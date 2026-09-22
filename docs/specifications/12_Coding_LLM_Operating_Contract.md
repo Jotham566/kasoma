@@ -13,7 +13,7 @@ Implement the Kasoma MVP exactly as specified, in small testable vertical slices
 
 1. `00_README_Source_of_Truth.md`
 2. Product roadmap and product whitepaper
-3. `01_Software_Requirements_Document.md`
+3. `01_SRD.md`
 4. `09_Security_Privacy_and_Safeguarding.md`
 5. `02_System_Architecture.md`
 6. `03_Domain_and_Data_Model.md`

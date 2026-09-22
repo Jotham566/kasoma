@@ -31,9 +31,11 @@ The whitepaper describes the mature north star. It does **not** authorize post-M
 
 ## Documents
 
+Product sources live in [the roadmap](../product/PRODUCT_ROADMAP.md) and [the whitepaper](../product/PRODUCT_WHITEPAPER.md). Track implementation in [the current sprint](../implementation/CURRENT_SPRINT.md) and [the live evidence register](../implementation/REQUIREMENTS_TRACEABILITY.md). Existing accepted ADRs remain in document 13; new records are indexed under [decisions/ADR](../decisions/ADR/README.md).
+
 | File | Purpose |
 |---|---|
-| `01_Software_Requirements_Document.md` | Functional and non-functional requirements with acceptance criteria |
+| `01_SRD.md` | Functional and non-functional requirements with acceptance criteria |
 | `02_System_Architecture.md` | Chosen stack, boundaries, runtime topology and cross-cutting design |
 | `03_Domain_and_Data_Model.md` | Entities, states, invariants, database model and event vocabulary |
 | `04_API_and_Integration_Contract.md` | REST conventions, endpoints, payloads, errors and WhatsApp integration |

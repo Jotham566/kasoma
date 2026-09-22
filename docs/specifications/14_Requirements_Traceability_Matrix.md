@@ -48,6 +48,8 @@ No requirement is marked complete because a UI exists. Completion requires domai
 
 Maintain during delivery:
 
+The repository's live register is [REQUIREMENTS_TRACEABILITY.md](../implementation/REQUIREMENTS_TRACEABILITY.md). The row below illustrates the format; it is not evidence of implementation.
+
 | Requirement ID | Code component | Test ID/link | Evidence/result | Owner | Status |
 |---|---|---|---|---|---|
 | Example: FR-GRD-001 | `grading.choice` | `test_choice_grading.py` | CI run / benchmark | QA | Not started |

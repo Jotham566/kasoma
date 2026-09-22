@@ -12,4 +12,5 @@ Describe applicable API, data, migration, privacy, safeguarding or provider impa
 
 - [ ] Scope follows the approved specifications.
 - [ ] Documentation reflects the implemented state.
+- [ ] Current sprint, implementation traceability and changelog are updated where applicable.
 - [ ] No credentials, real learner data or restricted source material are included.

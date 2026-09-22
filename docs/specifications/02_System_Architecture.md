@@ -53,7 +53,10 @@ kasoma/
     containers/
     deployment/
   docs/
-    adr/
+    product/
+    specifications/
+    decisions/ADR/
+    implementation/
     runbooks/
   tests/
     contract/

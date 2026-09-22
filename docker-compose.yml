@@ -1,0 +1,4 @@
+# Repository scaffold only. Add the services required by specification 15
+# during E0 runtime bootstrap; this file does not start a working application.
+# Ollama runs natively on the host Mac, not inside Compose.
+services: {}
