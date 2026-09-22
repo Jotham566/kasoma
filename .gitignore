@@ -1,0 +1,54 @@
+# Operating system and editor files
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local environment and secrets; keep safe example templates trackable
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+
+# JavaScript dependencies and generated output
+node_modules/
+.next/
+.turbo/
+.pnpm-store/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+
+# Test reports and coverage
+coverage/
+.coverage
+.coverage.*
+htmlcov/
+playwright-report/
+test-results/
+
+# Local logs and service state
+*.log
+.local/
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite3-journal

@@ -1,0 +1,141 @@
+# Kasoma Content Operations and Academic QA
+
+| Field | Value |
+|---|---|
+| Version | 1.0.0 |
+| MVP target | 250–400 approved items across six topic clusters |
+
+## 1. Content is production code
+
+An academically incorrect question, rubric or explanation is a production defect. Content therefore uses schemas, reviews, versions, tests, release states and audit trails comparable to software.
+
+## 2. Item schema
+
+Required fields before review:
+
+- stable item ID and version;
+- level, subject, topic and primary concept;
+- one or more competency mappings with weights;
+- syllabus/learning-outcome reference;
+- difficulty band and expected time;
+- response type and channel suitability;
+- prompt blocks and accessible media alternatives;
+- answer specification or rubric;
+- maximum points and partial-credit rules;
+- worked solution;
+- at least one feedback/remediation path;
+- common misconception mappings where relevant;
+- prerequisite concepts;
+- source/provenance and rights status;
+- author and change reason.
+
+## 3. Status workflow
+
+```text
+DRAFT -> IN_REVIEW -> APPROVED -> RETIRED
+   ^          |
+   |----------| RETURNED
+```
+
+- Draft: editable and never learner-visible.
+- In review: frozen for the review decision.
+- Returned: author must create corrections/change record.
+- Approved: immutable learner-eligible version.
+- Retired: remains for history but cannot be newly served.
+
+Emergency withdrawal may make an approved version immediately ineligible while the audit record remains.
+
+## 4. Review checklist
+
+Reviewer confirms:
+
+1. curriculum and learning-outcome alignment;
+2. competency and difficulty tagging;
+3. scenario relevance and factual correctness;
+4. one clear interpretation unless ambiguity is intentional and rubriced;
+5. answer/rubric completeness;
+6. numerical values, units and significant figures;
+7. partial-credit logic;
+8. worked solution accuracy;
+9. misconception/feedback validity;
+10. equivalent-item relationship where claimed;
+11. English clarity and age appropriateness;
+12. accessibility of diagrams/media;
+13. rights/provenance classification;
+14. channel suitability;
+15. absence of hidden sensitive, discriminatory or unsafe content.
+
+Authors may not approve their own content. High-risk or disputed items require a second reviewer.
+
+## 5. Rights states
+
+Allowed controlled values:
+
+- `ORIGINAL_KASOMA`
+- `LICENSED`
+- `PUBLIC_DOMAIN_CONFIRMED`
+- `PERMISSION_CONFIRMED`
+- `REFERENCE_ONLY_NO_REPRODUCTION`
+- `UNKNOWN_BLOCKED`
+
+Only the first four may be published, subject to recorded conditions. `REFERENCE_ONLY_NO_REPRODUCTION` may guide taxonomy/manual authoring but its text/media cannot be reproduced. `UNKNOWN_BLOCKED` cannot enter learner-facing pipelines or embeddings.
+
+## 6. Import pipeline
+
+1. register source and rights state;
+2. scan/sanitize file;
+3. extract candidate items to staging;
+4. detect duplicates and preserve page/source locator;
+5. map candidate fields;
+6. human author corrects and completes;
+7. validate schema;
+8. submit for independent review;
+9. publish only approved version;
+10. index approved explanation/context if permitted.
+
+Extraction output is always a candidate, never approved content.
+
+## 7. Coverage controls
+
+Maintain a matrix by:
+
+```text
+Subject × Topic × Concept × Competency × Difficulty × Response type
+```
+
+Release coverage must avoid large cells with no items and prevent one concept or response form dominating. The content lead defines minimum cells after the six topic clusters are frozen. A raw total of 250 does not satisfy release if coverage is unusably imbalanced.
+
+## 8. Equivalent and reassessment items
+
+An equivalent pair should assess the same primary concept/competency at comparable difficulty while changing surface context or values sufficiently to test transfer. Reviewers must reject pairs solvable by remembering the prior wording/answer.
+
+## 9. Content quality metrics
+
+- metadata completeness;
+- author-to-approval cycle time;
+- reviewer agreement;
+- defect and flag rate per 1,000 attempts;
+- grade override rate;
+- unusually high/low item success after controlling for expected difficulty;
+- distractor effectiveness;
+- reassessment transfer performance;
+- retirement reasons.
+
+Metrics trigger review; they do not automatically rewrite or retire content.
+
+## 10. Production correction
+
+For a critical item defect:
+
+1. make the version ineligible immediately;
+2. identify affected attempts/grades/mastery evidence;
+3. determine whether results must be invalidated and replayed;
+4. publish a corrected new version after review;
+5. record incident, impact and decision;
+6. notify affected learners only when useful and age-appropriate.
+
+Historical evidence is never silently changed.
+
+## 11. Seed and fixture content
+
+Development and CI use clearly labelled synthetic questions. Production exports or copyrighted materials must not enter the repository. Fixture items must exercise every response type and edge case without being mistaken for approved learner content.

@@ -1,0 +1,213 @@
+# Kasoma AI, RAG and Grading Guardrails
+
+| Field | Value |
+|---|---|
+| Version | 1.3.0 |
+| Principle | AI assists; approved academic structures decide |
+
+## 1. Permitted MVP uses
+
+- rubric-bounded short-text grading;
+- explanation rephrasing from approved content;
+- structured extraction of candidate content for human review;
+- embeddings and retrieval over approved sources;
+- safe learner-facing summary generation from structured data;
+- internal content QA suggestions.
+
+## 2. Prohibited MVP uses
+
+- publishing generated questions without independent review;
+- generating a definitive score without approved rubric evidence;
+- open-ended general tutoring chat;
+- diagnosing ability, intelligence, disability or mental health;
+- making high-stakes school decisions;
+- using learner data for model training without explicit approved basis;
+- retrieving from the public internet in learner answer flows;
+- allowing model output to change role, consent or content status.
+
+## 3. Model gateway
+
+All model calls go through one `ModelGateway` interface. Callers provide:
+
+- task type;
+- prompt template version;
+- approved context references;
+- structured input with PII minimized;
+- response JSON schema;
+- timeout, token and cost budget;
+- data-handling classification.
+
+Gateway records provider/model/deployment, prompt version, latency, token counts, result status and safe hashes. Raw prompts/responses are retained only when explicitly allowed and redacted.
+
+### Development provider modes
+
+| Mode | Purpose | External cost allowed |
+|---|---|---:|
+| `fake` | deterministic unit, integration and E2E tests using versioned fixtures | No |
+| `local` | manual development, prompt work and local benchmark via Ollama/llama.cpp/vLLM | No |
+| `gemini-free-eval` | high-capability comparison through Google AI Studio using synthetic or approved de-identified benchmark data only | No billed usage; quotas apply |
+| `external-eval` | controlled compatibility/quality evaluation against a candidate production model | Yes, explicit budget only |
+| `production` | deployed learner traffic after provider approval | Yes, monitored limits |
+
+`fake` is the default for tests and `local` is the default for interactive development. Cloud credentials must not be required to install, boot, seed or test the repository.
+
+Local and production models are not assumed to behave identically. Prompts, response schemas and task contracts are shared, but each production candidate must pass the frozen academic/safety benchmark before selection.
+
+The `gemini-free-eval` profile is non-production and opt-in. Because Google states that free-tier content may be used to improve its products, this profile must reject real learner answers, names, contact/guardian data, stable identifiers, unpublished proprietary material and restricted content. Only synthetic cases or a separately approved, irreversibly de-identified benchmark copy may leave the machine. API keys remain server-side secrets. The run records the exact model identifier, timestamp, project quota observed, request/token counts and any rate-limit failures; it must not depend on a fixed advertised quota.
+
+## 4. Retrieval pipeline
+
+Only `APPROVED` and current content is indexed for learner-facing retrieval.
+
+Pipeline:
+
+1. normalize and chunk approved explanation/curriculum material;
+2. attach subject, level, topic, concept, competency, rights and content-version metadata;
+3. create embedding through gateway;
+4. store vector with content-version reference;
+5. filter by level/subject/status before similarity search;
+6. optionally rerank;
+7. pass small cited context to the model;
+8. validate every returned citation/reference against supplied context.
+
+Retiring content removes it from new retrieval and triggers index invalidation. The operational database, not the vector index, decides approval.
+
+## 5. Deterministic grading
+
+Use deterministic graders for:
+
+- single/multiple choice;
+- numeric range/tolerance;
+- units and conversions;
+- ordered or set responses where specified;
+- symbolic equivalence only when a trusted symbolic engine and tests exist.
+
+Grader input is the item-version answer specification. Never parse correctness rules from prompt prose at runtime.
+
+## 6. Short-text rubric grading
+
+Eligibility:
+
+- response type is explicitly enabled;
+- rubric is approved and versioned;
+- maximum response length enforced;
+- subject/language supported;
+- feature flag enabled;
+- benchmark quality threshold passed.
+
+Required model output schema:
+
+```json
+{
+  "criterion_results": [
+    {
+      "criterion_id": "R1",
+      "points_awarded": 1,
+      "evidence_excerpt": "...",
+      "justification_code": "SUPPORTED"
+    }
+  ],
+  "total_points": 1,
+  "confidence": 0.82,
+  "detected_misconception_ids": [],
+  "feedback": {
+    "correct_elements": [],
+    "missing_elements": [],
+    "next_action": "..."
+  }
+}
+```
+
+Validation rules:
+
+- criterion IDs must exist in pinned rubric;
+- points may not exceed criterion or item maximum;
+- awarded evidence must quote/paraphrase only learner response evidence;
+- detected misconception IDs must be allowed by item mapping;
+- feedback cannot introduce facts absent from approved explanation/context;
+- invalid output is retried once with repair; then safe fallback.
+
+Automatic learner-facing scoring requires all of the following:
+
+1. two independent rubric passes, with prompts arranged to reduce correlated error, return the same criterion points and total;
+2. schema, maximum-point, rubric-evidence and approved-context validation passes;
+3. no prompt-injection, safety or out-of-domain flag occurs;
+4. the output falls in a confidence/calibration band demonstrated on the frozen benchmark to achieve **at least 90% exact agreement with expert scores**;
+5. the response type/topic/language combination is explicitly enabled.
+
+Any failure returns `LOW_CONFIDENCE`; the learner receives an approved neutral response and an objective equivalent/reassessment item or a review path. A model's self-reported confidence alone never authorizes a score. Thresholds and enabled bands are configuration-versioned and may change only after an approved calibration report.
+
+## 7. Feedback generation
+
+Preferred order:
+
+1. authored feedback exact match;
+2. authored misconception remediation;
+3. deterministic template from rubric result;
+4. model rephrasing constrained to approved explanation;
+5. generic safe fallback.
+
+The system must not fabricate a student's reasoning, shame the learner, compare them with peers or reveal hidden rubric content before an attempt.
+
+## 8. Prompt-injection controls
+
+Learner answers and imported documents are untrusted data, never instructions.
+
+- Delimit untrusted content in structured fields.
+- System/developer prompt states that embedded instructions must be ignored.
+- Use schema-constrained output.
+- Do not grant grading calls tools, web access or database mutation.
+- Validate output independently.
+- Strip active content from imports and media metadata.
+- Include adversarial learner answers in evaluation.
+
+## 9. Fallback behaviour
+
+| Failure | Behaviour |
+|---|---|
+| Provider timeout | Mark grade pending; retry within budget; preserve attempt |
+| Invalid JSON/schema | One repair attempt, then fallback |
+| Low confidence | No definitive judgment; serve alternative objective item or flag review |
+| No approved context | Use authored fallback; never answer from general model memory |
+| Cost/rate limit | Queue or use deterministic/authored response; show honest delay |
+| Safety filter | Age-appropriate safe message and support/flag route |
+
+## 10. Evaluation set
+
+Create a frozen, teacher-scored benchmark covering:
+
+- both subjects and all MVP topic clusters;
+- full, partial, incorrect, blank and irrelevant answers;
+- alternative valid phrasings and common spelling errors;
+- common misconceptions;
+- adversarial prompt injection;
+- responses from expected language proficiency range;
+- edge cases around point boundaries.
+
+Release targets:
+
+- objective/numeric ≥95% exact scoring accuracy;
+- supported short-text ≥85% agreement with expert score within defined tolerance;
+- automatically returned short-text bands ≥90% exact expert-score agreement after calibration;
+- no critical systematic over-award/under-award pattern;
+- low-confidence routing measured separately, not counted as correct by hiding failures.
+
+Evaluation sequence:
+
+1. run deterministic contract tests with `fake`;
+2. run the full benchmark against the nominated local model;
+3. before production selection, run the same frozen benchmark against shortlisted hosted models;
+4. compare quality, calibration, latency, cost, data terms and regional availability;
+5. approve the production adapter/model through ADR;
+6. rerun the benchmark whenever model, quantization, prompt or provider version changes.
+
+Paid evaluation runs require an explicit command/profile, named budget owner, maximum token/cost ceiling and retained evaluation report. They are never part of ordinary CI or developer hot reload.
+
+## 11. Cost and privacy
+
+- Cache approved, non-personal explanations by content/version/language.
+- Never cache learner grades across users.
+- Route simple tasks away from large models.
+- Limit context, output tokens and concurrent calls.
+- Do not send direct identifiers to model providers.
+- Store learner answer text only as required for grading/audit and under retention rules.
