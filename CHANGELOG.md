@@ -1,5 +1,8 @@
 # Changelog
 
+- E2: synthetic single-choice authoring, independent review, version immutability,
+  role checks and append-only content audit, with migration and browser/API tests.
+
 - E1: local OTP identity, protected learner profiles, rotating sessions and separate
   guardian-consent/learner-assent flows with migration, contracts and tests.
 

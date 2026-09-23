@@ -3,7 +3,8 @@
 Date: 23 September 2026. Branch: `codex/e1-identity-consent`.
 Foundation `4faf65a` passed [hosted CI](https://github.com/Jotham566/kasoma/actions/runs/35889650630),
 was fast-forwarded to main and pushed, and its branch was deleted locally/remotely.
-This E1 implementation remains uncommitted.
+E1 was subsequently committed as `9dfe726`, fast-forwarded to main and pushed
+at the owner's request. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/35896298632).
 
 ## Scope and evidence
 
@@ -68,8 +69,7 @@ The next slice is content roles, independent review and publication constraints.
 | `make container-smoke` | API, dependencies, worker and web healthy; app containers stopped afterward |
 
 [Main CI](https://github.com/Jotham566/kasoma/actions/runs/35890229157) also passed
-after the foundation merge. E1 has local evidence only; it has not been committed
-or pushed. The Starlette TestClient deprecation warning and intentional blocked-socket
+after the foundation merge. E1 was subsequently committed and pushed; its hosted CI also passed. The Starlette TestClient deprecation warning and intentional blocked-socket
 warnings remain non-failing toolchain notices.
 
 No external model, SMS, email or cloud service was called. Dependency downloads and

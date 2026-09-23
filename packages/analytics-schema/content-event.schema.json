@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Content workflow event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "item_version_id",
+    "type",
+    "version",
+    "request_id",
+    "created_at"
+  ],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "item_version_id": { "type": "string", "format": "uuid" },
+    "type": {
+      "enum": [
+        "content.created",
+        "content.edit",
+        "content.submit",
+        "content.review",
+        "content.retire"
+      ]
+    },
+    "version": { "const": 1 },
+    "request_id": { "type": "string", "format": "uuid" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -6,9 +6,8 @@ Kasoma's planned learning loop is **Diagnose → Recommend → Practice → Expl
 
 ## Repository status
 
-The E0 local web/API/worker foundation is merged. E1 adds local synthetic identity
-and consent; no production learner
-features or production deployment are enabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
+E0 foundation and E1 local identity/consent are merged. E2 adds a synthetic staff
+content workflow. Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
 
@@ -95,3 +94,11 @@ consent. Email codes are captured in local Mailpit; phone tests use an injected
 fake adapter. No real provider delivery or real learner enrollment is enabled.
 See [E1 verification](docs/implementation/E1_VERIFICATION.md) and
 [ADR-014](docs/decisions/ADR/014-identity-consent.md).
+
+## Staff content workflow
+
+The first content slice is at `/admin/content`: text-only single-choice drafts,
+independent review, corrections, approval and retirement. Synthetic mappings and
+workflow approvals do not count as academically approved production content.
+See [E2 verification](docs/implementation/E2_VERIFICATION.md) and the
+[local development runbook](docs/runbooks/LOCAL_DEVELOPMENT.md) for role provisioning.

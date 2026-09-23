@@ -156,3 +156,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-014: Local identity and consent](../decisions/ADR/014-identity-consent.md)
   records implementation choices for the approved E1 identity and consent contracts.
+
+- [ADR-015: First content review vertical slice](../decisions/ADR/015-content-review.md)
+  records the approved workflow implementation and explicit remaining content scope.

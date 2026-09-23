@@ -8,8 +8,10 @@ from pydantic import BaseModel
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
+from apps.api.content import router as content_router
 from apps.api.identity import router
 from services.config import Settings
+from services.content import ContentError
 from services.database import engine_for
 from services.health import Health, dependency_health
 from services.identity import IdentityError, IdentityService
@@ -44,6 +46,7 @@ def create_app(
 
     app = FastAPI(title="Kasoma API", version="0.1.0", lifespan=lifespan)
     app.include_router(router)
+    app.include_router(content_router)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[settings.app_public_url] if settings else [],
@@ -73,7 +76,13 @@ def create_app(
 
     @app.exception_handler(IdentityError)
     async def identity_error(request: Request, exc: IdentityError) -> JSONResponse:
-        return error(request, exc.status, exc.code, "This action could not be completed.")
+        return error(
+            request,
+            exc.status,
+            exc.code,
+            "This action could not be completed.",
+            exc.fields if isinstance(exc, ContentError) else [],
+        )
 
     @app.exception_handler(HTTPException)
     async def http_error(request: Request, exc: HTTPException) -> JSONResponse:
@@ -101,7 +110,9 @@ def create_app(
     return app
 
 
-def error(request: Request, status: int, code: str, message: str) -> JSONResponse:
+def error(
+    request: Request, status: int, code: str, message: str, fields: list[str] | None = None
+) -> JSONResponse:
     return JSONResponse(
         status_code=status,
         content={
@@ -109,7 +120,9 @@ def error(request: Request, status: int, code: str, message: str) -> JSONRespons
                 "code": code,
                 "message": message,
                 "request_id": request.state.request_id,
-                "field_errors": [],
+                "field_errors": [
+                    {"field": field, "message": "Review this field."} for field in (fields or [])
+                ],
             }
         },
     )

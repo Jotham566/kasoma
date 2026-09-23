@@ -129,3 +129,43 @@ Migration 0002 is additive. Tests explicitly exercise 0001 -> 0002 and repeat
 upgrade in independent schemas. No destructive downgrade is available. Expired OTP
 and rate rows are pruned on OTP requests; long-term consent/audit and inactive-account
 retention jobs remain release work, not an implied indefinite-retention policy.
+
+## Staff content workflow (E2)
+
+Run `make setup services migrate seed`. Migration 0003 adds content, normalized
+mappings, role and audit tables. Seed adds six explicitly synthetic concepts/outcome
+references and four competency labels, never approved question content.
+
+First sign in a fictional `.invalid` email through `/onboarding` and local Mailpit.
+Explicitly grant its role from the repository workspace:
+
+```sh
+make staff-role KASOMA_STAFF_EMAIL=author@example.invalid KASOMA_STAFF_ROLE=CONTENT_AUTHOR
+make staff-role KASOMA_STAFF_EMAIL=reviewer@example.invalid KASOMA_STAFF_ROLE=ACADEMIC_REVIEWER
+```
+
+Each account must already be independently verified. The CLI refuses real-domain
+addresses and non-development configuration. Names/addresses do not automatically
+grant roles. Every action is audited. To revoke, repeat with
+`KASOMA_STAFF_REVOKE=1`; the next protected request checks the new role state.
+This is a synthetic bootstrap tool, not a production staff provisioning system.
+
+Open `/admin/content` in separate browser profiles for author and reviewer. Create
+a text-only single-choice draft with the synthetic catalog reference. Provide
+rights evidence/conditions, answer, solution, remediation and competency weights
+summing to one. Missing fields block submission with field-specific errors.
+Approve only from a different verified reviewer; all fifteen checklist categories
+must be checked. Mark disputed/high-risk work for two independent reviewers.
+Returning a draft preserves comments. Retirement excludes new selection; creating
+the next draft preserves the old version. Version conflicts require reloading.
+
+The UI initially offers two options and preserves all existing API-authored options;
+additional choices (up to eight) can be authored through the generated API contract.
+The API rejects unknown privileged fields and requires revision and idempotency
+headers for mutations. Mutation retries return the same version's current state.
+
+No real NCDC mappings, source licenses, academic release approvals or production
+eligibility are implied. Bulk import, media, other response formats, full curriculum
+relations and learner attempt pinning remain subsequent slices. Never disable the
+database guards to edit an approved payload or audit history. Application rollback
+retains these additive tables; destructive downgrade has no automatic command.

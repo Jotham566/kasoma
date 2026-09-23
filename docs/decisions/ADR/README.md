@@ -9,3 +9,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-013: Bootstrap implementation choices](013-bootstrap-foundation.md)
 
 - [ADR-014: Local identity and consent](014-identity-consent.md)
+
+- [ADR-015: First content review vertical slice](015-content-review.md)

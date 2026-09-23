@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+from datetime import timedelta
 from uuid import uuid4
 
 import uvicorn
@@ -12,8 +13,10 @@ from apps.api.main import create_app
 from services.config import Settings
 from services.database import engine_for
 from services.identity import IdentityService
+from services.identity_contracts import OTPRequest, OTPVerify
 from services.providers import FakeMessagingProvider
 from services.seed import seed
+from services.staff import provision
 
 
 def main() -> None:
@@ -37,6 +40,23 @@ def main() -> None:
     engine = engine_for(config)
     messages = FakeMessagingProvider()
     service = IdentityService(engine, config, messages, messages, code=lambda: "246810")
+    clock = service.clock
+    service.clock = lambda: clock() - timedelta(seconds=61)
+    for label, roles in {
+        "author": ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"],
+        "reviewer": ["ACADEMIC_REVIEWER"],
+        "second": ["ACADEMIC_REVIEWER"],
+    }.items():
+        email = f"e2e-content-{label}@example.invalid"
+        challenge = service.request_otp(
+            OTPRequest(identifier=email, device_id=uuid4()), label, None
+        )
+        service.verify(
+            OTPVerify(challenge_id=challenge.challenge_id, code="246810"), None, str(uuid4())
+        )
+        for role in roles:
+            provision(service, email, role)
+    service.clock = clock
     try:
         uvicorn.run(create_app(config, service), host="127.0.0.1", port=8000, access_log=False)
     finally:

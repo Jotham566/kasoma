@@ -83,3 +83,10 @@ ollama-serve:
 .PHONY: container-smoke
 container-smoke:
 	$(UV) python scripts/container_smoke.py
+
+.PHONY: staff-role
+export KASOMA_STAFF_EMAIL
+export KASOMA_STAFF_ROLE
+export KASOMA_STAFF_REVOKE
+staff-role:
+	$(UV) python -m services.staff

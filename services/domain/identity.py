@@ -100,3 +100,10 @@ class IdentityEvent(Base):
     version: Mapped[int] = mapped_column(default=1)
     payload: Mapped[dict[str, str]] = mapped_column(JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class UserRole(Base):
+    __tablename__ = "user_roles"
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    role: Mapped[str] = mapped_column(String(32), primary_key=True)
+    granted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

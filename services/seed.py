@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from services.config import Settings
 from services.database import engine_for
-from services.domain.curriculum import Level, Subject, Topic
+from services.domain.curriculum import Competency, Concept, Level, Subject, Topic
 
 CLUSTERS = {
     "Mathematics": [
@@ -23,7 +23,7 @@ def fixture_id(name: str) -> UUID:
     return uuid5(NAMESPACE_URL, f"kasoma:synthetic:v1:{name}")
 
 
-def seed(settings: Settings) -> None:
+def seed(settings: Settings, *, foundation_only: bool = False) -> None:
     if settings.app_env != "development":
         raise ValueError("Seeding is restricted to the local development environment")
     engine = engine_for(settings)
@@ -54,6 +54,30 @@ def seed(settings: Settings) -> None:
                         )
                         .on_conflict_do_nothing(index_elements=["id"])
                     )
+                if foundation_only:
+                    continue
+                for topic in topics:
+                    session.execute(
+                        insert(Concept)
+                        .values(
+                            id=fixture_id("concept:" + topic),
+                            topic_id=fixture_id(topic),
+                            name="Synthetic fixture concept",
+                            synthetic=True,
+                            syllabus_reference="SYNTHETIC-NOT-NCDC/" + topic,
+                        )
+                        .on_conflict_do_nothing(index_elements=["id"])
+                    )
+            for competency in (
+                []
+                if foundation_only
+                else ["Recall", "Interpretation", "Application", "Problem-solving"]
+            ):
+                session.execute(
+                    insert(Competency)
+                    .values(id=fixture_id("competency:" + competency), name=competency)
+                    .on_conflict_do_nothing(index_elements=["id"])
+                )
     finally:
         engine.dispose()
 

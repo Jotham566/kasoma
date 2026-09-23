@@ -26,3 +26,18 @@ class Topic(Base):
     id: Mapped[UUID] = mapped_column(primary_key=True)
     subject_id: Mapped[UUID] = mapped_column(ForeignKey("subjects.id"))
     name: Mapped[str] = mapped_column(String(160), unique=True)
+
+
+class Concept(Base):
+    __tablename__ = "concepts"
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    topic_id: Mapped[UUID] = mapped_column(ForeignKey("topics.id"))
+    name: Mapped[str] = mapped_column(String(200))
+    syllabus_reference: Mapped[str]
+    synthetic: Mapped[bool]
+
+
+class Competency(Base):
+    __tablename__ = "competencies"
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(80), unique=True)

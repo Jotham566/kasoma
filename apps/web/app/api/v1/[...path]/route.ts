@@ -13,6 +13,8 @@ const allowed: Record<string, string[]> = {
   me: ["GET", "PATCH"],
   "me/consents": ["POST"],
   "curriculum/subjects": ["GET"],
+  "admin/content-context": ["GET"],
+  "admin/items": ["GET", "POST"],
 };
 
 async function gateway(
@@ -36,7 +38,18 @@ async function gateway(
         headers: { "Cache-Control": "no-store", request_id: requestId },
       },
     );
-  if (!allowed[path]?.includes(request.method))
+  const staffVersion =
+    /^admin\/item-versions\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(?:\/(submit|review|retire|reviews))?$/.exec(
+      path,
+    );
+  const methods = staffVersion
+    ? staffVersion[1] === "reviews"
+      ? ["GET"]
+      : staffVersion[1]
+        ? ["POST"]
+        : ["GET", "PATCH"]
+    : allowed[path];
+  if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (
     request.method !== "GET" &&
@@ -51,10 +64,11 @@ async function gateway(
   try {
     let body: string | undefined;
     if (request.method !== "GET") {
-      if (Number(request.headers.get("content-length") ?? 0) > 8192)
+      if (Number(request.headers.get("content-length") ?? 0) > 65536)
         return fail(413, "VALIDATION_FAILED");
       body = await request.text();
-      if (body.length > 8192) return fail(413, "VALIDATION_FAILED");
+      if (new TextEncoder().encode(body).length > 65536)
+        return fail(413, "VALIDATION_FAILED");
     }
     if (path === "auth/refresh") {
       body = JSON.stringify({
@@ -69,7 +83,13 @@ async function gateway(
     if (access) headers.Authorization = `Bearer ${access}`;
     const idempotency = request.headers.get("idempotency-key");
     if (idempotency) headers["Idempotency-Key"] = idempotency;
-    const upstream = await fetch(`${apiUrl()}/api/v1/${path}`, {
+    const query = new URLSearchParams();
+    if (path === "admin/items")
+      for (const key of ["cursor", "limit"]) {
+        const value = request.nextUrl.searchParams.get(key);
+        if (value !== null) query.set(key, value);
+      }
+    const upstream = await fetch(`${apiUrl()}/api/v1/${path}?${query}`, {
       method: request.method,
       headers,
       body,
