@@ -4,8 +4,7 @@ export default defineConfig({
   use: { baseURL: "http://127.0.0.1:3000" },
   webServer: [
     {
-      command:
-        "uv run --frozen uvicorn apps.api.main:app --host 127.0.0.1 --no-access-log",
+      command: "uv run --frozen python -m scripts.e2e_api",
       url: "http://127.0.0.1:8000/api/v1/live",
       reuseExistingServer: false,
     },

@@ -6,7 +6,8 @@ Kasoma's planned learning loop is **Diagnose → Recommend → Practice → Expl
 
 ## Repository status
 
-This repository is implementing E0: the local web/API/worker foundation. No learner
+The E0 local web/API/worker foundation is merged. E1 adds local synthetic identity
+and consent; no production learner
 features or production deployment are enabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
@@ -86,3 +87,11 @@ The [system architecture](docs/specifications/02_System_Architecture.md) specifi
 - A pnpm/Turborepo monorepo using the reserved directories above.
 
 These decisions govern the foundation and subsequent slices. See [CONTRIBUTING.md](CONTRIBUTING.md) for the change and review workflow.
+
+## Local identity slice
+
+After setup/migrations/seed, open `/onboarding` for synthetic registration and
+consent. Email codes are captured in local Mailpit; phone tests use an injected
+fake adapter. No real provider delivery or real learner enrollment is enabled.
+See [E1 verification](docs/implementation/E1_VERIFICATION.md) and
+[ADR-014](docs/decisions/ADR/014-identity-consent.md).

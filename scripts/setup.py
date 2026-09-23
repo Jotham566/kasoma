@@ -1,5 +1,6 @@
 """Install pinned repository-local tools without changing global installations."""
 
+import base64
 import os
 import secrets
 import shutil
@@ -53,6 +54,19 @@ def main():
             content = content.replace(f"{key}=\n", f"{key}={value}\n")
         with os.fdopen(os.open(env, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w") as file:
             file.write(content)
+    # Add only missing identity keys; never overwrite existing local keys.
+    content = env.read_text()
+    additions = {
+        "IDENTITY_ENCRYPTION_KEY": base64.urlsafe_b64encode(secrets.token_bytes(32)).decode(),
+        "IDENTITY_LOOKUP_KEY": secrets.token_urlsafe(48),
+    }
+    for key, value in additions.items():
+        if f"{key}=" not in content:
+            content += f"\n{key}={value}\n"
+        else:
+            content = content.replace(f"{key}=\n", f"{key}={value}\n")
+    env.write_text(content)
+    env.chmod(0o600)
     hooks = subprocess.run(
         ["git", "config", "--local", "--get", "core.hooksPath"],
         capture_output=True,

@@ -100,3 +100,32 @@ The installed Next.js CLI generates apps/web/AGENTS.md and CLAUDE.md during
 instructions. ESLint 9.39.5 is pinned for Next's React/import plugin compatibility;
 ESLint 10 currently fails with those plugins. Track the upstream compatibility
 upgrade; the development-tool deprecation is not a production-runtime exception.
+
+## Identity and consent (E1)
+
+Run `make setup migrate seed` after updating. Setup adds independent encryption and
+lookup keys to ignored .env without printing or replacing existing keys. Keep these
+keys with your local synthetic database; losing them prevents contact decryption.
+
+Open `/onboarding`. Use an `example.invalid` email and retrieve its random OTP from
+Mailpit at http://localhost:8025. Runtime codes are never logged or returned by an
+API. Fake phone messages are available only inside injected test adapters; use email
+for manual local walkthroughs. Automated Playwright starts its own isolated schema
+and in-memory provider with deterministic test-only codes through scripts/e2e_api.py.
+That script is never used by the development/production application entry point.
+
+Use synthetic birth dates and names. Adult test profiles need their own declaration;
+under-18 profiles need distinct guardian-contact verification and separate assent.
+The development notice is explicitly not approved legal wording. Use Verify contact
+again for sensitive actions after ten minutes, or Resume saved session when an
+access credential expires. Refresh does not reset the recent-authentication clock.
+
+The gateway allows same-origin local browser mutations only, retains credentials in
+HttpOnly cookies, and accepts no arbitrary upstream route. Bearer API clients use
+the generated identity contract. No active learning endpoints exist yet; future
+assessment/channel services must call IdentityService.require_learning.
+
+Migration 0002 is additive. Tests explicitly exercise 0001 -> 0002 and repeat
+upgrade in independent schemas. No destructive downgrade is available. Expired OTP
+and rate rows are pruned on OTP requests; long-term consent/audit and inactive-account
+retention jobs remain release work, not an implied indefinite-retention policy.

@@ -153,3 +153,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 - [ADR-013: Bootstrap implementation choices](../decisions/ADR/013-bootstrap-foundation.md)
   records delegated tooling, health-contract and migration-foundation choices;
   no accepted architecture or learner behaviour is replaced.
+
+- [ADR-014: Local identity and consent](../decisions/ADR/014-identity-consent.md)
+  records implementation choices for the approved E1 identity and consent contracts.

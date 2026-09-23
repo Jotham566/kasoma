@@ -87,8 +87,8 @@ A task is complete only when:
 
 ## Repository stage
 
-This repository is implementing E0 runtime foundation. Learner features and
-production deployment are not implemented. See
+The E0 runtime foundation is merged. E1 local identity/consent is in implementation;
+assessment, content workflows and production deployment are not implemented. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

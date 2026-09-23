@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     object_storage_access_key: SecretStr
     object_storage_secret_key: SecretStr
     jwt_signing_key: SecretStr
+    identity_encryption_key: SecretStr
+    identity_lookup_key: SecretStr
+    consent_policy_version: str = "synthetic-development-v1"
     token_issuer: str = "kasoma-local"
     model_provider: Literal["fake", "local"] = "fake"
     model_base_url: str = "http://localhost:11434/v1"
@@ -60,6 +63,14 @@ class Settings(BaseSettings):
         ):
             if not secret.get_secret_value():
                 raise ValueError("Required local configuration is empty; run make setup")
+        from cryptography.fernet import Fernet
+
+        try:
+            Fernet(self.identity_encryption_key.get_secret_value().encode())
+        except Exception:
+            raise ValueError("Invalid identity encryption key; run make setup") from None
+        if len(self.identity_lookup_key.get_secret_value()) < 32:
+            raise ValueError("Identity lookup key must have at least 32 characters")
         require_local(self.database_url.get_secret_value(), {"postgres"})
         require_local(self.redis_url.get_secret_value(), {"redis"})
         require_local(self.object_storage_endpoint, {"minio"})

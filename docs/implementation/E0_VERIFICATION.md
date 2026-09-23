@@ -29,7 +29,7 @@ No learner feature, production deployment or academic acceptance is claimed.
 | `make security-source` | Gitleaks: no source leaks |
 | `make security-containers` | Pass: Trivy 0.74.0, both runtime images; strict HIGH/CRITICAL gate, no exclusions |
 | `make setup-ollama`, `make ollama-check` and container-to-host probe | Official native 0.34.3 SHA-256 verified; both probes passed; no weights/inference |
-| Hosted GitHub Actions | Pending foundation branch push; publication authorized |
+| Hosted GitHub Actions | Passed at 4faf65a; merged to main on 23 September 2026 |
 
 Normal tests block network sockets; integration allows loopback only. Browser
 requests are restricted to local hosts. Integration includes a real Redis/Celery
@@ -56,7 +56,8 @@ slices; their fixture/provider foundations are not those implementations.
 Production startup remains explicitly blocked. Legal/privacy/content/benchmark
 and Week 8 hosting gates remain outstanding. The Week 5 versus Week 6 short-text
 milestone conflict is OPEN-QUESTION E0-01 in the Phase 0 assessment. Named owners,
-calendar kickoff, GitHub branch protection and hosted CI evidence remain pending.
+calendar kickoff and GitHub branch protection remain pending. Hosted E0 CI later
+passed before the owner-authorized merge to main.
 
 ## Architectural decisions
 

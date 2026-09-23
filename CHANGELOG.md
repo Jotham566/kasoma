@@ -1,5 +1,8 @@
 # Changelog
 
+- E1: local OTP identity, protected learner profiles, rotating sessions and separate
+  guardian-consent/learner-assent flows with migration, contracts and tests.
+
 Record meaningful repository and product changes here. A documentation baseline is not an application release.
 
 ## Unreleased

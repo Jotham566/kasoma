@@ -8,22 +8,42 @@ from pydantic import BaseModel
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
+from apps.api.identity import router
 from services.config import Settings
+from services.database import engine_for
 from services.health import Health, dependency_health
+from services.identity import IdentityError, IdentityService
 from services.observability import correlation_id, emit, tracer
+from services.providers import FakeMessagingProvider, MailpitEmailProvider
 
 
 class Live(BaseModel):
     status: str = "ok"
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None, identity: IdentityService | None = None
+) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         app.state.settings = settings or Settings()
-        yield
+        config = app.state.settings
+        engine = engine_for(config)
+        email = (
+            FakeMessagingProvider()
+            if config.email_provider == "fake"
+            else MailpitEmailProvider(config)
+        )
+        app.state.identity = identity or IdentityService(
+            engine, config, email, FakeMessagingProvider()
+        )
+        try:
+            yield
+        finally:
+            engine.dispose()
 
     app = FastAPI(title="Kasoma API", version="0.1.0", lifespan=lifespan)
+    app.include_router(router)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[settings.app_public_url] if settings else [],
@@ -50,6 +70,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             response.headers["Cache-Control"] = "no-store"
             emit("api.request", request_id, "WEB", response.status_code)
             return response
+
+    @app.exception_handler(IdentityError)
+    async def identity_error(request: Request, exc: IdentityError) -> JSONResponse:
+        return error(request, exc.status, exc.code, "This action could not be completed.")
 
     @app.exception_handler(HTTPException)
     async def http_error(request: Request, exc: HTTPException) -> JSONResponse:

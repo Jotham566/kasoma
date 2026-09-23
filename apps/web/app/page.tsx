@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { randomUUID } from "node:crypto";
 import { apiClient } from "@kasoma/api-client";
 import { Status } from "@kasoma/ui";
@@ -43,6 +44,12 @@ export default async function Home() {
           Check again
         </a>
       </div>
+      <Link
+        href="/onboarding"
+        className="mt-6 inline-flex min-h-11 items-center underline"
+      >
+        Set up a synthetic learner profile
+      </Link>
       <small className="mt-6 block text-slate-600">
         Support reference: {requestId}
       </small>

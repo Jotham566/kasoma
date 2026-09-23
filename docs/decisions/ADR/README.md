@@ -7,3 +7,5 @@ Create new records in this directory as `NNN-short-title.md`, starting at `013` 
 This directory location follows the user-requested repository organization. It does not change the accepted runtime architecture or product scope.
 
 - [ADR-013: Bootstrap implementation choices](013-bootstrap-foundation.md)
+
+- [ADR-014: Local identity and consent](014-identity-consent.md)

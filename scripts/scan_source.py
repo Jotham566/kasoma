@@ -33,6 +33,7 @@ with tempfile.TemporaryDirectory(prefix="kasoma-source-") as directory:
             "dir",
             "/repo",
             "--redact",
+            "--verbose",
         ],
         check=True,
     )
