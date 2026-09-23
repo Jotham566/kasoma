@@ -1,37 +1,41 @@
-# Current Sprint: E2 first content review slice
+# Current Sprint: E3 first assessment slice
 
-E0 foundation (`4faf65a`) and E1 identity/consent (`9dfe726`) are on main.
-Both passed hosted CI. E2 work is on `codex/e2-content-review` and remains
-uncommitted for review. See [E2 verification](E2_VERIFICATION.md).
+E0 (`4faf65a`), E1 (`9dfe726`) and E2 (`b5cfd75`) are on main and passed hosted CI.
+Completed E1/E2 branches have been removed locally; origin contains only main.
+E3 is active on `codex/e3-assessment`, uncommitted for review.
+See [E3 verification and file inventory](E3_VERIFICATION.md).
 
 ## Current slice
 
-FR-CNT-001–005: text-only single-choice draft authoring, independent review,
-return/correction, approval, retirement and new versions; FR-OPS-003 content/role
-audit; supporting NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
+FR-REV-002–005, FR-GRD-001/005/007, FR-CNT-004 and FR-OPS-001; supporting
+FR-ID-003, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
 
-Partial scope is explicit: bulk import, other response formats, media, full curriculum
-graph, real NCDC outcome mappings, rubric entities, historical attempt pinning and
-learner flags are not completed by this slice. Synthetic APPROVED versions are
-workflow test evidence, excluded from production content counts and selection.
+A consented S4 learner selects a topic, starts/resumes five-question practice,
+receives only approved synthetic single-choice versions, submits immutable answers,
+receives deterministic feedback and reads the pinned worked solution after submission.
+Retries are idempotent; attempt, grade and outbox record commit atomically.
+The API supports 5–10 items and reports insufficient inventory without shrinking plans.
+No recommendation/mastery claim is made. See [ADR-016](../decisions/ADR/016-assessment-choice.md).
 
 ## Next vertical slice
 
-E3: a consented learner starts a short session, receives an approved synthetic
-single-choice item without its answer key, submits one immutable answer and receives
-a deterministic grade. Pin the item version, make retries idempotent and emit the
-transactional result event. Extend numeric content/grading next; do not invent
-academic outcomes or claim the full diagnostic/mastery loop.
+E3/E4 numeric items and deterministic grading: approved unit/tolerance/equivalence
+contracts, content editor and question input, immutable result evidence and boundary
+benchmarks. Then implement the 10–15-item diagnostic and initial mastery projection.
 
-## Remaining release gates
+## Remaining release gates and questions
 
-- Real academic mapping, source rights review and production content inventory.
-- Approved consent/assent notices, guardian-verification procedures and legal review.
-- Production OTP providers, staff MFA/role governance and separate restricted database roles.
-- Long-term retention jobs, analytics dispatch, data-subject requests and provider selection.
-- All future learning/WhatsApp routes must enforce current consent and approved-content selection.
-- Week 5/6 short-text benchmark sequencing question E0-01 remains open for the grading slice.
-- No calendar kickoff or named delivery owners have been supplied; horizon remains 12 weeks.
+- Real academic mapping, rights review and sufficient independently reviewed content.
+- Approved consent/assent notices and guardian verification procedures.
+- Production providers, staff MFA, role governance and restricted database roles.
+- Mastery evidence/projections, outbox dispatch and retention/anonymization jobs.
+- Diagnostic, recommended practice, hints, numeric/multiple-choice/short-text grading,
+  reassessment, flags, progress and WhatsApp remain scheduled work.
+- E0-01: roadmap Week 5 short-text benchmark versus backlog Week 6 implementation.
+- E3-01: content difficulty STANDARD/CHALLENGING versus engine CORE/STRETCH; resolve
+  before adaptive weighting. The current choice grader does not use difficulty.
+- No calendar kickoff or named delivery owners supplied; horizon remains 12 weeks.
 
 Prior evidence: [E0](E0_VERIFICATION.md), [E1](E1_VERIFICATION.md),
-[Phase 0 assessment](PHASE_0_ASSESSMENT.md), [traceability](REQUIREMENTS_TRACEABILITY.md).
+[E2](E2_VERIFICATION.md), [Phase 0](PHASE_0_ASSESSMENT.md),
+[traceability](REQUIREMENTS_TRACEABILITY.md).

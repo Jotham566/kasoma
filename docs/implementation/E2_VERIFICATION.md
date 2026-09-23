@@ -1,6 +1,8 @@
 # E2 first content review slice: evidence
 
-Date: 23 September 2026. Branch: `codex/e2-content-review` (uncommitted).
+Date: 23 September 2026. Committed as `b5cfd75` and pushed to main.
+[Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/35901725404).
+The completed E1/E2 local branches were deleted; the remote has only main.
 E1 was committed as `9dfe726`, pushed to main at the owner's request, and
 [passed hosted CI](https://github.com/Jotham566/kasoma/actions/runs/35896298632).
 

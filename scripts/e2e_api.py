@@ -10,6 +10,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import make_url
 
 from apps.api.main import create_app
+from scripts.assessment_fixtures import seed_assessment
 from services.config import Settings
 from services.database import engine_for
 from services.identity import IdentityService
@@ -57,6 +58,7 @@ def main() -> None:
         for role in roles:
             provision(service, email, role)
     service.clock = clock
+    seed_assessment(service)
     try:
         uvicorn.run(create_app(config, service), host="127.0.0.1", port=8000, access_log=False)
     finally:

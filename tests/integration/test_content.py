@@ -11,67 +11,9 @@ from sqlalchemy.orm import Session
 from services.content import ContentError, ContentService
 from services.content_contracts import CHECKLIST, EditDraft
 from services.domain.content import AuditLog, ContentEvent, ContentReview, ItemMapping, ItemVersion
-from services.identity_contracts import OTPRequest, OTPVerify
-from services.seed import seed
 from services.staff import provision
 
 pytestmark = pytest.mark.integration
-
-
-@pytest.fixture
-def content(identity):
-    identity_service, client, messages, now = identity
-    seed(identity_service.settings)
-    actors = {}
-    for name, roles in {
-        "author": ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"],
-        "reviewer": ["ACADEMIC_REVIEWER"],
-        "second": ["ACADEMIC_REVIEWER"],
-        "other": ["CONTENT_AUTHOR"],
-        "admin": ["ADMIN"],
-        "support": ["SUPPORT_READONLY"],
-        "learner": [],
-    }.items():
-        email = f"{name}@example.invalid"
-        challenge = identity_service.request_otp(
-            OTPRequest(identifier=email, device_id=uuid4()), name, None
-        )
-        credentials = identity_service.verify(
-            OTPVerify(challenge_id=challenge.challenge_id, code="246810"), None, str(uuid4())
-        )
-        for role in roles:
-            provision(identity_service, email, role)
-        actors[name] = {"Authorization": "Bearer " + credentials.access_token}
-    context = client.get("/api/v1/admin/content-context", headers=actors["author"]).json()
-    subject = context["subjects"][0]
-    topic = next(t for t in context["topics"] if t["parent_id"] == subject["id"])
-    concept = next(c for c in context["concepts"] if c["parent_id"] == topic["id"])
-    document = {
-        "title": "Synthetic selector fixture",
-        "topic_id": topic["id"],
-        "concept_id": concept["id"],
-        "competency_mappings": [{"competency_id": context["competencies"][0]["id"], "weight": 1}],
-        "learning_outcome_reference": concept["syllabus_reference"],
-        "prompt": "Synthetic test: choose the option labelled Alpha.",
-        "choices": [{"id": "A", "text": "Alpha"}, {"id": "B", "text": "Beta"}],
-        "correct_choice_id": "A",
-        "worked_solution": "The requested label is Alpha, option A.",
-        "remediation": "Read the two labels again.",
-        "source": "Original synthetic workflow fixture",
-        "rights_status": "ORIGINAL_KASOMA",
-        "rights_evidence": "Original fixture, no third-party material",
-        "rights_conditions": "Test use only; not academic release content",
-    }
-    return (
-        identity_service,
-        client,
-        actors,
-        {
-            "subject_id": subject["id"],
-            "document": document,
-            "change_reason": "Synthetic workflow test",
-        },
-    )
 
 
 def mutate(client, path, headers, body, method="post", key=None):

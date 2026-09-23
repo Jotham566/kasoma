@@ -30,3 +30,10 @@ Record meaningful repository and product changes here. A documentation baseline 
 
 - Product whitepaper, roadmap and engineering specification pack.
 - README, contributor guidance, agent instructions, pull request template and Git/editor conventions.
+
+### E3 first assessment slice
+
+- Add consent-aware topic practice, approved version selection, immutable attempts,
+  deterministic single-choice grades, solution gating and transactional result events.
+- Add learner resume/retry UI, synthetic fixture command and ADR-016.
+- E2 `b5cfd75` pushed to main; hosted CI passed and completed E1/E2 branches removed.

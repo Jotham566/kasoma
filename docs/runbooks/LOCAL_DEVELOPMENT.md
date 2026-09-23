@@ -169,3 +169,27 @@ eligibility are implied. Bulk import, media, other response formats, full curric
 relations and learner attempt pinning remain subsequent slices. Never disable the
 database guards to edit an approved payload or audit history. Application rollback
 retains these additive tables; destructive downgrade has no automatic command.
+
+## Synthetic assessment (E3)
+
+After `make setup services migrate seed`, explicitly run `make seed-assessment`.
+This creates 30 synthetic workflow fixtures (five per topic) using separate local
+fixture author/reviewer identities and fake delivery. Repeating a completed seed
+is a no-op. The labels exercise software only, not NCDC academic correctness;
+they never count toward the 250-item release minimum.
+
+Run `make dev`, create/consent a synthetic learner at `/onboarding`, and visit
+`/revise`. The same session URL or the interrupted-session list resumes durable
+progress on another authenticated browser. Answers save before navigation; a lost
+acknowledgement can be retried safely. No tokens or answers are stored in browser
+localStorage. Review the last saved feedback after reload, then continue.
+
+`ASSESSMENT_SESSION_DAYS` and `ASSESSMENT_REPETITION_DAYS` default to seven days.
+They control session expiry and recent-item exclusion, not data retention. If
+inventory is insufficient, choose another topic; the service does not silently
+repeat or shorten the plan. Retired questions block new serving/submission; end
+that session to choose another topic. Historical grades retain their pinned version.
+Mastery status is NOT_IMPLEMENTED until the later projection slice.
+
+Migration 0004 is additive. Keep evidence tables if reverting application code;
+never downgrade/drop learning evidence without a separate recovery plan.

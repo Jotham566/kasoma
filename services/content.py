@@ -513,3 +513,47 @@ class ContentService:
         if version is None:
             raise ContentError("CONTENT_NOT_APPROVED", status=404)
         return version
+
+    def assessment_candidates(
+        self, db: Session, subject_id: UUID, topic_id: UUID, excluded: set[UUID], count: int
+    ) -> list[ItemVersion]:
+        """Local synthetic planner; publication remains this module's authority."""
+        versions = db.scalars(
+            select(ItemVersion)
+            .join(Item)
+            .join(Subject)
+            .join(Level)
+            .where(
+                Item.subject_id == subject_id,
+                ItemVersion.topic_id == topic_id,
+                ItemVersion.status == "APPROVED",
+                ItemVersion.synthetic.is_(True),
+                Subject.name.in_(["Mathematics", "Physics"]),
+                Level.name == "S4",
+                Item.id.not_in(excluded),
+            )
+            .order_by(Item.id, ItemVersion.version.desc())
+        )
+        result: list[ItemVersion] = []
+        seen: set[UUID] = set()
+        for version in versions:
+            if version.item_id in seen:
+                continue
+            seen.add(version.item_id)
+            document = DraftDocument.model_validate(version.document)
+            if "WEB" not in document.channel_suitability:
+                continue
+            db.refresh(version, with_for_update=True)
+            if version.status != "APPROVED":
+                continue
+            result.append(version)
+            if len(result) == count:
+                break
+        return result
+
+    def assessment_version(self, db: Session, version_id: UUID, subject_id: UUID) -> ItemVersion:
+        version = self.eligible_version(db, version_id, subject_id, synthetic=True)
+        db.refresh(version, with_for_update=True)
+        if version.status != "APPROVED":
+            raise ContentError("CONTENT_NOT_APPROVED", status=409)
+        return version

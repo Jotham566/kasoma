@@ -87,8 +87,9 @@ A task is complete only when:
 
 ## Repository stage
 
-E0 foundation and E1 local identity/consent are merged. E2 synthetic content review
-is in implementation; assessment and production deployment are not implemented. See
+E0 foundation, E1 local identity/consent and E2 synthetic content review are merged.
+E3 synthetic single-choice assessment is in implementation; diagnostics, mastery
+and production deployment are not implemented. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

@@ -11,3 +11,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-014: Local identity and consent](014-identity-consent.md)
 
 - [ADR-015: First content review vertical slice](015-content-review.md)
+
+- [ADR-016: First assessment and deterministic choice slice](016-assessment-choice.md)

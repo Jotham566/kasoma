@@ -68,6 +68,14 @@ test("FR-CNT-001–005: independent return, correction, approval and retirement"
       author.getByRole("button", { name: "Approve", exact: true }),
     ).toBeDisabled();
     await signIn(reviewer, "reviewer");
+    const queued = reviewer.getByRole("button", {
+      name: "Browser synthetic selector — v1 · IN_REVIEW",
+    });
+    if (!(await queued.count())) {
+      await reviewer
+        .getByRole("button", { name: "Load more", exact: true })
+        .click();
+    }
     await reviewer
       .getByRole("button", {
         name: "Browser synthetic selector — v1 · IN_REVIEW",

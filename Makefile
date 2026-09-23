@@ -90,3 +90,7 @@ export KASOMA_STAFF_ROLE
 export KASOMA_STAFF_REVOKE
 staff-role:
 	$(UV) python -m services.staff
+
+.PHONY: seed-assessment
+seed-assessment:
+	$(UV) python -m scripts.assessment_fixtures

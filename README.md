@@ -6,8 +6,8 @@ Kasoma's planned learning loop is **Diagnose → Recommend → Practice → Expl
 
 ## Repository status
 
-E0 foundation and E1 local identity/consent are merged. E2 adds a synthetic staff
-content workflow. Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
+E0 foundation, E1 local identity/consent and E2 synthetic content review are merged.
+E3 adds synthetic single-choice topic practice. Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
 
@@ -102,3 +102,13 @@ independent review, corrections, approval and retirement. Synthetic mappings and
 workflow approvals do not count as academically approved production content.
 See [E2 verification](docs/implementation/E2_VERIFICATION.md) and the
 [local development runbook](docs/runbooks/LOCAL_DEVELOPMENT.md) for role provisioning.
+
+### Synthetic topic practice
+
+E2 is on main (`b5cfd75`, hosted CI passed). E3 adds the first assessment path.
+After `make setup services migrate seed`, run `make seed-assessment` explicitly
+to create 30 synthetic workflow fixtures through the author/reviewer service.
+Run `make dev`, complete a synthetic profile and consent at `/onboarding`, then
+open `/revise`. Only five-question topic practice is exposed in the UI; the API
+accepts 5–10 when inventory permits. This is not an academic content release or
+a mastery estimate. See [current sprint](docs/implementation/CURRENT_SPRINT.md).

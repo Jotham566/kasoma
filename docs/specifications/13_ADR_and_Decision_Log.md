@@ -159,3 +159,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-015: First content review vertical slice](../decisions/ADR/015-content-review.md)
   records the approved workflow implementation and explicit remaining content scope.
+
+- [ADR-016: First assessment and deterministic choice slice](../decisions/ADR/016-assessment-choice.md)
+  records consent-aware topic practice, immutable grading and explicit remaining scope.

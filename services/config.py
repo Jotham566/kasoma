@@ -3,7 +3,7 @@
 from typing import Literal, Self
 from urllib.parse import urlsplit
 
-from pydantic import SecretStr, model_validator
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 LOCAL_HOSTS = {"localhost", "127.0.0.1", "::1", "host.docker.internal"}
@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     identity_encryption_key: SecretStr
     identity_lookup_key: SecretStr
     consent_policy_version: str = "synthetic-development-v1"
+    assessment_session_days: int = Field(default=7, ge=1, le=30)
+    assessment_repetition_days: int = Field(default=7, ge=1, le=90)
     token_issuer: str = "kasoma-local"
     model_provider: Literal["fake", "local"] = "fake"
     model_base_url: str = "http://localhost:11434/v1"

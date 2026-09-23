@@ -34,6 +34,30 @@
         "title": "APIError",
         "type": "object"
       },
+      "AnsweredItem": {
+        "additionalProperties": false,
+        "properties": {
+          "grade": {
+            "$ref": "#/components/schemas/GradeView"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "session_item_id": {
+            "format": "uuid",
+            "title": "Session Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_item_id",
+          "position",
+          "grade"
+        ],
+        "title": "AnsweredItem",
+        "type": "object"
+      },
       "CatalogEntry": {
         "additionalProperties": false,
         "properties": {
@@ -97,6 +121,28 @@
           "text"
         ],
         "title": "Choice",
+        "type": "object"
+      },
+      "ChoiceResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "choice_id": {
+            "maxLength": 1,
+            "pattern": "^[A-Z]$",
+            "title": "Choice Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "SINGLE_CHOICE",
+            "default": "SINGLE_CHOICE",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "choice_id"
+        ],
+        "title": "ChoiceResponse",
         "type": "object"
       },
       "ConsentInput": {
@@ -532,6 +578,36 @@
         "title": "ErrorEnvelope",
         "type": "object"
       },
+      "Feedback": {
+        "additionalProperties": false,
+        "properties": {
+          "correct_elements": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Correct Elements",
+            "type": "array"
+          },
+          "missing_elements": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Elements",
+            "type": "array"
+          },
+          "next_action": {
+            "title": "Next Action",
+            "type": "string"
+          }
+        },
+        "required": [
+          "correct_elements",
+          "missing_elements",
+          "next_action"
+        ],
+        "title": "Feedback",
+        "type": "object"
+      },
       "FieldError": {
         "additionalProperties": false,
         "properties": {
@@ -549,6 +625,76 @@
           "message"
         ],
         "title": "FieldError",
+        "type": "object"
+      },
+      "GradeView": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "confidence": {
+            "default": 1.0,
+            "maximum": 1.0,
+            "minimum": 1.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "feedback": {
+            "$ref": "#/components/schemas/Feedback"
+          },
+          "grader_version": {
+            "title": "Grader Version",
+            "type": "string"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "mastery_update_status": {
+            "const": "NOT_IMPLEMENTED",
+            "default": "NOT_IMPLEMENTED",
+            "title": "Mastery Update Status",
+            "type": "string"
+          },
+          "method": {
+            "const": "DETERMINISTIC",
+            "default": "DETERMINISTIC",
+            "title": "Method",
+            "type": "string"
+          },
+          "points_awarded": {
+            "title": "Points Awarded",
+            "type": "integer"
+          },
+          "points_possible": {
+            "title": "Points Possible",
+            "type": "integer"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "status": {
+            "const": "GRADED",
+            "default": "GRADED",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attempt_id",
+          "item_version_id",
+          "score",
+          "points_awarded",
+          "points_possible",
+          "grader_version",
+          "feedback"
+        ],
+        "title": "GradeView",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -603,6 +749,54 @@
           "redis"
         ],
         "title": "Health",
+        "type": "object"
+      },
+      "LearnerItem": {
+        "additionalProperties": false,
+        "properties": {
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "maximum_points": {
+            "title": "Maximum Points",
+            "type": "integer"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          },
+          "prompt_blocks": {
+            "items": {
+              "$ref": "#/components/schemas/PromptBlock"
+            },
+            "title": "Prompt Blocks",
+            "type": "array"
+          },
+          "response_spec": {
+            "$ref": "#/components/schemas/ResponseSpec"
+          },
+          "selection_reason": {
+            "title": "Selection Reason",
+            "type": "string"
+          },
+          "session_item_id": {
+            "format": "uuid",
+            "title": "Session Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_item_id",
+          "item_version_id",
+          "position",
+          "prompt_blocks",
+          "response_spec",
+          "maximum_points",
+          "selection_reason"
+        ],
+        "title": "LearnerItem",
         "type": "object"
       },
       "Live": {
@@ -831,6 +1025,26 @@
         "title": "ProfileView",
         "type": "object"
       },
+      "PromptBlock": {
+        "additionalProperties": false,
+        "properties": {
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "type": {
+            "const": "text",
+            "default": "text",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "title": "PromptBlock",
+        "type": "object"
+      },
       "Refresh": {
         "additionalProperties": false,
         "properties": {
@@ -845,6 +1059,29 @@
           "refresh_token"
         ],
         "title": "Refresh",
+        "type": "object"
+      },
+      "ResponseSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "type": {
+            "const": "SINGLE_CHOICE",
+            "default": "SINGLE_CHOICE",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "choices"
+        ],
+        "title": "ResponseSpec",
         "type": "object"
       },
       "ReviewInput": {
@@ -947,6 +1184,150 @@
         "title": "ReviewView",
         "type": "object"
       },
+      "SessionView": {
+        "additionalProperties": false,
+        "properties": {
+          "answered_count": {
+            "title": "Answered Count",
+            "type": "integer"
+          },
+          "answers": {
+            "items": {
+              "$ref": "#/components/schemas/AnsweredItem"
+            },
+            "title": "Answers",
+            "type": "array"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "item_count": {
+            "title": "Item Count",
+            "type": "integer"
+          },
+          "plan_version": {
+            "title": "Plan Version",
+            "type": "string"
+          },
+          "recommendation_reason": {
+            "title": "Recommendation Reason",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "COMPLETED",
+              "ABANDONED",
+              "EXPIRED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "subject_id": {
+            "format": "uuid",
+            "title": "Subject Id",
+            "type": "string"
+          },
+          "synthetic": {
+            "const": true,
+            "default": true,
+            "title": "Synthetic",
+            "type": "boolean"
+          },
+          "topic_id": {
+            "format": "uuid",
+            "title": "Topic Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "subject_id",
+          "topic_id",
+          "status",
+          "item_count",
+          "answered_count",
+          "recommendation_reason",
+          "plan_version",
+          "expires_at",
+          "answers"
+        ],
+        "title": "SessionView",
+        "type": "object"
+      },
+      "SolutionView": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "worked_solution": {
+            "title": "Worked Solution",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attempt_id",
+          "item_version_id",
+          "worked_solution"
+        ],
+        "title": "SolutionView",
+        "type": "object"
+      },
+      "StartRevision": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "const": "WEB",
+            "default": "WEB",
+            "title": "Channel",
+            "type": "string"
+          },
+          "desired_item_count": {
+            "default": 5,
+            "maximum": 10.0,
+            "minimum": 5.0,
+            "title": "Desired Item Count",
+            "type": "integer"
+          },
+          "mode": {
+            "const": "TOPIC",
+            "default": "TOPIC",
+            "title": "Mode",
+            "type": "string"
+          },
+          "subject_id": {
+            "format": "uuid",
+            "title": "Subject Id",
+            "type": "string"
+          },
+          "topic_id": {
+            "format": "uuid",
+            "title": "Topic Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject_id",
+          "topic_id"
+        ],
+        "title": "StartRevision",
+        "type": "object"
+      },
       "SubjectView": {
         "additionalProperties": false,
         "properties": {
@@ -965,6 +1346,45 @@
           "name"
         ],
         "title": "SubjectView",
+        "type": "object"
+      },
+      "SubmitAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "response": {
+            "$ref": "#/components/schemas/ChoiceResponse"
+          },
+          "session_item_id": {
+            "format": "uuid",
+            "title": "Session Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_item_id",
+          "response"
+        ],
+        "title": "SubmitAnswer",
+        "type": "object"
+      },
+      "TopicView": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "TopicView",
         "type": "object"
       },
       "Transition": {
@@ -2060,6 +2480,206 @@
         "summary": "Create"
       }
     },
+    "/api/v1/attempts/{attempt_id}/grade": {
+      "get": {
+        "operationId": "grade_api_v1_attempts__attempt_id__grade_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GradeView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Grade"
+      }
+    },
+    "/api/v1/attempts/{attempt_id}/solution": {
+      "get": {
+        "operationId": "solution_api_v1_attempts__attempt_id__solution_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolutionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Solution"
+      }
+    },
     "/api/v1/auth/logout": {
       "post": {
         "operationId": "logout_api_v1_auth_logout_post",
@@ -2218,6 +2838,110 @@
         "summary": "Subjects"
       }
     },
+    "/api/v1/curriculum/subjects/{subject_id}/topics": {
+      "get": {
+        "operationId": "topics_api_v1_curriculum_subjects__subject_id__topics_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subject_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Subject Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TopicView"
+                  },
+                  "title": "Response Topics Api V1 Curriculum Subjects  Subject Id  Topics Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Topics"
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "get_health",
@@ -2366,6 +3090,628 @@
           }
         },
         "summary": "Consent"
+      }
+    },
+    "/api/v1/revision-sessions": {
+      "post": {
+        "operationId": "start_api_v1_revision_sessions_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartRevision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Start"
+      }
+    },
+    "/api/v1/sessions/active": {
+      "get": {
+        "operationId": "active_api_v1_sessions_active_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SessionView"
+                  },
+                  "title": "Response Active Api V1 Sessions Active Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Active"
+      }
+    },
+    "/api/v1/sessions/{session_id}": {
+      "get": {
+        "operationId": "get_api_v1_sessions__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Get"
+      }
+    },
+    "/api/v1/sessions/{session_id}/abandon": {
+      "post": {
+        "operationId": "abandon_api_v1_sessions__session_id__abandon_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Abandon"
+      }
+    },
+    "/api/v1/sessions/{session_id}/attempts": {
+      "post": {
+        "operationId": "submit_api_v1_sessions__session_id__attempts_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitAnswer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GradeView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Submit"
+      }
+    },
+    "/api/v1/sessions/{session_id}/next-item": {
+      "get": {
+        "operationId": "next_item_api_v1_sessions__session_id__next_item_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LearnerItem"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Next Item"
       }
     }
   }
