@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "classification": "synthetic",
+  "academic_release_eligible": false,
+  "roles": ["LEARNER", "CONTENT_AUTHOR", "ACADEMIC_REVIEWER", "ADMIN"],
+  "graph": {
+    "concepts": ["synthetic-foundation", "synthetic-application"],
+    "competencies": ["recall", "interpretation", "application", "problem-solving"],
+    "prerequisites": [["synthetic-foundation", "synthetic-application"]]
+  },
+  "items": [
+    {"id": "synthetic-choice", "type": "SINGLE_CHOICE", "status": "DRAFT", "prompt": "Synthetic fixture: select 2 + 2.", "options": ["3", "4"], "answer": "4"},
+    {"id": "synthetic-multiple", "type": "MULTIPLE_CHOICE", "status": "IN_REVIEW", "prompt": "Synthetic fixture: select even numbers.", "options": ["2", "3", "4"], "answer": ["2", "4"]},
+    {"id": "synthetic-numeric", "type": "NUMERIC", "status": "APPROVED", "prompt": "Synthetic fixture: calculate 3 + 4.", "answer": "7", "simulated_approval_only": true},
+    {"id": "synthetic-short", "type": "SHORT_TEXT", "status": "RETIRED", "prompt": "Synthetic fixture: describe a sum.", "rubric": "Placeholder for schema tests, not a grading authority."}
+  ],
+  "sessions": [{"type": "DIAGNOSTIC", "status": "PLANNED"}, {"type": "REVISION", "status": "ACTIVE"}],
+  "trajectories": {
+    "strong": [1, 1, 1, 1], "weak": [0, 0, 0, 0], "sparse": [1],
+    "inconsistent": [0, 1, 0, 1], "hint_dependent": [0.5, 0.5, 1]
+  }
+}

@@ -2,7 +2,9 @@
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
 
-Repository organization supports E0 preparation but does not satisfy NFR-MNT-001 or any application requirement.
+E0 foundation evidence is recorded below. Partial foundation support is not full
+MVP acceptance. All learner requirements remain unimplemented; synthetic fixtures
+are not academic or learner-journey evidence. See the [assessment](PHASE_0_ASSESSMENT.md).
 
 | Requirement | Implementation | Tests / evidence | Status |
 | --- | --- | --- | --- |
@@ -50,8 +52,8 @@ Repository organization supports E0 preparation but does not satisfy NFR-MNT-001
 | FR-CNT-004 | — | — | Not started |
 | FR-CNT-005 | — | — | Not started |
 | FR-CNT-006 | — | — | Not started |
-| FR-OPS-001 | — | — | Not started |
-| FR-OPS-002 | — | — | Not started |
+| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`: safe operational-event shape | Foundation only; learner analytics pending |
+| FR-OPS-002 | `services/health.py`, API health shell and worker smoke | Health success/degraded tests; real Redis/Celery test | Partial; alerts/dashboards pending |
 | FR-OPS-003 | — | — | Not started |
 | FR-OPS-004 | — | — | Not started |
 | NFR-PERF-001 | — | — | Not started |
@@ -59,11 +61,11 @@ Repository organization supports E0 preparation but does not satisfy NFR-MNT-001
 | NFR-REL-001 | — | — | Not started |
 | NFR-REL-002 | — | — | Not started |
 | NFR-SCL-001 | — | — | Not started |
-| NFR-SEC-001 | — | — | Not started |
-| NFR-SEC-002 | — | — | Not started |
-| NFR-ACC-001 | — | — | Not started |
+| NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
+| NFR-SEC-002 | No learner/admin routes; production startup rejected | Unavailable routes and production config rejection tests | Foundation only; ownership/RBAC pending |
+| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell verified; learner journeys pending |
 | NFR-BW-001 | — | — | Not started |
-| NFR-COMP-001 | — | — | Not started |
-| NFR-OBS-001 | — | — | Not started |
-| NFR-MNT-001 | — | — | Not started |
-| NFR-LOC-001 | — | — | Not started |
+| NFR-COMP-001 | Next.js shell | Chromium browser test | Partial; cross-browser learner matrix pending |
+| NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, 24 Python tests, OpenAPI diff, web build/E2E | Foundation verified locally, including containers and fresh source; hosted CI pending |
+| NFR-LOC-001 | English shell; UTC database connections/Celery | Configuration inspected; no learner timestamps yet | Foundation only; Kampala presentation pending |

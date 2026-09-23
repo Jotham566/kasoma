@@ -1,4 +1,101 @@
-# Repository scaffold only. Add the services required by specification 15
-# during E0 runtime bootstrap; this file does not start a working application.
-# Ollama runs natively on the host Mac, not inside Compose.
-services: {}
+name: kasoma
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.2-pg16
+    environment:
+      POSTGRES_USER: kasoma
+      POSTGRES_DB: kasoma
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run make setup}
+    ports: ["127.0.0.1:55432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kasoma -d kasoma"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:7.4.8-alpine
+    ports: ["127.0.0.1:6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+    command: server /data --console-address :9001
+    environment:
+      MINIO_ROOT_USER: ${OBJECT_STORAGE_ACCESS_KEY:?Run make setup}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORAGE_SECRET_KEY:?Run make setup}
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
+    volumes: ["minio-data:/data"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  mailpit:
+    image: axllent/mailpit:v1.29.2
+    ports: ["127.0.0.1:1025:1025", "127.0.0.1:8025:8025"]
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+  api:
+    profiles: ["application"]
+    build:
+      context: .
+      dockerfile: infra/containers/python.Dockerfile
+    env_file: .env
+    environment: &application-environment
+      DATABASE_URL: postgresql+psycopg://kasoma:${POSTGRES_PASSWORD}@postgres:5432/kasoma
+      REDIS_URL: redis://redis:6379/0
+      OBJECT_STORAGE_ENDPOINT: http://minio:9000
+      MODEL_BASE_URL: http://host.docker.internal:11434/v1
+      MAILPIT_HOST: mailpit
+    command: uv run --frozen uvicorn apps.api.main:app --host 0.0.0.0 --no-access-log
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "uv", "run", "--frozen", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  worker:
+    profiles: ["application"]
+    build:
+      context: .
+      dockerfile: infra/containers/python.Dockerfile
+    env_file: .env
+    environment: *application-environment
+    command: uv run --frozen celery -A apps.worker.entrypoint:app worker --loglevel=INFO --concurrency=1
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "uv", "run", "--frozen", "celery", "-A", "apps.worker.entrypoint:app", "inspect", "ping", "--timeout=3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  web:
+    profiles: ["application"]
+    build:
+      context: .
+      dockerfile: infra/containers/web.Dockerfile
+    environment:
+      API_INTERNAL_URL: http://api:8000
+      NEXT_TELEMETRY_DISABLED: '1'
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1))"]
+      interval: 10s
+      timeout: 8s
+      retries: 10
+
+volumes:
+  postgres-data:
+  minio-data:

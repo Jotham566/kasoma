@@ -1,20 +1,23 @@
 """Validate local Markdown file links and SRD implementation-register coverage."""
 
-from pathlib import Path
 import re
 import subprocess
 import sys
+from pathlib import Path
 from urllib.parse import unquote, urlsplit
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main():
-    names = subprocess.check_output(
-        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
-        cwd=ROOT,
-    ).decode().split("\0")
+    names = (
+        subprocess.check_output(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+            cwd=ROOT,
+        )
+        .decode()
+        .split("\0")
+    )
     errors = []
     checked = 0
     for name in sorted(set(names)):
@@ -40,7 +43,9 @@ def main():
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print(f"Checked links in {checked} Markdown files and coverage of {len(expected)} requirements.")
+    print(
+        f"Checked links in {checked} Markdown files and coverage of {len(expected)} requirements."
+    )
     return 0
 
 

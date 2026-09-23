@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Foundation operational event (not learner analytics)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event",
+    "correlation_id",
+    "channel",
+    "status",
+    "schema_version"
+  ],
+  "properties": {
+    "event": { "enum": ["api.request", "worker.smoke"] },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "channel": { "enum": ["WEB", "WORKER"] },
+    "status": { "type": "integer" },
+    "schema_version": { "const": 1 }
+  }
+}

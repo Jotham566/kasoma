@@ -13,7 +13,9 @@ Start with the [specification index](docs/specifications/00_README_Source_of_Tru
 
 ## Current validation
 
-This is a documentation baseline with no runnable application or application test suite. For documentation changes, run `make check-docs` to validate relative file links, requirement-register coverage and whitespace. Check that descriptions distinguish planned behavior from implemented behavior. Runtime Make targets currently fail with a bootstrap instruction instead of reporting false success.
+E0 adds application checks. Follow [local development](docs/runbooks/LOCAL_DEVELOPMENT.md)
+for setup, migrations, tests and scans. `make check-docs` remains the documentation
+link, requirement coverage and whitespace check; it is not application acceptance.
 
 Update [current sprint](docs/implementation/CURRENT_SPRINT.md), [implementation traceability](docs/implementation/REQUIREMENTS_TRACEABILITY.md) and [changelog](CHANGELOG.md) as work progresses. Keep the specification matrix as the acceptance map and the implementation register as actual evidence; never mark a requirement complete based only on scaffolding.
 

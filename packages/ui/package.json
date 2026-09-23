@@ -1,0 +1,15 @@
+{
+  "name": "@kasoma/ui",
+  "version": "0.1.0",
+  "private": true,
+  "exports": "./src/index.tsx",
+  "peerDependencies": {
+    "react": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

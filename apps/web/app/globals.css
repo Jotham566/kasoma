@@ -1,0 +1,14 @@
+@import "tailwindcss";
+:root {
+  color: #172b29;
+  background: #f5f7f4;
+  font-family: Arial, sans-serif;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #075e54;
+  outline-offset: 4px;
+}
+button {
+  min-height: 44px;
+}

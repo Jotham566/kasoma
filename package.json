@@ -1,0 +1,26 @@
+{
+  "name": "kasoma",
+  "private": true,
+  "packageManager": "pnpm@10.30.2",
+  "engines": {
+    "node": "24.21.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write apps/web packages tests/e2e *.json *.yaml .github/workflows *.mjs *.ts scripts/*.mjs",
+    "format:check": "prettier --check apps/web packages tests/e2e *.json *.yaml .github/workflows *.mjs *.ts scripts/*.mjs",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.11.1",
+    "@playwright/test": "1.58.2",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.6",
+    "openapi-typescript": "7.13.0",
+    "prettier": "3.8.1",
+    "turbo": "2.11.3",
+    "typescript": "5.9.3"
+  }
+}

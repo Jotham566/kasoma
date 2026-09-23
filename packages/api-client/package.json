@@ -1,0 +1,12 @@
+{
+  "name": "@kasoma/api-client",
+  "version": "0.1.0",
+  "private": true,
+  "exports": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "openapi-fetch": "0.17.0"
+  }
+}

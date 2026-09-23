@@ -147,3 +147,9 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 **Consequence:** Everyday work remains local and reproducible. Gemini can expose quality gaps without API spend, but free-tier data-use terms prevent it from processing real learner or confidential data and its changing project quotas cannot be a CI dependency.
 **Reason:** Reduce development cost, enable offline/reproducible testing and avoid premature vendor lock-in.\
 **Consequences:** The team must maintain provider contracts, frozen evaluation sets and a deliberate hosted-model compatibility run before production. Local-model quality cannot be treated as production evidence.
+
+## Bootstrap implementation records
+
+- [ADR-013: Bootstrap implementation choices](../decisions/ADR/013-bootstrap-foundation.md)
+  records delegated tooling, health-contract and migration-foundation choices;
+  no accepted architecture or learner behaviour is replaced.
