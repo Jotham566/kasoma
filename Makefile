@@ -44,7 +44,8 @@ openapi:
 openapi-check:
 	$(UV) python scripts/check_contract.py
 e2e:
-	$(PNPM) exec playwright test
+	$(PNPM) exec playwright test --shard=1/2
+	$(PNPM) exec playwright test --shard=2/2
 build:
 	$(PNPM) build
 containers:
@@ -123,3 +124,7 @@ replay-reassessments:
 .PHONY: seed-reassessment
 seed-reassessment:
 	$(UV) python -m scripts.assessment_fixtures --reassessment --hints
+
+.PHONY: seed-multiple-choice
+seed-multiple-choice:
+	$(UV) python -m scripts.assessment_fixtures --multiple-choice --hints

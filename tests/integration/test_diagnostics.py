@@ -24,9 +24,10 @@ pytestmark = pytest.mark.integration
 @pytest.fixture
 def diagnostic(content, request):
     identity, client, actors, body = content
-    seed_assessment(identity, diagnostic=True)
+    multiple = getattr(request, "param", "") == "MULTIPLE_CHOICE"
+    seed_assessment(identity, diagnostic=True, multiple_choice=multiple)
     context = client.get("/api/v1/admin/content-context", headers=actors["author"]).json()
-    selected = getattr(request, "param", "Mathematics")
+    selected = "Mathematics" if multiple else getattr(request, "param", "Mathematics")
     body = body | {
         "subject_id": next(s["id"] for s in context["subjects"] if s["name"] == selected)
     }
@@ -82,6 +83,8 @@ def next_item(client, headers, session):
 
 def submit(client, headers, session, item, key=None, correct=True):
     response = {"type": "SINGLE_CHOICE", "choice_id": "A" if correct else "B"}
+    if item["response_spec"]["type"] == "MULTIPLE_CHOICE":
+        response = {"type": "MULTIPLE_CHOICE", "choice_ids": ["C", "A"] if correct else ["A"]}
     if item["response_spec"]["type"] == "NUMERIC":
         response = {"type": "NUMERIC", "value": "1.00" if correct else "2.00", "unit": "m"}
     return client.post(
@@ -91,7 +94,7 @@ def submit(client, headers, session, item, key=None, correct=True):
     )
 
 
-@pytest.mark.parametrize("diagnostic", ["Mathematics", "Physics"], indirect=True)
+@pytest.mark.parametrize("diagnostic", ["Mathematics", "Physics", "MULTIPLE_CHOICE"], indirect=True)
 @pytest.mark.parametrize("correct", [True, False])
 def test_diagnostic_complete_coverage_hidden_grades_resume_and_replay(diagnostic, correct):
     identity, client, actors, body = diagnostic

@@ -309,3 +309,17 @@ own content; stale revision returns `VERSION_CONFLICT`. Retry returns the curren
 without applying the operation again. No grade/evidence/content rewrite is implicit.
 New reports are limited to 10 per hour; flag access/triage to 60 per minute per actor.
 See [ADR-025](../decisions/ADR/025-learner-flags.md) and generated contracts.
+
+## Deterministic multiple choice (ADR-026)
+
+Reviewed documents may use MULTIPLE_CHOICE with 2–8 unique options and a nonempty
+`correct_choice_ids` subset. `correct_choice_id` must be empty and numeric_spec null.
+Keys are sorted and duplicate IDs rejected. Learner response_spec exposes only the
+discriminator and options, never the key or its size. SubmitAnswer accepts
+`{"type":"MULTIPLE_CHOICE","choice_ids":["C","A"]}` with 1–8 unique uppercase IDs.
+Selections are sorted before the idempotency fingerprint and storage. Unknown IDs,
+duplicates, empty sets and response-format mismatches return 422. A changed set with
+a reused key returns 409. Exact set equality earns all points; any other valid set
+scores zero. The stored grader version is `multiple-choice-set-v1`.
+Existing consent, ownership, version pinning, hint, solution, diagnostic seal,
+reassessment and flag controls apply. See [ADR-026](../decisions/ADR/026-multiple-choice.md).

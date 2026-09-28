@@ -280,7 +280,7 @@ class ContentService:
                 sum(m.weight for m in document.competency_mappings), 1, abs_tol=1e-6
             ):
                 fields.append("competency_mappings")
-            if document.response_type == "SINGLE_CHOICE":
+            if document.response_type in {"SINGLE_CHOICE", "MULTIPLE_CHOICE"}:
                 choices = document.choices
                 ids = {c.id for c in choices}
                 if (
@@ -289,12 +289,23 @@ class ContentService:
                     or any(not c.text.strip() for c in choices)
                 ):
                     fields.append("choices")
-                if document.correct_choice_id not in ids:
-                    fields.append("correct_choice_id")
+                if document.response_type == "SINGLE_CHOICE":
+                    if document.correct_choice_id not in ids:
+                        fields.append("correct_choice_id")
+                    if document.correct_choice_ids:
+                        fields.append("correct_choice_ids")
+                else:
+                    if (
+                        not document.correct_choice_ids
+                        or not set(document.correct_choice_ids) <= ids
+                    ):
+                        fields.append("correct_choice_ids")
+                    if document.correct_choice_id:
+                        fields.append("correct_choice_id")
                 if document.numeric_spec is not None:
                     fields.append("numeric_spec")
             else:
-                if document.choices or document.correct_choice_id:
+                if document.choices or document.correct_choice_id or document.correct_choice_ids:
                     fields.append("choices")
                 if document.numeric_spec is None:
                     fields.append("numeric_spec")

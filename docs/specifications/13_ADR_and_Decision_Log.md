@@ -188,3 +188,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-025: Learner flags and independent triage](../decisions/ADR/025-learner-flags.md)
   records report privacy, immutable linkage, audit/retry controls and disputed review.
+
+- [ADR-026: Exact-set deterministic multiple choice](../decisions/ADR/026-multiple-choice.md)
+  records canonical sets, all-or-nothing grading and compatible immutable evidence.

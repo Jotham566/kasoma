@@ -353,8 +353,16 @@ export default function ContentWorkspace() {
               ) : (
                 <p className="my-4">
                   Correct option:{" "}
-                  {selected.document.correct_choice_id || "Missing"}. Maximum
-                  points: {selected.document.maximum_points}.
+                  {(selected.document.response_type === "MULTIPLE_CHOICE"
+                    ? selected.document.correct_choice_ids?.join(", ")
+                    : selected.document.correct_choice_id) || "Missing"}
+                  . Maximum points: {selected.document.maximum_points}.
+                </p>
+              )}
+              {selected.document.response_type === "MULTIPLE_CHOICE" && (
+                <p>
+                  Scoring: all or nothing. The selected set must exactly match
+                  every correct option.
                 </p>
               )}
               <p className="whitespace-pre-wrap">

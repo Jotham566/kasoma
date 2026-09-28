@@ -175,3 +175,13 @@ published versions are immutable; successor approval requires two independent re
 including when a report arrives after the successor draft was created. A triage decision
 does not change grades/mastery, publish corrections or automatically retire content.
 Use existing explicit retirement and independently reviewed successor procedures.
+
+## Multiple-choice authoring and review
+
+The text editor supports 2–8 options and an explicit nonempty set of correct options.
+Option IDs survive draft editing; added options use an unused uppercase ID. Publication
+rejects repeated/blank options, unknown or empty keys and fields belonging to another
+response format. Independent reviewers see the full key and all-or-nothing policy.
+Academic review must establish that multiple selection is valid for the question;
+synthetic software fixtures do not establish this. Corrections create a successor
+version, preserving prior attempts and grades. See [ADR-026](../decisions/ADR/026-multiple-choice.md).

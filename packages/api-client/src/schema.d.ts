@@ -896,6 +896,8 @@ export interface components {
              * @default
              */
             correct_choice_id: string;
+            /** Correct Choice Ids */
+            correct_choice_ids?: string[];
             /**
              * Difficulty
              * @default FOUNDATIONAL
@@ -950,7 +952,7 @@ export interface components {
              * @default SINGLE_CHOICE
              * @enum {string}
              */
-            response_type: "SINGLE_CHOICE" | "NUMERIC";
+            response_type: "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "NUMERIC";
             /**
              * Rights Conditions
              * @default
@@ -1351,7 +1353,7 @@ export interface components {
             /** Prompt Blocks */
             prompt_blocks: components["schemas"]["PromptBlock"][];
             /** Response Spec */
-            response_spec: components["schemas"]["ResponseSpec"] | components["schemas"]["NumericResponseSpec"];
+            response_spec: components["schemas"]["ResponseSpec"] | components["schemas"]["MultipleChoiceResponseSpec"] | components["schemas"]["NumericResponseSpec"];
             /** Selection Reason */
             selection_reason: string;
             /**
@@ -1377,6 +1379,27 @@ export interface components {
             competency_id: string;
             /** Weight */
             weight: number;
+        };
+        /** MultipleChoiceResponse */
+        MultipleChoiceResponse: {
+            /** Choice Ids */
+            choice_ids: string[];
+            /**
+             * Type
+             * @constant
+             */
+            type: "MULTIPLE_CHOICE";
+        };
+        /** MultipleChoiceResponseSpec */
+        MultipleChoiceResponseSpec: {
+            /** Choices */
+            choices: components["schemas"]["Choice"][];
+            /**
+             * Type
+             * @default MULTIPLE_CHOICE
+             * @constant
+             */
+            type: "MULTIPLE_CHOICE";
         };
         /** NumericResponse */
         NumericResponse: {
@@ -1927,7 +1950,7 @@ export interface components {
         /** SubmitAnswer */
         SubmitAnswer: {
             /** Response */
-            response: components["schemas"]["ChoiceResponse"] | components["schemas"]["NumericResponse"];
+            response: components["schemas"]["ChoiceResponse"] | components["schemas"]["MultipleChoiceResponse"] | components["schemas"]["NumericResponse"];
             /**
              * Session Item Id
              * Format: uuid

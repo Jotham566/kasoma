@@ -66,3 +66,37 @@ def grade_numeric(
             else document.remediation,
         ),
     )
+
+
+def grade_multiple_choice(
+    attempt_id: UUID, version_id: UUID, document: DraftDocument, selected: list[str]
+) -> GradeView:
+    choices = {c.id for c in document.choices}
+    key = set(document.correct_choice_ids)
+    if (
+        document.response_type != "MULTIPLE_CHOICE"
+        or not key
+        or not key <= choices
+        or not selected
+        or len(selected) != len(set(selected))
+        or not set(selected) <= choices
+    ):
+        raise ValueError("Invalid multiple-choice specification or selection")
+    correct = set(selected) == key
+    return GradeView(
+        attempt_id=attempt_id,
+        item_version_id=version_id,
+        score=1.0 if correct else 0.0,
+        points_awarded=document.maximum_points if correct else 0,
+        points_possible=document.maximum_points,
+        grader_version="multiple-choice-set-v1",
+        feedback=Feedback(
+            correct_elements=["Your selected set matches the approved answer."] if correct else [],
+            missing_elements=[]
+            if correct
+            else ["Select all correct options and no others for credit."],
+            next_action="Review the worked solution, then continue."
+            if correct
+            else document.remediation,
+        ),
+    )

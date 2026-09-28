@@ -578,6 +578,15 @@
             "title": "Correct Choice Id",
             "type": "string"
           },
+          "correct_choice_ids": {
+            "items": {
+              "pattern": "^[A-Z]$",
+              "type": "string"
+            },
+            "maxItems": 8,
+            "title": "Correct Choice Ids",
+            "type": "array"
+          },
           "difficulty": {
             "default": "FOUNDATIONAL",
             "enum": [
@@ -672,6 +681,7 @@
             "default": "SINGLE_CHOICE",
             "enum": [
               "SINGLE_CHOICE",
+              "MULTIPLE_CHOICE",
               "NUMERIC"
             ],
             "title": "Response Type",
@@ -1529,6 +1539,9 @@
                 "$ref": "#/components/schemas/ResponseSpec"
               },
               {
+                "$ref": "#/components/schemas/MultipleChoiceResponseSpec"
+              },
+              {
                 "$ref": "#/components/schemas/NumericResponseSpec"
               }
             ],
@@ -1587,6 +1600,55 @@
           "weight"
         ],
         "title": "Mapping",
+        "type": "object"
+      },
+      "MultipleChoiceResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "choice_ids": {
+            "items": {
+              "pattern": "^[A-Z]$",
+              "type": "string"
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "title": "Choice Ids",
+            "type": "array"
+          },
+          "type": {
+            "const": "MULTIPLE_CHOICE",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "choice_ids"
+        ],
+        "title": "MultipleChoiceResponse",
+        "type": "object"
+      },
+      "MultipleChoiceResponseSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "type": {
+            "const": "MULTIPLE_CHOICE",
+            "default": "MULTIPLE_CHOICE",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "choices"
+        ],
+        "title": "MultipleChoiceResponseSpec",
         "type": "object"
       },
       "NumericResponse": {
@@ -2876,6 +2938,9 @@
             "anyOf": [
               {
                 "$ref": "#/components/schemas/ChoiceResponse"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoiceResponse"
               },
               {
                 "$ref": "#/components/schemas/NumericResponse"

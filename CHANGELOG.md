@@ -1,5 +1,17 @@
 # Changelog
 
+## 28 September 2026 — deterministic multiple choice (local implementation)
+
+- Flags/triage committed and pushed to main as `bd9dae3`; completed branch removed.
+- Add reviewed multiple-choice keys, exact-set scoring and checkbox delivery through
+  shared revision, diagnostic and reassessment paths. Preserve hint/evidence controls.
+- Canonicalize selection order for idempotent retries; reject duplicate/unknown IDs.
+- Add additive migration 0013, generated contracts, synthetic fixtures and tests.
+- Run browser tests in two fresh isolated shards to retain the production OTP peer limit.
+- Update ADR-026, API/data/runbook documentation, sprint and traceability; see
+  [verification](docs/implementation/E4_MULTIPLE_CHOICE_VERIFICATION.md). Academic
+  content approval, short-text benchmark and production deployment remain gated.
+
 ## 28 September 2026 — learner flags and triage (local implementation)
 
 - Progress/history committed and pushed to main as `df855ab`; completed branch removed.

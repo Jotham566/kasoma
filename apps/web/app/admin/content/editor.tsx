@@ -24,12 +24,14 @@ export function Editor({
   const [format, setFormat] = useState<Document["response_type"]>(
     initial?.response_type ?? "SINGLE_CHOICE",
   );
-  const choices = initial?.choices?.length
-    ? initial.choices
-    : [
-        { id: "A", text: "" },
-        { id: "B", text: "" },
-      ];
+  const [choices, setChoices] = useState(
+    initial?.choices?.length
+      ? initial.choices
+      : [
+          { id: "A", text: "" },
+          { id: "B", text: "" },
+        ],
+  );
   const [subject, setSubject] = useState(
     selected?.subject_id ?? context.subjects[0]?.id ?? "",
   );
@@ -87,7 +89,11 @@ export function Editor({
                   text: value(`choice_${choice.id}`),
                 })),
           correct_choice_id:
-            format === "NUMERIC" ? "" : value("correct_choice_id"),
+            format === "SINGLE_CHOICE" ? value("correct_choice_id") : "",
+          correct_choice_ids:
+            format === "MULTIPLE_CHOICE"
+              ? data.getAll("correct_choice_ids").map(String).sort()
+              : [],
           numeric_spec:
             format === "NUMERIC"
               ? {
@@ -296,6 +302,7 @@ export function Editor({
           }
         >
           <option value="SINGLE_CHOICE">Single choice</option>
+          <option value="MULTIPLE_CHOICE">Multiple choice (select all)</option>
           <option value="NUMERIC">Numeric</option>
         </select>
       </label>
@@ -308,21 +315,62 @@ export function Editor({
               {area(`Option ${choice.id}`, `choice_${choice.id}`, choice.text)}
             </div>
           ))}
-          <label>
-            Correct option
-            <select
-              className={input}
-              name="correct_choice_id"
-              defaultValue={initial?.correct_choice_id ?? ""}
-            >
-              <option value="">Not yet specified</option>
-              {choices.map((choice) => (
-                <option key={choice.id} value={choice.id}>
-                  {choice.id}
-                </option>
+          <button
+            type="button"
+            disabled={choices.length >= 8}
+            onClick={() =>
+              setChoices((current) => [
+                ...current,
+                {
+                  id: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    .split("")
+                    .find((id) => !current.some((c) => c.id === id))!,
+                  text: "",
+                },
+              ])
+            }
+          >
+            Add option
+          </button>
+          <button
+            type="button"
+            disabled={choices.length <= 2}
+            onClick={() => setChoices((current) => current.slice(0, -1))}
+          >
+            Remove last option
+          </button>
+          {format === "MULTIPLE_CHOICE" ? (
+            <fieldset>
+              <legend>Correct options (exact set)</legend>
+              {choices.map((c) => (
+                <label className="flex min-h-11 items-center gap-3" key={c.id}>
+                  <input
+                    type="checkbox"
+                    name="correct_choice_ids"
+                    value={c.id}
+                    defaultChecked={initial?.correct_choice_ids?.includes(c.id)}
+                  />
+                  Correct option {c.id}
+                </label>
               ))}
-            </select>
-          </label>
+            </fieldset>
+          ) : (
+            <label>
+              Correct option
+              <select
+                className={input}
+                name="correct_choice_id"
+                defaultValue={initial?.correct_choice_id ?? ""}
+              >
+                <option value="">Not yet specified</option>
+                {choices.map((choice) => (
+                  <option key={choice.id} value={choice.id}>
+                    {choice.id}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
         </>
       )}
       <label>

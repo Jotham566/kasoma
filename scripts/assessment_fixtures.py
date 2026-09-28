@@ -22,6 +22,7 @@ def seed_assessment(
     diagnostic: bool = False,
     hints: bool = False,
     reassessment: bool = False,
+    multiple_choice: bool = False,
 ) -> None:
     if identity.settings.app_env not in {"development", "test"}:
         raise ValueError("Synthetic fixtures only")
@@ -32,7 +33,13 @@ def seed_assessment(
         prefix += " with hints"
     if reassessment:
         prefix = "Synthetic reassessment fixture"
-    expected_count = 90 if diagnostic else (5 if numeric else (15 if mathematics_only else 30))
+    if multiple_choice:
+        prefix += " multiple choice"
+    expected_count = (
+        (45 if mathematics_only else 90)
+        if diagnostic
+        else (5 if numeric or multiple_choice else (15 if mathematics_only else 30))
+    )
     if reassessment:
         expected_count = 144 if mathematics_only else 288
     with Session(identity.engine) as db:
@@ -63,6 +70,8 @@ def seed_assessment(
             if reassessment
             else ("diagnostic-" if diagnostic else ("numeric-" if numeric else ""))
         )
+        if multiple_choice:
+            namespace += "multiple-"
         email = f"fixture-{namespace}{role.lower()}@example.invalid"
         challenge = service.request_otp(OTPRequest(identifier=email, device_id=uuid4()), role, None)
         credentials = service.verify(
@@ -74,6 +83,8 @@ def seed_assessment(
     context = content.context(tokens[0])
     math_id = next(s.id for s in context.subjects if s.name == "Mathematics")
     for topic in context.topics:
+        if multiple_choice and not diagnostic and topic.name != "Waves, Light and Sound":
+            continue
         if numeric and topic.name != "Electricity and Magnetism":
             continue
         if mathematics_only and topic.parent_id != math_id:
@@ -128,7 +139,7 @@ def seed_assessment(
                         ],
                     }
                 )
-            if numeric or (diagnostic and topic.parent_id != math_id):
+            if not multiple_choice and (numeric or (diagnostic and topic.parent_id != math_id)):
                 doc.update(
                     {
                         "response_type": "NUMERIC",
@@ -155,6 +166,23 @@ def seed_assessment(
                             "significant_figures_policy": "EXACT",
                             "significant_figures": 3,
                         },
+                    }
+                )
+            if multiple_choice:
+                doc.update(
+                    {
+                        "response_type": "MULTIPLE_CHOICE",
+                        "choices": [
+                            {"id": "A", "text": "Alpha"},
+                            {"id": "B", "text": "Beta"},
+                            {"id": "C", "text": "Gamma"},
+                            {"id": "D", "text": "Delta"},
+                        ],
+                        "correct_choice_id": "",
+                        "correct_choice_ids": ["A", "C"],
+                        "prompt": f"Synthetic selection check {index + 1}: select Alpha and Gamma.",
+                        "worked_solution": "Alpha and Gamma are options A and C.",
+                        "remediation": "Compare every option with both requested labels.",
                     }
                 )
             if hints:
@@ -205,7 +233,9 @@ def main() -> None:
     from services.database import engine_for
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--numeric", action="store_true")
+    formats = parser.add_mutually_exclusive_group()
+    formats.add_argument("--numeric", action="store_true")
+    formats.add_argument("--multiple-choice", action="store_true")
     parser.add_argument("--diagnostic", action="store_true")
     parser.add_argument("--hints", action="store_true")
     parser.add_argument("--reassessment", action="store_true")
@@ -219,6 +249,7 @@ def main() -> None:
             hints=args.hints,
             reassessment=args.reassessment,
             numeric=args.numeric,
+            multiple_choice=args.multiple_choice,
             diagnostic=args.diagnostic,
         )
     finally:

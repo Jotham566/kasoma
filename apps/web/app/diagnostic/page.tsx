@@ -44,6 +44,7 @@ export default function Diagnostic() {
   const [item, setItem] = useState<Schema["LearnerItem"] | null>(null);
   const [flagAttempt, setFlagAttempt] = useState("");
   const [choice, setChoice] = useState("");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [number, setNumber] = useState("");
   const [unit, setUnit] = useState("");
   const [busy, setBusy] = useState(true);
@@ -92,6 +93,7 @@ export default function Diagnostic() {
         }),
       );
       setChoice("");
+      setSelectedIds([]);
       setNumber("");
       setUnit(
         next.response_spec.type === "NUMERIC"
@@ -233,7 +235,9 @@ export default function Diagnostic() {
                 response:
                   item.response_spec.type === "NUMERIC"
                     ? { type: "NUMERIC", value: number, unit }
-                    : { type: "SINGLE_CHOICE", choice_id: choice },
+                    : item.response_spec.type === "MULTIPLE_CHOICE"
+                      ? { type: "MULTIPLE_CHOICE", choice_ids: selectedIds }
+                      : { type: "SINGLE_CHOICE", choice_id: choice },
               };
               const saved = value(
                 await client().POST("/api/v1/sessions/{session_id}/attempts", {
@@ -254,19 +258,41 @@ export default function Diagnostic() {
             {item.prompt_blocks.map((block, index) => (
               <p key={index}>{block.content}</p>
             ))}
-            {item.response_spec.type === "SINGLE_CHOICE" ? (
+            {item.response_spec.type === "MULTIPLE_CHOICE" && (
+              <p>
+                Select all that apply. Full credit requires every correct option
+                and no others.
+              </p>
+            )}
+            {item.response_spec.type !== "NUMERIC" ? (
               item.response_spec.choices.map((option) => (
                 <label
                   key={option.id}
                   className="flex min-h-11 items-center gap-3"
                 >
                   <input
-                    type="radio"
+                    type={
+                      item.response_spec.type === "MULTIPLE_CHOICE"
+                        ? "checkbox"
+                        : "radio"
+                    }
                     name="answer"
                     value={option.id}
-                    checked={choice === option.id}
-                    onChange={() => setChoice(option.id)}
-                    required
+                    checked={
+                      item.response_spec.type === "MULTIPLE_CHOICE"
+                        ? selectedIds.includes(option.id)
+                        : choice === option.id
+                    }
+                    onChange={() =>
+                      item.response_spec.type === "MULTIPLE_CHOICE"
+                        ? setSelectedIds((ids) =>
+                            ids.includes(option.id)
+                              ? ids.filter((id) => id !== option.id)
+                              : [...ids, option.id].sort(),
+                          )
+                        : setChoice(option.id)
+                    }
+                    required={item.response_spec.type === "SINGLE_CHOICE"}
                   />
                   {option.text}
                 </label>
@@ -306,7 +332,15 @@ export default function Diagnostic() {
                 </label>
               </>
             )}
-            <button className={button}>Save answer and continue</button>
+            <button
+              className={button}
+              disabled={
+                item.response_spec.type === "MULTIPLE_CHOICE" &&
+                selectedIds.length === 0
+              }
+            >
+              Save answer and continue
+            </button>
           </fieldset>
         </form>
       )}

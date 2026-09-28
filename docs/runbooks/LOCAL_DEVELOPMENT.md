@@ -321,3 +321,21 @@ through the content workspace; grades/mastery remain unchanged. Disputed success
 require two reviewers. Resolved flags record a 24-month retention due date; production
 retention jobs and approved safeguarding procedures remain required before real data.
 See [flag verification](../implementation/E8_FLAGS_VERIFICATION.md).
+
+## Multiple-choice practice
+
+Run `make migrate seed-multiple-choice`. This opt-in fixture adds five reviewed
+synthetic multiple-choice items to Physics / Waves, Light and Sound. Enrol a synthetic
+adult in Physics, record consent and select that topic at `/revise`. Select Alpha and
+Gamma for full credit; a subset or superset earns zero. Reordering the same set does
+not create a second attempt. Review content at `/admin/content`, choosing Multiple
+choice, adding options and checking the complete key before independent review.
+Migration 0013 preserves existing choice/numeric evidence. Deploy generated contracts
+and compatible players together and recover through forward fixes after new content
+exists. Neither this fixture nor migration authorizes production learner data.
+
+`make e2e` runs two sequential Playwright shards, each with a fresh isolated migrated
+schema and API. This keeps synthetic logins within the unchanged 20-per-hour peer
+limit; it does not disable security controls. Every browser test runs once. The browser
+fixture keeps diagnostic inventory in Mathematics, numeric items in Electricity and
+Magnetism, and multiple-choice items in Waves, Light and Sound so selection is deterministic.

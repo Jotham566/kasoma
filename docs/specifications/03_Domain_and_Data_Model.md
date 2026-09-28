@@ -213,3 +213,15 @@ flag deletion is exposed. See [ADR-025](../decisions/ADR/025-learner-flags.md).
 
 Migration 0012 explicitly requires a terminal retention deadline, closing SQL CHECK
 null semantics without rewriting the already applied initial migration.
+
+## Multiple-choice persistence (migration 0013)
+
+The existing attempts.response JSON stores `{type: MULTIPLE_CHOICE, choice_ids: [A,C]}`
+with a null choice_id. A bounded structured-response constraint preserves the prior
+numeric shape and accepts only sorted, unique, nonempty sets of 1–8 uppercase IDs.
+The assignment trigger also requires MULTIPLE_CHOICE on the pinned approved version
+and membership of every selected ID in its options. Legacy choice/numeric rows and
+content/grade hashes remain unchanged. Reviewed correct_choice_ids is versioned under
+the existing content hash. Grade, mastery, hint and outbox atomicity/immutability remain.
+Use forward fixes with compatible readers; no destructive downgrade of learner evidence.
+See [ADR-026](../decisions/ADR/026-multiple-choice.md).

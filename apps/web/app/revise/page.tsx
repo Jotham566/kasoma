@@ -66,6 +66,7 @@ export default function Revise() {
   const [grade, setGrade] = useState<Schema["GradeView"] | null>(null);
   const [solution, setSolution] = useState("");
   const [choice, setChoice] = useState("");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [numericValue, setNumericValue] = useState("");
   const [unit, setUnit] = useState("");
   const [busy, setBusy] = useState(true);
@@ -118,6 +119,7 @@ export default function Revise() {
     setGrade(null);
     setSolution("");
     setChoice("");
+    setSelectedIds([]);
     setNumericValue("");
     setUnit("");
     const state = value(
@@ -348,7 +350,9 @@ export default function Revise() {
                     response:
                       item.response_spec.type === "NUMERIC"
                         ? { type: "NUMERIC", value: numericValue, unit }
-                        : { type: "SINGLE_CHOICE", choice_id: choice },
+                        : item.response_spec.type === "MULTIPLE_CHOICE"
+                          ? { type: "MULTIPLE_CHOICE", choice_ids: selectedIds }
+                          : { type: "SINGLE_CHOICE", choice_id: choice },
                   };
                   const result = value(
                     await client().POST(
@@ -453,18 +457,43 @@ export default function Revise() {
               ) : (
                 <>
                   <fieldset disabled={busy}>
-                    <legend>Choose one answer</legend>
+                    <legend>
+                      {item.response_spec.type === "MULTIPLE_CHOICE"
+                        ? "Select all that apply"
+                        : "Choose one answer"}
+                    </legend>
+                    {item.response_spec.type === "MULTIPLE_CHOICE" && (
+                      <p>
+                        Full credit requires every correct option and no others.
+                      </p>
+                    )}
                     {item.response_spec.choices.map((c) => (
                       <label
                         className="flex min-h-11 items-center gap-3"
                         key={c.id}
                       >
                         <input
-                          type="radio"
+                          type={
+                            item.response_spec.type === "MULTIPLE_CHOICE"
+                              ? "checkbox"
+                              : "radio"
+                          }
                           name="answer"
                           value={c.id}
-                          checked={choice === c.id}
-                          onChange={() => setChoice(c.id)}
+                          checked={
+                            item.response_spec.type === "MULTIPLE_CHOICE"
+                              ? selectedIds.includes(c.id)
+                              : choice === c.id
+                          }
+                          onChange={() =>
+                            item.response_spec.type === "MULTIPLE_CHOICE"
+                              ? setSelectedIds((ids) =>
+                                  ids.includes(c.id)
+                                    ? ids.filter((id) => id !== c.id)
+                                    : [...ids, c.id].sort(),
+                                )
+                              : setChoice(c.id)
+                          }
                         />
                         {c.text}
                       </label>
@@ -478,7 +507,9 @@ export default function Revise() {
                   busy ||
                   (item.response_spec.type === "NUMERIC"
                     ? !numericValue.trim()
-                    : !choice)
+                    : item.response_spec.type === "MULTIPLE_CHOICE"
+                      ? selectedIds.length === 0
+                      : !choice)
                 }
               >
                 Submit answer

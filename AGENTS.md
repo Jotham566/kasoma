@@ -92,7 +92,8 @@ A task is complete only when:
 E0–E4 foundation, identity/consent, content review and deterministic assessment
 and the E5 synthetic diagnostic/mastery slice are merged. Synthetic recommended
 practice, reviewed hints, unseen reassessment and E6 progress/history are merged.
-Learner flags and independent staff triage are implemented locally.
+Learner flags and independent staff triage are merged. Exact-set multiple-choice
+content and assessment are implemented locally.
 Academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain

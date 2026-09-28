@@ -8,10 +8,13 @@ from sqlalchemy.orm import Session
 
 from services.assessment_contracts import (
     AnsweredItem,
+    ChoiceResponse,
     DiagnosticReceipt,
     DiagnosticView,
     GradeView,
     LearnerItem,
+    MultipleChoiceResponse,
+    MultipleChoiceResponseSpec,
     NumericResponse,
     NumericResponseSpec,
     PromptBlock,
@@ -37,7 +40,7 @@ from services.domain.assessment import (
 from services.domain.content import ItemVersion
 from services.domain.curriculum import Level, Subject, Topic
 from services.domain.identity import LearnerProfile
-from services.grading import grade_choice, grade_numeric
+from services.grading import grade_choice, grade_multiple_choice, grade_numeric
 from services.identity import IdentityError, IdentityService
 from services.mastery import reconcile
 
@@ -367,12 +370,16 @@ class AssessmentService:
                 spec = document.numeric_spec
                 if spec is None:
                     raise IdentityError("CONTENT_NOT_APPROVED", 409)
-                response_spec: ResponseSpec | NumericResponseSpec = NumericResponseSpec(
-                    unit_options=[u.label for u in spec.units],
-                    accepted_forms=spec.accepted_forms,
-                    significant_figures_policy=spec.significant_figures_policy,
-                    significant_figures=spec.significant_figures,
+                response_spec: ResponseSpec | MultipleChoiceResponseSpec | NumericResponseSpec = (
+                    NumericResponseSpec(
+                        unit_options=[u.label for u in spec.units],
+                        accepted_forms=spec.accepted_forms,
+                        significant_figures_policy=spec.significant_figures_policy,
+                        significant_figures=spec.significant_figures,
+                    )
                 )
+            elif document.response_type == "MULTIPLE_CHOICE":
+                response_spec = MultipleChoiceResponseSpec(choices=document.choices)
             else:
                 response_spec = ResponseSpec(choices=document.choices)
             from services.hints import state
@@ -421,13 +428,16 @@ class AssessmentService:
             version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
             document = DraftDocument.model_validate(version.document)
             attempt_id = uuid4()
-            numeric = isinstance(body.response, NumericResponse)
-            if (document.response_type == "NUMERIC") != numeric:
+            if document.response_type != body.response.type:
                 raise IdentityError("VALIDATION_FAILED", 422)
             try:
                 if isinstance(body.response, NumericResponse):
                     result = grade_numeric(
                         attempt_id, version.id, document, body.response.value, body.response.unit
+                    )
+                elif isinstance(body.response, MultipleChoiceResponse):
+                    result = grade_multiple_choice(
+                        attempt_id, version.id, document, body.response.choice_ids
                     )
                 else:
                     result = grade_choice(attempt_id, version.id, document, body.response.choice_id)
@@ -442,12 +452,12 @@ class AssessmentService:
                     learner_id=actor,
                     session_item_id=item.id,
                     item_version_id=version.id,
-                    choice_id=None
-                    if isinstance(body.response, NumericResponse)
-                    else body.response.choice_id,
-                    response=body.response.model_dump(mode="json")
-                    if isinstance(body.response, NumericResponse)
+                    choice_id=body.response.choice_id
+                    if isinstance(body.response, ChoiceResponse)
                     else None,
+                    response=None
+                    if isinstance(body.response, ChoiceResponse)
+                    else body.response.model_dump(mode="json"),
                     submitted_at=self.identity.clock(),
                     hint_count=hint_count,
                     highest_hint_level=highest_hint_level,

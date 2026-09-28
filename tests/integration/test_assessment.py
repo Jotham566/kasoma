@@ -24,8 +24,7 @@ from tests.integration.test_content import create, mutate, review, submit
 pytestmark = pytest.mark.integration
 
 
-@pytest.fixture
-def assessment(content):
+def prepare_assessment(content):
     identity, client, actors, body = content
     versions = []
     for i in range(5):
@@ -64,6 +63,11 @@ def assessment(content):
         "channel": "WEB",
     }
     return identity, client, actors, body, versions, plan
+
+
+@pytest.fixture
+def assessment(content):
+    return prepare_assessment(content)
 
 
 def start(client, headers, plan, key=None):

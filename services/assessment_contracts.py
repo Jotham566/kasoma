@@ -1,10 +1,10 @@
 """Learner-safe, explicitly projected assessment contracts."""
 
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 from uuid import UUID
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 
 from services.content_contracts import Choice
 from services.identity_contracts import Contract
@@ -45,6 +45,18 @@ class ChoiceResponse(Contract):
     choice_id: str = Field(pattern=r"^[A-Z]$", max_length=1)
 
 
+class MultipleChoiceResponse(Contract):
+    type: Literal["MULTIPLE_CHOICE"]
+    choice_ids: list[Annotated[str, Field(pattern=r"^[A-Z]$")]] = Field(min_length=1, max_length=8)
+
+    @field_validator("choice_ids")
+    @classmethod
+    def canonical_selection(cls, value: list[str]) -> list[str]:
+        if len(value) != len(set(value)):
+            raise ValueError("Duplicate selected IDs")
+        return sorted(value)
+
+
 class NumericResponse(Contract):
     type: Literal["NUMERIC"]
     value: str = Field(min_length=1, max_length=64)
@@ -53,7 +65,7 @@ class NumericResponse(Contract):
 
 class SubmitAnswer(Contract):
     session_item_id: UUID
-    response: ChoiceResponse | NumericResponse
+    response: ChoiceResponse | MultipleChoiceResponse | NumericResponse
 
 
 class Feedback(Contract):
@@ -111,6 +123,11 @@ class ResponseSpec(Contract):
     choices: list[Choice]
 
 
+class MultipleChoiceResponseSpec(Contract):
+    type: Literal["MULTIPLE_CHOICE"] = "MULTIPLE_CHOICE"
+    choices: list[Choice]
+
+
 class NumericResponseSpec(Contract):
     type: Literal["NUMERIC"] = "NUMERIC"
     unit_options: list[str]
@@ -141,7 +158,7 @@ class LearnerItem(Contract):
     item_version_id: UUID
     position: int
     prompt_blocks: list[PromptBlock]
-    response_spec: ResponseSpec | NumericResponseSpec
+    response_spec: ResponseSpec | MultipleChoiceResponseSpec | NumericResponseSpec
     maximum_points: int
     selection_reason: str
     hints: list[RevealedHint] = Field(default_factory=list)
