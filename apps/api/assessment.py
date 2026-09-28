@@ -12,6 +12,7 @@ from services.assessment_contracts import (
     DiagnosticView,
     GradeView,
     LearnerItem,
+    RecommendationView,
     SessionView,
     SolutionView,
     StartDiagnostic,
@@ -100,3 +101,8 @@ def diagnostic_get(session_id: UUID, request: Request) -> DiagnosticView:
     if not isinstance(result, DiagnosticView):
         raise IdentityError("RESOURCE_NOT_FOUND", 404)
     return result
+
+
+@router.get("/me/recommendations/next", response_model=RecommendationView)
+def recommendation(subject_id: UUID, request: Request) -> RecommendationView:
+    return service(request).recommendation(bearer(request), subject_id)

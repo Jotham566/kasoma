@@ -9,7 +9,8 @@ Kasoma's planned learning loop is **Diagnose → Recommend → Practice → Expl
 E0 foundation, E1 local identity/consent and E2 synthetic content review are merged.
 E3 synthetic choice assessment is merged (`22773fd`, hosted CI passed).
 E4 numeric grading is merged (`7d2c8ed`); the MinIO setup repair (`ee73741`) passed hosted CI.
-The E5 synthetic diagnostic and initial mastery slice is implemented locally for review.
+The E5 synthetic diagnostic/mastery slice is on main; recommended practice is implemented
+locally for review. See [recommended practice evidence](docs/implementation/E5_RECOMMENDATIONS_VERIFICATION.md).
 Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.

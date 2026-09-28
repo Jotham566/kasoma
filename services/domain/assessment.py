@@ -17,6 +17,7 @@ class AssessmentSession(Base):
     subject_id: Mapped[UUID] = mapped_column(ForeignKey("subjects.id"))
     topic_id: Mapped[UUID | None] = mapped_column(ForeignKey("topics.id"))
     kind: Mapped[str] = mapped_column(default="REVISION", server_default="REVISION")
+    recommendation_snapshot: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     diagnostic_result: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     status: Mapped[str]
     item_count: Mapped[int]
@@ -81,3 +82,13 @@ class AssessmentEvent(Base):
     request_id: Mapped[UUID]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class RecommendationSnapshot(Base):
+    __tablename__ = "recommendation_snapshots"
+    __table_args__ = (UniqueConstraint("learner_id", "input_hash"),)
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    learner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    subject_id: Mapped[UUID] = mapped_column(ForeignKey("subjects.id"))
+    input_hash: Mapped[str]
+    snapshot: Mapped[dict[str, Any]] = mapped_column(JSON)

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Literal
 from uuid import UUID
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from services.content_contracts import Choice
 from services.identity_contracts import Contract
@@ -13,10 +13,31 @@ from services.numeric import NumericForm
 
 class StartRevision(Contract):
     subject_id: UUID
-    mode: Literal["TOPIC"] = "TOPIC"
-    topic_id: UUID
+    mode: Literal["TOPIC", "RECOMMENDED"] = "TOPIC"
+    topic_id: UUID | None = None
     desired_item_count: int = Field(default=5, ge=5, le=10)
     channel: Literal["WEB"] = "WEB"
+
+    @model_validator(mode="after")
+    def valid_focus(self) -> "StartRevision":
+        if (self.mode == "TOPIC") != (self.topic_id is not None):
+            raise ValueError("Topic is required only for topic practice")
+        return self
+
+
+class RecommendationView(Contract):
+    subject_id: UUID
+    topic_id: UUID | None
+    topic: str | None
+    reason_code: str
+    learner_text: str
+    estimated_minutes: int
+    algorithm_version: str
+    configuration_version: str
+    input_hash: str
+    calculated_at: datetime
+    diagnostic_suggested: bool
+    synthetic: Literal[True] = True
 
 
 class ChoiceResponse(Contract):

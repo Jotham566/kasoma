@@ -249,3 +249,18 @@ learning database reports zero; integration fixtures verify nonempty replay.
 Migrations 0006/0007 are additive. Retain evidence and use a forward fix on failure.
 Do not run old revision-only readers against new diagnostic records. The diagnostic
 browser route and API must deploy together. Production startup remains blocked.
+
+## Recommended practice (synthetic)
+
+After `make migrate seed seed-diagnostic`, sign in with a synthetic consented profile
+and open the home page. The next-activity card explains its target and offers five
+questions or a diagnostic when evidence is sparse. The API supports 5–10 questions;
+it returns insufficient content when the selected skill lacks the requested count.
+`make seed-assessment` adds the existing choice fixtures for a larger local inventory.
+
+`make replay-recommendations` verifies stored preview and committed-plan snapshots
+without modifying data or calling a provider. Ranking uses the explicitly synthetic
+configuration in [ADR-021](../decisions/ADR/021-recommended-practice.md); no real
+curriculum priority or calibrated review schedule is implied. Forward-fix migration
+0008 preserves historical sessions. Disable new recommended starts rather than
+dropping learning or recommendation records during recovery.

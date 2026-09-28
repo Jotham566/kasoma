@@ -107,3 +107,7 @@ seed-diagnostic:
 .PHONY: replay-mastery
 replay-mastery:
 	$(UV) python -m scripts.replay_mastery
+
+.PHONY: replay-recommendations
+replay-recommendations:
+	$(UV) python -m scripts.replay_recommendations

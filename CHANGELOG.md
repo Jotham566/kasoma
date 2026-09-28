@@ -1,5 +1,11 @@
 # Changelog
 
+## E5 recommended practice (local synthetic verification)
+
+- Versioned synthetic ranking, prerequisite redirection and immutable replay snapshots.
+- Explained home recommendation and resumable 5–10-item recommended plans.
+- Shared reservation exclusion for manual and adaptive practice.
+
 - E2: synthetic single-choice authoring, independent review, version immutability,
   role checks and append-only content audit, with migration and browser/API tests.
 

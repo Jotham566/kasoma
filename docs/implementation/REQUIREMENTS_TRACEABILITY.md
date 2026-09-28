@@ -2,7 +2,7 @@
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
 
-E0 through the E5 diagnostic slice evidence is recorded below. Local synthetic journeys are not
+E0 through E5 synthetic recommended practice evidence is recorded below. Local synthetic journeys are not
 production-pilot acceptance; delivery-provider and legal approval gates remain. See the [assessment](PHASE_0_ASSESSMENT.md).
 
 | Requirement | Implementation | Tests / evidence | Status |
@@ -17,13 +17,13 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
 | FR-DIAG-004 | Atomic acknowledgement with attempt, grade, mastery and outbox; same-key replay | Lost acknowledgement browser retry, rollback and resume tests | Local implemented |
-| FR-DIAG-005 | Frozen skill estimates, uncertainty and first explained topic practice recommendation | Completion API, browser result and recommendation link | Local synthetic implemented; full adaptive ranking remains pending |
-| FR-REV-001 | — | — | Not started |
+| FR-DIAG-005 | Frozen skill estimates, uncertainty and first explained topic practice recommendation | Completion API, browser result and recommendation link | Local synthetic implemented; current ranking is available through recommended practice |
+| FR-REV-001 | `services/recommendations.py`, shared RECOMMENDED start, frozen plan snapshot | 5/10-item API flows, concurrent start, replay, browser lost-ack retry | Local synthetic implemented; academic calibration pending |
 | FR-REV-002 | Topic-selected 5–10-item plans through shared assessment service | Assessment API and browser five-question journey | Local manual focus and synchronous mastery updates implemented |
 | FR-REV-003 | Content-owned selector, S4/enrollment checks, current approval and retirement lock | Draft/retired/non-web inventory exclusion; identity subject checks | Local synthetic single-choice path implemented |
 | FR-REV-004 | Configurable seven-day served-item exclusion across versions; no silent shortage fallback | Completed plan cannot immediately repeat; insufficient-inventory API tests | Local implemented; adaptive ranking/retry assignment pending |
 | FR-REV-005 | Durable fixed assignments and answered history; active-plan lookup; lost-ack retry | Concurrent replay, separate browser resume and completion after reload | Local choice/numeric revision and diagnostic resume implemented |
-| FR-REV-006 | First diagnostic recommendation carries safe reason and topic action | Browser follows recommendation to selected topic | Partial: full adaptive session ranking/explanation pending |
+| FR-REV-006 | Versioned reasons, home target/time card, per-item selection reasons and diagnostic action | API safe projection, sparse text, accessible browser practice | Local synthetic implemented |
 | FR-GRD-001 | Pinned answer key and versioned deterministic single-choice grader | Exact synthetic scoring cases, invalid choices and stored result tests | Partial: single-choice implemented; multiple-choice pending; not an academic benchmark claim |
 | FR-GRD-002 | Reviewed numeric contracts, exact rational grading, unit conversions, inclusive tolerances, precision and accepted forms | `tests/contract/test_numeric.py`, `tests/integration/test_numeric_workflow.py`, `tests/e2e/numeric.spec.ts` | Local deterministic implementation; synthetic regression/property cases are not expert academic benchmark approval |
 | FR-GRD-003 | — | — | Not started |
@@ -38,7 +38,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
 | FR-MST-004 | Diagnostic result by topic and competency | Both subjects represented by synthetic API fixtures | Partial: general progress/subject aggregation UX pending |
 | FR-MST-005 | Not enough evidence and Developing estimate with visible confidence | Sparse prior, display-boundary and accessible browser tests | Local diagnostic implemented; general progress pending |
-| FR-MST-006 | — | — | Not started |
+| FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
 | FR-WA-001 | — | — | Not started |
 | FR-WA-002 | — | — | Not started |
 | FR-WA-003 | — | — | Not started |
@@ -66,9 +66,11 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-BW-001 | — | — | Not started |
 | NFR-COMP-001 | Next.js shell | Chromium browser test | Partial; cross-browser learner matrix pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
-| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E4 and MinIO repair hosted CI passed; E5 local verification recorded |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E5 diagnostic hosted CI passed; recommended-practice local evidence recorded |
 | NFR-LOC-001 | English shell; UTC database connections/Celery | Configuration inspected; diagnostic result timestamps use UTC | Foundation only; Kampala presentation pending |
 
 E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
 
 E5 diagnostic/mastery evidence: [verification report](E5_VERIFICATION.md).
+
+E5 recommended practice: [verification report](E5_RECOMMENDATIONS_VERIFICATION.md).

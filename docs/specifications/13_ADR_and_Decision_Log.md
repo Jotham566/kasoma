@@ -173,3 +173,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-020: Diagnostic and initial mastery](../decisions/ADR/020-diagnostic-mastery.md)
   records synthetic diagnostics, sealed results, synchronous evidence and replay.
+
+- [ADR-021: Synthetic recommended practice and replay](../decisions/ADR/021-recommended-practice.md)
+  records ranking inputs, prerequisite redirection and immutable recommended plans.

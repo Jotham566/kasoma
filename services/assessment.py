@@ -15,6 +15,7 @@ from services.assessment_contracts import (
     NumericResponse,
     NumericResponseSpec,
     PromptBlock,
+    RecommendationView,
     ResponseSpec,
     SessionView,
     SolutionView,
@@ -150,20 +151,37 @@ class AssessmentService:
             receipt = self.replay(db, actor, key, fingerprint)
             if receipt:
                 return self.view(db, self.owned(db, actor, receipt.session_id))
-            topic = db.get(Topic, body.topic_id)
-            if not topic or topic.subject_id != body.subject_id:
-                raise IdentityError("VALIDATION_FAILED", 422)
-            active = db.scalar(
+            # Expire all stale revision reservations under the same learner lock.
+            # Otherwise an expired manual plan can still hold the topic's unique index.
+            for stale in db.scalars(
                 select(AssessmentSession).where(
                     AssessmentSession.learner_id == actor,
-                    AssessmentSession.topic_id == body.topic_id,
+                    AssessmentSession.subject_id == body.subject_id,
+                    AssessmentSession.kind == "REVISION",
+                    AssessmentSession.status == "ACTIVE",
+                    AssessmentSession.expires_at <= self.identity.clock(),
+                )
+            ):
+                stale.status = "EXPIRED"
+            db.flush()
+            recommended = body.mode == "RECOMMENDED"
+            if not recommended:
+                topic = db.get(Topic, body.topic_id)
+                if not topic or topic.subject_id != body.subject_id:
+                    raise IdentityError("VALIDATION_FAILED", 422)
+            active = db.scalar(
+                select(AssessmentSession)
+                .where(
+                    AssessmentSession.learner_id == actor,
+                    AssessmentSession.subject_id == body.subject_id,
+                    AssessmentSession.kind == "REVISION",
+                    AssessmentSession.recommendation_snapshot.is_not(None)
+                    if recommended
+                    else AssessmentSession.topic_id == body.topic_id,
                     AssessmentSession.status == "ACTIVE",
                 )
+                .order_by(AssessmentSession.started_at)
             )
-            if active and active.expires_at <= self.identity.clock():
-                active.status = "EXPIRED"
-                db.flush()
-                active = None
             if active:
                 if active.item_count != body.desired_item_count:
                     raise IdentityError("VERSION_CONFLICT", 409)
@@ -171,34 +189,50 @@ class AssessmentService:
             else:
                 if not self.identity.rate(db, "assessment-start:" + str(actor), 30, 3600):
                     raise IdentityError("USAGE_LIMIT_REACHED", 429)
-                excluded = set(
-                    db.scalars(
-                        select(ItemVersion.item_id)
-                        .join(SessionItem, SessionItem.item_version_id == ItemVersion.id)
-                        .join(AssessmentSession, AssessmentSession.id == SessionItem.session_id)
-                        .where(
-                            AssessmentSession.learner_id == actor,
-                            SessionItem.served_at
-                            >= self.identity.clock()
-                            - timedelta(days=self.identity.settings.assessment_repetition_days),
-                        )
-                    )
-                )
-                candidates = self.content.assessment_candidates(
-                    db, body.subject_id, body.topic_id, excluded, body.desired_item_count
-                )
+                snapshot = None
+                topic_id = body.topic_id
+                reason = "Practice the topic you selected."
+                reasons = [reason] * body.desired_item_count
+                plan_version = "topic-choice-v1"
+                if recommended:
+                    from services.recommendations import plan
+
+                    try:
+                        selected = plan(self, db, actor, body.subject_id, body.desired_item_count)
+                    except ValueError as error:
+                        raise IdentityError("CONTENT_NOT_APPROVED", 409) from error
+                    if selected.topic_id is None:
+                        raise IdentityError("INSUFFICIENT_CONTENT", 409)
+                    topic_id, reason = selected.topic_id, selected.learner_text
+                    reasons = list(selected.item_reasons)
+                    plan_version = selected.inputs.configuration.algorithm_version
+                    snapshot = selected.model_dump(mode="json")
+                    candidates = [
+                        self.content.assessment_version(db, version, body.subject_id)
+                        for version in selected.item_version_ids
+                    ]
+                else:
+                    candidates = [
+                        v
+                        for v in self.diagnostics.candidates(db, actor, body.subject_id)
+                        if v.topic_id == topic_id
+                    ][: body.desired_item_count]
+                    candidates = [
+                        self.content.assessment_version(db, v.id, body.subject_id)
+                        for v in candidates
+                    ]
                 if len(candidates) < body.desired_item_count:
                     raise IdentityError("INSUFFICIENT_CONTENT", 409)
-                reason = "Practice the topic you selected."
                 session = AssessmentSession(
                     id=uuid4(),
                     learner_id=actor,
                     subject_id=body.subject_id,
-                    topic_id=body.topic_id,
+                    topic_id=topic_id,
+                    recommendation_snapshot=snapshot,
                     status="ACTIVE",
                     item_count=len(candidates),
                     reason=reason,
-                    plan_version="topic-choice-v1",
+                    plan_version=plan_version,
                     started_at=self.identity.clock(),
                     expires_at=self.identity.clock()
                     + timedelta(days=self.identity.settings.assessment_session_days),
@@ -212,7 +246,7 @@ class AssessmentService:
                             session_id=session.id,
                             item_version_id=v.id,
                             position=i + 1,
-                            reason=reason,
+                            reason=reasons[i],
                         )
                         for i, v in enumerate(candidates)
                     ]
@@ -225,6 +259,31 @@ class AssessmentService:
             )
             db.flush()
             return self.view(db, session)
+
+    def recommendation(self, token: str, subject: UUID) -> RecommendationView:
+        from services.recommendations import plan
+
+        with Session(self.identity.engine) as db, db.begin():
+            actor = self.authorize(db, token, subject)
+            if not self.identity.rate(db, "recommendation-read:" + str(actor), 60, 3600):
+                raise IdentityError("USAGE_LIMIT_REACHED", 429)
+            try:
+                result = plan(self, db, actor, subject, 5)
+            except ValueError as error:
+                raise IdentityError("CONTENT_NOT_APPROVED", 409) from error
+            return RecommendationView(
+                subject_id=subject,
+                topic_id=result.topic_id,
+                topic=result.topic,
+                reason_code=result.reason_code,
+                learner_text=result.learner_text,
+                estimated_minutes=result.estimated_minutes,
+                algorithm_version=result.inputs.configuration.algorithm_version,
+                configuration_version=result.inputs.configuration.configuration_version,
+                input_hash=result.input_hash,
+                calculated_at=result.inputs.calculated_at,
+                diagnostic_suggested=result.reason_code == "GATHER_MORE_EVIDENCE",
+            )
 
     def active(self, token: str) -> list[SessionView]:
         with Session(self.identity.engine) as db, db.begin():

@@ -12,6 +12,7 @@ const allowed: Record<string, string[]> = {
   "auth/logout-all": ["POST"],
   me: ["GET", "PATCH"],
   "me/consents": ["POST"],
+  "me/recommendations/next": ["GET"],
   "curriculum/subjects": ["GET"],
   "revision-sessions": ["POST"],
   diagnostics: ["POST"],
@@ -104,6 +105,10 @@ async function gateway(
         const value = request.nextUrl.searchParams.get(key);
         if (value !== null) query.set(key, value);
       }
+    if (path === "me/recommendations/next") {
+      const subject = request.nextUrl.searchParams.get("subject_id");
+      if (subject !== null) query.set("subject_id", subject);
+    }
     const upstream = await fetch(`${apiUrl()}/api/v1/${path}?${query}`, {
       method: request.method,
       headers,

@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { apiClient } from "@kasoma/api-client";
 import { Status } from "@kasoma/ui";
 import { apiUrl } from "./config";
+import { RecommendationCard } from "./recommendation-card";
 
 export const dynamic = "force-dynamic";
 
@@ -64,6 +65,7 @@ export default async function Home() {
       >
         Start a subject diagnostic
       </Link>
+      <RecommendationCard />
       <small className="mt-6 block text-slate-600">
         Support reference: {requestId}
       </small>

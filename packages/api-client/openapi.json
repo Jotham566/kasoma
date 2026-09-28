@@ -1445,6 +1445,93 @@
         "title": "PromptBlock",
         "type": "object"
       },
+      "RecommendationView": {
+        "additionalProperties": false,
+        "properties": {
+          "algorithm_version": {
+            "title": "Algorithm Version",
+            "type": "string"
+          },
+          "calculated_at": {
+            "format": "date-time",
+            "title": "Calculated At",
+            "type": "string"
+          },
+          "configuration_version": {
+            "title": "Configuration Version",
+            "type": "string"
+          },
+          "diagnostic_suggested": {
+            "title": "Diagnostic Suggested",
+            "type": "boolean"
+          },
+          "estimated_minutes": {
+            "title": "Estimated Minutes",
+            "type": "integer"
+          },
+          "input_hash": {
+            "title": "Input Hash",
+            "type": "string"
+          },
+          "learner_text": {
+            "title": "Learner Text",
+            "type": "string"
+          },
+          "reason_code": {
+            "title": "Reason Code",
+            "type": "string"
+          },
+          "subject_id": {
+            "format": "uuid",
+            "title": "Subject Id",
+            "type": "string"
+          },
+          "synthetic": {
+            "const": true,
+            "default": true,
+            "title": "Synthetic",
+            "type": "boolean"
+          },
+          "topic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic"
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic Id"
+          }
+        },
+        "required": [
+          "subject_id",
+          "topic_id",
+          "topic",
+          "reason_code",
+          "learner_text",
+          "estimated_minutes",
+          "algorithm_version",
+          "configuration_version",
+          "input_hash",
+          "calculated_at",
+          "diagnostic_suggested"
+        ],
+        "title": "RecommendationView",
+        "type": "object"
+      },
       "Refresh": {
         "additionalProperties": false,
         "properties": {
@@ -1787,8 +1874,11 @@
             "type": "integer"
           },
           "mode": {
-            "const": "TOPIC",
             "default": "TOPIC",
+            "enum": [
+              "TOPIC",
+              "RECOMMENDED"
+            ],
             "title": "Mode",
             "type": "string"
           },
@@ -1798,14 +1888,20 @@
             "type": "string"
           },
           "topic_id": {
-            "format": "uuid",
-            "title": "Topic Id",
-            "type": "string"
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic Id"
           }
         },
         "required": [
-          "subject_id",
-          "topic_id"
+          "subject_id"
         ],
         "title": "StartRevision",
         "type": "object"
@@ -3790,6 +3886,106 @@
           }
         },
         "summary": "Consent"
+      }
+    },
+    "/api/v1/me/recommendations/next": {
+      "get": {
+        "operationId": "recommendation_api_v1_me_recommendations_next_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "subject_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Subject Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecommendationView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Recommendation"
       }
     },
     "/api/v1/revision-sessions": {

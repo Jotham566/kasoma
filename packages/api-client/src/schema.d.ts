@@ -381,6 +381,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/recommendations/next": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Recommendation */
+        get: operations["recommendation_api_v1_me_recommendations_next_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/revision-sessions": {
         parameters: {
             query?: never;
@@ -1119,6 +1136,43 @@ export interface components {
              */
             type: "text";
         };
+        /** RecommendationView */
+        RecommendationView: {
+            /** Algorithm Version */
+            algorithm_version: string;
+            /**
+             * Calculated At
+             * Format: date-time
+             */
+            calculated_at: string;
+            /** Configuration Version */
+            configuration_version: string;
+            /** Diagnostic Suggested */
+            diagnostic_suggested: boolean;
+            /** Estimated Minutes */
+            estimated_minutes: number;
+            /** Input Hash */
+            input_hash: string;
+            /** Learner Text */
+            learner_text: string;
+            /** Reason Code */
+            reason_code: string;
+            /**
+             * Subject Id
+             * Format: uuid
+             */
+            subject_id: string;
+            /**
+             * Synthetic
+             * @default true
+             * @constant
+             */
+            synthetic: true;
+            /** Topic */
+            topic: string | null;
+            /** Topic Id */
+            topic_id: string | null;
+        };
         /** Refresh */
         Refresh: {
             /** Refresh Token */
@@ -1292,19 +1346,16 @@ export interface components {
             /**
              * Mode
              * @default TOPIC
-             * @constant
+             * @enum {string}
              */
-            mode: "TOPIC";
+            mode: "TOPIC" | "RECOMMENDED";
             /**
              * Subject Id
              * Format: uuid
              */
             subject_id: string;
-            /**
-             * Topic Id
-             * Format: uuid
-             */
-            topic_id: string;
+            /** Topic Id */
+            topic_id?: string | null;
         };
         /** SubjectView */
         SubjectView: {
@@ -2856,6 +2907,91 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recommendation_api_v1_me_recommendations_next_get: {
+        parameters: {
+            query: {
+                subject_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecommendationView"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };

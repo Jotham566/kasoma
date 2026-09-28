@@ -12,10 +12,14 @@ test("health shell, keyboard retry and accessibility", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Know what to revise next.",
   );
-  await expect(page.getByRole("status")).toHaveText("Services are ready.");
+  await expect(
+    page.getByRole("status").filter({ hasText: "Services are ready." }),
+  ).toHaveText("Services are ready.");
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Check again" })).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("status")).toHaveText("Services are ready.");
+  await expect(
+    page.getByRole("status").filter({ hasText: "Services are ready." }),
+  ).toHaveText("Services are ready.");
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
