@@ -85,3 +85,12 @@ short text, diagnostic/mastery, hints and other MVP slices remain pending.
 Next: a resumable diagnostic with 10–15 approved items, coverage constraints, no
 hints/solutions, versioned difficulty mapping and immutable initial mastery evidence.
 See [current sprint](CURRENT_SPRINT.md) and [traceability](REQUIREMENTS_TRACEABILITY.md).
+
+### Main CI artifact repair — 28 September 2026
+
+E4 committed and pushed as `7d2c8ed`. Hosted run 36391189987 failed before tests
+because the pinned MinIO image returned unauthorized. Docker startup was subsequently
+completed locally. All 38 existing integration tests and the source scan passed
+again. ADR-019 retains MinIO but builds official immutable, archive-checksummed
+release source. The source build, Compose readiness and private bucket setup passed.
+This fixes clean CI setup without registry credentials or a new storage provider.

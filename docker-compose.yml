@@ -22,7 +22,11 @@ services:
       timeout: 3s
       retries: 20
   minio:
-    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
+    image: kasoma-minio:2025-09-07-source
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: infra/containers/minio.Dockerfile
     command: server /data --console-address :9001
     environment:
       MINIO_ROOT_USER: ${OBJECT_STORAGE_ACCESS_KEY:?Run make setup}

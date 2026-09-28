@@ -16,3 +16,5 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-017: Implementation readiness resolutions](017-readiness-resolutions.md)
 - [ADR-018: Bounded deterministic numeric answers](018-numeric-grading.md)
+
+- [ADR-019: Local MinIO source build](019-minio-source-build.md)

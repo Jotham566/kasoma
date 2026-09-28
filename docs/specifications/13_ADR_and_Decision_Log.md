@@ -167,3 +167,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
   resolves E0-01/E3-01 while preserving existing values and release gates.
 - [ADR-018: Bounded deterministic numeric answers](../decisions/ADR/018-numeric-grading.md)
   records reviewed numeric contracts, exact grading semantics and migration controls.
+
+- [ADR-019: Local MinIO source build](../decisions/ADR/019-minio-source-build.md)
+  repairs clean setup after the pinned public image became unavailable.

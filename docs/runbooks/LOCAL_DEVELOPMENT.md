@@ -217,3 +217,11 @@ stopped state of application services; it still refreshes them to the built imag
 Migration 0005 is additive and preserves choice rows. Once numeric documents exist,
 prefer a forward fix or retain numeric-aware readers during recovery. Pre-numeric
 code cannot read new numeric documents; never delete evidence to enable rollback.
+
+### MinIO image availability
+
+`make services` builds the pinned MinIO release from official, checksum-verified
+source because the original public image registry denies clean pulls. The initial
+build downloads a pinned Go builder and verified upstream modules; Go is not needed
+on the host. Compose caches subsequent builds. Keep existing data volumes when
+updating. See [ADR-019](../decisions/ADR/019-minio-source-build.md).
