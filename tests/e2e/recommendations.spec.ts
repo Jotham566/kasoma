@@ -82,4 +82,20 @@ test("FR-REV-001/006: explained recommendation, lost start acknowledgement and d
     page.getByRole("heading", { name: "Practice complete" }),
   ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.goto("/progress");
+  await expect(page.getByRole("status")).toHaveText("Learning record loaded.");
+  await expect(
+    page
+      .getByRole("region", { name: "Subject progress" })
+      .getByText(/5 recorded answers/),
+  ).toBeVisible();
+  await expect(page.getByText(/Evidence confidence:/).first()).toBeVisible();
+  await page.getByRole("link", { name: "History", exact: true }).click();
+  await expect(
+    page.getByText("Status: completed. 5 of 5 answers saved."),
+  ).toBeVisible();
+  await page.getByRole("link", { name: "Review session" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Practice complete" }),
+  ).toBeVisible();
 });

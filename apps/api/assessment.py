@@ -3,7 +3,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Header, Query, Request
 
 from apps.api.identity import bearer
 from services.assessment import AssessmentService
@@ -23,6 +23,7 @@ from services.assessment_contracts import (
     TopicView,
 )
 from services.content_contracts import ErrorEnvelope
+from services.progress_contracts import ProgressView, SessionHistoryPage
 
 router = APIRouter(
     prefix="/api/v1",
@@ -168,3 +169,22 @@ def reassessment_get(attempt_id: UUID, request: Request) -> SessionView:
     from services.reassessments import access
 
     return access(service(request), bearer(request), attempt_id)
+
+
+@router.get("/me/progress", response_model=ProgressView)
+def learner_progress(subject_id: UUID, request: Request) -> ProgressView:
+    from services.progress import progress
+
+    return progress(service(request), bearer(request), subject_id)
+
+
+@router.get("/me/session-history", response_model=SessionHistoryPage)
+def learner_history(
+    request: Request,
+    subject_id: UUID | None = None,
+    cursor: Annotated[str | None, Query(max_length=512)] = None,
+    limit: Annotated[int, Query(ge=1, le=50)] = 10,
+) -> SessionHistoryPage:
+    from services.progress import history
+
+    return history(service(request), bearer(request), subject_id, cursor, limit)

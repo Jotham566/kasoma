@@ -1,5 +1,15 @@
 # Changelog
 
+## 28 September 2026 — progress and session history (local implementation)
+
+- Unseen reassessment committed and pushed to main as `73c1fba`; completed branch removed.
+- Add consent-aware subject/topic/competency progress with evidence confidence, coverage
+  and guarded recent-change text; unfinished diagnostic evidence remains sealed.
+- Add owned, cursor-paginated session history with resume/review and Kampala timestamps.
+- Add ADR-024, generated contracts, regression tests and documentation; no new migration.
+- See [verification](docs/implementation/E6_PROGRESS_VERIFICATION.md). Academic calibration
+  and production acceptance remain separate gates.
+
 ## 28 September 2026 — unseen reassessment (local implementation)
 
 - Reviewed hints committed and pushed to main as `3c0c3ba`; hosted CI passed and completed branch removed.

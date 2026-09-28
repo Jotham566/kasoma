@@ -433,6 +433,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Learner Progress */
+        get: operations["learner_progress_api_v1_me_progress_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/recommendations/next": {
         parameters: {
             query?: never;
@@ -442,6 +459,23 @@ export interface paths {
         };
         /** Recommendation */
         get: operations["recommendation_api_v1_me_recommendations_next_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/session-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Learner History */
+        get: operations["learner_history_api_v1_me_session_history_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1242,6 +1276,84 @@ export interface components {
             /** Subject Ids */
             subject_ids: string[];
         };
+        /** ProgressAction */
+        ProgressAction: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "CONTINUE_DIAGNOSTIC" | "START_DIAGNOSTIC" | "OPEN_RECOMMENDATIONS";
+            /** Label */
+            label: string;
+            /** Session Id */
+            session_id?: string | null;
+        };
+        /** ProgressSummary */
+        ProgressSummary: {
+            /** Assessed Skill Count */
+            assessed_skill_count: number;
+            /**
+             * Change
+             * @enum {string}
+             */
+            change: "NOT_ENOUGH_EVIDENCE" | "HIGHER" | "LOWER" | "UNCHANGED";
+            /** Confidence */
+            confidence: number;
+            /**
+             * Display State
+             * @enum {string}
+             */
+            display_state: "NOT_ENOUGH_EVIDENCE" | "DEVELOPING_ESTIMATE" | "NEEDS_ATTENTION" | "DEVELOPING" | "STRONG";
+            /** Evidence Count */
+            evidence_count: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Input Hash */
+            input_hash: string;
+            /** Last Evidence At */
+            last_evidence_at: string | null;
+            /** Mapped Skill Count */
+            mapped_skill_count: number;
+            /** Mastery */
+            mastery: number | null;
+            /** Name */
+            name: string;
+        };
+        /** ProgressView */
+        ProgressView: {
+            /**
+             * Aggregation Version
+             * @default progress-rollup-v1
+             * @constant
+             */
+            aggregation_version: "progress-rollup-v1";
+            /**
+             * Algorithm Version
+             * @default weighted-evidence-v1
+             * @constant
+             */
+            algorithm_version: "weighted-evidence-v1";
+            /**
+             * Calculated At
+             * Format: date-time
+             */
+            calculated_at: string;
+            /** Competencies */
+            competencies: components["schemas"]["ProgressSummary"][];
+            next_action: components["schemas"]["ProgressAction"];
+            subject: components["schemas"]["ProgressSummary"];
+            /**
+             * Synthetic
+             * @default true
+             * @constant
+             */
+            synthetic: true;
+            /** Topics */
+            topics: components["schemas"]["ProgressSummary"][];
+        };
         /** PromptBlock */
         PromptBlock: {
             /** Content */
@@ -1355,6 +1467,53 @@ export interface components {
              * Format: uuid
              */
             reviewer_id: string;
+        };
+        /** SessionHistoryEntry */
+        SessionHistoryEntry: {
+            /** Answered Count */
+            answered_count: number;
+            /** Completed At */
+            completed_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Item Count */
+            item_count: number;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "REVISION" | "DIAGNOSTIC" | "REASSESSMENT";
+            /** Original Session Id */
+            original_session_id?: string | null;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ACTIVE" | "COMPLETED" | "ABANDONED" | "EXPIRED";
+            /** Subject */
+            subject: string;
+            /**
+             * Subject Id
+             * Format: uuid
+             */
+            subject_id: string;
+            /** Topic */
+            topic: string | null;
+        };
+        /** SessionHistoryPage */
+        SessionHistoryPage: {
+            /** Data */
+            data: components["schemas"]["SessionHistoryEntry"][];
+            /** Next Cursor */
+            next_cursor: string | null;
         };
         /** SessionView */
         SessionView: {
@@ -3398,6 +3557,91 @@ export interface operations {
             };
         };
     };
+    learner_progress_api_v1_me_progress_get: {
+        parameters: {
+            query: {
+                subject_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgressView"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     recommendation_api_v1_me_recommendations_next_get: {
         parameters: {
             query: {
@@ -3416,6 +3660,93 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecommendationView"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    learner_history_api_v1_me_session_history_get: {
+        parameters: {
+            query?: {
+                subject_id?: string | null;
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionHistoryPage"];
                 };
             };
             /** @description Bad Request */

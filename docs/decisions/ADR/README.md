@@ -28,3 +28,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-023: Unseen equivalent reassessment](023-unseen-reassessment.md)
   records reviewed claims, unseen selection, immutable linkage and independent evidence.
+
+- [ADR-024: Evidence-derived progress and history](024-progress-history.md)
+  records confidence-aware aggregation, sealed diagnostics and owned cursor pagination.

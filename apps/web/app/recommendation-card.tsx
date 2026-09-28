@@ -73,7 +73,12 @@ export function RecommendationCard() {
         profile.data!.subject_ids.includes(s.id),
       );
       setSubjects(selected);
-      if (selected[0]) await load(selected[0].id);
+      const requested =
+        selected.find(
+          (s) =>
+            s.id === new URLSearchParams(window.location.search).get("subject"),
+        ) ?? selected[0];
+      if (requested) await load(requested.id);
       else failure("CONSENT_REQUIRED");
     } catch {
       failure();
@@ -92,6 +97,7 @@ export function RecommendationCard() {
   return (
     <section
       aria-label="Recommended practice"
+      id="recommendations"
       className="mt-8 space-y-4 rounded-xl border border-slate-300 p-5"
     >
       <h2 className="text-xl font-semibold">Your next activity</h2>

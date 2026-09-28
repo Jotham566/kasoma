@@ -3,8 +3,9 @@
 Date: 28 September 2026. Synthetic local development only.
 
 Reviewed hints were committed and pushed to main as `3c0c3ba`; the completed branch
-was deleted. This next implementation is on local `codex/e4-unseen-reassessment`,
-uncommitted for review. Hosted main CI passed; local evidence is recorded below.
+was deleted. Reassessment was subsequently committed and pushed to main as `73c1fba`;
+`codex/e4-unseen-reassessment` was deleted. Local evidence is recorded below; the
+[next progress slice](E6_PROGRESS_VERIFICATION.md) records the resulting main CI status.
 
 ## Requirements and decisions
 

@@ -2,7 +2,7 @@
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
 
-E0 through E5 synthetic practice and E4 reviewed-hint evidence is recorded below. Local synthetic journeys are not
+E0 through E6 synthetic progress, practice, reviewed-hint and reassessment evidence is recorded below. Local synthetic journeys are not
 production-pilot acceptance; delivery-provider and legal approval gates remain. See the [assessment](PHASE_0_ASSESSMENT.md).
 
 | Requirement | Implementation | Tests / evidence | Status |
@@ -36,8 +36,8 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-001 | Unique append-only attempt/skill evidence; synchronous deterministic grading; consented legacy reconciliation | Duplicate replay, rollback, immutable DB records and integration tests | Local deterministic path implemented |
 | FR-MST-002 | Specified weighted prior, score, coverage/recency confidence and display state | Hand calculations, property tests and diagnostic UI | Local implemented |
 | FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
-| FR-MST-004 | Diagnostic result by topic and competency | Both subjects represented by synthetic API fixtures | Partial: general progress/subject aggregation UX pending |
-| FR-MST-005 | Not enough evidence and Developing estimate with visible confidence | Sparse prior, display-boundary and accessible browser tests | Local diagnostic implemented; general progress pending |
+| FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history | Progress engine/API/browser tests; [verification](E6_PROGRESS_VERIFICATION.md) | Local synthetic implemented; academic aggregation calibration and large-history performance gates pending |
+| FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
 | FR-WA-001 | — | — | Not started |
 | FR-WA-002 | — | — | Not started |
@@ -62,12 +62,12 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-SCL-001 | — | — | Not started |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
-| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, choice/numeric assessment and diagnostic axe/keyboard checks; remaining journey matrix pending |
+| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, choice/numeric assessment, diagnostic and progress/history axe/keyboard checks; remaining journey matrix pending |
 | NFR-BW-001 | — | — | Not started |
 | NFR-COMP-001 | Next.js shell | Chromium browser test | Partial; cross-browser learner matrix pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
-| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E5 recommended-practice hosted CI passed; reviewed-hint local evidence recorded |
-| NFR-LOC-001 | English shell; UTC database connections/Celery | Configuration inspected; diagnostic result timestamps use UTC | Foundation only; Kampala presentation pending |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E5 hosted CI and E6 progress local checks recorded in verification reports |
+| NFR-LOC-001 | English shell; UTC storage/wire; progress/history dates in Africa/Kampala | Configuration and browser history checks | Progress/history presentation implemented; wider localization review pending |
 
 E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
 
@@ -78,3 +78,5 @@ E5 recommended practice: [verification report](E5_RECOMMENDATIONS_VERIFICATION.m
 E4 reviewed hints: [verification report](E4_HINTS_VERIFICATION.md).
 
 E4 unseen reassessment: [verification report](E4_REASSESSMENT_VERIFICATION.md).
+
+E6 progress and session history: [verification report](E6_PROGRESS_VERIFICATION.md).

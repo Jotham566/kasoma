@@ -105,7 +105,12 @@ export default function Diagnostic() {
     const all = value(await client().GET("/api/v1/curriculum/subjects"));
     const selected = all.filter((s) => profile.subject_ids.includes(s.id));
     setSubjects(selected);
-    setSubject(selected[0]?.id ?? "");
+    const requested =
+      selected.find(
+        (s) =>
+          s.id === new URLSearchParams(window.location.search).get("subject"),
+      ) ?? selected[0];
+    setSubject(requested?.id ?? "");
     const id = new URLSearchParams(window.location.search).get("session");
     if (id) await load(id);
   }
@@ -142,6 +147,23 @@ export default function Diagnostic() {
         feedback during the diagnostic.
       </p>
       <Status>{status}</Status>
+      <nav
+        aria-label="Learning history and progress"
+        className="flex flex-wrap gap-4"
+      >
+        <Link
+          className="inline-flex min-h-11 items-center underline"
+          href="/progress"
+        >
+          Progress
+        </Link>
+        <Link
+          className="inline-flex min-h-11 items-center underline"
+          href="/history"
+        >
+          History
+        </Link>
+      </nav>
       <Link
         href="/onboarding"
         className="inline-flex min-h-11 items-center underline"

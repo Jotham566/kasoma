@@ -182,3 +182,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-023: Unseen equivalent reassessment](../decisions/ADR/023-unseen-reassessment.md)
   records reviewed claims, unseen selection, immutable linkage and independent evidence.
+
+- [ADR-024: Evidence-derived progress and history](../decisions/ADR/024-progress-history.md)
+  records confidence-aware aggregation, sealed diagnostics and owned cursor pagination.

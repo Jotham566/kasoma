@@ -65,6 +65,23 @@ export default async function Home() {
       >
         Start a subject diagnostic
       </Link>
+      <nav
+        aria-label="Learning history and progress"
+        className="flex flex-wrap gap-4"
+      >
+        <Link
+          className="inline-flex min-h-11 items-center underline"
+          href="/progress"
+        >
+          Progress
+        </Link>
+        <Link
+          className="inline-flex min-h-11 items-center underline"
+          href="/history"
+        >
+          History
+        </Link>
+      </nav>
       <RecommendationCard />
       <small className="mt-6 block text-slate-600">
         Support reference: {requestId}

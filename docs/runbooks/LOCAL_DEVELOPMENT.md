@@ -293,3 +293,15 @@ mint new reassessments. `make replay-reassessments` checks frozen selection, has
 pinned content read-only; nonempty replay is exercised by integration tests.
 Keep history and use forward fixes on rollback. See
 [verification evidence](../implementation/E4_REASSESSMENT_VERIFICATION.md).
+
+## Synthetic progress and session history
+
+After consent and synthetic practice, open `/progress` for subject, topic and competency
+estimates with confidence and mapped-skill coverage. `/history` lists resumable/reviewable
+sessions and loads older records with an owned cursor. Dates display in Kampala.
+Unfinished, abandoned and expired diagnostics contribute no visible progress evidence.
+A completed diagnostic or practice contributes existing immutable evidence; opening these
+pages creates no new learning evidence. Reload retries failed reads safely.
+No new seed command or migration is required. Verify with `make test`, `make e2e`,
+`make lint` and `make openapi-check`; see the
+[progress verification report](../implementation/E6_PROGRESS_VERIFICATION.md).

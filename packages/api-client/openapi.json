@@ -1535,6 +1535,199 @@
         "title": "ProfileView",
         "type": "object"
       },
+      "ProgressAction": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "CONTINUE_DIAGNOSTIC",
+              "START_DIAGNOSTIC",
+              "OPEN_RECOMMENDATIONS"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          }
+        },
+        "required": [
+          "kind",
+          "label"
+        ],
+        "title": "ProgressAction",
+        "type": "object"
+      },
+      "ProgressSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "assessed_skill_count": {
+            "minimum": 0.0,
+            "title": "Assessed Skill Count",
+            "type": "integer"
+          },
+          "change": {
+            "enum": [
+              "NOT_ENOUGH_EVIDENCE",
+              "HIGHER",
+              "LOWER",
+              "UNCHANGED"
+            ],
+            "title": "Change",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "display_state": {
+            "enum": [
+              "NOT_ENOUGH_EVIDENCE",
+              "DEVELOPING_ESTIMATE",
+              "NEEDS_ATTENTION",
+              "DEVELOPING",
+              "STRONG"
+            ],
+            "title": "Display State",
+            "type": "string"
+          },
+          "evidence_count": {
+            "minimum": 0.0,
+            "title": "Evidence Count",
+            "type": "integer"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "input_hash": {
+            "title": "Input Hash",
+            "type": "string"
+          },
+          "last_evidence_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Evidence At"
+          },
+          "mapped_skill_count": {
+            "minimum": 0.0,
+            "title": "Mapped Skill Count",
+            "type": "integer"
+          },
+          "mastery": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mastery"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "mastery",
+          "confidence",
+          "display_state",
+          "evidence_count",
+          "assessed_skill_count",
+          "mapped_skill_count",
+          "last_evidence_at",
+          "change",
+          "input_hash"
+        ],
+        "title": "ProgressSummary",
+        "type": "object"
+      },
+      "ProgressView": {
+        "additionalProperties": false,
+        "properties": {
+          "aggregation_version": {
+            "const": "progress-rollup-v1",
+            "default": "progress-rollup-v1",
+            "title": "Aggregation Version",
+            "type": "string"
+          },
+          "algorithm_version": {
+            "const": "weighted-evidence-v1",
+            "default": "weighted-evidence-v1",
+            "title": "Algorithm Version",
+            "type": "string"
+          },
+          "calculated_at": {
+            "format": "date-time",
+            "title": "Calculated At",
+            "type": "string"
+          },
+          "competencies": {
+            "items": {
+              "$ref": "#/components/schemas/ProgressSummary"
+            },
+            "title": "Competencies",
+            "type": "array"
+          },
+          "next_action": {
+            "$ref": "#/components/schemas/ProgressAction"
+          },
+          "subject": {
+            "$ref": "#/components/schemas/ProgressSummary"
+          },
+          "synthetic": {
+            "const": true,
+            "default": true,
+            "title": "Synthetic",
+            "type": "boolean"
+          },
+          "topics": {
+            "items": {
+              "$ref": "#/components/schemas/ProgressSummary"
+            },
+            "title": "Topics",
+            "type": "array"
+          }
+        },
+        "required": [
+          "subject",
+          "topics",
+          "competencies",
+          "next_action",
+          "calculated_at"
+        ],
+        "title": "ProgressView",
+        "type": "object"
+      },
       "PromptBlock": {
         "additionalProperties": false,
         "properties": {
@@ -1809,6 +2002,135 @@
           "created_at"
         ],
         "title": "ReviewView",
+        "type": "object"
+      },
+      "SessionHistoryEntry": {
+        "additionalProperties": false,
+        "properties": {
+          "answered_count": {
+            "title": "Answered Count",
+            "type": "integer"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "item_count": {
+            "title": "Item Count",
+            "type": "integer"
+          },
+          "kind": {
+            "enum": [
+              "REVISION",
+              "DIAGNOSTIC",
+              "REASSESSMENT"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "original_session_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Original Session Id"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "COMPLETED",
+              "ABANDONED",
+              "EXPIRED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "subject": {
+            "title": "Subject",
+            "type": "string"
+          },
+          "subject_id": {
+            "format": "uuid",
+            "title": "Subject Id",
+            "type": "string"
+          },
+          "topic": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic"
+          }
+        },
+        "required": [
+          "id",
+          "subject_id",
+          "subject",
+          "topic",
+          "kind",
+          "status",
+          "started_at",
+          "completed_at",
+          "item_count",
+          "answered_count"
+        ],
+        "title": "SessionHistoryEntry",
+        "type": "object"
+      },
+      "SessionHistoryPage": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/SessionHistoryEntry"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data",
+          "next_cursor"
+        ],
+        "title": "SessionHistoryPage",
         "type": "object"
       },
       "SessionView": {
@@ -4489,6 +4811,106 @@
         "summary": "Consent"
       }
     },
+    "/api/v1/me/progress": {
+      "get": {
+        "operationId": "learner_progress_api_v1_me_progress_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "subject_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Subject Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Learner Progress"
+      }
+    },
     "/api/v1/me/recommendations/next": {
       "get": {
         "operationId": "recommendation_api_v1_me_recommendations_next_get",
@@ -4587,6 +5009,142 @@
           }
         },
         "summary": "Recommendation"
+      }
+    },
+    "/api/v1/me/session-history": {
+      "get": {
+        "operationId": "learner_history_api_v1_me_session_history_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "subject_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Subject Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 512,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionHistoryPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Learner History"
       }
     },
     "/api/v1/revision-sessions": {

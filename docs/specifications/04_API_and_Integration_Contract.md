@@ -259,3 +259,24 @@ new question is selected, with no hints before submission and no early worked so
 The original grade is immutable. Completed, abandoned or expired reassessments remain
 linked; repeated starts never replace them. Selection provenance stays server-side.
 See [ADR-023](../decisions/ADR/023-unseen-reassessment.md) and generated OpenAPI.
+
+## Learner progress and history (ADR-024)
+
+`GET /me/progress?subject_id=<uuid>` requires a currently selected subject and current
+learning consent. It returns `ProgressView`: subject, topics and competencies with
+mastery/confidence/display state, unique answer count, assessed/mapped skill coverage,
+last evidence time, recent change and input hash; also calculation/algorithm/aggregation
+versions and a safe next action. Equal-weight skill means include unassessed priors;
+empty scope has null mastery. Numeric mastery is hidden below 0.25 confidence in the UI.
+Diagnostic evidence is invisible until its session is completed, including abandoned
+and expired diagnostics. Reads never update grades, evidence or mastery projections.
+
+`GET /me/session-history` accepts optional `subject_id`, `limit` (1–50, default 10)
+and opaque `cursor` (maximum 512 characters). Returns `data` and nullable `next_cursor`.
+Entries contain owned session ID, subject/topic, kind/status, UTC start/completion times,
+item/answer counts and optional original session ID for reassessment. No scores, answers
+or selection internals are included. Order is descending `(started_at,id)`; cursor
+signatures bind actor and subject filter. Invalid or mismatched cursors return 422;
+missing authentication returns 401 and unauthorized subject/consent returns 403.
+Both endpoints rate-limit to 60 requests per learner per minute and recheck current access.
+See [ADR-024](../decisions/ADR/024-progress-history.md) and generated OpenAPI for DTOs.

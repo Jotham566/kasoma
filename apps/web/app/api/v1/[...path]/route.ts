@@ -13,6 +13,8 @@ const allowed: Record<string, string[]> = {
   me: ["GET", "PATCH"],
   "me/consents": ["POST"],
   "me/recommendations/next": ["GET"],
+  "me/progress": ["GET"],
+  "me/session-history": ["GET"],
   "curriculum/subjects": ["GET"],
   "revision-sessions": ["POST"],
   diagnostics: ["POST"],
@@ -112,12 +114,16 @@ async function gateway(
     const idempotency = request.headers.get("idempotency-key");
     if (idempotency) headers["Idempotency-Key"] = idempotency;
     const query = new URLSearchParams();
-    if (path === "admin/items")
+    if (path === "admin/items" || path === "me/session-history")
       for (const key of ["cursor", "limit"]) {
         const value = request.nextUrl.searchParams.get(key);
         if (value !== null) query.set(key, value);
       }
-    if (path === "me/recommendations/next") {
+    if (
+      ["me/recommendations/next", "me/progress", "me/session-history"].includes(
+        path,
+      )
+    ) {
       const subject = request.nextUrl.searchParams.get("subject_id");
       if (subject !== null) query.set("subject_id", subject);
     }

@@ -1,34 +1,30 @@
-# Current Sprint: E4 unseen equivalent reassessment
+# Current Sprint: E6 progress and session history
 
-Reviewed hints are committed and pushed to main as `3c0c3ba`; the completed branch
-was deleted. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36401623871). The next slice
-is local on `codex/e4-unseen-reassessment`, uncommitted for review.
+Unseen reassessment is committed and pushed to main as `73c1fba`; the completed
+branch was deleted. [Hosted main CI passed](https://github.com/Jotham566/kasoma/actions/runs/36404562915).
+The next slice is local on `codex/e6-progress-history`, uncommitted for review.
 
 ## Current slice
 
-FR-GRD-008, supporting FR-REV-003/005, FR-GRD-007, FR-MST-001/003,
-FR-CNT-001/004, FR-ID-003, FR-OPS-001, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
+FR-MST-004/005, supporting FR-MST-002/003, FR-ID-003, FR-REV-005, NFR-SEC-002,
+NFR-ACC-001, NFR-LOC-001 and NFR-MNT-001.
 
-Reviewed equivalent-version claims are preferred to same-primary-skill/difficulty
-fallback. Selection excludes all previously served stable items, active reservations
-and near-duplicate prompts. One reassessment links to each original revision attempt;
-retries and cross-device discovery resume it. The shared player, grader and mastery
-service produce separate independent evidence and preserve the original grade.
-Migration 0010 is additive; replay checks frozen selection and content hashes.
+Progress summarizes subject/topic/competency estimates from immutable eligible evidence,
+with confidence, mapped-skill coverage and guarded recent change. Unfinished, abandoned
+and expired diagnostic evidence stays sealed. History provides owned cursor pagination,
+Kampala timestamps and existing session resume/review. Reads do not mutate learning
+records. No migration is required.
 
-Decision: [ADR-023](../decisions/ADR/023-unseen-reassessment.md).
-Evidence and check status: [reassessment verification](E4_REASSESSMENT_VERIFICATION.md).
-All 249 Python tests and 13 browser tests passed, alongside setup, migration, contracts,
-lint/types, security and container checks. Changelog, API/data/content specifications,
-runbook and traceability accompany the slice.
+Decision: [ADR-024](../decisions/ADR/024-progress-history.md).
+Evidence and check status: [progress verification](E6_PROGRESS_VERIFICATION.md).
+Changelog, API contract, runbook and traceability accompany the slice.
 
 ## Next vertical slice
 
-FR-MST-004/005: consent-aware subject/topic/competency progress and recent session
-history, aggregating immutable evidence with visible confidence and sparse-evidence
-language. Preserve the Week 5 frozen expert benchmark and short-text gate as parallel
-academic dependencies. Do not infer learning gain or misconception resolution from
-synthetic regression results.
+FR-GRD-009/FR-CNT-006: learner flags for owned questions/grades, immutable item/version/
+attempt linkage, safe optional comments and auditable staff triage. Preserve the Week 5
+frozen expert benchmark and short-text gate as academic dependencies. Do not infer
+learning gain or misconception resolution from synthetic regression results.
 
 ## Remaining dependencies and release gates
 
@@ -38,8 +34,9 @@ synthetic regression results.
 - Approved privacy wording, verifiable guardian procedure, DPIA and legal approvals.
 - Week 5 short-text benchmark and Week 8 production provider decision; no model
   evaluation, real learner data or cloud deployment is authorized by these local checks.
-- General progress/history, multiple-choice/short-text, learner flags, WhatsApp and operations.
+- Multiple-choice/short-text, learner flags, WhatsApp and operations.
 - Production OTP/MFA, restricted DB roles, outbox dispatch and retention/anonymization jobs.
 
-Prior evidence: [hints](E4_HINTS_VERIFICATION.md), [recommendations](E5_RECOMMENDATIONS_VERIFICATION.md),
+Prior evidence: [reassessment](E4_REASSESSMENT_VERIFICATION.md),
+[hints](E4_HINTS_VERIFICATION.md), [recommendations](E5_RECOMMENDATIONS_VERIFICATION.md),
 [diagnostics](E5_VERIFICATION.md), [traceability](REQUIREMENTS_TRACEABILITY.md).
