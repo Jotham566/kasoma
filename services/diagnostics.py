@@ -8,6 +8,7 @@ from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session
 
 from services.assessment_contracts import (
+    DiagnosticAnswerReference,
     DiagnosticResult,
     DiagnosticView,
     InitialRecommendation,
@@ -69,19 +70,22 @@ class Diagnostics:
         return result
 
     def view(self, db: Session, session: AssessmentSession) -> DiagnosticView:
-        count = len(
-            list(
-                db.scalars(
-                    select(Attempt.id).join(SessionItem).where(SessionItem.session_id == session.id)
-                )
+        answers = [
+            DiagnosticAnswerReference(attempt_id=attempt, position=position)
+            for attempt, position in db.execute(
+                select(Attempt.id, SessionItem.position)
+                .join(SessionItem)
+                .where(SessionItem.session_id == session.id)
+                .order_by(SessionItem.position)
             )
-        )
+        ]
         return DiagnosticView(
             id=session.id,
             subject_id=session.subject_id,
             status=session.status,
             item_count=session.item_count,
-            answered_count=count,
+            answered_count=len(answers),
+            answered_attempts=answers,
             plan_version=session.plan_version,
             expires_at=session.expires_at,
             result=DiagnosticResult.model_validate(session.diagnostic_result)

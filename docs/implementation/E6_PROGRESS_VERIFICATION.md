@@ -3,8 +3,8 @@
 Date: 28 September 2026. Synthetic local development only.
 
 Unseen reassessment was committed and pushed to main as `73c1fba`; its completed
-branch was removed. Progress/history is on `codex/e6-progress-history`, uncommitted
-for review. [Hosted main CI passed](https://github.com/Jotham566/kasoma/actions/runs/36404562915). These local checks are not production acceptance.
+branch was removed. Progress/history was subsequently committed and pushed to main as `df855ab`;
+`codex/e6-progress-history` was deleted. [Hosted main CI passed](https://github.com/Jotham566/kasoma/actions/runs/36407232098). These local checks are not production acceptance.
 
 ## Requirements and decision
 

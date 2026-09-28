@@ -2,7 +2,7 @@
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
 
-E0 through E6 synthetic progress, practice, reviewed-hint and reassessment evidence is recorded below. Local synthetic journeys are not
+E0 through E6 synthetic learning and E8 learner-flag evidence is recorded below. Local synthetic journeys are not
 production-pilot acceptance; delivery-provider and legal approval gates remain. See the [assessment](PHASE_0_ASSESSMENT.md).
 
 | Requirement | Implementation | Tests / evidence | Status |
@@ -32,7 +32,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-GRD-006 | Reviewed versioned hints, append-only usage and frozen pre-answer count/highest level; independence weighting with unchanged points | `tests/contract/test_hint_contract.py`, `tests/integration/test_hints.py`, `tests/e2e/hints.spec.ts`; [verification](E4_HINTS_VERIFICATION.md) | Local synthetic verified (235 Python tests / 12 browser tests); production hint academic review pending |
 | FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision gating and permanent diagnostic solution block implemented |
 | FR-GRD-008 | Reviewed equivalence claims and same-primary-skill/difficulty fallback; all-time unseen/clone exclusion; one-item linked session with independent evidence | Reassessment unit/API/browser suites, migration 0010 and `make replay-reassessments`; [verification](E4_REASSESSMENT_VERIFICATION.md) | Local synthetic verified (249 Python tests / 13 browser tests); academic transfer validity and calibrated misconception-resolution criteria pending |
-| FR-GRD-009 | — | — | Not started |
+| FR-GRD-009 | Owned attempt/version-bound reporting, encrypted bounded comments, safe receipt recovery | Flag contract/API/browser suites; [verification](E8_FLAGS_VERIFICATION.md) | Local synthetic implementation; current consent and diagnostic sealing enforced |
 | FR-MST-001 | Unique append-only attempt/skill evidence; synchronous deterministic grading; consented legacy reconciliation | Duplicate replay, rollback, immutable DB records and integration tests | Local deterministic path implemented |
 | FR-MST-002 | Specified weighted prior, score, coverage/recency confidence and display state | Hand calculations, property tests and diagnostic UI | Local implemented |
 | FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
@@ -50,10 +50,10 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-003 | Return, approval, high-risk/disputed second review, retirement and append-only reviews | Full API/browser workflow; two-reviewer and retired-selection tests | Local implemented with synthetic content |
 | FR-CNT-004 | Immutable approved versions, explicit successor drafts and normalized frozen mappings | API mutation rejection; direct SQL history/mapping/attempt tests; retired-version grades/solutions remain unchanged | Partial: choice/numeric attempts and grades pin immutable versions/hash; migration preserves legacy choice rows; rubric pinning pending |
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local choice/numeric publication validation implemented; other formats and academic evidence pending |
-| FR-CNT-006 | — | — | Not started |
-| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; other learner events and dispatch pending |
+| FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
+| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; other learner events and dispatch pending |
 | FR-OPS-002 | `services/health.py`, API health shell and worker smoke | Health success/degraded tests; real Redis/Celery test | Partial; alerts/dashboards pending |
-| FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content and local role actions; operations audit UI/retention pending |
+| FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
 | FR-OPS-004 | — | — | Not started |
 | NFR-PERF-001 | — | — | Not started |
 | NFR-PERF-002 | — | — | Not started |
@@ -62,7 +62,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-SCL-001 | — | — | Not started |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
-| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, choice/numeric assessment, diagnostic and progress/history axe/keyboard checks; remaining journey matrix pending |
+| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, assessment, diagnostic, progress/history and flag/triage axe/keyboard checks; remaining journey matrix pending |
 | NFR-BW-001 | — | — | Not started |
 | NFR-COMP-001 | Next.js shell | Chromium browser test | Partial; cross-browser learner matrix pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
@@ -80,3 +80,5 @@ E4 reviewed hints: [verification report](E4_HINTS_VERIFICATION.md).
 E4 unseen reassessment: [verification report](E4_REASSESSMENT_VERIFICATION.md).
 
 E6 progress and session history: [verification report](E6_PROGRESS_VERIFICATION.md).
+
+E8 learner flags: [verification report](E8_FLAGS_VERIFICATION.md).

@@ -359,6 +359,26 @@
         "title": "Credentials",
         "type": "object"
       },
+      "DiagnosticAnswerReference": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "position": {
+            "title": "Position",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "attempt_id",
+          "position"
+        ],
+        "title": "DiagnosticAnswerReference",
+        "type": "object"
+      },
       "DiagnosticReceipt": {
         "additionalProperties": false,
         "properties": {
@@ -430,6 +450,13 @@
       "DiagnosticView": {
         "additionalProperties": false,
         "properties": {
+          "answered_attempts": {
+            "items": {
+              "$ref": "#/components/schemas/DiagnosticAnswerReference"
+            },
+            "title": "Answered Attempts",
+            "type": "array"
+          },
           "answered_count": {
             "title": "Answered Count",
             "type": "integer"
@@ -485,6 +512,7 @@
           }
         },
         "required": [
+          "answered_attempts",
           "id",
           "subject_id",
           "status",
@@ -816,6 +844,426 @@
           "message"
         ],
         "title": "FieldError",
+        "type": "object"
+      },
+      "FlagDetail": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "QUESTION_ERROR",
+              "GRADE_DISPUTE",
+              "UNCLEAR",
+              "ACCESSIBILITY",
+              "UNSAFE_CONTENT",
+              "OTHER"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "comment": {
+            "title": "Comment",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/FlagHistoryView"
+            },
+            "title": "History",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "item_id": {
+            "format": "uuid",
+            "title": "Item Id",
+            "type": "string"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "owner_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Id"
+          },
+          "priority": {
+            "enum": [
+              "NORMAL",
+              "HIGH"
+            ],
+            "title": "Priority",
+            "type": "string"
+          },
+          "resolution": {
+            "title": "Resolution",
+            "type": "string"
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved At"
+          },
+          "retention_due_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retention Due At"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "IN_REVIEW",
+              "RESOLVED",
+              "DISMISSED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "item_id",
+          "item_version_id",
+          "category",
+          "priority",
+          "status",
+          "owner_id",
+          "revision",
+          "created_at",
+          "updated_at",
+          "comment",
+          "resolution",
+          "resolved_at",
+          "retention_due_at",
+          "history"
+        ],
+        "title": "FlagDetail",
+        "type": "object"
+      },
+      "FlagHistoryView": {
+        "additionalProperties": false,
+        "properties": {
+          "actor_id": {
+            "format": "uuid",
+            "title": "Actor Id",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "owner_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Id"
+          },
+          "priority": {
+            "enum": [
+              "NORMAL",
+              "HIGH"
+            ],
+            "title": "Priority",
+            "type": "string"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "IN_REVIEW",
+              "RESOLVED",
+              "DISMISSED"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "actor_id",
+          "revision",
+          "status",
+          "priority",
+          "owner_id",
+          "created_at"
+        ],
+        "title": "FlagHistoryView",
+        "type": "object"
+      },
+      "FlagInput": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "QUESTION_ERROR",
+              "GRADE_DISPUTE",
+              "UNCLEAR",
+              "ACCESSIBILITY",
+              "UNSAFE_CONTENT",
+              "OTHER"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "comment": {
+            "default": "",
+            "maxLength": 1000,
+            "title": "Comment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "title": "FlagInput",
+        "type": "object"
+      },
+      "FlagPage": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/FlagSummary"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data",
+          "next_cursor"
+        ],
+        "title": "FlagPage",
+        "type": "object"
+      },
+      "FlagReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "QUESTION_ERROR",
+              "GRADE_DISPUTE",
+              "UNCLEAR",
+              "ACCESSIBILITY",
+              "UNSAFE_CONTENT",
+              "OTHER"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "category",
+          "created_at"
+        ],
+        "title": "FlagReceipt",
+        "type": "object"
+      },
+      "FlagSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "QUESTION_ERROR",
+              "GRADE_DISPUTE",
+              "UNCLEAR",
+              "ACCESSIBILITY",
+              "UNSAFE_CONTENT",
+              "OTHER"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "item_id": {
+            "format": "uuid",
+            "title": "Item Id",
+            "type": "string"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "owner_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Id"
+          },
+          "priority": {
+            "enum": [
+              "NORMAL",
+              "HIGH"
+            ],
+            "title": "Priority",
+            "type": "string"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "IN_REVIEW",
+              "RESOLVED",
+              "DISMISSED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "item_id",
+          "item_version_id",
+          "category",
+          "priority",
+          "status",
+          "owner_id",
+          "revision",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "FlagSummary",
+        "type": "object"
+      },
+      "FlagUpdate": {
+        "additionalProperties": false,
+        "properties": {
+          "claim": {
+            "default": false,
+            "title": "Claim",
+            "type": "boolean"
+          },
+          "expected_revision": {
+            "minimum": 1.0,
+            "title": "Expected Revision",
+            "type": "integer"
+          },
+          "priority": {
+            "enum": [
+              "NORMAL",
+              "HIGH"
+            ],
+            "title": "Priority",
+            "type": "string"
+          },
+          "resolution": {
+            "default": "",
+            "maxLength": 1000,
+            "title": "Resolution",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "IN_REVIEW",
+              "RESOLVED",
+              "DISMISSED"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "expected_revision",
+          "status",
+          "priority"
+        ],
+        "title": "FlagUpdate",
         "type": "object"
       },
       "GradeView": {
@@ -2732,6 +3180,335 @@
         "summary": "Context"
       }
     },
+    "/api/v1/admin/content-flags": {
+      "get": {
+        "operationId": "queue_api_v1_admin_content_flags_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "OPEN",
+                    "IN_REVIEW",
+                    "RESOLVED",
+                    "DISMISSED"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlagPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Queue"
+      }
+    },
+    "/api/v1/admin/content-flags/{flag_id}": {
+      "get": {
+        "operationId": "detail_api_v1_admin_content_flags__flag_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "flag_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Flag Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlagDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Detail"
+      },
+      "patch": {
+        "operationId": "triage_api_v1_admin_content_flags__flag_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "flag_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Flag Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlagDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Triage"
+      }
+    },
     "/api/v1/admin/item-versions/{version_id}": {
       "get": {
         "operationId": "get_version_api_v1_admin_item_versions__version_id__get",
@@ -3559,6 +4336,208 @@
           }
         },
         "summary": "Create"
+      }
+    },
+    "/api/v1/attempts/{attempt_id}/flag": {
+      "get": {
+        "operationId": "owned_reports_api_v1_attempts__attempt_id__flag_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/FlagReceipt"
+                  },
+                  "title": "Response Owned Reports Api V1 Attempts  Attempt Id  Flag Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Owned Reports"
+      },
+      "post": {
+        "operationId": "report_api_v1_attempts__attempt_id__flag_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlagReceipt"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Report"
       }
     },
     "/api/v1/attempts/{attempt_id}/grade": {

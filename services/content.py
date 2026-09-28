@@ -31,6 +31,7 @@ from services.domain.content import (
     ItemVersion,
 )
 from services.domain.curriculum import Competency, Concept, Level, Subject, Topic
+from services.domain.flags import ContentFlag
 from services.identity import IdentityError, IdentityService
 from services.numeric import specification_errors
 from services.staff import authorize
@@ -77,6 +78,20 @@ class ContentService:
             approval_count=self.approvals(db, version),
             created_at=version.created_at,
             updated_at=version.updated_at,
+        )
+
+    def disputed(self, db: Session, item_id: UUID) -> bool:
+        return (
+            db.scalar(
+                select(ContentFlag.id)
+                .where(
+                    ContentFlag.item_id == item_id,
+                    ContentFlag.category.in_(["QUESTION_ERROR", "GRADE_DISPUTE", "UNSAFE_CONTENT"]),
+                    ContentFlag.status != "DISMISSED",
+                )
+                .limit(1)
+            )
+            is not None
         )
 
     def approvals(self, db: Session, version: ItemVersion) -> int:
@@ -384,7 +399,9 @@ class ContentService:
                     )
                     or 0
                 ) + 1
-                second_review = second_review or source.requires_second_review
+                second_review = (
+                    second_review or source.requires_second_review or self.disputed(db, item.id)
+                )
             else:
                 item = Item(id=uuid4(), subject_id=body.subject_id, author_id=actor, created_at=now)
                 db.add(item)
@@ -450,7 +467,7 @@ class ContentService:
                 raise ContentError("CONTENT_VALIDATION_FAILED", ["reason"])
             before = version.content_hash
             document = DraftDocument.model_validate(version.document)
-            item = db.get(Item, version.item_id)
+            item = db.scalar(select(Item).where(Item.id == version.item_id).with_for_update())
             if item is None:
                 raise ContentError("RESOURCE_NOT_FOUND", status=404)
             if action == "edit" and isinstance(body, EditDraft):
@@ -507,10 +524,18 @@ class ContentService:
                     )
                 )
                 db.flush()
-                version.requires_second_review |= body.require_second_review
+                # Read before mutating: an autoflush must not persist review escalation
+                # before the version revision is incremented below.
+                second_review_required = (
+                    version.requires_second_review
+                    or body.require_second_review
+                    or self.disputed(db, item.id)
+                )
+                approvals = self.approvals(db, version)
+                version.requires_second_review = second_review_required
                 if body.decision == "RETURN":
                     version.status = "DRAFT"
-                elif self.approvals(db, version) >= (2 if version.requires_second_review else 1):
+                elif approvals >= (2 if second_review_required else 1):
                     version.status = "APPROVED"
             elif action == "retire":
                 if version.status != "APPROVED":

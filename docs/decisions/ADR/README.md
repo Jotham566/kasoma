@@ -31,3 +31,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-024: Evidence-derived progress and history](024-progress-history.md)
   records confidence-aware aggregation, sealed diagnostics and owned cursor pagination.
+
+- [ADR-025: Learner flags and independent triage](025-learner-flags.md)
+  records report privacy, immutable linkage, audit/retry controls and disputed review.

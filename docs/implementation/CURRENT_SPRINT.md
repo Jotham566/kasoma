@@ -1,30 +1,28 @@
-# Current Sprint: E6 progress and session history
+# Current Sprint: E8 learner flags and independent triage
 
-Unseen reassessment is committed and pushed to main as `73c1fba`; the completed
-branch was deleted. [Hosted main CI passed](https://github.com/Jotham566/kasoma/actions/runs/36404562915).
-The next slice is local on `codex/e6-progress-history`, uncommitted for review.
+Progress/history is committed and pushed to main as `df855ab`; the completed branch
+was deleted. [Hosted main CI passed](https://github.com/Jotham566/kasoma/actions/runs/36407232098). This next slice is local on `codex/learner-flags`, uncommitted for review.
 
 ## Current slice
 
-FR-MST-004/005, supporting FR-MST-002/003, FR-ID-003, FR-REV-005, NFR-SEC-002,
-NFR-ACC-001, NFR-LOC-001 and NFR-MNT-001.
+FR-GRD-009/FR-CNT-006, supporting FR-CNT-003/004, FR-ID-003, FR-OPS-001/003,
+NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
 
-Progress summarizes subject/topic/competency estimates from immutable eligible evidence,
-with confidence, mapped-skill coverage and guarded recent change. Unfinished, abandoned
-and expired diagnostic evidence stays sealed. History provides owned cursor pagination,
-Kampala timestamps and existing session resume/review. Reads do not mutate learning
-records. No migration is required.
+Learners report owned submitted questions/grades; staff inspect, claim, prioritize and
+resolve flags with immutable source linkage, encrypted text, revision checks and audited
+history. Diagnostic feedback remains sealed and no learning evidence is changed.
+Disputed successor content requires two independent reviewers. Migrations 0011–0012 are additive.
 
-Decision: [ADR-024](../decisions/ADR/024-progress-history.md).
-Evidence and check status: [progress verification](E6_PROGRESS_VERIFICATION.md).
-Changelog, API contract, runbook and traceability accompany the slice.
+Decision: [ADR-025](../decisions/ADR/025-learner-flags.md).
+Evidence and check status: [flag verification](E8_FLAGS_VERIFICATION.md).
+All 280 Python tests and 15 browser tests pass; setup, migrations, contracts, lint/types,
+security and final container checks pass. Production gates remain below.
 
 ## Next vertical slice
 
-FR-GRD-009/FR-CNT-006: learner flags for owned questions/grades, immutable item/version/
-attempt linkage, safe optional comments and auditable staff triage. Preserve the Week 5
-frozen expert benchmark and short-text gate as academic dependencies. Do not infer
-learning gain or misconception resolution from synthetic regression results.
+Complete FR-GRD-001 deterministic multiple-choice support through reviewed content,
+shared assessment, exact grading and tests. Preserve the expert short-text benchmark
+and Week 8 provider gates; synthetic validation does not certify academic truth.
 
 ## Remaining dependencies and release gates
 
@@ -34,7 +32,7 @@ learning gain or misconception resolution from synthetic regression results.
 - Approved privacy wording, verifiable guardian procedure, DPIA and legal approvals.
 - Week 5 short-text benchmark and Week 8 production provider decision; no model
   evaluation, real learner data or cloud deployment is authorized by these local checks.
-- Multiple-choice/short-text, learner flags, WhatsApp and operations.
+- Multiple-choice/short-text, WhatsApp and remaining operations.
 - Production OTP/MFA, restricted DB roles, outbox dispatch and retention/anonymization jobs.
 
 Prior evidence: [reassessment](E4_REASSESSMENT_VERIFICATION.md),

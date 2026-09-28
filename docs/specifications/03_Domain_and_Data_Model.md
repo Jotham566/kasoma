@@ -197,3 +197,19 @@ confidence (0–1), under the claim-bearing version's immutable content hash and
 independent review records. Selection records the exact claim/review IDs or the
 explicit same-skill/difficulty fallback basis. No automatic relationship inference
 or retrospective evidence rewrite occurs. See [ADR-023](../decisions/ADR/023-unseen-reassessment.md).
+
+## Learner flag persistence (migrations 0011–0012)
+
+`content_flags` pins attempt, learner reporter, stable item and exact version with a
+unique attempt/category scope and immutable source binding. Comment and current
+resolution are encrypted. Mutable priority/status/owner require a monotonically
+checked revision and append-only `content_flag_history` metadata; actor-bound
+`content_flag_receipts` protect retries. Database guards require valid source bindings,
+independent reviewer ownership, history, terminal resolution and a retention date
+24 calendar months after resolution. Reopening clears the terminal resolution/date.
+Safe audit and content outbox events commit atomically. No grade/mastery row changes.
+Production retention/anonymization jobs remain a separate required gate; no destructive
+flag deletion is exposed. See [ADR-025](../decisions/ADR/025-learner-flags.md).
+
+Migration 0012 explicitly requires a terminal retention deadline, closing SQL CHECK
+null semantics without rewriting the already applied initial migration.

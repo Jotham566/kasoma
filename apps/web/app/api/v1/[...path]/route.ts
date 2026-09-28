@@ -21,6 +21,7 @@ const allowed: Record<string, string[]> = {
   "sessions/active": ["GET"],
   "admin/content-context": ["GET"],
   "admin/items": ["GET", "POST"],
+  "admin/content-flags": ["GET"],
 };
 
 async function gateway(
@@ -60,25 +61,31 @@ async function gateway(
     `^(?:sessions/${uuid}/items/${uuid}/hint|attempts/${uuid}/hint)$`,
   ).test(path);
   const reassessment = new RegExp(`^attempts/${uuid}/reassessment$`).test(path);
-  const methods = reassessment
+  const flagReport = new RegExp(`^attempts/${uuid}/flag$`).test(path);
+  const flagTriage = new RegExp(`^admin/content-flags/${uuid}$`).test(path);
+  const methods = flagReport
     ? ["GET", "POST"]
-    : hintWrite
-      ? ["POST"]
-      : learning
-        ? [
-            learning[1] === "attempts" || learning[1] === "abandon"
-              ? "POST"
-              : "GET",
-          ]
-        : learningRead
-          ? ["GET"]
-          : staffVersion
-            ? staffVersion[1] === "reviews"
+    : flagTriage
+      ? ["GET", "PATCH"]
+      : reassessment
+        ? ["GET", "POST"]
+        : hintWrite
+          ? ["POST"]
+          : learning
+            ? [
+                learning[1] === "attempts" || learning[1] === "abandon"
+                  ? "POST"
+                  : "GET",
+              ]
+            : learningRead
               ? ["GET"]
-              : staffVersion[1]
-                ? ["POST"]
-                : ["GET", "PATCH"]
-            : allowed[path];
+              : staffVersion
+                ? staffVersion[1] === "reviews"
+                  ? ["GET"]
+                  : staffVersion[1]
+                    ? ["POST"]
+                    : ["GET", "PATCH"]
+                : allowed[path];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (
@@ -114,7 +121,15 @@ async function gateway(
     const idempotency = request.headers.get("idempotency-key");
     if (idempotency) headers["Idempotency-Key"] = idempotency;
     const query = new URLSearchParams();
-    if (path === "admin/items" || path === "me/session-history")
+    if (path === "admin/content-flags") {
+      const status = request.nextUrl.searchParams.get("status");
+      if (status) query.set("status", status);
+    }
+    if (
+      ["admin/items", "admin/content-flags", "me/session-history"].includes(
+        path,
+      )
+    )
       for (const key of ["cursor", "limit"]) {
         const value = request.nextUrl.searchParams.get(key);
         if (value !== null) query.set(key, value);

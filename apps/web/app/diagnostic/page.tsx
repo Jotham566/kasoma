@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FlagForm } from "../flag-form";
 import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 import { Status } from "@kasoma/ui";
@@ -41,6 +42,7 @@ export default function Diagnostic() {
   const [subject, setSubject] = useState("");
   const [session, setSession] = useState<Schema["DiagnosticView"] | null>(null);
   const [item, setItem] = useState<Schema["LearnerItem"] | null>(null);
+  const [flagAttempt, setFlagAttempt] = useState("");
   const [choice, setChoice] = useState("");
   const [number, setNumber] = useState("");
   const [unit, setUnit] = useState("");
@@ -307,6 +309,36 @@ export default function Diagnostic() {
             <button className={button}>Save answer and continue</button>
           </fieldset>
         </form>
+      )}
+      {!!session?.answered_attempts.length && (
+        <section
+          aria-label="Report a diagnostic question"
+          className="space-y-3"
+        >
+          <h2 className="text-xl font-semibold">Report a saved question</h2>
+          <label>
+            Saved question
+            <select
+              className={field}
+              value={
+                flagAttempt || session.answered_attempts.at(-1)!.attempt_id
+              }
+              onChange={(e) => setFlagAttempt(e.target.value)}
+            >
+              {session.answered_attempts.map((a) => (
+                <option key={a.attempt_id} value={a.attempt_id}>
+                  Question {a.position}
+                </option>
+              ))}
+            </select>
+          </label>
+          <FlagForm
+            key={flagAttempt || session.answered_attempts.at(-1)!.attempt_id}
+            attemptId={
+              flagAttempt || session.answered_attempts.at(-1)!.attempt_id
+            }
+          />
+        </section>
       )}
       {session?.result && (
         <section aria-label="Diagnostic results" className="space-y-4">

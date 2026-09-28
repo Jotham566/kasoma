@@ -305,3 +305,19 @@ pages creates no new learning evidence. Reload retries failed reads safely.
 No new seed command or migration is required. Verify with `make test`, `make e2e`,
 `make lint` and `make openapi-check`; see the
 [progress verification report](../implementation/E6_PROGRESS_VERIFICATION.md).
+
+## Synthetic learner flags and staff triage
+
+Run `make migrate` for additive migrations 0011–0012. After saving a synthetic practice
+answer, open **Report question or grade**. Diagnostic reporting uses the saved-question
+selector without exposing scores. Comments are bounded, encrypted and never written
+to browser storage. Retry preserves the same report; reload recovers recorded categories.
+
+Provision a synthetic reviewer using the existing `make staff-role` workflow and open
+`/admin/flags`. Inspect reports, claim them, set priority and resolve/dismiss with a
+short internal resolution. Every read/decision is audited; authors cannot triage their
+own content. Stale revisions require reload. Inspect the exact reported content version
+through the content workspace; grades/mastery remain unchanged. Disputed successors
+require two reviewers. Resolved flags record a 24-month retention due date; production
+retention jobs and approved safeguarding procedures remain required before real data.
+See [flag verification](../implementation/E8_FLAGS_VERIFICATION.md).

@@ -1,5 +1,18 @@
 # Changelog
 
+## 28 September 2026 — learner flags and triage (local implementation)
+
+- Progress/history committed and pushed to main as `df855ab`; completed branch removed.
+- Add owned attempt-bound reports, encrypted optional comments, safe receipt recovery,
+  rate limits and exact retry handling across browser interruption/reload.
+- Add reviewer/admin queue, independent self-assignment, priorities, revision-checked
+  resolution/reopening and atomic audit/history/outbox records.
+- Preserve grades, mastery and sealed diagnostics; require two reviewers for disputed
+  successor content. Migrations 0011–0012 are additive and enforce the approved retention due date.
+- Add ADR-025, generated contracts, tests, traceability and
+  [verification](docs/implementation/E8_FLAGS_VERIFICATION.md). Production support,
+  retention jobs, safeguarding/legal approval and academic calibration remain gated.
+
 ## 28 September 2026 — progress and session history (local implementation)
 
 - Unseen reassessment committed and pushed to main as `73c1fba`; completed branch removed.

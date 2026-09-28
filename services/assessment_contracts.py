@@ -197,7 +197,13 @@ class DiagnosticResult(Contract):
     input_hash: str
 
 
+class DiagnosticAnswerReference(Contract):
+    attempt_id: UUID
+    position: int
+
+
 class DiagnosticView(Contract):
+    answered_attempts: list[DiagnosticAnswerReference]
     id: UUID
     subject_id: UUID
     status: Literal["ACTIVE", "COMPLETED", "ABANDONED", "EXPIRED"]

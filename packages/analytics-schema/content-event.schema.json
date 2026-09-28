@@ -20,7 +20,9 @@
         "content.edit",
         "content.submit",
         "content.review",
-        "content.retire"
+        "content.retire",
+        "content.flag.created",
+        "content.flag.updated"
       ]
     },
     "version": { "const": 1 },

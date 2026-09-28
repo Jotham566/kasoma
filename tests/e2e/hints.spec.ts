@@ -86,6 +86,9 @@ test("FR-GRD-006: reviewed hints survive lost acknowledgement and preserve gradi
   await expect(
     hints.getByText(/Your submitted score and evidence stay unchanged/),
   ).toBeVisible();
+  await expect(
+    hints.getByRole("button", { name: "Show next reviewed hint" }),
+  ).toBeEnabled();
   await hints.getByRole("button", { name: "Show next reviewed hint" }).focus();
   await page.keyboard.press("Enter");
   await expect(hints.getByText(/^Hint 2:/)).toBeVisible();

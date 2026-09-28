@@ -21,6 +21,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/content-flags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Queue */
+        get: operations["queue_api_v1_admin_content_flags_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/content-flags/{flag_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detail */
+        get: operations["detail_api_v1_admin_content_flags__flag_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Triage */
+        patch: operations["triage_api_v1_admin_content_flags__flag_id__patch"];
+        trace?: never;
+    };
     "/api/v1/admin/item-versions/{version_id}": {
         parameters: {
             query?: never;
@@ -119,6 +154,24 @@ export interface paths {
         put?: never;
         /** Create */
         post: operations["create_api_v1_admin_items_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/attempts/{attempt_id}/flag": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Owned Reports */
+        get: operations["owned_reports_api_v1_attempts__attempt_id__flag_get"];
+        put?: never;
+        /** Report */
+        post: operations["report_api_v1_attempts__attempt_id__flag_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -739,6 +792,16 @@ export interface components {
              */
             token_type: "Bearer";
         };
+        /** DiagnosticAnswerReference */
+        DiagnosticAnswerReference: {
+            /**
+             * Attempt Id
+             * Format: uuid
+             */
+            attempt_id: string;
+            /** Position */
+            position: number;
+        };
         /** DiagnosticReceipt */
         DiagnosticReceipt: {
             /**
@@ -777,6 +840,8 @@ export interface components {
         };
         /** DiagnosticView */
         DiagnosticView: {
+            /** Answered Attempts */
+            answered_attempts: components["schemas"]["DiagnosticAnswerReference"][];
             /** Answered Count */
             answered_count: number;
             /**
@@ -957,6 +1022,200 @@ export interface components {
             field: string;
             /** Message */
             message: string;
+        };
+        /** FlagDetail */
+        FlagDetail: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "QUESTION_ERROR" | "GRADE_DISPUTE" | "UNCLEAR" | "ACCESSIBILITY" | "UNSAFE_CONTENT" | "OTHER";
+            /** Comment */
+            comment: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** History */
+            history: components["schemas"]["FlagHistoryView"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Item Id
+             * Format: uuid
+             */
+            item_id: string;
+            /**
+             * Item Version Id
+             * Format: uuid
+             */
+            item_version_id: string;
+            /** Owner Id */
+            owner_id: string | null;
+            /**
+             * Priority
+             * @enum {string}
+             */
+            priority: "NORMAL" | "HIGH";
+            /** Resolution */
+            resolution: string;
+            /** Resolved At */
+            resolved_at: string | null;
+            /** Retention Due At */
+            retention_due_at: string | null;
+            /** Revision */
+            revision: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "OPEN" | "IN_REVIEW" | "RESOLVED" | "DISMISSED";
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** FlagHistoryView */
+        FlagHistoryView: {
+            /**
+             * Actor Id
+             * Format: uuid
+             */
+            actor_id: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Owner Id */
+            owner_id: string | null;
+            /**
+             * Priority
+             * @enum {string}
+             */
+            priority: "NORMAL" | "HIGH";
+            /** Revision */
+            revision: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "OPEN" | "IN_REVIEW" | "RESOLVED" | "DISMISSED";
+        };
+        /** FlagInput */
+        FlagInput: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "QUESTION_ERROR" | "GRADE_DISPUTE" | "UNCLEAR" | "ACCESSIBILITY" | "UNSAFE_CONTENT" | "OTHER";
+            /**
+             * Comment
+             * @default
+             */
+            comment: string;
+        };
+        /** FlagPage */
+        FlagPage: {
+            /** Data */
+            data: components["schemas"]["FlagSummary"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** FlagReceipt */
+        FlagReceipt: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "QUESTION_ERROR" | "GRADE_DISPUTE" | "UNCLEAR" | "ACCESSIBILITY" | "UNSAFE_CONTENT" | "OTHER";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+        };
+        /** FlagSummary */
+        FlagSummary: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "QUESTION_ERROR" | "GRADE_DISPUTE" | "UNCLEAR" | "ACCESSIBILITY" | "UNSAFE_CONTENT" | "OTHER";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Item Id
+             * Format: uuid
+             */
+            item_id: string;
+            /**
+             * Item Version Id
+             * Format: uuid
+             */
+            item_version_id: string;
+            /** Owner Id */
+            owner_id: string | null;
+            /**
+             * Priority
+             * @enum {string}
+             */
+            priority: "NORMAL" | "HIGH";
+            /** Revision */
+            revision: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "OPEN" | "IN_REVIEW" | "RESOLVED" | "DISMISSED";
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** FlagUpdate */
+        FlagUpdate: {
+            /**
+             * Claim
+             * @default false
+             */
+            claim: boolean;
+            /** Expected Revision */
+            expected_revision: number;
+            /**
+             * Priority
+             * @enum {string}
+             */
+            priority: "NORMAL" | "HIGH";
+            /**
+             * Resolution
+             * @default
+             */
+            resolution: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "IN_REVIEW" | "RESOLVED" | "DISMISSED";
         };
         /** GradeView */
         GradeView: {
@@ -1851,6 +2110,242 @@ export interface operations {
             };
         };
     };
+    queue_api_v1_admin_content_flags_get: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+                status?: ("OPEN" | "IN_REVIEW" | "RESOLVED" | "DISMISSED") | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlagPage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    detail_api_v1_admin_content_flags__flag_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flag_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlagDetail"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    triage_api_v1_admin_content_flags__flag_id__patch: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                flag_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FlagUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlagDetail"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     get_version_api_v1_admin_item_versions__version_id__get: {
         parameters: {
             query?: never;
@@ -2479,6 +2974,164 @@ export interface operations {
             };
             /** @description Unprocessable Entity */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    owned_reports_api_v1_attempts__attempt_id__flag_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlagReceipt"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    report_api_v1_attempts__attempt_id__flag_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                attempt_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FlagInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlagReceipt"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

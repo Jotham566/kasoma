@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FlagForm } from "../flag-form";
 import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 import { Status } from "@kasoma/ui";
@@ -501,6 +502,7 @@ export default function Revise() {
                 <p key={i}>{text}</p>
               ))}
               <p>{grade.feedback.next_action}</p>
+              <FlagForm key={grade.attempt_id} attemptId={grade.attempt_id} />
               {session.kind !== "REASSESSMENT" && (
                 <Hints
                   key={grade.attempt_id}

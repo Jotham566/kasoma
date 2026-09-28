@@ -57,6 +57,27 @@ export default function ContentWorkspace() {
         setItems(list.data?.data ?? []);
         setCursor(list.data?.next_cursor ?? null);
         setStatus("Staff workspace ready.");
+        const version = new URLSearchParams(window.location.search).get(
+          "version",
+        );
+        if (version) {
+          const found = await api().GET(
+            "/api/v1/admin/item-versions/{version_id}",
+            { params: { path: { version_id: version } } },
+          );
+          if (!active) return;
+          if (found.data) {
+            setSelected(found.data);
+            const reviews = await api().GET(
+              "/api/v1/admin/item-versions/{version_id}/reviews",
+              { params: { path: { version_id: version } } },
+            );
+            if (active) setHistory(reviews.data ?? []);
+          } else
+            setStatus(
+              "The requested content version is unavailable for this account.",
+            );
+        }
       })
       .catch(() => {
         if (active) setStatus("Connection interrupted. Reload to try again.");
@@ -180,6 +201,12 @@ export default function ContentWorkspace() {
     (!selected || selected.author_id === context.actor_id);
   return (
     <main className="mx-auto max-w-4xl p-6">
+      <Link
+        className="inline-flex min-h-11 items-center underline mr-4"
+        href="/admin/flags"
+      >
+        Learner flags
+      </Link>
       <Link
         className="underline inline-flex min-h-11 items-center"
         href="/onboarding"

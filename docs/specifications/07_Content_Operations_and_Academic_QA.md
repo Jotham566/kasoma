@@ -163,3 +163,15 @@ An approving reviewer cannot author either side. Existing independent-review and
 high-risk second-review controls apply. The review must establish transfer validity;
 automated text checks and synthetic confidence values do not certify equivalence.
 Published claims are immutable; changes require a successor version and new review.
+
+## Learner flag operations (ADR-025)
+
+The reviewer/admin queue supports audited inspection, self-assignment, priority,
+resolution, dismissal and reopening. Authors cannot triage flags on their own content.
+Comments are confidential plain text; no private learner messaging or general learner
+record access is granted. Non-dismissed QUESTION_ERROR, GRADE_DISPUTE and UNSAFE_CONTENT
+reports make the stable item disputed for successor creation and review. Existing
+published versions are immutable; successor approval requires two independent reviewers,
+including when a report arrives after the successor draft was created. A triage decision
+does not change grades/mastery, publish corrections or automatically retire content.
+Use existing explicit retirement and independently reviewed successor procedures.

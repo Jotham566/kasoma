@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 from services.config import Settings
 from services.database import Base, engine_for
-from services.domain import assessment, content, curriculum, identity, mastery  # noqa: F401
+from services.domain import assessment, content, curriculum, flags, identity, mastery  # noqa: F401
 
 settings = Settings()
 engine = engine_for(settings)

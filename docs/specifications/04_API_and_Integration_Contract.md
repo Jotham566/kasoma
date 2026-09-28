@@ -280,3 +280,32 @@ signatures bind actor and subject filter. Invalid or mismatched cursors return 4
 missing authentication returns 401 and unauthorized subject/consent returns 403.
 Both endpoints rate-limit to 60 requests per learner per minute and recheck current access.
 See [ADR-024](../decisions/ADR/024-progress-history.md) and generated OpenAPI for DTOs.
+
+## Learner flags and triage (ADR-025)
+
+`POST /attempts/{attempt_id}/flag` requires current learning consent, selected-subject
+access, owned submitted attempt and `Idempotency-Key`. Body: `category` from
+QUESTION_ERROR/GRADE_DISPUTE/UNCLEAR/ACCESSIBILITY/UNSAFE_CONTENT/OTHER and optional
+trimmed `comment` (maximum 1000 characters). It returns 201 with `id`, `category` and
+`created_at`. Source item/version/reporter are server-derived. One report per attempt/
+category; same payload is idempotent across keys, differing comments conflict with
+`FLAG_ALREADY_REPORTED`. Key reuse with a different request returns `IDEMPOTENCY_CONFLICT`.
+`GET /attempts/{attempt_id}/flag` returns owned safe receipts for recovery, never staff
+notes. Diagnostic `answered_attempts` contains only attempt ID and question position;
+reporting does not reveal diagnostic grades or feedback.
+
+`GET /admin/content-flags` requires ACADEMIC_REVIEWER or ADMIN. Optional UUID `cursor`,
+`limit` (1–50, default 20), and `status` filter return a page of safe summaries in UUID
+order. `GET /admin/content-flags/{flag_id}` adds the confidential comment, current
+resolution, retention deadline and metadata history. Staff reads are audited. DTOs
+omit learner identity, raw answers and grades; no general support access is granted.
+
+`PATCH /admin/content-flags/{flag_id}` requires recent staff authentication and an
+idempotency key. Body: `expected_revision`, `status` (IN_REVIEW/RESOLVED/DISMISSED),
+`priority` (NORMAL/HIGH), optional `claim` (self-assignment), and `resolution` (required
+nonempty for terminal states, empty for IN_REVIEW; maximum 1000 characters). The current
+owner or claiming independent reviewer records the decision. Authors cannot triage
+own content; stale revision returns `VERSION_CONFLICT`. Retry returns the current flag
+without applying the operation again. No grade/evidence/content rewrite is implicit.
+New reports are limited to 10 per hour; flag access/triage to 60 per minute per actor.
+See [ADR-025](../decisions/ADR/025-learner-flags.md) and generated contracts.

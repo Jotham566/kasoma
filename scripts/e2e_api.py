@@ -47,6 +47,7 @@ def main() -> None:
         "author": ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"],
         "reviewer": ["ACADEMIC_REVIEWER"],
         "second": ["ACADEMIC_REVIEWER"],
+        "flag-reviewer": ["ACADEMIC_REVIEWER"],
     }.items():
         email = f"e2e-content-{label}@example.invalid"
         challenge = service.request_otp(

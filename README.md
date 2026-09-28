@@ -11,8 +11,8 @@ E3 synthetic choice assessment is merged (`22773fd`, hosted CI passed).
 E4 numeric grading is merged (`7d2c8ed`); the MinIO setup repair (`ee73741`) passed hosted CI.
 The E5 diagnostic/mastery and recommended-practice slices are on main (`88dd880`, hosted CI passed).
 Reviewed hints (`3c0c3ba`) and unseen reassessment (`73c1fba`) are on main.
-E6 progress and session history are implemented locally for review; see
-[progress verification](docs/implementation/E6_PROGRESS_VERIFICATION.md).
+E6 progress/history is on main (`df855ab`). Learner flags and staff triage are
+implemented locally for review; see [flag verification](docs/implementation/E8_FLAGS_VERIFICATION.md).
 Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.

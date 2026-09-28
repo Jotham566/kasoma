@@ -10,6 +10,7 @@ from starlette.responses import JSONResponse
 
 from apps.api.assessment import router as assessment_router
 from apps.api.content import router as content_router
+from apps.api.flags import router as flags_router
 from apps.api.identity import router
 from services.config import Settings
 from services.content import ContentError
@@ -49,6 +50,7 @@ def create_app(
     app.include_router(router)
     app.include_router(content_router)
     app.include_router(assessment_router)
+    app.include_router(flags_router)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[settings.app_public_url] if settings else [],
