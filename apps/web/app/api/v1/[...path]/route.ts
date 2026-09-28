@@ -14,6 +14,7 @@ const allowed: Record<string, string[]> = {
   "me/consents": ["POST"],
   "curriculum/subjects": ["GET"],
   "revision-sessions": ["POST"],
+  diagnostics: ["POST"],
   "sessions/active": ["GET"],
   "admin/content-context": ["GET"],
   "admin/items": ["GET", "POST"],
@@ -50,7 +51,7 @@ async function gateway(
     `^sessions/${uuid}(?:/(next-item|attempts|abandon))?$`,
   ).exec(path);
   const learningRead = new RegExp(
-    `^(?:attempts/${uuid}/(?:grade|solution)|curriculum/subjects/${uuid}/topics)$`,
+    `^(?:diagnostics/${uuid}|attempts/${uuid}/(?:grade|solution)|curriculum/subjects/${uuid}/topics)$`,
   ).test(path);
   const methods = learning
     ? [learning[1] === "attempts" || learning[1] === "abandon" ? "POST" : "GET"]

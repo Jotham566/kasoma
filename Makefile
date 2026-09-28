@@ -6,7 +6,7 @@ export TURBO_TELEMETRY_DISABLED := 1
 UV := $(CURDIR)/.local/tools/bin/uv run --frozen
 PNPM := corepack pnpm
 
-.PHONY: help setup services dev test lint format typecheck migrate seed openapi openapi-check e2e security check-docs build containers eval-local eval-gemini-free eval-compare
+.PHONY: help setup services dev test test-unit lint format typecheck migrate seed openapi openapi-check e2e security check-docs build containers eval-local eval-gemini-free eval-compare
 help:
 	@echo "Kasoma E0: setup services migrate seed dev test lint openapi e2e security build containers"
 setup:
@@ -15,9 +15,10 @@ services:
 	docker compose up -d --wait postgres redis minio mailpit
 dev: services migrate
 	$(UV) python scripts/dev.py
-test:
-	$(UV) pytest -m 'not integration'
+test: test-unit
 	$(UV) pytest -m integration --allow-hosts=localhost,127.0.0.1,::1
+test-unit:
+	$(UV) pytest -m 'not integration'
 lint: check-docs
 	$(UV) ruff check .
 	$(UV) ruff format --check .
@@ -98,3 +99,11 @@ seed-assessment:
 .PHONY: seed-numeric
 seed-numeric:
 	$(UV) python -m scripts.assessment_fixtures --numeric
+
+.PHONY: seed-diagnostic
+seed-diagnostic:
+	$(UV) python -m scripts.assessment_fixtures --diagnostic
+
+.PHONY: replay-mastery
+replay-mastery:
+	$(UV) python -m scripts.replay_mastery

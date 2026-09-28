@@ -27,8 +27,9 @@ export default async function Home() {
       <h1 className="mt-8 text-4xl font-semibold">Know what to revise next.</h1>
       <p className="mt-6">Revision for Senior 4 Mathematics and Physics.</p>
       <p className="mt-4">
-        Synthetic practice is available for development. Academic content and
-        mastery estimates are still being prepared.
+        Synthetic practice is available for development. Diagnostic estimates
+        are available with synthetic fixtures. Academic approval remains
+        pending.
       </p>
       <div className="mt-8 rounded-xl border border-slate-300 p-5">
         <Status>
@@ -56,6 +57,12 @@ export default async function Home() {
         className="mt-6 inline-flex min-h-11 items-center underline"
       >
         Practise a topic
+      </Link>
+      <Link
+        href="/diagnostic"
+        className="mt-6 inline-flex min-h-11 items-center underline"
+      >
+        Start a subject diagnostic
       </Link>
       <small className="mt-6 block text-slate-600">
         Support reference: {requestId}

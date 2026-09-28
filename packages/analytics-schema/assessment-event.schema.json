@@ -13,20 +13,40 @@
     "created_at"
   ],
   "properties": {
-    "id": { "type": "string", "format": "uuid" },
-    "session_id": { "type": "string", "format": "uuid" },
-    "attempt_id": { "type": ["string", "null"], "format": "uuid" },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "session_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "attempt_id": {
+      "type": ["string", "null"],
+      "format": "uuid"
+    },
     "type": {
       "enum": [
         "session.started",
         "item.served",
         "attempt.graded",
         "session.completed",
-        "session.abandoned"
+        "session.abandoned",
+        "diagnostic.started",
+        "diagnostic.completed",
+        "mastery.updated"
       ]
     },
-    "version": { "const": 1 },
-    "request_id": { "type": "string", "format": "uuid" },
-    "created_at": { "type": "string", "format": "date-time" }
+    "version": {
+      "const": 1
+    },
+    "request_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
   }
 }

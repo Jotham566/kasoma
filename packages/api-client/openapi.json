@@ -359,6 +359,144 @@
         "title": "Credentials",
         "type": "object"
       },
+      "DiagnosticReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "message": {
+            "default": "Answer saved. Results are available after the diagnostic.",
+            "title": "Message",
+            "type": "string"
+          },
+          "status": {
+            "const": "SAVED",
+            "default": "SAVED",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attempt_id"
+        ],
+        "title": "DiagnosticReceipt",
+        "type": "object"
+      },
+      "DiagnosticResult": {
+        "additionalProperties": false,
+        "properties": {
+          "algorithm_version": {
+            "title": "Algorithm Version",
+            "type": "string"
+          },
+          "calculated_at": {
+            "format": "date-time",
+            "title": "Calculated At",
+            "type": "string"
+          },
+          "configuration_version": {
+            "title": "Configuration Version",
+            "type": "string"
+          },
+          "input_hash": {
+            "title": "Input Hash",
+            "type": "string"
+          },
+          "recommendation": {
+            "$ref": "#/components/schemas/InitialRecommendation"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/SkillSummary"
+            },
+            "title": "Skills",
+            "type": "array"
+          }
+        },
+        "required": [
+          "skills",
+          "recommendation",
+          "calculated_at",
+          "algorithm_version",
+          "configuration_version",
+          "input_hash"
+        ],
+        "title": "DiagnosticResult",
+        "type": "object"
+      },
+      "DiagnosticView": {
+        "additionalProperties": false,
+        "properties": {
+          "answered_count": {
+            "title": "Answered Count",
+            "type": "integer"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "item_count": {
+            "title": "Item Count",
+            "type": "integer"
+          },
+          "plan_version": {
+            "title": "Plan Version",
+            "type": "string"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DiagnosticResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "COMPLETED",
+              "ABANDONED",
+              "EXPIRED"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "subject_id": {
+            "format": "uuid",
+            "title": "Subject Id",
+            "type": "string"
+          },
+          "synthetic": {
+            "const": true,
+            "default": true,
+            "title": "Synthetic",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "subject_id",
+          "status",
+          "item_count",
+          "answered_count",
+          "plan_version",
+          "expires_at",
+          "result"
+        ],
+        "title": "DiagnosticView",
+        "type": "object"
+      },
       "DraftDocument": {
         "additionalProperties": false,
         "properties": {
@@ -668,8 +806,11 @@
             "type": "string"
           },
           "mastery_update_status": {
-            "const": "NOT_IMPLEMENTED",
             "default": "NOT_IMPLEMENTED",
+            "enum": [
+              "NOT_IMPLEMENTED",
+              "COMPLETED"
+            ],
             "title": "Mastery Update Status",
             "type": "string"
           },
@@ -762,6 +903,43 @@
           "redis"
         ],
         "title": "Health",
+        "type": "object"
+      },
+      "InitialRecommendation": {
+        "additionalProperties": false,
+        "properties": {
+          "learner_text": {
+            "title": "Learner Text",
+            "type": "string"
+          },
+          "reason_code": {
+            "enum": [
+              "GATHER_MORE_EVIDENCE",
+              "PRACTISE_SUPPORTED_GAP",
+              "CONTENT_UNAVAILABLE"
+            ],
+            "title": "Reason Code",
+            "type": "string"
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Topic Id"
+          }
+        },
+        "required": [
+          "topic_id",
+          "reason_code",
+          "learner_text"
+        ],
+        "title": "InitialRecommendation",
         "type": "object"
       },
       "LearnerItem": {
@@ -1484,6 +1662,67 @@
         "title": "SessionView",
         "type": "object"
       },
+      "SkillSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "competency": {
+            "title": "Competency",
+            "type": "string"
+          },
+          "competency_id": {
+            "format": "uuid",
+            "title": "Competency Id",
+            "type": "string"
+          },
+          "concept_id": {
+            "format": "uuid",
+            "title": "Concept Id",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "display_state": {
+            "title": "Display State",
+            "type": "string"
+          },
+          "evidence_count": {
+            "title": "Evidence Count",
+            "type": "integer"
+          },
+          "mastery": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Mastery",
+            "type": "number"
+          },
+          "topic": {
+            "title": "Topic",
+            "type": "string"
+          },
+          "topic_id": {
+            "format": "uuid",
+            "title": "Topic Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic_id",
+          "topic",
+          "concept_id",
+          "competency_id",
+          "competency",
+          "mastery",
+          "confidence",
+          "display_state",
+          "evidence_count"
+        ],
+        "title": "SkillSummary",
+        "type": "object"
+      },
       "SolutionView": {
         "additionalProperties": false,
         "properties": {
@@ -1508,6 +1747,27 @@
           "worked_solution"
         ],
         "title": "SolutionView",
+        "type": "object"
+      },
+      "StartDiagnostic": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "const": "WEB",
+            "default": "WEB",
+            "title": "Channel",
+            "type": "string"
+          },
+          "subject_id": {
+            "format": "uuid",
+            "title": "Subject Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject_id"
+        ],
+        "title": "StartDiagnostic",
         "type": "object"
       },
       "StartRevision": {
@@ -3172,6 +3432,216 @@
         "summary": "Topics"
       }
     },
+    "/api/v1/diagnostics": {
+      "post": {
+        "operationId": "diagnostic_start_api_v1_diagnostics_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartDiagnostic"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosticView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Diagnostic Start"
+      }
+    },
+    "/api/v1/diagnostics/{session_id}": {
+      "get": {
+        "operationId": "diagnostic_get_api_v1_diagnostics__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiagnosticView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Diagnostic Get"
+      }
+    },
     "/api/v1/health": {
       "get": {
         "operationId": "get_health",
@@ -3544,7 +4014,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SessionView"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/SessionView"
+                    },
+                    {
+                      "$ref": "#/components/schemas/DiagnosticView"
+                    }
+                  ],
+                  "title": "Response Get Api V1 Sessions  Session Id  Get"
                 }
               }
             },
@@ -3644,7 +4122,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SessionView"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/SessionView"
+                    },
+                    {
+                      "$ref": "#/components/schemas/DiagnosticView"
+                    }
+                  ],
+                  "title": "Response Abandon Api V1 Sessions  Session Id  Abandon Post"
                 }
               }
             },
@@ -3764,7 +4250,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GradeView"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/GradeView"
+                    },
+                    {
+                      "$ref": "#/components/schemas/DiagnosticReceipt"
+                    }
+                  ],
+                  "title": "Response Submit Api V1 Sessions  Session Id  Attempts Post"
                 }
               }
             },

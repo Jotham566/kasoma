@@ -2,42 +2,42 @@
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
 
-E0 through E4 evidence is recorded below. Local synthetic journeys are not
+E0 through the E5 diagnostic slice evidence is recorded below. Local synthetic journeys are not
 production-pilot acceptance; delivery-provider and legal approval gates remain. See the [assessment](PHASE_0_ASSESSMENT.md).
 
 | Requirement | Implementation | Tests / evidence | Status |
 | --- | --- | --- | --- |
 | FR-ID-001 | Email/phone OTP, purpose binding, five-attempt/ten-minute limits, per-contact/peer/device sends | `tests/integration/test_identity.py`, `tests/e2e/identity.spec.ts` | Local implemented; SES/SMS production gates pending |
 | FR-ID-002 | Verified identifier linking with uniqueness, encryption and keyed lookup; existing identities never auto-merge | API linking, collision and one-identity tests | Local implemented |
-| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests | Local implemented; approved wording and future diagnostic/WhatsApp integration pending; assessment routes enforce current consent |
+| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests | Local implemented; approved wording and WhatsApp integration pending; diagnostic and revision routes enforce current consent |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout | Local implemented |
 | FR-ID-006 | — | — | Not started |
-| FR-DIAG-001 | — | — | Not started |
-| FR-DIAG-002 | — | — | Not started |
-| FR-DIAG-003 | — | — | Not started |
-| FR-DIAG-004 | — | — | Not started |
-| FR-DIAG-005 | — | — | Not started |
+| FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
+| FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
+| FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
+| FR-DIAG-004 | Atomic acknowledgement with attempt, grade, mastery and outbox; same-key replay | Lost acknowledgement browser retry, rollback and resume tests | Local implemented |
+| FR-DIAG-005 | Frozen skill estimates, uncertainty and first explained topic practice recommendation | Completion API, browser result and recommendation link | Local synthetic implemented; full adaptive ranking remains pending |
 | FR-REV-001 | — | — | Not started |
-| FR-REV-002 | Topic-selected 5–10-item plans through shared assessment service | Assessment API and browser five-question journey | Partial: manual focus implemented; mastery projection pending |
+| FR-REV-002 | Topic-selected 5–10-item plans through shared assessment service | Assessment API and browser five-question journey | Local manual focus and synchronous mastery updates implemented |
 | FR-REV-003 | Content-owned selector, S4/enrollment checks, current approval and retirement lock | Draft/retired/non-web inventory exclusion; identity subject checks | Local synthetic single-choice path implemented |
 | FR-REV-004 | Configurable seven-day served-item exclusion across versions; no silent shortage fallback | Completed plan cannot immediately repeat; insufficient-inventory API tests | Local implemented; adaptive ranking/retry assignment pending |
-| FR-REV-005 | Durable fixed assignments and answered history; active-plan lookup; lost-ack retry | Concurrent replay, separate browser resume and completion after reload | Local single-choice revision implemented; diagnostic pending |
-| FR-REV-006 | — | — | Not started |
+| FR-REV-005 | Durable fixed assignments and answered history; active-plan lookup; lost-ack retry | Concurrent replay, separate browser resume and completion after reload | Local choice/numeric revision and diagnostic resume implemented |
+| FR-REV-006 | First diagnostic recommendation carries safe reason and topic action | Browser follows recommendation to selected topic | Partial: full adaptive session ranking/explanation pending |
 | FR-GRD-001 | Pinned answer key and versioned deterministic single-choice grader | Exact synthetic scoring cases, invalid choices and stored result tests | Partial: single-choice implemented; multiple-choice pending; not an academic benchmark claim |
 | FR-GRD-002 | Reviewed numeric contracts, exact rational grading, unit conversions, inclusive tolerances, precision and accepted forms | `tests/contract/test_numeric.py`, `tests/integration/test_numeric_workflow.py`, `tests/e2e/numeric.spec.ts` | Local deterministic implementation; synthetic regression/property cases are not expert academic benchmark approval |
 | FR-GRD-003 | — | — | Not started |
 | FR-GRD-004 | — | — | Not started |
 | FR-GRD-005 | Typed deterministic correct/missing elements and authored remediation | API score/feedback and browser correct/incorrect journey | Choice and numeric correct/missing feedback implemented; rubric feedback pending |
 | FR-GRD-006 | — | — | Not started |
-| FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision implemented; diagnostic restrictions pending |
+| FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision gating and permanent diagnostic solution block implemented |
 | FR-GRD-008 | — | — | Not started |
 | FR-GRD-009 | — | — | Not started |
-| FR-MST-001 | — | — | Not started |
-| FR-MST-002 | — | — | Not started |
-| FR-MST-003 | — | — | Not started |
-| FR-MST-004 | — | — | Not started |
-| FR-MST-005 | — | — | Not started |
+| FR-MST-001 | Unique append-only attempt/skill evidence; synchronous deterministic grading; consented legacy reconciliation | Duplicate replay, rollback, immutable DB records and integration tests | Local deterministic path implemented |
+| FR-MST-002 | Specified weighted prior, score, coverage/recency confidence and display state | Hand calculations, property tests and diagnostic UI | Local implemented |
+| FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
+| FR-MST-004 | Diagnostic result by topic and competency | Both subjects represented by synthetic API fixtures | Partial: general progress/subject aggregation UX pending |
+| FR-MST-005 | Not enough evidence and Developing estimate with visible confidence | Sparse prior, display-boundary and accessible browser tests | Local diagnostic implemented; general progress pending |
 | FR-MST-006 | — | — | Not started |
 | FR-WA-001 | — | — | Not started |
 | FR-WA-002 | — | — | Not started |
@@ -51,7 +51,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-004 | Immutable approved versions, explicit successor drafts and normalized frozen mappings | API mutation rejection; direct SQL history/mapping/attempt tests; retired-version grades/solutions remain unchanged | Partial: choice/numeric attempts and grades pin immutable versions/hash; migration preserves legacy choice rows; rubric pinning pending |
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local choice/numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | — | — | Not started |
-| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent and assessment start/serve/grade/complete/abandon events persist atomically; other learner events and dispatch pending |
+| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; other learner events and dispatch pending |
 | FR-OPS-002 | `services/health.py`, API health shell and worker smoke | Health success/degraded tests; real Redis/Celery test | Partial; alerts/dashboards pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content and local role actions; operations audit UI/retention pending |
 | FR-OPS-004 | — | — | Not started |
@@ -62,11 +62,13 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-SCL-001 | — | — | Not started |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
-| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review and choice/numeric assessment axe/keyboard checks; remaining journey matrix pending |
+| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, choice/numeric assessment and diagnostic axe/keyboard checks; remaining journey matrix pending |
 | NFR-BW-001 | — | — | Not started |
 | NFR-COMP-001 | Next.js shell | Chromium browser test | Partial; cross-browser learner matrix pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
-| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E3 hosted CI passed; E4 evidence tracked separately |
-| NFR-LOC-001 | English shell; UTC database connections/Celery | Configuration inspected; no learner timestamps yet | Foundation only; Kampala presentation pending |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E4 and MinIO repair hosted CI passed; E5 local verification recorded |
+| NFR-LOC-001 | English shell; UTC database connections/Celery | Configuration inspected; diagnostic result timestamps use UTC | Foundation only; Kampala presentation pending |
 
 E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
+
+E5 diagnostic/mastery evidence: [verification report](E5_VERIFICATION.md).

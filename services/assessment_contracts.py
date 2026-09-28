@@ -52,7 +52,7 @@ class GradeView(Contract):
     method: Literal["DETERMINISTIC"] = "DETERMINISTIC"
     grader_version: str
     feedback: Feedback
-    mastery_update_status: Literal["NOT_IMPLEMENTED"] = "NOT_IMPLEMENTED"
+    mastery_update_status: Literal["NOT_IMPLEMENTED", "COMPLETED"] = "NOT_IMPLEMENTED"
 
 
 class AnsweredItem(Contract):
@@ -113,3 +113,53 @@ class SolutionView(Contract):
 class TopicView(Contract):
     id: UUID
     name: str
+
+
+class StartDiagnostic(Contract):
+    subject_id: UUID
+    channel: Literal["WEB"] = "WEB"
+
+
+class DiagnosticReceipt(Contract):
+    attempt_id: UUID
+    status: Literal["SAVED"] = "SAVED"
+    message: str = "Answer saved. Results are available after the diagnostic."
+
+
+class SkillSummary(Contract):
+    topic_id: UUID
+    topic: str
+    concept_id: UUID
+    competency_id: UUID
+    competency: str
+    mastery: float = Field(ge=0, le=1)
+    confidence: float = Field(ge=0, le=1)
+    display_state: str
+    evidence_count: int
+
+
+class InitialRecommendation(Contract):
+    topic_id: UUID | None
+    reason_code: Literal["GATHER_MORE_EVIDENCE", "PRACTISE_SUPPORTED_GAP", "CONTENT_UNAVAILABLE"]
+    learner_text: str
+
+
+class DiagnosticResult(Contract):
+    skills: list[SkillSummary]
+    recommendation: InitialRecommendation
+    calculated_at: datetime
+    algorithm_version: str
+    configuration_version: str
+    input_hash: str
+
+
+class DiagnosticView(Contract):
+    id: UUID
+    subject_id: UUID
+    status: Literal["ACTIVE", "COMPLETED", "ABANDONED", "EXPIRED"]
+    item_count: int
+    answered_count: int
+    plan_version: str
+    expires_at: datetime
+    result: DiagnosticResult | None
+    synthetic: Literal[True] = True

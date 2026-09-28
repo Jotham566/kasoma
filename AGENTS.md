@@ -87,9 +87,9 @@ A task is complete only when:
 
 ## Repository stage
 
-E0–E3 foundation, identity/consent, content review and synthetic choice assessment
-are merged. E4 numeric grading is in implementation; diagnostics, mastery and
-production deployment are not implemented. See
+E0–E4 foundation, identity/consent, content review and deterministic assessment
+are merged. The E5 synthetic diagnostic and initial mastery slice is implemented
+locally; full adaptive recommendations and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

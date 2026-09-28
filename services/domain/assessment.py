@@ -15,7 +15,9 @@ class AssessmentSession(Base):
     id: Mapped[UUID] = mapped_column(primary_key=True)
     learner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
     subject_id: Mapped[UUID] = mapped_column(ForeignKey("subjects.id"))
-    topic_id: Mapped[UUID] = mapped_column(ForeignKey("topics.id"))
+    topic_id: Mapped[UUID | None] = mapped_column(ForeignKey("topics.id"))
+    kind: Mapped[str] = mapped_column(default="REVISION", server_default="REVISION")
+    diagnostic_result: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     status: Mapped[str]
     item_count: Mapped[int]
     reason: Mapped[str]

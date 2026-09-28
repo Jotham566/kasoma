@@ -1,55 +1,50 @@
-# Current Sprint: E4 numeric grading
+# Current Sprint: E5 diagnostic and initial mastery
 
-E0–E3 are on main. E3 `22773fd` passed hosted CI and its completed branch was
-removed. E4 numeric grading is verified locally as recorded below and authorized for merge;
-28 September Docker-dependent rechecks await Docker Desktop authentication.
+E0–E4 are on main. Numeric grading committed as `7d2c8ed`; the MinIO clean-setup
+repair is `ee73741`. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36392615242).
+The completed E4 branch was removed. The owner authorized committing and merging
+this verified E5 slice to main, then removing its completed branch.
 
 ## Current slice
 
-FR-GRD-002/005/007, FR-CNT-001/004/005 and supporting FR-REV-003, NFR-SEC-002,
-NFR-ACC-001 and NFR-MNT-001.
+FR-DIAG-001–005, FR-MST-001–003/005, supporting FR-ID-003, FR-REV-002/005/006,
+FR-GRD-007, FR-OPS-001, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
 
-Authors define numeric answers, permitted units/conversions, absolute and relative
-tolerance, accepted decimal/scientific/fraction forms and explicit precision policy.
-Independent reviewers approve these rules. Learners receive only input instructions,
-submit bounded numeric answers and get deterministic version-pinned feedback.
-Migration 0005 preserves existing choice evidence and stores numeric responses
-immutably. No model provider or production dependency is introduced.
+Subject diagnostics resume one active plan, sample 15 approved synthetic items,
+cover available topics/competencies and adjust difficulty from prior answers.
+Answers are acknowledged only after attempt, grade, mastery evidence and outbox
+commit. No grade feedback or worked solutions leak during a diagnostic. Completion
+freezes initial estimates with confidence and an explained first practice target.
 
-## Resolved pending questions
+Mastery follows specification 05 and ADR-017 exactly. Immutable per-attempt/skill
+evidence includes original inputs and configuration; projections/history can be
+replayed. Legacy grades reconcile only after current learner consent authorization.
+Original grades remain unchanged. Numeric and choice grading share this path.
 
-[ADR-017](../decisions/ADR/017-readiness-resolutions.md) resolves:
-
-- E3-01: preserve content labels and use versioned FOUNDATIONAL→FOUNDATIONAL,
-  STANDARD→CORE, CHALLENGING→STRETCH mapping when implementing E5 evidence.
-- E0-01: retain the Week 5 short-text benchmark gate; deliver its first supported
-  grading/evaluation path in Weeks 3–5, then harden/broaden in Week 6.
-
-[ADR-018](../decisions/ADR/018-numeric-grading.md) records exact numeric semantics.
-Test servers now use dedicated loopback ports; container smoke preserves application
-services that were already running.
+[ADR-019](../decisions/ADR/019-minio-source-build.md) repairs unavailable MinIO
+images using official pinned source. [ADR-020](../decisions/ADR/020-diagnostic-mastery.md)
+records the diagnostic/mastery decisions. Evidence: [E5 verification](E5_VERIFICATION.md).
 
 ## Next vertical slice
 
-Diagnostic planning and initial mastery evidence: one active diagnostic per subject,
-10–15 approved choice/numeric items, topic/competency coverage, no hints or solutions,
-durable resume, immutable mapped evidence and initial score/confidence projection.
-Use the approved difficulty mapping and engine formula with replay/idempotency tests.
-The first recommendation must include an honest rationale and uncertainty.
+Implement the full versioned recommendation ranking (FR-MST-006) and recommended
+5–10-item revision plans (FR-REV-001/006), including prerequisite redirection,
+importance, recency, uncertainty and repetition factors. Preserve the current
+baseline and teacher-calibration gate. Then add hint independence and unseen
+reassessment to complete the Week 5 learning loop.
 
 ## Remaining external dependencies and release gates
 
-- Named delivery/academic/safeguarding owners, kickoff date and confirmed capacity.
-- Exact NCDC mappings, source rights review, real item inventory and expert benchmark.
-- Approved notices, guardian-verification procedure, DPIA and other privacy approvals.
+- Named owners, kickoff date, delivery capacity and academic reviewer capacity.
+- Exact NCDC mappings, real content rights, balanced inventory and expert benchmark.
+- Approved privacy notices, verifiable guardian procedure, DPIA and legal approvals.
+- Week 5 short-text benchmark gate remains; no model evaluation has been authorized.
 - Week 8 production provider selection, production OTP/MFA and restricted DB roles.
-- Other MVP implementation: diagnostic/mastery, recommended practice, multiple choice,
-  short text, hints, reassessment, flags, progress, WhatsApp and operations.
+- General progress/history UX, full adaptive ranking, multiple-choice/short-text,
+  hints/reassessment, flags, WhatsApp and operations remain further MVP work.
 - Outbox dispatch and approved retention/anonymization jobs remain E8 work.
-- Current evidence remains synthetic and does not authorize production use.
-
-Current evidence: [E4 numeric verification](E4_VERIFICATION.md).
+- Synthetic regression results do not authorize production or certify learning gain.
 
 Prior evidence: [E0](E0_VERIFICATION.md), [E1](E1_VERIFICATION.md),
-[E2](E2_VERIFICATION.md), [E3](E3_VERIFICATION.md),
+[E2](E2_VERIFICATION.md), [E3](E3_VERIFICATION.md), [E4](E4_VERIFICATION.md),
 [traceability](REQUIREMENTS_TRACEABILITY.md).

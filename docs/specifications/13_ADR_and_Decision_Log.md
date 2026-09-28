@@ -170,3 +170,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-019: Local MinIO source build](../decisions/ADR/019-minio-source-build.md)
   repairs clean setup after the pinned public image became unavailable.
+
+- [ADR-020: Diagnostic and initial mastery](../decisions/ADR/020-diagnostic-mastery.md)
+  records synthetic diagnostics, sealed results, synchronous evidence and replay.

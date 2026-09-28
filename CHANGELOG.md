@@ -45,3 +45,11 @@ Record meaningful repository and product changes here. A documentation baseline 
   changing published content or weakening quality gates.
 - Add numeric authoring/review, safe learner input, exact rational grading,
   units/tolerance/precision policy, immutable response storage and regression tests.
+
+## 28 September 2026 — diagnostic and initial mastery
+
+- E4 numeric grading and the pinned MinIO source-build CI repair merged to main.
+- Added synthetic resumable subject diagnostics with hidden in-session grades.
+- Added immutable mastery evidence, baseline estimates/history and offline replay.
+- Added generated contracts, browser results, migration and regression evidence.
+- Full adaptive recommendation factors and academic calibration remain pending.

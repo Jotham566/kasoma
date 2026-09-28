@@ -16,12 +16,17 @@ from services.staff import provision
 
 
 def seed_assessment(
-    identity: IdentityService, numeric: bool = False, mathematics_only: bool = False
+    identity: IdentityService,
+    numeric: bool = False,
+    mathematics_only: bool = False,
+    diagnostic: bool = False,
 ) -> None:
     if identity.settings.app_env not in {"development", "test"}:
         raise ValueError("Synthetic fixtures only")
     prefix = "Synthetic numeric fixture" if numeric else "Synthetic assessment fixture"
-    expected_count = 5 if numeric else (15 if mathematics_only else 30)
+    if diagnostic:
+        prefix = "Synthetic diagnostic fixture"
+    expected_count = 90 if diagnostic else (5 if numeric else (15 if mathematics_only else 30))
     with Session(identity.engine) as db:
         existing = list(
             db.scalars(
@@ -45,7 +50,7 @@ def seed_assessment(
     )
     tokens = []
     for role in ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"]:
-        namespace = "numeric-" if numeric else ""
+        namespace = "diagnostic-" if diagnostic else ("numeric-" if numeric else "")
         email = f"fixture-{namespace}{role.lower()}@example.invalid"
         challenge = service.request_otp(OTPRequest(identifier=email, device_id=uuid4()), role, None)
         credentials = service.verify(
@@ -62,7 +67,7 @@ def seed_assessment(
         if mathematics_only and topic.parent_id != math_id:
             continue
         concept = next(c for c in context.concepts if c.parent_id == topic.id)
-        for index in range(5):
+        for index in range(15 if diagnostic else 5):
             title = f"{prefix} {topic.id}/{index}"
             with Session(identity.engine) as db:
                 if db.scalar(
@@ -85,7 +90,16 @@ def seed_assessment(
                 "rights_evidence": "Original software fixture; no external source",
                 "rights_conditions": "Synthetic testing only; not academic release content",
             }
-            if numeric:
+            if diagnostic:
+                doc.update(
+                    {
+                        "difficulty": ["STANDARD", "FOUNDATIONAL", "CHALLENGING"][index % 3],
+                        "competency_mappings": [
+                            {"competency_id": context.competencies[index % 2].id, "weight": 1}
+                        ],
+                    }
+                )
+            if numeric or (diagnostic and topic.parent_id != math_id):
                 doc.update(
                     {
                         "response_type": "NUMERIC",
@@ -157,12 +171,17 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--numeric", action="store_true")
+    parser.add_argument("--diagnostic", action="store_true")
     args = parser.parse_args()
     config = Settings()
     engine = engine_for(config)
     try:
         fake = FakeMessagingProvider()
-        seed_assessment(IdentityService(engine, config, fake, fake), numeric=args.numeric)
+        seed_assessment(
+            IdentityService(engine, config, fake, fake),
+            numeric=args.numeric,
+            diagnostic=args.diagnostic,
+        )
     finally:
         engine.dispose()
     print("Synthetic assessment workflow fixtures ready; excluded from academic release counts.")

@@ -278,6 +278,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/diagnostics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Diagnostic Start */
+        post: operations["diagnostic_start_api_v1_diagnostics_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/diagnostics/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Diagnostic Get */
+        get: operations["diagnostic_get_api_v1_diagnostics__session_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/health": {
         parameters: {
             query?: never;
@@ -585,6 +619,78 @@ export interface components {
              */
             token_type: "Bearer";
         };
+        /** DiagnosticReceipt */
+        DiagnosticReceipt: {
+            /**
+             * Attempt Id
+             * Format: uuid
+             */
+            attempt_id: string;
+            /**
+             * Message
+             * @default Answer saved. Results are available after the diagnostic.
+             */
+            message: string;
+            /**
+             * Status
+             * @default SAVED
+             * @constant
+             */
+            status: "SAVED";
+        };
+        /** DiagnosticResult */
+        DiagnosticResult: {
+            /** Algorithm Version */
+            algorithm_version: string;
+            /**
+             * Calculated At
+             * Format: date-time
+             */
+            calculated_at: string;
+            /** Configuration Version */
+            configuration_version: string;
+            /** Input Hash */
+            input_hash: string;
+            recommendation: components["schemas"]["InitialRecommendation"];
+            /** Skills */
+            skills: components["schemas"]["SkillSummary"][];
+        };
+        /** DiagnosticView */
+        DiagnosticView: {
+            /** Answered Count */
+            answered_count: number;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Item Count */
+            item_count: number;
+            /** Plan Version */
+            plan_version: string;
+            result: components["schemas"]["DiagnosticResult"] | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ACTIVE" | "COMPLETED" | "ABANDONED" | "EXPIRED";
+            /**
+             * Subject Id
+             * Format: uuid
+             */
+            subject_id: string;
+            /**
+             * Synthetic
+             * @default true
+             * @constant
+             */
+            synthetic: true;
+        };
         /** DraftDocument */
         DraftDocument: {
             /**
@@ -741,9 +847,9 @@ export interface components {
             /**
              * Mastery Update Status
              * @default NOT_IMPLEMENTED
-             * @constant
+             * @enum {string}
              */
-            mastery_update_status: "NOT_IMPLEMENTED";
+            mastery_update_status: "NOT_IMPLEMENTED" | "COMPLETED";
             /**
              * Method
              * @default DETERMINISTIC
@@ -791,6 +897,18 @@ export interface components {
              * @enum {string}
              */
             status: "ok" | "degraded";
+        };
+        /** InitialRecommendation */
+        InitialRecommendation: {
+            /** Learner Text */
+            learner_text: string;
+            /**
+             * Reason Code
+             * @enum {string}
+             */
+            reason_code: "GATHER_MORE_EVIDENCE" | "PRACTISE_SUPPORTED_GAP" | "CONTENT_UNAVAILABLE";
+            /** Topic Id */
+            topic_id: string | null;
         };
         /** LearnerItem */
         LearnerItem: {
@@ -1099,6 +1217,36 @@ export interface components {
              */
             topic_id: string;
         };
+        /** SkillSummary */
+        SkillSummary: {
+            /** Competency */
+            competency: string;
+            /**
+             * Competency Id
+             * Format: uuid
+             */
+            competency_id: string;
+            /**
+             * Concept Id
+             * Format: uuid
+             */
+            concept_id: string;
+            /** Confidence */
+            confidence: number;
+            /** Display State */
+            display_state: string;
+            /** Evidence Count */
+            evidence_count: number;
+            /** Mastery */
+            mastery: number;
+            /** Topic */
+            topic: string;
+            /**
+             * Topic Id
+             * Format: uuid
+             */
+            topic_id: string;
+        };
         /** SolutionView */
         SolutionView: {
             /**
@@ -1113,6 +1261,20 @@ export interface components {
             item_version_id: string;
             /** Worked Solution */
             worked_solution: string;
+        };
+        /** StartDiagnostic */
+        StartDiagnostic: {
+            /**
+             * Channel
+             * @default WEB
+             * @constant
+             */
+            channel: "WEB";
+            /**
+             * Subject Id
+             * Format: uuid
+             */
+            subject_id: string;
         };
         /** StartRevision */
         StartRevision: {
@@ -2387,6 +2549,180 @@ export interface operations {
             };
         };
     };
+    diagnostic_start_api_v1_diagnostics_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartDiagnostic"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiagnosticView"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    diagnostic_get_api_v1_diagnostics__session_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiagnosticView"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     get_health: {
         parameters: {
             query?: never;
@@ -2713,7 +3049,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SessionView"];
+                    "application/json": components["schemas"]["SessionView"] | components["schemas"]["DiagnosticView"];
                 };
             };
             /** @description Bad Request */
@@ -2798,7 +3134,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SessionView"];
+                    "application/json": components["schemas"]["SessionView"] | components["schemas"]["DiagnosticView"];
                 };
             };
             /** @description Bad Request */
@@ -2889,7 +3225,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GradeView"];
+                    "application/json": components["schemas"]["GradeView"] | components["schemas"]["DiagnosticReceipt"];
                 };
             };
             /** @description Bad Request */

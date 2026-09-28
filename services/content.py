@@ -528,7 +528,13 @@ class ContentService:
         return version
 
     def assessment_candidates(
-        self, db: Session, subject_id: UUID, topic_id: UUID, excluded: set[UUID], count: int
+        self,
+        db: Session,
+        subject_id: UUID,
+        topic_id: UUID,
+        excluded: set[UUID],
+        count: int,
+        lock: bool = True,
     ) -> list[ItemVersion]:
         """Local synthetic planner; publication remains this module's authority."""
         versions = db.scalars(
@@ -556,7 +562,8 @@ class ContentService:
             document = DraftDocument.model_validate(version.document)
             if "WEB" not in document.channel_suitability:
                 continue
-            db.refresh(version, with_for_update=True)
+            if lock:
+                db.refresh(version, with_for_update=True)
             if version.status != "APPROVED":
                 continue
             result.append(version)

@@ -18,3 +18,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-018: Bounded deterministic numeric answers](018-numeric-grading.md)
 
 - [ADR-019: Local MinIO source build](019-minio-source-build.md)
+
+- [ADR-020: Diagnostic and initial mastery](020-diagnostic-mastery.md)

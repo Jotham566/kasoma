@@ -225,3 +225,27 @@ source because the original public image registry denies clean pulls. The initia
 build downloads a pinned Go builder and verified upstream modules; Go is not needed
 on the host. Compose caches subsequent builds. Keep existing data volumes when
 updating. See [ADR-019](../decisions/ADR/019-minio-source-build.md).
+
+## Synthetic diagnostic and mastery
+
+Run `make migrate seed seed-diagnostic`, start with `make dev`, then sign in, record
+synthetic consent, select a subject and open `/diagnostic`. The explicit fixture
+command creates independently workflow-reviewed synthetic questions; they are not
+NCDC-approved content and never count toward the release inventory. A new subject
+diagnostic needs 15 eligible items and a STANDARD representative for each available
+topic. Shortage is explicit; no immediate repeats or shortened plans are invented.
+
+Starting again resumes the active subject diagnostic. Reloading after interrupted
+submission reconciles saved server progress. Grades remain private until completion;
+diagnostic worked solutions are always blocked. The results show score and confidence
+per skill plus a first topic practice action. General adaptive ranking is later work.
+
+`make test-unit` runs the deterministic suite without local services; `make test`
+also runs integration against PostgreSQL/Redis/MinIO/Mailpit. `make replay-mastery`
+reads and compares every stored current/history projection at its recorded timestamp
+and configuration. It changes no records and prints only a count. An empty local
+learning database reports zero; integration fixtures verify nonempty replay.
+
+Migrations 0006/0007 are additive. Retain evidence and use a forward fix on failure.
+Do not run old revision-only readers against new diagnostic records. The diagnostic
+browser route and API must deploy together. Production startup remains blocked.

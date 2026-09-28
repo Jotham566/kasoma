@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 
 from services.assessment_contracts import (
     AnsweredItem,
+    DiagnosticReceipt,
+    DiagnosticView,
     GradeView,
     LearnerItem,
     NumericResponse,
@@ -35,12 +37,16 @@ from services.domain.curriculum import Level, Subject, Topic
 from services.domain.identity import LearnerProfile
 from services.grading import grade_choice, grade_numeric
 from services.identity import IdentityError, IdentityService
+from services.mastery import reconcile
 
 
 class AssessmentService:
     def __init__(self, identity: IdentityService):
         self.identity = identity
         self.content = ContentService(identity)
+        from services.diagnostics import Diagnostics
+
+        self.diagnostics = Diagnostics(self)
 
     def authorize(self, db: Session, token: str, subject: UUID | None = None) -> UUID:
         actor = self.identity.authenticate(db, token).user_id
@@ -96,6 +102,8 @@ class AssessmentService:
                 .order_by(SessionItem.position)
             )
         ]
+        if session.topic_id is None:
+            raise ValueError("Revision requires a topic")
         return SessionView(
             id=session.id,
             subject_id=session.subject_id,
@@ -228,6 +236,7 @@ class AssessmentService:
                     .where(
                         AssessmentSession.learner_id == actor,
                         AssessmentSession.status == "ACTIVE",
+                        AssessmentSession.kind == "REVISION",
                         AssessmentSession.subject_id.in_(allowed),
                     )
                     .order_by(AssessmentSession.started_at)
@@ -239,12 +248,16 @@ class AssessmentService:
                 if s.expires_at > self.identity.clock()
             ]
 
-    def get(self, token: str, session_id: UUID) -> SessionView:
+    def get(self, token: str, session_id: UUID) -> SessionView | DiagnosticView:
         with Session(self.identity.engine) as db, db.begin():
             actor = self.authorize(db, token)
             session = self.owned(db, actor, session_id)
             self.authorize(db, token, session.subject_id)
-            return self.view(db, session)
+            return (
+                self.diagnostics.view(db, session)
+                if session.kind == "DIAGNOSTIC"
+                else self.view(db, session)
+            )
 
     def pending(self, db: Session, session_id: UUID) -> SessionItem | None:
         return db.scalar(
@@ -265,6 +278,8 @@ class AssessmentService:
             if session.status != "ACTIVE":
                 raise IdentityError("SESSION_NOT_ACTIVE", 409)
             item = self.pending(db, session.id)
+            if item is None and session.kind == "DIAGNOSTIC":
+                item = self.diagnostics.assign(db, session)
             if item is None:
                 raise IdentityError("SESSION_NOT_ACTIVE", 409)
             version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
@@ -296,7 +311,7 @@ class AssessmentService:
 
     def submit(
         self, token: str, session_id: UUID, body: SubmitAnswer, key: UUID, request: UUID
-    ) -> GradeView:
+    ) -> GradeView | DiagnosticReceipt:
         with Session(self.identity.engine) as db, db.begin():
             actor = self.authorize(db, token)
             session = self.owned(db, actor, session_id)
@@ -306,7 +321,11 @@ class AssessmentService:
             )
             receipt = self.replay(db, actor, key, fingerprint)
             if receipt and receipt.attempt_id:
-                return self.grade(db, receipt.attempt_id)
+                return (
+                    DiagnosticReceipt(attempt_id=receipt.attempt_id)
+                    if session.kind == "DIAGNOSTIC"
+                    else self.grade(db, receipt.attempt_id)
+                )
             if db.scalar(
                 select(Attempt.id).where(
                     Attempt.session_item_id == body.session_item_id, Attempt.learner_id == actor
@@ -351,6 +370,7 @@ class AssessmentService:
                 )
             )
             db.flush()
+            result = result.model_copy(update={"mastery_update_status": "COMPLETED"})
             db.add(
                 Grade(
                     attempt_id=attempt_id,
@@ -368,11 +388,28 @@ class AssessmentService:
                     attempt_id=attempt_id,
                 )
             )
+            db.flush()
+            reconcile(db, actor, self.identity.clock())
             self.event(db, session.id, "attempt.graded", request, attempt_id)
-            if self.pending(db, session.id) is None:
+            self.event(db, session.id, "mastery.updated", request, attempt_id)
+            completed = (
+                self.diagnostics.view(db, session).answered_count >= session.item_count
+                if session.kind == "DIAGNOSTIC"
+                else self.pending(db, session.id) is None
+            )
+            if completed:
+                if session.kind == "DIAGNOSTIC":
+                    self.diagnostics.complete(db, session)
                 session.status, session.completed_at = "COMPLETED", self.identity.clock()
-                self.event(db, session.id, "session.completed", request)
-            return result
+                self.event(
+                    db,
+                    session.id,
+                    "diagnostic.completed" if session.kind == "DIAGNOSTIC" else "session.completed",
+                    request,
+                )
+            return (
+                DiagnosticReceipt(attempt_id=attempt_id) if session.kind == "DIAGNOSTIC" else result
+            )
 
     def grade(self, db: Session, attempt_id: UUID) -> GradeView:
         grade = db.get(Grade, attempt_id)
@@ -395,6 +432,8 @@ class AssessmentService:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
             session = self.owned(db, actor, item.session_id)
             self.authorize(db, token, session.subject_id)
+            if session.kind == "DIAGNOSTIC" and (solution or session.status != "COMPLETED"):
+                raise IdentityError("FORBIDDEN", 403)
             if solution:
                 version = db.get(ItemVersion, attempt.item_version_id)
                 if version is None:
@@ -406,7 +445,7 @@ class AssessmentService:
                 )
             return self.grade(db, attempt.id)
 
-    def abandon(self, token: str, session_id: UUID, request: UUID) -> SessionView:
+    def abandon(self, token: str, session_id: UUID, request: UUID) -> SessionView | DiagnosticView:
         with Session(self.identity.engine) as db, db.begin():
             actor = self.authorize(db, token)
             session = self.owned(db, actor, session_id)
@@ -414,4 +453,8 @@ class AssessmentService:
             if session.status == "ACTIVE":
                 session.status = "ABANDONED"
                 self.event(db, session.id, "session.abandoned", request)
-            return self.view(db, session)
+            return (
+                self.diagnostics.view(db, session)
+                if session.kind == "DIAGNOSTIC"
+                else self.view(db, session)
+            )

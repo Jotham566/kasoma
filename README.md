@@ -8,7 +8,9 @@ Kasoma's planned learning loop is **Diagnose → Recommend → Practice → Expl
 
 E0 foundation, E1 local identity/consent and E2 synthetic content review are merged.
 E3 synthetic choice assessment is merged (`22773fd`, hosted CI passed).
-E4 adds reviewed numeric rules and deterministic grading. Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
+E4 numeric grading is merged (`7d2c8ed`); the MinIO setup repair (`ee73741`) passed hosted CI.
+The E5 synthetic diagnostic and initial mastery slice is implemented locally for review.
+Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
 
@@ -119,3 +121,8 @@ adds five synthetic numeric items to Physics / Electricity and Magnetism. They
 exercise software rules only and do not count as academic release content.
 Units, inclusive tolerances, accepted forms and precision are explicitly reviewed;
 see [ADR-018](docs/decisions/ADR/018-numeric-grading.md).
+
+The synthetic diagnostic and initial mastery slice is available locally; see
+[E5 verification](docs/implementation/E5_VERIFICATION.md). Run `make seed-diagnostic`
+for workflow fixtures and open `/diagnostic`. `make replay-mastery` verifies stored
+projections without changing data. Neither command certifies academic quality.

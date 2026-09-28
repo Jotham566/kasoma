@@ -122,7 +122,7 @@ def test_durable_flow_resume_exact_grades_and_version_history(assessment):
         grade = response.json()
         assert grade["score"] == (1 if i % 2 == 0 else 0)
         assert grade["points_awarded"] == grade["points_possible"] * grade["score"]
-        assert grade["mastery_update_status"] == "NOT_IMPLEMENTED"
+        assert grade["mastery_update_status"] == "COMPLETED"
         assert (
             answer(client, headers, session, item, key, "A" if i % 2 == 0 else "B").json() == grade
         )

@@ -48,7 +48,15 @@ export default function Revise() {
   const [subject, setSubject] = useState("");
   const [topic, setTopic] = useState("");
   const [active, setActive] = useState<Schema["SessionView"][]>([]);
-  const [session, setSession] = useState<Schema["SessionView"] | null>(null);
+  const [session, setRevisionSession] = useState<Schema["SessionView"] | null>(
+    null,
+  );
+  function setSession(
+    state: Schema["SessionView"] | Schema["DiagnosticView"] | null,
+  ) {
+    if (state && !("answers" in state)) throw new Error("FORBIDDEN");
+    setRevisionSession(state);
+  }
   const [item, setItem] = useState<Schema["LearnerItem"] | null>(null);
   const [grade, setGrade] = useState<Schema["GradeView"] | null>(null);
   const [solution, setSolution] = useState("");
@@ -112,6 +120,7 @@ export default function Revise() {
         params: { path: { session_id: id } },
       }),
     );
+    if (!("answers" in state)) throw new Error("FORBIDDEN");
     setSession(state);
     window.history.replaceState(null, "", `/revise?session=${state.id}`);
     const last = state.answers.at(-1);
@@ -134,7 +143,13 @@ export default function Revise() {
     const selected = all.filter((s) => profile.subject_ids.includes(s.id));
     setSubjects(selected);
     setReady(true);
-    if (selected[0]) await loadTopics(selected[0].id);
+    const query = new URLSearchParams(window.location.search);
+    const requested =
+      selected.find((s) => s.id === query.get("subject")) ?? selected[0];
+    if (requested) {
+      await loadTopics(requested.id);
+      if (query.get("topic")) setTopic(query.get("topic")!);
+    }
     setActive(value(await client().GET("/api/v1/sessions/active")));
     const id = new URLSearchParams(window.location.search).get("session");
     if (id) await loadSession(id);
@@ -170,8 +185,8 @@ export default function Revise() {
       </Link>
       <h1 className="text-3xl font-semibold">Practise a topic</h1>
       <p>
-        Synthetic development questions only. These sessions do not yet estimate
-        mastery.
+        Synthetic development questions only. Answers contribute to an evolving
+        mastery estimate, not a certified grade.
       </p>
       <Status>{status}</Status>
       <Link
@@ -309,6 +324,7 @@ export default function Revise() {
                       },
                     ),
                   );
+                  if (result.status !== "GRADED") throw new Error("FORBIDDEN");
                   setGrade(result);
                   setItem(null);
                   retry.current = null;

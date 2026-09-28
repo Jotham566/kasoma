@@ -71,7 +71,7 @@ test("FR-CNT-001–005: independent return, correction, approval and retirement"
     const queued = reviewer.getByRole("button", {
       name: "Browser synthetic selector — v1 · IN_REVIEW",
     });
-    if (!(await queued.count())) {
+    while (!(await queued.count())) {
       await reviewer
         .getByRole("button", { name: "Load more", exact: true })
         .click();
