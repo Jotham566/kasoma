@@ -1,48 +1,45 @@
-# Current Sprint: E4 reviewed revision hints
+# Current Sprint: E4 unseen equivalent reassessment
 
-Recommended practice is committed and pushed to main as `88dd880`.
-[Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36398742634).
-Its completed branch was deleted; `codex/e4-reviewed-hints` is the active local
-implementation branch. The hint slice remains uncommitted for review.
+Reviewed hints are committed and pushed to main as `3c0c3ba`; the completed branch
+was deleted. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36401623871). The next slice
+is local on `codex/e4-unseen-reassessment`, uncommitted for review.
 
 ## Current slice
 
-FR-GRD-006, supporting FR-GRD-007, FR-MST-001/003, FR-CNT-001/004,
-FR-ID-003, FR-OPS-001, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
+FR-GRD-008, supporting FR-REV-003/005, FR-GRD-007, FR-MST-001/003,
+FR-CNT-001/004, FR-ID-003, FR-OPS-001, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
 
-Zero to three authored hints travel through independent content review. Revision
-learners request progressive levels with durable usage and exact retry boundaries.
-Submission freezes before-answer count/highest level into the immutable attempt and
-mastery evidence; the existing independence formula applies without changing points.
-Post-answer remediation preserves original evidence. Diagnostics always block hints.
-Consent, ownership, current approved content and assignment eligibility are enforced.
-Migration 0009 is additive and legacy evidence hashes remain replayable.
+Reviewed equivalent-version claims are preferred to same-primary-skill/difficulty
+fallback. Selection excludes all previously served stable items, active reservations
+and near-duplicate prompts. One reassessment links to each original revision attempt;
+retries and cross-device discovery resume it. The shared player, grader and mastery
+service produce separate independent evidence and preserve the original grade.
+Migration 0010 is additive; replay checks frozen selection and content hashes.
 
-Decision: [ADR-022](../decisions/ADR/022-reviewed-hints.md).
-Evidence and check status: [hint verification](E4_HINTS_VERIFICATION.md).
-The changelog, API/data/content specifications, runbook and traceability accompany this slice.
+Decision: [ADR-023](../decisions/ADR/023-unseen-reassessment.md).
+Evidence and check status: [reassessment verification](E4_REASSESSMENT_VERIFICATION.md).
+All 249 Python tests and 13 browser tests passed, alongside setup, migration, contracts,
+lint/types, security and container checks. Changelog, API/data/content specifications,
+runbook and traceability accompany the slice.
 
 ## Next vertical slice
 
-FR-GRD-008: unseen equivalent reassessment following remediation, with a pinned link
-to the original attempt, equivalent approved skill/difficulty selection, separate
-independent evidence and no original-grade rewrite. Read the applicable specification
-and document selection/shortage semantics before implementation. The frozen expert
-benchmark and Week 5 short-text gate remain parallel academic dependencies.
+FR-MST-004/005: consent-aware subject/topic/competency progress and recent session
+history, aggregating immutable evidence with visible confidence and sparse-evidence
+language. Preserve the Week 5 frozen expert benchmark and short-text gate as parallel
+academic dependencies. Do not infer learning gain or misconception resolution from
+synthetic regression results.
 
-## Remaining external dependencies and release gates
+## Remaining dependencies and release gates
 
-- Named owners, kickoff date, delivery capacity and academic reviewer capacity.
-- Exact NCDC mappings, real content rights, balanced inventory and expert benchmark.
-- Approved privacy notices, verifiable guardian procedure, DPIA and legal approvals.
-- Week 5 short-text benchmark gate remains; no model evaluation has been authorized.
-- Week 8 production provider selection, production OTP/MFA and restricted DB roles.
-- General progress/history UX, reviewed ranking calibration, multiple-choice/short-text,
-  reassessment, flags, WhatsApp and operations remain further MVP work.
-- Outbox dispatch and approved retention/anonymization jobs remain E8 work.
-- Synthetic regression results do not authorize production or certify learning gain.
+- Named owners, kickoff date, delivery and academic reviewer capacity.
+- Exact NCDC mappings, content rights, balanced inventory, reviewed equivalent pairs
+  and expert benchmark; semantic transfer validation and calibrated criterion thresholds.
+- Approved privacy wording, verifiable guardian procedure, DPIA and legal approvals.
+- Week 5 short-text benchmark and Week 8 production provider decision; no model
+  evaluation, real learner data or cloud deployment is authorized by these local checks.
+- General progress/history, multiple-choice/short-text, learner flags, WhatsApp and operations.
+- Production OTP/MFA, restricted DB roles, outbox dispatch and retention/anonymization jobs.
 
-Prior evidence: [E0](E0_VERIFICATION.md), [E1](E1_VERIFICATION.md),
-[E2](E2_VERIFICATION.md), [E3](E3_VERIFICATION.md), [E4 numeric](E4_VERIFICATION.md),
-[E5 diagnostics](E5_VERIFICATION.md), [E5 recommendations](E5_RECOMMENDATIONS_VERIFICATION.md),
-[traceability](REQUIREMENTS_TRACEABILITY.md).
+Prior evidence: [hints](E4_HINTS_VERIFICATION.md), [recommendations](E5_RECOMMENDATIONS_VERIFICATION.md),
+[diagnostics](E5_VERIFICATION.md), [traceability](REQUIREMENTS_TRACEABILITY.md).

@@ -117,6 +117,15 @@ export function Editor({
                       : null,
                 }
               : null,
+          equivalents: value("equivalents")
+            .split("\n")
+            .filter((line) => line.trim())
+            .map((line) => {
+              const [version_id, confidence] = line
+                .split(",")
+                .map((part) => part.trim());
+              return { version_id, confidence: Number(confidence) };
+            }),
           maximum_points: Number(value("maximum_points")),
           partial_credit: "ALL_OR_NOTHING",
           hints: [0, 1, 2]
@@ -329,6 +338,19 @@ export function Editor({
         />
       </label>
       <p>Scoring policy: all or nothing.</p>
+      {area(
+        "Equivalent approved versions (optional)",
+        "equivalents",
+        initial?.equivalents
+          ?.map((e) => `${e.version_id}, ${e.confidence}`)
+          .join("\n") ?? "",
+        500,
+      )}
+      <p>
+        One approved version ID and confidence from 0 to 1 per line, separated
+        by a comma. Both items must test the same primary skill and difficulty
+        in a different scenario. Independent review is required.
+      </p>
       <fieldset>
         <legend>Reviewed hints (optional, in order)</legend>
         <p>

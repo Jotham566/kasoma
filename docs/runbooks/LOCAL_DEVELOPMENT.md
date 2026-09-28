@@ -277,3 +277,19 @@ Diagnostics never expose hints. `make replay-mastery replay-recommendations` ver
 stored evidence read-only; automated integration tests exercise nonempty histories.
 Migration 0009 is additive; retain historical evidence and use forward fixes rather
 than destructive downgrade. See [hint verification](../implementation/E4_HINTS_VERIFICATION.md).
+
+## Synthetic unseen reassessment
+
+Run `make migrate seed seed-reassessment` for additive migration 0010 and distinct
+synthetic text scenarios across both subjects, three difficulty bands and two competency
+mappings. These software fixtures are excluded from academic release counts. Re-running
+preserves published versions; fixture staff use a separate deterministic identity namespace.
+
+From revision feedback choose **Try an unseen reassessment**. Retry after a lost response
+or use active sessions on another signed-in device. The one-item result is separate from
+the original grade. A shortage is explicit; the selector never repeats a previously
+served stable item. Retired targets cannot be served. Completed/expired links do not
+mint new reassessments. `make replay-reassessments` checks frozen selection, hashes and
+pinned content read-only; nonempty replay is exercised by integration tests.
+Keep history and use forward fixes on rollback. See
+[verification evidence](../implementation/E4_REASSESSMENT_VERIFICATION.md).

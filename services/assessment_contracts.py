@@ -85,6 +85,9 @@ class AnsweredItem(Contract):
 
 
 class SessionView(Contract):
+    kind: Literal["REVISION", "REASSESSMENT"] = "REVISION"
+    original_attempt_id: UUID | None = None
+    original_session_id: UUID | None = None
     id: UUID
     subject_id: UUID
     topic_id: UUID

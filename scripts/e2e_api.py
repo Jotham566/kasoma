@@ -61,6 +61,7 @@ def main() -> None:
     seed_assessment(service, mathematics_only=True, hints=True)
     seed_assessment(service, numeric=True, hints=True)
     seed_assessment(service, diagnostic=True, hints=True)
+    seed_assessment(service, reassessment=True, mathematics_only=True, hints=True)
     try:
         uvicorn.run(create_app(config, service), host="127.0.0.1", port=18000, access_log=False)
     finally:

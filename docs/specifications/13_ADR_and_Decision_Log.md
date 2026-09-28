@@ -179,3 +179,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-022: Reviewed hints and immutable independence evidence](../decisions/ADR/022-reviewed-hints.md)
   records reviewed disclosure, retry boundaries and frozen independence metadata.
+
+- [ADR-023: Unseen equivalent reassessment](../decisions/ADR/023-unseen-reassessment.md)
+  records reviewed claims, unseen selection, immutable linkage and independent evidence.

@@ -21,6 +21,7 @@ def seed_assessment(
     mathematics_only: bool = False,
     diagnostic: bool = False,
     hints: bool = False,
+    reassessment: bool = False,
 ) -> None:
     if identity.settings.app_env not in {"development", "test"}:
         raise ValueError("Synthetic fixtures only")
@@ -29,7 +30,11 @@ def seed_assessment(
         prefix = "Synthetic diagnostic fixture"
     if hints:
         prefix += " with hints"
+    if reassessment:
+        prefix = "Synthetic reassessment fixture"
     expected_count = 90 if diagnostic else (5 if numeric else (15 if mathematics_only else 30))
+    if reassessment:
+        expected_count = 144 if mathematics_only else 288
     with Session(identity.engine) as db:
         existing = list(
             db.scalars(
@@ -53,7 +58,11 @@ def seed_assessment(
     )
     tokens = []
     for role in ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"]:
-        namespace = "diagnostic-" if diagnostic else ("numeric-" if numeric else "")
+        namespace = (
+            "reassessment-"
+            if reassessment
+            else ("diagnostic-" if diagnostic else ("numeric-" if numeric else ""))
+        )
         email = f"fixture-{namespace}{role.lower()}@example.invalid"
         challenge = service.request_otp(OTPRequest(identifier=email, device_id=uuid4()), role, None)
         credentials = service.verify(
@@ -70,7 +79,7 @@ def seed_assessment(
         if mathematics_only and topic.parent_id != math_id:
             continue
         concept = next(c for c in context.concepts if c.parent_id == topic.id)
-        for index in range(15 if diagnostic else 5):
+        for index in range(48 if reassessment else (15 if diagnostic else 5)):
             title = f"{prefix} {topic.id}/{index}"
             with Session(identity.engine) as db:
                 if db.scalar(
@@ -93,6 +102,23 @@ def seed_assessment(
                 "rights_evidence": "Original software fixture; no external source",
                 "rights_conditions": "Synthetic testing only; not academic release content",
             }
+            if reassessment:
+                doc["prompt"] = [
+                    "Software check: select Alpha from the two labels.",
+                    "On the practice control panel, Alpha starts the timer. "
+                    "Which control starts it?",
+                    "The green test marker is named Alpha. Identify that marker using its name.",
+                    "Match this fixture's requested token: Alpha.",
+                    "Choose the label printed inside the sample circle: Alpha.",
+                    "Among the test badges, the one to inspect is Alpha. Mark that badge.",
+                    "The simulated log records Alpha as ready; Beta is pending. "
+                    "Select the ready entry.",
+                    "A test card displays the word Alpha above an empty box. Select that word.",
+                ][index % 8]
+                doc["difficulty"] = ["FOUNDATIONAL", "STANDARD", "CHALLENGING"][(index // 8) % 3]
+                doc["competency_mappings"] = [
+                    {"competency_id": context.competencies[index // 24].id, "weight": 1}
+                ]
             if diagnostic:
                 doc.update(
                     {
@@ -182,6 +208,7 @@ def main() -> None:
     parser.add_argument("--numeric", action="store_true")
     parser.add_argument("--diagnostic", action="store_true")
     parser.add_argument("--hints", action="store_true")
+    parser.add_argument("--reassessment", action="store_true")
     args = parser.parse_args()
     config = Settings()
     engine = engine_for(config)
@@ -190,6 +217,7 @@ def main() -> None:
         seed_assessment(
             IdentityService(engine, config, fake, fake),
             hints=args.hints,
+            reassessment=args.reassessment,
             numeric=args.numeric,
             diagnostic=args.diagnostic,
         )

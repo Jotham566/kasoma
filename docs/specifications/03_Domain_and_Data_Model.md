@@ -181,3 +181,19 @@ supports exact retry boundaries. Attempts freeze before-answer count/highest lev
 mastery evidence and safe outbox metadata bind to those values. Post-answer usage
 cannot rewrite attempts, grades or evidence. Legacy evidence without highest level
 retains its original input hash. See [ADR-022](../decisions/ADR/022-reviewed-hints.md).
+
+## Unseen reassessment persistence (migration 0010)
+
+The `REASSESSMENT` session kind requires exactly one assignment and a topic. The
+append-only `reassessments` record binds a unique original revision attempt to the
+child session and selected version, relationship basis, elapsed seconds, selection
+snapshot and input hash. Guards enforce ownership, distinct stable items, all-time
+unseen delivery, primary skill/difficulty and one-item linkage. Original grades and
+new mastery evidence remain separate. Active-topic uniqueness applies to REVISION,
+allowing a reassessment to coexist with its source session.
+
+Optional content-document `equivalents` claims pin another approved version plus
+confidence (0–1), under the claim-bearing version's immutable content hash and
+independent review records. Selection records the exact claim/review IDs or the
+explicit same-skill/difficulty fallback basis. No automatic relationship inference
+or retrospective evidence rewrite occurs. See [ADR-023](../decisions/ADR/023-unseen-reassessment.md).

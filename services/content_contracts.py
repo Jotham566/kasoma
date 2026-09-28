@@ -65,7 +65,13 @@ class Mapping(Contract):
     weight: float = Field(gt=0, le=1, allow_inf_nan=False)
 
 
+class EquivalentItem(Contract):
+    version_id: UUID
+    confidence: float = Field(ge=0, le=1)
+
+
 class DraftDocument(Contract):
+    equivalents: list[EquivalentItem] = Field(default_factory=list, max_length=10)
     title: str = Field(default="", max_length=160)
     topic_id: UUID | None = None
     concept_id: UUID | None = None

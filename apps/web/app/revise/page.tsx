@@ -23,6 +23,9 @@ function value<T>(result: {
   return result.data;
 }
 const messages: Record<string, string> = {
+  REASSESSMENT_UNAVAILABLE:
+    "No unseen suitable question is available yet. Continue your practice or try later.",
+  REASSESSMENT_NOT_ALLOWED: "Reassessment starts from revision feedback.",
   VALIDATION_FAILED:
     "Check the number, unit and accepted form, then submit again. Your answer has not been saved.",
   AUTH_REQUIRED: "Sign in again to continue. Your saved answers are retained.",
@@ -184,7 +187,11 @@ export default function Revise() {
       <Link className="inline-flex min-h-11 items-center underline" href="/">
         Kasoma home
       </Link>
-      <h1 className="text-3xl font-semibold">Practise a topic</h1>
+      <h1 className="text-3xl font-semibold">
+        {session?.kind === "REASSESSMENT"
+          ? "Check your understanding"
+          : "Practise a topic"}
+      </h1>
       <p>
         Synthetic development questions only. Answers contribute to an evolving
         mastery estimate, not a certified grade.
@@ -286,6 +293,23 @@ export default function Revise() {
       {session && (
         <section className="space-y-5" aria-label="Practice session">
           <p>{session.recommendation_reason}</p>
+          {session.kind === "REASSESSMENT" && (
+            <p>
+              Try this question independently. Your original score stays
+              unchanged.
+            </p>
+          )}
+          {session.original_session_id && (
+            <button
+              className={button}
+              disabled={busy}
+              onClick={() =>
+                void run(() => loadSession(session.original_session_id!))
+              }
+            >
+              Return to original practice
+            </button>
+          )}
           <p>
             {session.answered_count} of {session.item_count} answers saved
           </p>
@@ -347,12 +371,14 @@ export default function Revise() {
                   {p.content}
                 </p>
               ))}
-              <Hints
-                key={item.session_item_id}
-                sessionId={session.id}
-                item={item}
-                disabled={busy}
-              />
+              {session.kind !== "REASSESSMENT" && (
+                <Hints
+                  key={item.session_item_id}
+                  sessionId={session.id}
+                  item={item}
+                  disabled={busy}
+                />
+              )}
               {item.response_spec.type === "NUMERIC" ? (
                 <fieldset disabled={busy} className="space-y-3">
                   <legend>Enter a numeric answer</legend>
@@ -458,12 +484,14 @@ export default function Revise() {
                 <p key={i}>{text}</p>
               ))}
               <p>{grade.feedback.next_action}</p>
-              <Hints
-                key={grade.attempt_id}
-                sessionId={session.id}
-                attemptId={grade.attempt_id}
-                disabled={busy}
-              />
+              {session.kind !== "REASSESSMENT" && (
+                <Hints
+                  key={grade.attempt_id}
+                  sessionId={session.id}
+                  attemptId={grade.attempt_id}
+                  disabled={busy}
+                />
+              )}
               <button
                 className={button}
                 disabled={busy}
@@ -485,6 +513,35 @@ export default function Revise() {
                 Show worked solution
               </button>
               {solution && <p className="whitespace-pre-wrap">{solution}</p>}
+              {session.kind !== "REASSESSMENT" && (
+                <button
+                  className={button}
+                  disabled={busy}
+                  onClick={() =>
+                    void run(async () => {
+                      const result = value(
+                        await client().POST(
+                          "/api/v1/attempts/{attempt_id}/reassessment",
+                          {
+                            params: {
+                              path: { attempt_id: grade.attempt_id },
+                              header: {
+                                "Idempotency-Key": key({
+                                  reassessment: grade.attempt_id,
+                                }),
+                              },
+                            },
+                          },
+                        ),
+                      );
+                      retry.current = null;
+                      await loadSession(result.id);
+                    })
+                  }
+                >
+                  Try an unseen reassessment
+                </button>
+              )}
               {session.status === "ACTIVE" && (
                 <button
                   className={button}

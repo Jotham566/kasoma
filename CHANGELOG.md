@@ -1,5 +1,17 @@
 # Changelog
 
+## 28 September 2026 — unseen reassessment (local implementation)
+
+- Reviewed hints committed and pushed to main as `3c0c3ba`; hosted CI passed and completed branch removed.
+- Add reviewed equivalent-version claims with independent review of both sides.
+- Add one-item unseen reassessment, same-skill/difficulty fallback, conservative clone
+  exclusion, durable source linkage and replayable selection evidence.
+- Reuse the shared player/grader/mastery service; preserve the original result and
+  record separate independent evidence with safe lifecycle events.
+- Add migration 0010, generated contracts, synthetic fixtures and regression coverage.
+- See [verification](docs/implementation/E4_REASSESSMENT_VERIFICATION.md). Academic
+  transfer validity, calibrated resolution criteria and production gates remain pending.
+
 ## 28 September 2026 — reviewed revision hints (local implementation)
 
 - Recommended practice merged to main as `88dd880`; hosted CI passed and its branch was removed.

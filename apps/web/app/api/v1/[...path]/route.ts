@@ -57,23 +57,26 @@ async function gateway(
   const hintWrite = new RegExp(
     `^(?:sessions/${uuid}/items/${uuid}/hint|attempts/${uuid}/hint)$`,
   ).test(path);
-  const methods = hintWrite
-    ? ["POST"]
-    : learning
-      ? [
-          learning[1] === "attempts" || learning[1] === "abandon"
-            ? "POST"
-            : "GET",
-        ]
-      : learningRead
-        ? ["GET"]
-        : staffVersion
-          ? staffVersion[1] === "reviews"
-            ? ["GET"]
-            : staffVersion[1]
-              ? ["POST"]
-              : ["GET", "PATCH"]
-          : allowed[path];
+  const reassessment = new RegExp(`^attempts/${uuid}/reassessment$`).test(path);
+  const methods = reassessment
+    ? ["GET", "POST"]
+    : hintWrite
+      ? ["POST"]
+      : learning
+        ? [
+            learning[1] === "attempts" || learning[1] === "abandon"
+              ? "POST"
+              : "GET",
+          ]
+        : learningRead
+          ? ["GET"]
+          : staffVersion
+            ? staffVersion[1] === "reviews"
+              ? ["GET"]
+              : staffVersion[1]
+                ? ["POST"]
+                : ["GET", "PATCH"]
+            : allowed[path];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (

@@ -242,3 +242,20 @@ The next-item response also resumes revealed pre-answer hints. Frozen grade fiel
 `hint_count` and `highest_hint_level` describe use before submission only.
 See [ADR-022](../decisions/ADR/022-reviewed-hints.md) and the generated OpenAPI for
 complete schemas. Historical stored grade JSON may omit these additive zero defaults.
+
+## Unseen reassessment (ADR-023)
+
+`POST /attempts/{attempt_id}/reassessment` requires `Idempotency-Key` and no body.
+It creates or resumes the one-item reassessment linked to an owned submitted revision
+attempt. `GET` on the same path reads that existing linked session, returning 404 if
+none exists. Both enforce current consent, subject enrollment and ownership. Diagnostic
+and reassessment origins return `REASSESSMENT_NOT_ALLOWED`; insufficient unseen eligible
+inventory returns `REASSESSMENT_UNAVAILABLE` (409) without creating a session.
+
+The additive `SessionView.kind`, `original_attempt_id` and `original_session_id` fields
+support the shared player and return navigation. Existing session next-item, submit,
+get and abandon routes apply; active discovery includes reassessments. Exactly one
+new question is selected, with no hints before submission and no early worked solution.
+The original grade is immutable. Completed, abandoned or expired reassessments remain
+linked; repeated starts never replace them. Selection provenance stays server-side.
+See [ADR-023](../decisions/ADR/023-unseen-reassessment.md) and generated OpenAPI.

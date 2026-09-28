@@ -149,3 +149,17 @@ confirm progressive scaffolding without disclosing the answer or worked solution
 The editor and reviewer display all authored levels; learner routes disclose only
 requested levels. Synthetic fixture text and automated tests do not replace academic
 review of production hints. See [ADR-022](../decisions/ADR/022-reviewed-hints.md).
+
+## Versioned equivalence claims (ADR-023 implementation)
+
+Authors may include up to ten `equivalents` entries with `version_id` and `confidence`
+(0–1). The referenced version must be approved synthetic content in the same subject,
+primary concept/competency and difficulty band. Primary competency is greatest mapping
+weight with stable-ID tie breaking. Reject duplicate IDs and textual/structural clones.
+
+The staff editor accepts one version ID/confidence pair per line; reviewers can inspect
+the referenced version and return to the claim-bearing item through the item list.
+An approving reviewer cannot author either side. Existing independent-review and
+high-risk second-review controls apply. The review must establish transfer validity;
+automated text checks and synthetic confidence values do not certify equivalence.
+Published claims are immutable; changes require a successor version and new review.

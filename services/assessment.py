@@ -31,6 +31,7 @@ from services.domain.assessment import (
     AssessmentSession,
     Attempt,
     Grade,
+    Reassessment,
     SessionItem,
 )
 from services.domain.content import ItemVersion
@@ -115,7 +116,13 @@ class AssessmentService:
         ]
         if session.topic_id is None:
             raise ValueError("Revision requires a topic")
+        link = db.scalar(select(Reassessment).where(Reassessment.session_id == session.id))
+        original = db.get(Attempt, link.original_attempt_id) if link else None
+        original_item = db.get(SessionItem, original.session_item_id) if original else None
         return SessionView(
+            kind=session.kind,
+            original_attempt_id=original.id if original else None,
+            original_session_id=original_item.session_id if original_item else None,
             id=session.id,
             subject_id=session.subject_id,
             topic_id=session.topic_id,
@@ -305,7 +312,7 @@ class AssessmentService:
                     .where(
                         AssessmentSession.learner_id == actor,
                         AssessmentSession.status == "ACTIVE",
-                        AssessmentSession.kind == "REVISION",
+                        AssessmentSession.kind.in_(["REVISION", "REASSESSMENT"]),
                         AssessmentSession.subject_id.in_(allowed),
                     )
                     .order_by(AssessmentSession.started_at)
@@ -489,6 +496,8 @@ class AssessmentService:
                 if session.kind == "DIAGNOSTIC"
                 else self.pending(db, session.id) is None
             )
+            if completed and session.kind == "REASSESSMENT":
+                self.event(db, session.id, "reassessment.completed", request, attempt_id)
             if completed:
                 if session.kind == "DIAGNOSTIC":
                     self.diagnostics.complete(db, session)

@@ -221,6 +221,27 @@ class ContentService:
             if valid is None or prerequisite == document.concept_id:
                 fields.append("prerequisite_concept_ids")
                 break
+        if document.equivalents:
+            from services.reassessment_engine import near_duplicate, same_skill
+
+            equivalent_ids = [claim.version_id for claim in document.equivalents]
+            if len(equivalent_ids) != len(set(equivalent_ids)):
+                fields.append("equivalents")
+            for claim in document.equivalents:
+                target = db.get(ItemVersion, claim.version_id)
+                target_item = db.get(Item, target.item_id) if target else None
+                if (
+                    target is None
+                    or target.status != "APPROVED"
+                    or not target.synthetic
+                    or target_item is None
+                    or target_item.subject_id != subject_id
+                ):
+                    fields.append("equivalents")
+                    continue
+                other = DraftDocument.model_validate(target.document)
+                if not same_skill(document, other) or near_duplicate(document.prompt, other.prompt):
+                    fields.append("equivalents")
         if complete:
             for field in [
                 "title",
@@ -465,6 +486,10 @@ class ContentService:
                 ):
                     raise ContentError("DUPLICATE_REVIEW")
                 if body.decision == "APPROVE":
+                    for claim in document.equivalents:
+                        target_version = db.get(ItemVersion, claim.version_id)
+                        if target_version is not None and target_version.author_id == actor:
+                            raise ContentError("SELF_REVIEW_FORBIDDEN")
                     self.validate(db, item.subject_id, document, complete=True)
                     if set(body.checklist) != CHECKLIST or len(body.checklist) != len(CHECKLIST):
                         raise ContentError("CONTENT_VALIDATION_FAILED", ["checklist"])

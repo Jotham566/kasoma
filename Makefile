@@ -115,3 +115,11 @@ replay-recommendations:
 .PHONY: seed-hints
 seed-hints:
 	$(UV) python -m scripts.assessment_fixtures --hints
+
+.PHONY: replay-reassessments
+replay-reassessments:
+	$(UV) python -m scripts.replay_reassessments
+
+.PHONY: seed-reassessment
+seed-reassessment:
+	$(UV) python -m scripts.assessment_fixtures --reassessment --hints

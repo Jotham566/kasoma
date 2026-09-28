@@ -5,7 +5,8 @@ Date: 28 September 2026. Synthetic local development only.
 Recommended practice was committed and pushed to main as `88dd880`.
 [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36398742634);
 the completed recommendation branch was removed. This next slice is on the active
-local `codex/e4-reviewed-hints` branch, uncommitted for review.
+local `codex/e4-reviewed-hints` branch at verification. It was subsequently committed
+and pushed to main as `3c0c3ba`; that completed branch was removed.
 
 ## Requirements and decision
 
@@ -82,3 +83,5 @@ scope was introduced. Dependency vulnerability checks access package advisories 
 No production deployment is enabled. The next slice is FR-GRD-008 unseen equivalent
 reassessment, preserving the original grade and recording new independent evidence.
 Week 5 benchmark and Week 8 provider decisions remain release prerequisites.
+
+Hosted CI for main `3c0c3ba`: [passed](https://github.com/Jotham566/kasoma/actions/runs/36401623871).

@@ -148,3 +148,23 @@ def attempt_hints(attempt_id: UUID, request: Request) -> HintState:
     from services.hints import access
 
     return access(service(request), bearer(request), attempt_id=attempt_id)
+
+
+@router.post("/attempts/{attempt_id}/reassessment", response_model=SessionView)
+def reassessment_start(attempt_id: UUID, request: Request, idempotency_key: Key) -> SessionView:
+    from services.reassessments import access
+
+    return access(
+        service(request),
+        bearer(request),
+        attempt_id,
+        idempotency_key,
+        UUID(request.state.request_id),
+    )
+
+
+@router.get("/attempts/{attempt_id}/reassessment", response_model=SessionView)
+def reassessment_get(attempt_id: UUID, request: Request) -> SessionView:
+    from services.reassessments import access
+
+    return access(service(request), bearer(request), attempt_id)

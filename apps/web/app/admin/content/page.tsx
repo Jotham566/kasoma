@@ -336,6 +336,44 @@ export default function ContentWorkspace() {
               <p className="whitespace-pre-wrap">
                 Remediation: {selected.document.remediation}
               </p>
+              <section aria-label="Equivalent item claims">
+                <h3 className="font-semibold">Equivalence for transfer</h3>
+                <p>
+                  Review both scenarios; reject pairs answered by recalling
+                  prior wording or answers.
+                </p>
+                <ul>
+                  {selected.document.equivalents?.map((claim) => (
+                    <li key={claim.version_id}>
+                      <button
+                        className={button}
+                        disabled={busy}
+                        onClick={() =>
+                          void run(async () => {
+                            const other = await api().GET(
+                              "/api/v1/admin/item-versions/{version_id}",
+                              {
+                                params: {
+                                  path: { version_id: claim.version_id },
+                                },
+                              },
+                            );
+                            if (!other.data) throw new Error();
+                            await result(
+                              other.data,
+                              other.response,
+                              other.error,
+                            );
+                          })
+                        }
+                      >
+                        Inspect equivalent version {claim.version_id}
+                      </button>{" "}
+                      Confidence: {claim.confidence}
+                    </li>
+                  ))}
+                </ul>
+              </section>
               <section aria-label="Authored hints">
                 <h3 className="font-semibold">Hints</h3>
                 <p>

@@ -91,8 +91,8 @@ A task is complete only when:
 
 E0–E4 foundation, identity/consent, content review and deterministic assessment
 and the E5 synthetic diagnostic/mastery slice are merged. Synthetic recommended
-practice is merged; reviewed revision hints are implemented locally. Academic
-calibration and production deployment remain pending. See
+practice and reviewed hints are merged; unseen reassessment is implemented locally.
+Academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

@@ -107,3 +107,14 @@ class HintUse(Base):
     level: Mapped[int]
     phase: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class Reassessment(Base):
+    __tablename__ = "reassessments"
+    original_attempt_id: Mapped[UUID] = mapped_column(ForeignKey("attempts.id"), primary_key=True)
+    session_id: Mapped[UUID] = mapped_column(ForeignKey("assessment_sessions.id"), unique=True)
+    item_version_id: Mapped[UUID] = mapped_column(ForeignKey("item_versions.id"))
+    basis: Mapped[str]
+    elapsed_seconds: Mapped[float]
+    snapshot: Mapped[dict[str, Any]] = mapped_column(JSON)
+    input_hash: Mapped[str]

@@ -35,7 +35,9 @@
         "diagnostic.started",
         "diagnostic.completed",
         "mastery.updated",
-        "hint.used"
+        "hint.used",
+        "reassessment.started",
+        "reassessment.completed"
       ]
     },
     "version": {
