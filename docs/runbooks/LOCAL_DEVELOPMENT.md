@@ -193,3 +193,27 @@ Mastery status is NOT_IMPLEMENTED until the later projection slice.
 
 Migration 0004 is additive. Keep evidence tables if reverting application code;
 never downgrade/drop learning evidence without a separate recovery plan.
+
+## Numeric grading (E4)
+
+Run `make migrate seed-numeric`. The explicit numeric seed creates five synthetic
+workflow items in Physics / Electricity and Magnetism and is repeatable. It uses
+fake messaging and separate fixture author/reviewer identities; it makes no claim
+about academic inventory or curriculum correctness. Visit `/admin/content` as a
+provisioned staff identity to author numeric rules, and `/revise` as a consented
+synthetic learner to exercise the input and deterministic grade.
+
+Each numeric item declares conversions (`canonical = input * factor + offset`),
+absolute/relative tolerance, accepted forms and significant-figure policy. Boundary
+comparison is inclusive, using exact rational arithmetic. Learners see allowed units,
+formats and precision instructions, never expected values or tolerance specifications.
+See [ADR-018](../decisions/ADR/018-numeric-grading.md) for bounds and conventions.
+
+`make e2e` now starts isolated test servers on loopback ports 13000 (web) and 18000
+(API). It retains separate synthetic database schemas and does not reuse the local
+application on ports 3000/8000. `make container-smoke` restores the prior running/
+stopped state of application services; it still refreshes them to the built images.
+
+Migration 0005 is additive and preserves choice rows. Once numeric documents exist,
+prefer a forward fix or retain numeric-aware readers during recovery. Pre-numeric
+code cannot read new numeric documents; never delete evidence to enable rollback.

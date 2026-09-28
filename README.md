@@ -7,7 +7,8 @@ Kasoma's planned learning loop is **Diagnose → Recommend → Practice → Expl
 ## Repository status
 
 E0 foundation, E1 local identity/consent and E2 synthetic content review are merged.
-E3 adds synthetic single-choice topic practice. Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
+E3 synthetic choice assessment is merged (`22773fd`, hosted CI passed).
+E4 adds reviewed numeric rules and deterministic grading. Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
 
@@ -112,3 +113,9 @@ Run `make dev`, complete a synthetic profile and consent at `/onboarding`, then
 open `/revise`. Only five-question topic practice is exposed in the UI; the API
 accepts 5–10 when inventory permits. This is not an academic content release or
 a mastery estimate. See [current sprint](docs/implementation/CURRENT_SPRINT.md).
+
+For numeric development fixtures, run `make seed-numeric` after migrations. This
+adds five synthetic numeric items to Physics / Electricity and Magnetism. They
+exercise software rules only and do not count as academic release content.
+Units, inclusive tolerances, accepted forms and precision are explicitly reviewed;
+see [ADR-018](docs/decisions/ADR/018-numeric-grading.md).

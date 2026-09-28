@@ -94,3 +94,7 @@ staff-role:
 .PHONY: seed-assessment
 seed-assessment:
 	$(UV) python -m scripts.assessment_fixtures
+
+.PHONY: seed-numeric
+seed-numeric:
+	$(UV) python -m scripts.assessment_fixtures --numeric

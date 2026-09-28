@@ -7,6 +7,7 @@ from uuid import UUID
 from pydantic import Field
 
 from services.identity_contracts import Contract
+from services.numeric import NumericSpec
 
 Text = Annotated[str, Field(max_length=4000)]
 Reason = Annotated[str, Field(min_length=1, max_length=500)]
@@ -72,12 +73,13 @@ class DraftDocument(Contract):
     learning_outcome_reference: str = Field(default="", max_length=300)
     difficulty: Literal["FOUNDATIONAL", "STANDARD", "CHALLENGING"] = "FOUNDATIONAL"
     expected_seconds: int = Field(default=60, ge=10, le=3600)
-    response_type: Literal["SINGLE_CHOICE"] = "SINGLE_CHOICE"
+    response_type: Literal["SINGLE_CHOICE", "NUMERIC"] = "SINGLE_CHOICE"
     channel_suitability: list[Literal["WEB", "WHATSAPP"]] = Field(
         default=["WEB"], min_length=1, max_length=2
     )
     prompt: Text = ""
     choices: list[Choice] = Field(default_factory=list, max_length=8)
+    numeric_spec: NumericSpec | None = None
     correct_choice_id: str = Field(default="", max_length=1)
     maximum_points: int = Field(default=1, ge=1, le=20)
     partial_credit: Literal["ALL_OR_NOTHING"] = "ALL_OR_NOTHING"

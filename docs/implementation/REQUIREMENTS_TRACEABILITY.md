@@ -2,7 +2,7 @@
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
 
-E0, E1, E2 and E3 evidence is recorded below. Local synthetic journeys are not
+E0 through E4 evidence is recorded below. Local synthetic journeys are not
 production-pilot acceptance; delivery-provider and legal approval gates remain. See the [assessment](PHASE_0_ASSESSMENT.md).
 
 | Requirement | Implementation | Tests / evidence | Status |
@@ -25,10 +25,10 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-REV-005 | Durable fixed assignments and answered history; active-plan lookup; lost-ack retry | Concurrent replay, separate browser resume and completion after reload | Local single-choice revision implemented; diagnostic pending |
 | FR-REV-006 | — | — | Not started |
 | FR-GRD-001 | Pinned answer key and versioned deterministic single-choice grader | Exact synthetic scoring cases, invalid choices and stored result tests | Partial: single-choice implemented; multiple-choice pending; not an academic benchmark claim |
-| FR-GRD-002 | — | — | Not started |
+| FR-GRD-002 | Reviewed numeric contracts, exact rational grading, unit conversions, inclusive tolerances, precision and accepted forms | `tests/contract/test_numeric.py`, `tests/integration/test_numeric_workflow.py`, `tests/e2e/numeric.spec.ts` | Local deterministic implementation; synthetic regression/property cases are not expert academic benchmark approval |
 | FR-GRD-003 | — | — | Not started |
 | FR-GRD-004 | — | — | Not started |
-| FR-GRD-005 | Typed deterministic correct/missing elements and authored remediation | API score/feedback and browser correct/incorrect journey | Partial: single-choice path; rubric feedback pending |
+| FR-GRD-005 | Typed deterministic correct/missing elements and authored remediation | API score/feedback and browser correct/incorrect journey | Choice and numeric correct/missing feedback implemented; rubric feedback pending |
 | FR-GRD-006 | — | — | Not started |
 | FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision implemented; diagnostic restrictions pending |
 | FR-GRD-008 | — | — | Not started |
@@ -45,11 +45,11 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-WA-004 | — | — | Not started |
 | FR-WA-005 | — | — | Not started |
 | FR-WA-006 | — | — | Not started |
-| FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor | Content API/schema/browser tests | Partial: single-choice create/edit complete; import and other response formats pending |
+| FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor | Content API/schema/browser tests | Partial: single-choice and numeric create/edit complete; import and other formats pending |
 | FR-CNT-002 | Role checks and immutable author ownership; self-review blocked even with both roles | API self-review denial; SQL review guard; disabled author approval in browser | Local implemented |
 | FR-CNT-003 | Return, approval, high-risk/disputed second review, retirement and append-only reviews | Full API/browser workflow; two-reviewer and retired-selection tests | Local implemented with synthetic content |
-| FR-CNT-004 | Immutable approved versions, explicit successor drafts and normalized frozen mappings | API mutation rejection; direct SQL history/mapping/attempt tests; retired-version grades/solutions remain unchanged | Partial: choice attempts/grades pin immutable versions and answer-specification hash; rubric pinning pending |
-| FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single-choice path implemented; other formats and academic evidence pending |
+| FR-CNT-004 | Immutable approved versions, explicit successor drafts and normalized frozen mappings | API mutation rejection; direct SQL history/mapping/attempt tests; retired-version grades/solutions remain unchanged | Partial: choice/numeric attempts and grades pin immutable versions/hash; migration preserves legacy choice rows; rubric pinning pending |
+| FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local choice/numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | — | — | Not started |
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent and assessment start/serve/grade/complete/abandon events persist atomically; other learner events and dispatch pending |
 | FR-OPS-002 | `services/health.py`, API health shell and worker smoke | Health success/degraded tests; real Redis/Celery test | Partial; alerts/dashboards pending |
@@ -62,9 +62,11 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-SCL-001 | — | — | Not started |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
-| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review and assessment axe/keyboard checks; remaining journey matrix pending |
+| NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review and choice/numeric assessment axe/keyboard checks; remaining journey matrix pending |
 | NFR-BW-001 | — | — | Not started |
 | NFR-COMP-001 | Next.js shell | Chromium browser test | Partial; cross-browser learner matrix pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
-| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0/E1/E2 hosted CI passed; E3 evidence in E3_VERIFICATION.md |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E3 hosted CI passed; E4 evidence tracked separately |
 | NFR-LOC-001 | English shell; UTC database connections/Celery | Configuration inspected; no learner timestamps yet | Foundation only; Kampala presentation pending |
+
+E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).

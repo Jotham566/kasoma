@@ -76,7 +76,7 @@
 
 **Demo:** full subject diagnostic yielding initial estimates.
 
-### Week 5 — Adaptive revision
+### Week 5 — Adaptive revision and first gated short-text path
 
 - recommendation ranking and explanation;
 - 5–10-item revision sessions;
@@ -87,11 +87,11 @@
 
 **Gate:** complete Diagnose → Recommend → Practice → Explain → Reassess → Update loop.
 
-### Week 6 — Short-text grading and content tooling
+### Week 6 — Short-text hardening and content tooling
 
-- rubric-grading gateway and schema validation;
+- harden the rubric-grading gateway and schema validation delivered for the Week 5 gate;
 - dual-pass agreement, calibrated ≥90% auto-score gate, fallback and feature flag;
-- frozen benchmark execution;
+- repeat frozen benchmark execution for any changed prompt/model/configuration;
 - bulk import validation and content flags;
 - cumulative 190 items.
 
@@ -195,3 +195,6 @@ Pause affected delivery for:
 - requirements conflict requiring product choice.
 
 Record the issue; do not hide it behind a fallback that changes learner behaviour.
+
+Sequencing clarification: [ADR-017](../decisions/ADR/017-readiness-resolutions.md)
+preserves the Week 5 quality gate and resolves the earlier Week 6 start conflict.

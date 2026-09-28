@@ -57,6 +57,10 @@ choose earlier benchmark/implementation capacity or explicitly revise the gate.
 Recommendation: establish the benchmark early and resolve capacity at Week 2;
 never silently move or weaken the gate. Foundation and deterministic work continue.
 
+Resolution recorded on 23 September: [ADR-017](../decisions/ADR/017-readiness-resolutions.md)
+retains the Week 5 gate and advances the first short-text implementation/evaluation
+into Weeks 3–5; Week 6 hardens and broadens. Capacity remains an owner dependency.
+
 ## First vertical slice and implementation discretion
 
 Web health shell → generated OpenAPI TypeScript client → FastAPI safe dependency

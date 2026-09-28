@@ -58,9 +58,10 @@ def main() -> None:
         for role in roles:
             provision(service, email, role)
     service.clock = clock
-    seed_assessment(service)
+    seed_assessment(service, mathematics_only=True)
+    seed_assessment(service, numeric=True)
     try:
-        uvicorn.run(create_app(config, service), host="127.0.0.1", port=8000, access_log=False)
+        uvicorn.run(create_app(config, service), host="127.0.0.1", port=18000, access_log=False)
     finally:
         engine.dispose()
 

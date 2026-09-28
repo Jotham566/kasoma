@@ -37,3 +37,11 @@ Record meaningful repository and product changes here. A documentation baseline 
   deterministic single-choice grades, solution gating and transactional result events.
 - Add learner resume/retry UI, synthetic fixture command and ADR-016.
 - E2 `b5cfd75` pushed to main; hosted CI passed and completed E1/E2 branches removed.
+
+### E4 numeric grading and readiness
+
+- Merge E3 `22773fd`, verify hosted CI and remove its completed branch.
+- Resolve difficulty-label mapping and Week 5/6 sequencing in ADR-017 without
+  changing published content or weakening quality gates.
+- Add numeric authoring/review, safe learner input, exact rational grading,
+  units/tolerance/precision policy, immutable response storage and regression tests.

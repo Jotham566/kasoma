@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { components } from "@kasoma/api-client";
+import { NumericFields } from "./numeric-fields";
 
 type Context = components["schemas"]["ContentContext"];
 type Document = components["schemas"]["DraftDocument"];
@@ -20,6 +21,9 @@ export function Editor({
   save: (subject: string, document: Document, reason: string) => Promise<void>;
 }) {
   const initial = selected?.document;
+  const [format, setFormat] = useState<Document["response_type"]>(
+    initial?.response_type ?? "SINGLE_CHOICE",
+  );
   const choices = initial?.choices?.length
     ? initial.choices
     : [
@@ -70,16 +74,49 @@ export function Editor({
           learning_outcome_reference: value("learning_outcome_reference"),
           difficulty: value("difficulty") as Document["difficulty"],
           expected_seconds: Number(value("expected_seconds")),
-          response_type: "SINGLE_CHOICE",
+          response_type: format,
           channel_suitability: data.has("whatsapp")
             ? ["WEB", "WHATSAPP"]
             : ["WEB"],
           prompt: value("prompt"),
-          choices: choices.map((choice) => ({
-            id: choice.id,
-            text: value(`choice_${choice.id}`),
-          })),
-          correct_choice_id: value("correct_choice_id"),
+          choices:
+            format === "NUMERIC"
+              ? []
+              : choices.map((choice) => ({
+                  id: choice.id,
+                  text: value(`choice_${choice.id}`),
+                })),
+          correct_choice_id:
+            format === "NUMERIC" ? "" : value("correct_choice_id"),
+          numeric_spec:
+            format === "NUMERIC"
+              ? {
+                  expected_value: value("numeric_expected"),
+                  canonical_unit: value("numeric_canonical"),
+                  absolute_tolerance: value("numeric_absolute"),
+                  relative_tolerance: value("numeric_relative"),
+                  units: Array.from(
+                    { length: Number(value("numeric_unit_count")) },
+                    (_, i) => ({
+                      label: value(`numeric_unit_${i}`),
+                      factor: value(`numeric_factor_${i}`),
+                      offset: value(`numeric_offset_${i}`),
+                    }),
+                  ),
+                  accepted_forms: data
+                    .getAll("numeric_forms")
+                    .map(
+                      String,
+                    ) as components["schemas"]["NumericSpec"]["accepted_forms"],
+                  significant_figures_policy: value(
+                    "numeric_precision",
+                  ) as components["schemas"]["NumericSpec"]["significant_figures_policy"],
+                  significant_figures:
+                    value("numeric_precision") === "EXACT"
+                      ? Number(value("numeric_figures"))
+                      : null,
+                }
+              : null,
           maximum_points: Number(value("maximum_points")),
           partial_credit: "ALL_OR_NOTHING",
           worked_solution: value("worked_solution"),
@@ -98,8 +135,9 @@ export function Editor({
         {selected ? "Edit draft" : "Create draft"}
       </h2>
       <p className="mb-4">
-        Text-only single choice. Drafts may be incomplete; submission validates
-        every required field. No media uploads or imports in this slice.
+        Text-only choice or numeric response. Drafts may be incomplete;
+        submission validates every required field. No media uploads or imports
+        in this slice.
       </p>
       <label>
         Title
@@ -236,26 +274,45 @@ export function Editor({
         />
       </label>
       {area("Question prompt", "prompt", initial?.prompt)}
-      {choices.map((choice) => (
-        <div key={choice.id}>
-          {area(`Option ${choice.id}`, `choice_${choice.id}`, choice.text)}
-        </div>
-      ))}
       <label>
-        Correct option
+        Response format
         <select
           className={input}
-          name="correct_choice_id"
-          defaultValue={initial?.correct_choice_id ?? ""}
+          value={format}
+          onChange={(e) =>
+            setFormat(e.target.value as Document["response_type"])
+          }
         >
-          <option value="">Not yet specified</option>
-          {choices.map((choice) => (
-            <option key={choice.id} value={choice.id}>
-              {choice.id}
-            </option>
-          ))}
+          <option value="SINGLE_CHOICE">Single choice</option>
+          <option value="NUMERIC">Numeric</option>
         </select>
       </label>
+      {format === "NUMERIC" ? (
+        <NumericFields initial={initial?.numeric_spec} />
+      ) : (
+        <>
+          {choices.map((choice) => (
+            <div key={choice.id}>
+              {area(`Option ${choice.id}`, `choice_${choice.id}`, choice.text)}
+            </div>
+          ))}
+          <label>
+            Correct option
+            <select
+              className={input}
+              name="correct_choice_id"
+              defaultValue={initial?.correct_choice_id ?? ""}
+            >
+              <option value="">Not yet specified</option>
+              {choices.map((choice) => (
+                <option key={choice.id} value={choice.id}>
+                  {choice.id}
+                </option>
+              ))}
+            </select>
+          </label>
+        </>
+      )}
       <label>
         Maximum points
         <input

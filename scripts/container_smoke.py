@@ -1,9 +1,14 @@
-"""Exercise application containers, then release app ports for native development."""
+"""Exercise application containers and preserve previously running application services."""
 
 import json
 import subprocess
 import urllib.request
 
+already_running = set(
+    subprocess.check_output(
+        ["docker", "compose", "ps", "--services", "--status", "running"], text=True
+    ).splitlines()
+)
 try:
     subprocess.run(
         [
@@ -28,7 +33,8 @@ try:
         assert b"Services are ready." in response.read()
     print("Container smoke passed: API/database/Redis, worker health and web client.")
 finally:
-    subprocess.run(
-        ["docker", "compose", "--profile", "application", "stop", "web", "worker", "api"],
-        check=True,
-    )
+    started_here = [name for name in ["web", "worker", "api"] if name not in already_running]
+    if started_here:
+        subprocess.run(
+            ["docker", "compose", "--profile", "application", "stop", *started_here], check=True
+        )

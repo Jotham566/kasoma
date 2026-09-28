@@ -287,11 +287,49 @@ export default function ContentWorkspace() {
                   </li>
                 ))}
               </ul>
-              <p className="my-4">
-                Correct option:{" "}
-                {selected.document.correct_choice_id || "Missing"}. Maximum
-                points: {selected.document.maximum_points}.
-              </p>
+              {selected.document.response_type === "NUMERIC" &&
+              selected.document.numeric_spec ? (
+                <section
+                  aria-label="Numeric answer preview"
+                  className="space-y-2 my-4"
+                >
+                  <p>
+                    Expected value:{" "}
+                    {selected.document.numeric_spec.expected_value}{" "}
+                    {selected.document.numeric_spec.canonical_unit}
+                  </p>
+                  <p>
+                    Absolute tolerance:{" "}
+                    {selected.document.numeric_spec.absolute_tolerance};
+                    relative tolerance:{" "}
+                    {selected.document.numeric_spec.relative_tolerance}
+                  </p>
+                  <p>
+                    Accepted forms:{" "}
+                    {selected.document.numeric_spec.accepted_forms.join(", ")}
+                  </p>
+                  <p>
+                    Precision:{" "}
+                    {selected.document.numeric_spec.significant_figures_policy}{" "}
+                    {selected.document.numeric_spec.significant_figures ?? ""}
+                  </p>
+                  <ul>
+                    {selected.document.numeric_spec.units.map((u) => (
+                      <li key={u.label}>
+                        Unit {u.label || "(dimensionless)"}: factor {u.factor},
+                        offset {u.offset}
+                      </li>
+                    ))}
+                  </ul>
+                  <p>Maximum points: {selected.document.maximum_points}</p>
+                </section>
+              ) : (
+                <p className="my-4">
+                  Correct option:{" "}
+                  {selected.document.correct_choice_id || "Missing"}. Maximum
+                  points: {selected.document.maximum_points}.
+                </p>
+              )}
               <p className="whitespace-pre-wrap">
                 Worked solution: {selected.document.worked_solution}
               </p>

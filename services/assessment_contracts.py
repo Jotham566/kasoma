@@ -8,6 +8,7 @@ from pydantic import Field
 
 from services.content_contracts import Choice
 from services.identity_contracts import Contract
+from services.numeric import NumericForm
 
 
 class StartRevision(Contract):
@@ -23,9 +24,15 @@ class ChoiceResponse(Contract):
     choice_id: str = Field(pattern=r"^[A-Z]$", max_length=1)
 
 
+class NumericResponse(Contract):
+    type: Literal["NUMERIC"]
+    value: str = Field(min_length=1, max_length=64)
+    unit: str = Field(default="", max_length=24)
+
+
 class SubmitAnswer(Contract):
     session_item_id: UUID
-    response: ChoiceResponse
+    response: ChoiceResponse | NumericResponse
 
 
 class Feedback(Contract):
@@ -78,12 +85,21 @@ class ResponseSpec(Contract):
     choices: list[Choice]
 
 
+class NumericResponseSpec(Contract):
+    type: Literal["NUMERIC"] = "NUMERIC"
+    unit_options: list[str]
+    accepted_forms: list[NumericForm]
+    significant_figures_policy: Literal["IGNORE", "EXACT"]
+    significant_figures: int | None
+    input_mode: Literal["text"] = "text"
+
+
 class LearnerItem(Contract):
     session_item_id: UUID
     item_version_id: UUID
     position: int
     prompt_blocks: list[PromptBlock]
-    response_spec: ResponseSpec
+    response_spec: ResponseSpec | NumericResponseSpec
     maximum_points: int
     selection_reason: str
 

@@ -32,6 +32,7 @@ from services.domain.content import (
 )
 from services.domain.curriculum import Competency, Concept, Level, Subject, Topic
 from services.identity import IdentityError, IdentityService
+from services.numeric import specification_errors
 from services.staff import authorize
 
 READ_ROLES = {"CONTENT_AUTHOR", "ACADEMIC_REVIEWER", "ADMIN"}
@@ -243,16 +244,28 @@ class ContentService:
                 sum(m.weight for m in document.competency_mappings), 1, abs_tol=1e-6
             ):
                 fields.append("competency_mappings")
-            choices = document.choices
-            ids = {c.id for c in choices}
-            if (
-                len(choices) < 2
-                or len(ids) != len(choices)
-                or any(not c.text.strip() for c in choices)
-            ):
-                fields.append("choices")
-            if document.correct_choice_id not in ids:
-                fields.append("correct_choice_id")
+            if document.response_type == "SINGLE_CHOICE":
+                choices = document.choices
+                ids = {c.id for c in choices}
+                if (
+                    len(choices) < 2
+                    or len(ids) != len(choices)
+                    or any(not c.text.strip() for c in choices)
+                ):
+                    fields.append("choices")
+                if document.correct_choice_id not in ids:
+                    fields.append("correct_choice_id")
+                if document.numeric_spec is not None:
+                    fields.append("numeric_spec")
+            else:
+                if document.choices or document.correct_choice_id:
+                    fields.append("choices")
+                if document.numeric_spec is None:
+                    fields.append("numeric_spec")
+                else:
+                    fields.extend(
+                        "numeric_spec." + f for f in specification_errors(document.numeric_spec)
+                    )
             if document.rights_status not in PUBLISHABLE_RIGHTS:
                 fields.append("rights_status")
         if fields:

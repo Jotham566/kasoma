@@ -1,6 +1,8 @@
 # E3 first assessment slice: verification
 
-Date: 23 September 2026. Active branch: `codex/e3-assessment`; changes uncommitted.
+Date: 23 September 2026. Committed as `22773fd` and pushed to main.
+[Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/35906564261).
+The completed E3 branch was deleted after merge.
 E2 was committed as `b5cfd75` and pushed to main at the owner's request.
 [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/35901725404).
 Completed E1/E2 local branches were deleted after merge. Origin has only main;
@@ -89,7 +91,8 @@ specification 05 uses CORE/STRETCH. Before E5, either approve a versioned mappin
 (recommended, preserves immutable content and current API values) or approve a
 compatible content-contract migration. Do not silently assign weights. This affects
 FR-MST-001/003/006 and adaptive selection, not the current exact choice grader.
-E0-01 (Week 5/6 short-text sequencing) also remains unresolved.
+E0-01 (Week 5/6 short-text sequencing) was also open at E3 completion.
+Both questions were subsequently resolved in [ADR-017](../decisions/ADR/017-readiness-resolutions.md).
 
 Next: approved numeric answer specification and editor/player support, deterministic
 units/tolerance/equivalence grading with boundary fixtures and pinned results;

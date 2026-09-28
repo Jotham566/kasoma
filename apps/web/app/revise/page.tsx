@@ -22,6 +22,8 @@ function value<T>(result: {
   return result.data;
 }
 const messages: Record<string, string> = {
+  VALIDATION_FAILED:
+    "Check the number, unit and accepted form, then submit again. Your answer has not been saved.",
   AUTH_REQUIRED: "Sign in again to continue. Your saved answers are retained.",
   CONSENT_REQUIRED:
     "Learning access is paused. Complete your profile and required consent first.",
@@ -51,6 +53,8 @@ export default function Revise() {
   const [grade, setGrade] = useState<Schema["GradeView"] | null>(null);
   const [solution, setSolution] = useState("");
   const [choice, setChoice] = useState("");
+  const [numericValue, setNumericValue] = useState("");
+  const [unit, setUnit] = useState("");
   const [busy, setBusy] = useState(true);
   const [ready, setReady] = useState(false);
   const [status, setStatus] = useState("Loading your practice options…");
@@ -101,6 +105,8 @@ export default function Revise() {
     setGrade(null);
     setSolution("");
     setChoice("");
+    setNumericValue("");
+    setUnit("");
     const state = value(
       await client().GET("/api/v1/sessions/{session_id}", {
         params: { path: { session_id: id } },
@@ -111,13 +117,14 @@ export default function Revise() {
     const last = state.answers.at(-1);
     if (showLast && last) setGrade(last.grade);
     else if (state.status === "ACTIVE") {
-      setItem(
-        value(
-          await client().GET("/api/v1/sessions/{session_id}/next-item", {
-            params: { path: { session_id: id } },
-          }),
-        ),
+      const next = value(
+        await client().GET("/api/v1/sessions/{session_id}/next-item", {
+          params: { path: { session_id: id } },
+        }),
       );
+      setItem(next);
+      if (next.response_spec.type === "NUMERIC")
+        setUnit(next.response_spec.unit_options[0] ?? "");
     }
   }
   async function initialize() {
@@ -280,7 +287,10 @@ export default function Revise() {
                 void run(async () => {
                   const body: Schema["SubmitAnswer"] = {
                     session_item_id: item.session_item_id,
-                    response: { type: "SINGLE_CHOICE", choice_id: choice },
+                    response:
+                      item.response_spec.type === "NUMERIC"
+                        ? { type: "NUMERIC", value: numericValue, unit }
+                        : { type: "SINGLE_CHOICE", choice_id: choice },
                   };
                   const result = value(
                     await client().POST(
@@ -320,25 +330,90 @@ export default function Revise() {
                   {p.content}
                 </p>
               ))}
-              <fieldset disabled={busy}>
-                <legend>Choose one answer</legend>
-                {item.response_spec.choices.map((c) => (
-                  <label
-                    className="flex min-h-11 items-center gap-3"
-                    key={c.id}
-                  >
+              {item.response_spec.type === "NUMERIC" ? (
+                <fieldset disabled={busy} className="space-y-3">
+                  <legend>Enter a numeric answer</legend>
+                  <label>
+                    Numeric value
                     <input
-                      type="radio"
-                      name="answer"
-                      value={c.id}
-                      checked={choice === c.id}
-                      onChange={() => setChoice(c.id)}
+                      className={input}
+                      value={numericValue}
+                      onChange={(e) => setNumericValue(e.target.value)}
+                      maxLength={64}
+                      autoComplete="off"
+                      required
+                      aria-describedby="numeric-help"
                     />
-                    {c.text}
                   </label>
-                ))}
-              </fieldset>
-              <button className={button} disabled={busy || !choice}>
+                  <label>
+                    Answer unit
+                    <select
+                      className={input}
+                      value={unit}
+                      onChange={(e) => setUnit(e.target.value)}
+                    >
+                      {item.response_spec.unit_options.map((u) => (
+                        <option key={u} value={u}>
+                          {u || "No unit (dimensionless)"}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <p id="numeric-help">
+                    Accepted forms:{" "}
+                    {item.response_spec.accepted_forms
+                      .map((f) =>
+                        f === "DECIMAL"
+                          ? "decimal (e.g. 1.25)"
+                          : f === "SCIENTIFIC"
+                            ? "scientific (e.g. 1.25e2)"
+                            : "fraction (e.g. 1/2)",
+                      )
+                      .join(", ")}
+                    . Use a decimal point; do not include units in the value.
+                  </p>
+                  {item.response_spec.significant_figures_policy ===
+                    "EXACT" && (
+                    <p>
+                      Use exactly {item.response_spec.significant_figures}{" "}
+                      significant figures. Trailing zeros count after a decimal
+                      point or in scientific notation; integer trailing zeros do
+                      not. For zero, decimal places count, with a minimum of
+                      one.
+                    </p>
+                  )}
+                </fieldset>
+              ) : (
+                <>
+                  <fieldset disabled={busy}>
+                    <legend>Choose one answer</legend>
+                    {item.response_spec.choices.map((c) => (
+                      <label
+                        className="flex min-h-11 items-center gap-3"
+                        key={c.id}
+                      >
+                        <input
+                          type="radio"
+                          name="answer"
+                          value={c.id}
+                          checked={choice === c.id}
+                          onChange={() => setChoice(c.id)}
+                        />
+                        {c.text}
+                      </label>
+                    ))}
+                  </fieldset>
+                </>
+              )}
+              <button
+                className={button}
+                disabled={
+                  busy ||
+                  (item.response_spec.type === "NUMERIC"
+                    ? !numericValue.trim()
+                    : !choice)
+                }
+              >
                 Submit answer
               </button>
             </form>

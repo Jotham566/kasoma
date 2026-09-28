@@ -19,7 +19,7 @@ from services.staff import provision
 
 
 @pytest.fixture
-def identity():
+def identity(request):
     baseline = Settings()
     engine = engine_for(baseline)
     schema = "identity_test_" + uuid4().hex
@@ -31,7 +31,8 @@ def identity():
     config = Settings(database_url=url.render_as_string(hide_password=False), email_provider="fake")
     env = os.environ | {"DATABASE_URL": config.database_url.get_secret_value()}
     # Exercise actual foundation -> identity migration, preserving the seeded catalog.
-    for target in ["0001", "head", "head"]:
+    migration_target = getattr(request, "param", "head")
+    for target in ["0001", migration_target, migration_target]:
         subprocess.run(
             ["uv", "run", "--frozen", "alembic", "-c", "apps/api/alembic.ini", "upgrade", target],
             check=True,

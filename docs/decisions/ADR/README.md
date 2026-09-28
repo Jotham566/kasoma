@@ -13,3 +13,6 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-015: First content review vertical slice](015-content-review.md)
 
 - [ADR-016: First assessment and deterministic choice slice](016-assessment-choice.md)
+
+- [ADR-017: Implementation readiness resolutions](017-readiness-resolutions.md)
+- [ADR-018: Bounded deterministic numeric answers](018-numeric-grading.md)

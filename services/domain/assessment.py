@@ -45,7 +45,8 @@ class Attempt(Base):
     learner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
     session_item_id: Mapped[UUID] = mapped_column(ForeignKey("session_items.id"), unique=True)
     item_version_id: Mapped[UUID] = mapped_column(ForeignKey("item_versions.id"))
-    choice_id: Mapped[str]
+    choice_id: Mapped[str | None]
+    response: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     submitted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     hint_count: Mapped[int]
     channel: Mapped[str]

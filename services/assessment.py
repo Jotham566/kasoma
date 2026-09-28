@@ -10,6 +10,8 @@ from services.assessment_contracts import (
     AnsweredItem,
     GradeView,
     LearnerItem,
+    NumericResponse,
+    NumericResponseSpec,
     PromptBlock,
     ResponseSpec,
     SessionView,
@@ -31,7 +33,7 @@ from services.domain.assessment import (
 from services.domain.content import ItemVersion
 from services.domain.curriculum import Level, Subject, Topic
 from services.domain.identity import LearnerProfile
-from services.grading import grade_choice
+from services.grading import grade_choice, grade_numeric
 from services.identity import IdentityError, IdentityService
 
 
@@ -270,12 +272,24 @@ class AssessmentService:
             if item.served_at is None:
                 item.served_at = self.identity.clock()
                 self.event(db, session.id, "item.served", request)
+            if document.response_type == "NUMERIC":
+                spec = document.numeric_spec
+                if spec is None:
+                    raise IdentityError("CONTENT_NOT_APPROVED", 409)
+                response_spec: ResponseSpec | NumericResponseSpec = NumericResponseSpec(
+                    unit_options=[u.label for u in spec.units],
+                    accepted_forms=spec.accepted_forms,
+                    significant_figures_policy=spec.significant_figures_policy,
+                    significant_figures=spec.significant_figures,
+                )
+            else:
+                response_spec = ResponseSpec(choices=document.choices)
             return LearnerItem(
                 session_item_id=item.id,
                 item_version_id=version.id,
                 position=item.position,
                 prompt_blocks=[PromptBlock(content=document.prompt)],
-                response_spec=ResponseSpec(choices=document.choices),
+                response_spec=response_spec,
                 maximum_points=document.maximum_points,
                 selection_reason=item.reason,
             )
@@ -306,17 +320,31 @@ class AssessmentService:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
             version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
             document = DraftDocument.model_validate(version.document)
-            if body.response.choice_id not in {c.id for c in document.choices}:
-                raise IdentityError("VALIDATION_FAILED", 422)
             attempt_id = uuid4()
-            result = grade_choice(attempt_id, version.id, document, body.response.choice_id)
+            numeric = isinstance(body.response, NumericResponse)
+            if (document.response_type == "NUMERIC") != numeric:
+                raise IdentityError("VALIDATION_FAILED", 422)
+            try:
+                if isinstance(body.response, NumericResponse):
+                    result = grade_numeric(
+                        attempt_id, version.id, document, body.response.value, body.response.unit
+                    )
+                else:
+                    result = grade_choice(attempt_id, version.id, document, body.response.choice_id)
+            except ValueError:
+                raise IdentityError("VALIDATION_FAILED", 422) from None
             db.add(
                 Attempt(
                     id=attempt_id,
                     learner_id=actor,
                     session_item_id=item.id,
                     item_version_id=version.id,
-                    choice_id=body.response.choice_id,
+                    choice_id=None
+                    if isinstance(body.response, NumericResponse)
+                    else body.response.choice_id,
+                    response=body.response.model_dump(mode="json")
+                    if isinstance(body.response, NumericResponse)
+                    else None,
                     submitted_at=self.identity.clock(),
                     hint_count=0,
                     channel="WEB",

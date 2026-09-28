@@ -162,3 +162,8 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-016: First assessment and deterministic choice slice](../decisions/ADR/016-assessment-choice.md)
   records consent-aware topic practice, immutable grading and explicit remaining scope.
+
+- [ADR-017: Implementation readiness resolutions](../decisions/ADR/017-readiness-resolutions.md)
+  resolves E0-01/E3-01 while preserving existing values and release gates.
+- [ADR-018: Bounded deterministic numeric answers](../decisions/ADR/018-numeric-grading.md)
+  records reviewed numeric contracts, exact grading semantics and migration controls.

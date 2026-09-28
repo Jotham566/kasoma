@@ -54,6 +54,10 @@ coverage_factor = min(1, distinct_item_count/3) * min(1, distinct_format_count/2
 confidence = raw_confidence * (0.6 + 0.4*coverage_factor)
 ```
 
+Content/API labels map through `content-difficulty-v1`: FOUNDATIONAL → FOUNDATIONAL,
+STANDARD → CORE, CHALLENGING → STRETCH. Preserve immutable content labels and record
+the mapping version with engine configuration, per [ADR-017](../decisions/ADR/017-readiness-resolutions.md).
+
 Configuration values are initial hypotheses. They must be stored with algorithm version and tuned only through an approved evaluation.
 
 Display states:

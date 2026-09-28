@@ -447,6 +447,16 @@
             "title": "Maximum Points",
             "type": "integer"
           },
+          "numeric_spec": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NumericSpec"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "partial_credit": {
             "const": "ALL_OR_NOTHING",
             "default": "ALL_OR_NOTHING",
@@ -475,8 +485,11 @@
             "type": "string"
           },
           "response_type": {
-            "const": "SINGLE_CHOICE",
             "default": "SINGLE_CHOICE",
+            "enum": [
+              "SINGLE_CHOICE",
+              "NUMERIC"
+            ],
             "title": "Response Type",
             "type": "string"
           },
@@ -775,7 +788,15 @@
             "type": "array"
           },
           "response_spec": {
-            "$ref": "#/components/schemas/ResponseSpec"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseSpec"
+              },
+              {
+                "$ref": "#/components/schemas/NumericResponseSpec"
+              }
+            ],
+            "title": "Response Spec"
           },
           "selection_reason": {
             "title": "Selection Reason",
@@ -830,6 +851,207 @@
           "weight"
         ],
         "title": "Mapping",
+        "type": "object"
+      },
+      "NumericResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "NUMERIC",
+            "title": "Type",
+            "type": "string"
+          },
+          "unit": {
+            "default": "",
+            "maxLength": 24,
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "value"
+        ],
+        "title": "NumericResponse",
+        "type": "object"
+      },
+      "NumericResponseSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "accepted_forms": {
+            "items": {
+              "enum": [
+                "DECIMAL",
+                "SCIENTIFIC",
+                "FRACTION"
+              ],
+              "type": "string"
+            },
+            "title": "Accepted Forms",
+            "type": "array"
+          },
+          "input_mode": {
+            "const": "text",
+            "default": "text",
+            "title": "Input Mode",
+            "type": "string"
+          },
+          "significant_figures": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Significant Figures"
+          },
+          "significant_figures_policy": {
+            "enum": [
+              "IGNORE",
+              "EXACT"
+            ],
+            "title": "Significant Figures Policy",
+            "type": "string"
+          },
+          "type": {
+            "const": "NUMERIC",
+            "default": "NUMERIC",
+            "title": "Type",
+            "type": "string"
+          },
+          "unit_options": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Unit Options",
+            "type": "array"
+          }
+        },
+        "required": [
+          "unit_options",
+          "accepted_forms",
+          "significant_figures_policy",
+          "significant_figures"
+        ],
+        "title": "NumericResponseSpec",
+        "type": "object"
+      },
+      "NumericSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "absolute_tolerance": {
+            "maxLength": 64,
+            "title": "Absolute Tolerance",
+            "type": "string"
+          },
+          "accepted_forms": {
+            "items": {
+              "enum": [
+                "DECIMAL",
+                "SCIENTIFIC",
+                "FRACTION"
+              ],
+              "type": "string"
+            },
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Accepted Forms",
+            "type": "array"
+          },
+          "canonical_unit": {
+            "maxLength": 24,
+            "title": "Canonical Unit",
+            "type": "string"
+          },
+          "expected_value": {
+            "maxLength": 64,
+            "title": "Expected Value",
+            "type": "string"
+          },
+          "relative_tolerance": {
+            "maxLength": 64,
+            "title": "Relative Tolerance",
+            "type": "string"
+          },
+          "significant_figures": {
+            "anyOf": [
+              {
+                "maximum": 12.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Significant Figures"
+          },
+          "significant_figures_policy": {
+            "enum": [
+              "IGNORE",
+              "EXACT"
+            ],
+            "title": "Significant Figures Policy",
+            "type": "string"
+          },
+          "units": {
+            "items": {
+              "$ref": "#/components/schemas/NumericUnit"
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "title": "Units",
+            "type": "array"
+          }
+        },
+        "required": [
+          "expected_value",
+          "canonical_unit",
+          "units",
+          "absolute_tolerance",
+          "relative_tolerance",
+          "accepted_forms",
+          "significant_figures_policy"
+        ],
+        "title": "NumericSpec",
+        "type": "object"
+      },
+      "NumericUnit": {
+        "additionalProperties": false,
+        "properties": {
+          "factor": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Factor",
+            "type": "string"
+          },
+          "label": {
+            "maxLength": 24,
+            "pattern": "^[A-Za-z0-9\u00b0\u00b5\u03bc/%^ ._-]*$",
+            "title": "Label",
+            "type": "string"
+          },
+          "offset": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Offset",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "factor",
+          "offset"
+        ],
+        "title": "NumericUnit",
         "type": "object"
       },
       "OTPAccepted": {
@@ -1352,7 +1574,15 @@
         "additionalProperties": false,
         "properties": {
           "response": {
-            "$ref": "#/components/schemas/ChoiceResponse"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChoiceResponse"
+              },
+              {
+                "$ref": "#/components/schemas/NumericResponse"
+              }
+            ],
+            "title": "Response"
           },
           "session_item_id": {
             "format": "uuid",

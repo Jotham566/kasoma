@@ -631,6 +631,7 @@ export interface components {
              * @default 1
              */
             maximum_points: number;
+            numeric_spec?: components["schemas"]["NumericSpec"] | null;
             /**
              * Partial Credit
              * @default ALL_OR_NOTHING
@@ -652,9 +653,9 @@ export interface components {
             /**
              * Response Type
              * @default SINGLE_CHOICE
-             * @constant
+             * @enum {string}
              */
-            response_type: "SINGLE_CHOICE";
+            response_type: "SINGLE_CHOICE" | "NUMERIC";
             /**
              * Rights Conditions
              * @default
@@ -804,7 +805,8 @@ export interface components {
             position: number;
             /** Prompt Blocks */
             prompt_blocks: components["schemas"]["PromptBlock"][];
-            response_spec: components["schemas"]["ResponseSpec"];
+            /** Response Spec */
+            response_spec: components["schemas"]["ResponseSpec"] | components["schemas"]["NumericResponseSpec"];
             /** Selection Reason */
             selection_reason: string;
             /**
@@ -830,6 +832,78 @@ export interface components {
             competency_id: string;
             /** Weight */
             weight: number;
+        };
+        /** NumericResponse */
+        NumericResponse: {
+            /**
+             * Type
+             * @constant
+             */
+            type: "NUMERIC";
+            /**
+             * Unit
+             * @default
+             */
+            unit: string;
+            /** Value */
+            value: string;
+        };
+        /** NumericResponseSpec */
+        NumericResponseSpec: {
+            /** Accepted Forms */
+            accepted_forms: ("DECIMAL" | "SCIENTIFIC" | "FRACTION")[];
+            /**
+             * Input Mode
+             * @default text
+             * @constant
+             */
+            input_mode: "text";
+            /** Significant Figures */
+            significant_figures: number | null;
+            /**
+             * Significant Figures Policy
+             * @enum {string}
+             */
+            significant_figures_policy: "IGNORE" | "EXACT";
+            /**
+             * Type
+             * @default NUMERIC
+             * @constant
+             */
+            type: "NUMERIC";
+            /** Unit Options */
+            unit_options: string[];
+        };
+        /** NumericSpec */
+        NumericSpec: {
+            /** Absolute Tolerance */
+            absolute_tolerance: string;
+            /** Accepted Forms */
+            accepted_forms: ("DECIMAL" | "SCIENTIFIC" | "FRACTION")[];
+            /** Canonical Unit */
+            canonical_unit: string;
+            /** Expected Value */
+            expected_value: string;
+            /** Relative Tolerance */
+            relative_tolerance: string;
+            /** Significant Figures */
+            significant_figures?: number | null;
+            /**
+             * Significant Figures Policy
+             * @enum {string}
+             */
+            significant_figures_policy: "IGNORE" | "EXACT";
+            /** Units */
+            units: components["schemas"]["NumericUnit"][];
+        };
+        /** NumericUnit */
+        NumericUnit: {
+            /** Factor */
+            factor: string;
+            /** Label */
+            label: string;
+            /** Offset */
+            offset: string;
         };
         /** OTPAccepted */
         OTPAccepted: {
@@ -1082,7 +1156,8 @@ export interface components {
         };
         /** SubmitAnswer */
         SubmitAnswer: {
-            response: components["schemas"]["ChoiceResponse"];
+            /** Response */
+            response: components["schemas"]["ChoiceResponse"] | components["schemas"]["NumericResponse"];
             /**
              * Session Item Id
              * Format: uuid
