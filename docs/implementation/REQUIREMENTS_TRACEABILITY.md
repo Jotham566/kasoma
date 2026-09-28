@@ -2,7 +2,7 @@
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
 
-E0 through E5 synthetic recommended practice evidence is recorded below. Local synthetic journeys are not
+E0 through E5 synthetic practice and E4 reviewed-hint evidence is recorded below. Local synthetic journeys are not
 production-pilot acceptance; delivery-provider and legal approval gates remain. See the [assessment](PHASE_0_ASSESSMENT.md).
 
 | Requirement | Implementation | Tests / evidence | Status |
@@ -29,7 +29,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-GRD-003 | — | — | Not started |
 | FR-GRD-004 | — | — | Not started |
 | FR-GRD-005 | Typed deterministic correct/missing elements and authored remediation | API score/feedback and browser correct/incorrect journey | Choice and numeric correct/missing feedback implemented; rubric feedback pending |
-| FR-GRD-006 | — | — | Not started |
+| FR-GRD-006 | Reviewed versioned hints, append-only usage and frozen pre-answer count/highest level; independence weighting with unchanged points | `tests/contract/test_hint_contract.py`, `tests/integration/test_hints.py`, `tests/e2e/hints.spec.ts`; [verification](E4_HINTS_VERIFICATION.md) | Local synthetic verified (235 Python tests / 12 browser tests); production hint academic review pending |
 | FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision gating and permanent diagnostic solution block implemented |
 | FR-GRD-008 | — | — | Not started |
 | FR-GRD-009 | — | — | Not started |
@@ -51,7 +51,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-004 | Immutable approved versions, explicit successor drafts and normalized frozen mappings | API mutation rejection; direct SQL history/mapping/attempt tests; retired-version grades/solutions remain unchanged | Partial: choice/numeric attempts and grades pin immutable versions/hash; migration preserves legacy choice rows; rubric pinning pending |
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local choice/numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | — | — | Not started |
-| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; other learner events and dispatch pending |
+| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use events also persist atomically; other learner events and dispatch pending |
 | FR-OPS-002 | `services/health.py`, API health shell and worker smoke | Health success/degraded tests; real Redis/Celery test | Partial; alerts/dashboards pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content and local role actions; operations audit UI/retention pending |
 | FR-OPS-004 | — | — | Not started |
@@ -66,7 +66,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-BW-001 | — | — | Not started |
 | NFR-COMP-001 | Next.js shell | Chromium browser test | Partial; cross-browser learner matrix pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
-| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E5 diagnostic hosted CI passed; recommended-practice local evidence recorded |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | E0–E5 recommended-practice hosted CI passed; reviewed-hint local evidence recorded |
 | NFR-LOC-001 | English shell; UTC database connections/Celery | Configuration inspected; diagnostic result timestamps use UTC | Foundation only; Kampala presentation pending |
 
 E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
@@ -74,3 +74,5 @@ E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
 E5 diagnostic/mastery evidence: [verification report](E5_VERIFICATION.md).
 
 E5 recommended practice: [verification report](E5_RECOMMENDATIONS_VERIFICATION.md).
+
+E4 reviewed hints: [verification report](E4_HINTS_VERIFICATION.md).

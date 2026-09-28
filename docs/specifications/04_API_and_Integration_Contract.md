@@ -223,3 +223,22 @@ Required stable codes include:
 - Additive optional fields are non-breaking.
 - OpenAPI diff runs in CI.
 - Web uses generated client; handwritten duplicate DTOs are prohibited.
+
+## Reviewed revision hints (ADR-022)
+
+The submitted attempt remains immutable. `POST /sessions/{session_id}/items/{item_id}/hint`
+reveals the next reviewed hint for the current served, unanswered revision assignment.
+`POST /attempts/{attempt_id}/hint` provides post-answer remediation, and
+`GET /attempts/{attempt_id}/hints` resumes previously revealed hints. All require
+current consent, ownership, subject access and an approved pinned content version.
+Diagnostics never expose hints, including after completion.
+
+Both mutations require `Idempotency-Key` and `{ "expected_hint_level": 0 }` (0–3).
+Responses contain `session_item_id`, revealed `hints` with level/text/phase and
+`has_more_hints`; no future hints or worked solution are included. Same-key retries
+return the original disclosure boundary; stale levels return `VERSION_CONFLICT`,
+exhausted hints `HINT_UNAVAILABLE`, and diagnostics `HINTS_DISABLED`.
+The next-item response also resumes revealed pre-answer hints. Frozen grade fields
+`hint_count` and `highest_hint_level` describe use before submission only.
+See [ADR-022](../decisions/ADR/022-reviewed-hints.md) and the generated OpenAPI for
+complete schemas. Historical stored grade JSON may omit these additive zero defaults.

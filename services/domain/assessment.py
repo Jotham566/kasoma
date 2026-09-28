@@ -52,6 +52,7 @@ class Attempt(Base):
     response: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
     submitted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     hint_count: Mapped[int]
+    highest_hint_level: Mapped[int] = mapped_column(default=0, server_default="0")
     channel: Mapped[str]
 
 
@@ -68,6 +69,7 @@ class AssessmentReceipt(Base):
     learner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
     key: Mapped[UUID] = mapped_column(primary_key=True)
     request_hash: Mapped[str]
+    hint_use_id: Mapped[UUID | None] = mapped_column(ForeignKey("hint_uses.id"))
     session_id: Mapped[UUID] = mapped_column(ForeignKey("assessment_sessions.id"))
     attempt_id: Mapped[UUID | None] = mapped_column(ForeignKey("attempts.id"))
 
@@ -79,6 +81,8 @@ class AssessmentEvent(Base):
     attempt_id: Mapped[UUID | None] = mapped_column(ForeignKey("attempts.id"))
     type: Mapped[str]
     version: Mapped[int]
+    hint_count: Mapped[int | None]
+    highest_hint_level: Mapped[int | None]
     request_id: Mapped[UUID]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
@@ -92,3 +96,14 @@ class RecommendationSnapshot(Base):
     subject_id: Mapped[UUID] = mapped_column(ForeignKey("subjects.id"))
     input_hash: Mapped[str]
     snapshot: Mapped[dict[str, Any]] = mapped_column(JSON)
+
+
+class HintUse(Base):
+    __tablename__ = "hint_uses"
+    __table_args__ = (UniqueConstraint("session_item_id", "level"),)
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    learner_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    session_item_id: Mapped[UUID] = mapped_column(ForeignKey("session_items.id"))
+    level: Mapped[int]
+    phase: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

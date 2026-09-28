@@ -52,19 +52,28 @@ async function gateway(
     `^sessions/${uuid}(?:/(next-item|attempts|abandon))?$`,
   ).exec(path);
   const learningRead = new RegExp(
-    `^(?:diagnostics/${uuid}|attempts/${uuid}/(?:grade|solution)|curriculum/subjects/${uuid}/topics)$`,
+    `^(?:diagnostics/${uuid}|attempts/${uuid}/(?:grade|solution|hints)|curriculum/subjects/${uuid}/topics)$`,
   ).test(path);
-  const methods = learning
-    ? [learning[1] === "attempts" || learning[1] === "abandon" ? "POST" : "GET"]
-    : learningRead
-      ? ["GET"]
-      : staffVersion
-        ? staffVersion[1] === "reviews"
-          ? ["GET"]
-          : staffVersion[1]
-            ? ["POST"]
-            : ["GET", "PATCH"]
-        : allowed[path];
+  const hintWrite = new RegExp(
+    `^(?:sessions/${uuid}/items/${uuid}/hint|attempts/${uuid}/hint)$`,
+  ).test(path);
+  const methods = hintWrite
+    ? ["POST"]
+    : learning
+      ? [
+          learning[1] === "attempts" || learning[1] === "abandon"
+            ? "POST"
+            : "GET",
+        ]
+      : learningRead
+        ? ["GET"]
+        : staffVersion
+          ? staffVersion[1] === "reviews"
+            ? ["GET"]
+            : staffVersion[1]
+              ? ["POST"]
+              : ["GET", "PATCH"]
+          : allowed[path];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (

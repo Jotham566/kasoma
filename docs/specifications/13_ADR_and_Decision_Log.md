@@ -176,3 +176,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-021: Synthetic recommended practice and replay](../decisions/ADR/021-recommended-practice.md)
   records ranking inputs, prerequisite redirection and immutable recommended plans.
+
+- [ADR-022: Reviewed hints and immutable independence evidence](../decisions/ADR/022-reviewed-hints.md)
+  records reviewed disclosure, retry boundaries and frozen independence metadata.

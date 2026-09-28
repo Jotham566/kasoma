@@ -22,3 +22,6 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-020: Diagnostic and initial mastery](020-diagnostic-mastery.md)
 
 - [ADR-021: Synthetic recommended practice and replay](021-recommended-practice.md)
+
+- [ADR-022: Reviewed hints and immutable independence evidence](022-reviewed-hints.md)
+  records reviewed disclosure, retry boundaries and frozen independence metadata.

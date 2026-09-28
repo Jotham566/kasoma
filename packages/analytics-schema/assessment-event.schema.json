@@ -34,7 +34,8 @@
         "session.abandoned",
         "diagnostic.started",
         "diagnostic.completed",
-        "mastery.updated"
+        "mastery.updated",
+        "hint.used"
       ]
     },
     "version": {
@@ -47,6 +48,16 @@
     "created_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "hint_count": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "maximum": 3
+    },
+    "highest_hint_level": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "maximum": 3
     }
   }
 }

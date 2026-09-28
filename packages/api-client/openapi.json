@@ -572,6 +572,16 @@
             "title": "High Risk",
             "type": "boolean"
           },
+          "hints": {
+            "items": {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 3,
+            "title": "Hints",
+            "type": "array"
+          },
           "learning_outcome_reference": {
             "default": "",
             "maxLength": 300,
@@ -800,6 +810,20 @@
             "title": "Grader Version",
             "type": "string"
           },
+          "highest_hint_level": {
+            "default": 0,
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Highest Hint Level",
+            "type": "integer"
+          },
+          "hint_count": {
+            "default": 0,
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Hint Count",
+            "type": "integer"
+          },
           "item_version_id": {
             "format": "uuid",
             "title": "Item Version Id",
@@ -905,6 +929,50 @@
         "title": "Health",
         "type": "object"
       },
+      "HintRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_hint_level": {
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Expected Hint Level",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expected_hint_level"
+        ],
+        "title": "HintRequest",
+        "type": "object"
+      },
+      "HintState": {
+        "additionalProperties": false,
+        "properties": {
+          "has_more_hints": {
+            "title": "Has More Hints",
+            "type": "boolean"
+          },
+          "hints": {
+            "items": {
+              "$ref": "#/components/schemas/RevealedHint"
+            },
+            "title": "Hints",
+            "type": "array"
+          },
+          "session_item_id": {
+            "format": "uuid",
+            "title": "Session Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_item_id",
+          "hints",
+          "has_more_hints"
+        ],
+        "title": "HintState",
+        "type": "object"
+      },
       "InitialRecommendation": {
         "additionalProperties": false,
         "properties": {
@@ -945,6 +1013,18 @@
       "LearnerItem": {
         "additionalProperties": false,
         "properties": {
+          "has_more_hints": {
+            "default": false,
+            "title": "Has More Hints",
+            "type": "boolean"
+          },
+          "hints": {
+            "items": {
+              "$ref": "#/components/schemas/RevealedHint"
+            },
+            "title": "Hints",
+            "type": "array"
+          },
           "item_version_id": {
             "format": "uuid",
             "title": "Item Version Id",
@@ -1569,6 +1649,36 @@
           "choices"
         ],
         "title": "ResponseSpec",
+        "type": "object"
+      },
+      "RevealedHint": {
+        "additionalProperties": false,
+        "properties": {
+          "level": {
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Level",
+            "type": "integer"
+          },
+          "phase": {
+            "enum": [
+              "BEFORE_ANSWER",
+              "AFTER_ANSWER"
+            ],
+            "title": "Phase",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "level",
+          "text",
+          "phase"
+        ],
+        "title": "RevealedHint",
         "type": "object"
       },
       "ReviewInput": {
@@ -3166,6 +3276,226 @@
         "summary": "Grade"
       }
     },
+    "/api/v1/attempts/{attempt_id}/hint": {
+      "post": {
+        "operationId": "attempt_hint_api_v1_attempts__attempt_id__hint_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HintRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HintState"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Attempt Hint"
+      }
+    },
+    "/api/v1/attempts/{attempt_id}/hints": {
+      "get": {
+        "operationId": "attempt_hints_api_v1_attempts__attempt_id__hints_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "attempt_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Attempt Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HintState"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Attempt Hints"
+      }
+    },
     "/api/v1/attempts/{attempt_id}/solution": {
       "get": {
         "operationId": "solution_api_v1_attempts__attempt_id__solution_get",
@@ -4532,6 +4862,136 @@
           }
         },
         "summary": "Submit"
+      }
+    },
+    "/api/v1/sessions/{session_id}/items/{item_id}/hint": {
+      "post": {
+        "operationId": "revision_hint_api_v1_sessions__session_id__items__item_id__hint_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Item Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HintRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HintState"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Revision Hint"
       }
     },
     "/api/v1/sessions/{session_id}/next-item": {

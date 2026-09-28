@@ -119,6 +119,9 @@ export function Editor({
               : null,
           maximum_points: Number(value("maximum_points")),
           partial_credit: "ALL_OR_NOTHING",
+          hints: [0, 1, 2]
+            .map((i) => value(`hint_${i}`).trim())
+            .filter(Boolean),
           worked_solution: value("worked_solution"),
           remediation: value("remediation"),
           prerequisite_concept_ids: data.getAll("prerequisites").map(String),
@@ -326,6 +329,23 @@ export function Editor({
         />
       </label>
       <p>Scoring policy: all or nothing.</p>
+      <fieldset>
+        <legend>Reviewed hints (optional, in order)</legend>
+        <p>
+          Scaffold learner thinking without giving the answer or worked
+          solution. Empty fields are omitted.
+        </p>
+        {[0, 1, 2].map((i) => (
+          <div key={i}>
+            {area(
+              `Hint ${i + 1}`,
+              `hint_${i}`,
+              initial?.hints?.[i] ?? "",
+              1000,
+            )}
+          </div>
+        ))}
+      </fieldset>
       {area("Worked solution", "worked_solution", initial?.worked_solution)}
       {area("Feedback and remediation", "remediation", initial?.remediation)}
       <fieldset className="mb-4">

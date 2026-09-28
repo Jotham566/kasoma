@@ -71,6 +71,8 @@ class GradeView(Contract):
     points_possible: int
     confidence: float = Field(default=1.0, ge=1, le=1)
     method: Literal["DETERMINISTIC"] = "DETERMINISTIC"
+    hint_count: int = Field(default=0, ge=0, le=3)
+    highest_hint_level: int = Field(default=0, ge=0, le=3)
     grader_version: str
     feedback: Feedback
     mastery_update_status: Literal["NOT_IMPLEMENTED", "COMPLETED"] = "NOT_IMPLEMENTED"
@@ -115,6 +117,22 @@ class NumericResponseSpec(Contract):
     input_mode: Literal["text"] = "text"
 
 
+class HintRequest(Contract):
+    expected_hint_level: int = Field(ge=0, le=3)
+
+
+class RevealedHint(Contract):
+    level: int = Field(ge=1, le=3)
+    text: str
+    phase: Literal["BEFORE_ANSWER", "AFTER_ANSWER"]
+
+
+class HintState(Contract):
+    session_item_id: UUID
+    hints: list[RevealedHint]
+    has_more_hints: bool
+
+
 class LearnerItem(Contract):
     session_item_id: UUID
     item_version_id: UUID
@@ -123,6 +141,8 @@ class LearnerItem(Contract):
     response_spec: ResponseSpec | NumericResponseSpec
     maximum_points: int
     selection_reason: str
+    hints: list[RevealedHint] = Field(default_factory=list)
+    has_more_hints: bool = False
 
 
 class SolutionView(Contract):

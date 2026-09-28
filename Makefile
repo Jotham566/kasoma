@@ -111,3 +111,7 @@ replay-mastery:
 .PHONY: replay-recommendations
 replay-recommendations:
 	$(UV) python -m scripts.replay_recommendations
+
+.PHONY: seed-hints
+seed-hints:
+	$(UV) python -m scripts.assessment_fixtures --hints

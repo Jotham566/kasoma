@@ -10,7 +10,9 @@ from services.content_contracts import DraftDocument
 from services.grading import grade_choice
 
 
-@pytest.mark.parametrize("key", ["score", "mastery", "hint_count", "role", "item_version_id"])
+@pytest.mark.parametrize(
+    "key", ["score", "mastery", "hint_count", "highest_hint_level", "role", "item_version_id"]
+)
 def test_learner_cannot_supply_authoritative_fields(key):
     with pytest.raises(ValidationError):
         SubmitAnswer.model_validate(
@@ -51,4 +53,6 @@ def test_event_allowlist_excludes_answers_and_identifiers():
         "version",
         "request_id",
         "created_at",
+        "hint_count",
+        "highest_hint_level",
     }

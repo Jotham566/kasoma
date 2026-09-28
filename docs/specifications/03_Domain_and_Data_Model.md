@@ -170,3 +170,14 @@ Candidate scores, selected target, human-readable reason, algorithm version, inp
 ## 10. Deletion/anonymization
 
 Deletion workflow removes authentication identifiers, channel links and direct profile data, then anonymizes permitted learning records using a non-reversible replacement identity. Records that must be retained for rights, security or financial obligations follow the approved retention schedule. Analytics events must never be the only location of personal data requiring deletion.
+
+## Reviewed hint persistence (migration 0009)
+
+`hint_uses` stores append-only learner/assignment linkage, ordered level (1–3), phase
+(`BEFORE_ANSWER` or `AFTER_ANSWER`) and UTC timestamp. Text remains in the immutable
+approved item-version document. Unique assignment/level and eligibility triggers
+prevent skipped levels, future-item disclosure and diagnostic hints. Receipt linkage
+supports exact retry boundaries. Attempts freeze before-answer count/highest level;
+mastery evidence and safe outbox metadata bind to those values. Post-answer usage
+cannot rewrite attempts, grades or evidence. Legacy evidence without highest level
+retains its original input hash. See [ADR-022](../decisions/ADR/022-reviewed-hints.md).

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 import { Status } from "@kasoma/ui";
+import { Hints } from "./hints";
 
 type Schema = components["schemas"];
 const button =
@@ -346,6 +347,12 @@ export default function Revise() {
                   {p.content}
                 </p>
               ))}
+              <Hints
+                key={item.session_item_id}
+                sessionId={session.id}
+                item={item}
+                disabled={busy}
+              />
               {item.response_spec.type === "NUMERIC" ? (
                 <fieldset disabled={busy} className="space-y-3">
                   <legend>Enter a numeric answer</legend>
@@ -451,6 +458,12 @@ export default function Revise() {
                 <p key={i}>{text}</p>
               ))}
               <p>{grade.feedback.next_action}</p>
+              <Hints
+                key={grade.attempt_id}
+                sessionId={session.id}
+                attemptId={grade.attempt_id}
+                disabled={busy}
+              />
               <button
                 className={button}
                 disabled={busy}

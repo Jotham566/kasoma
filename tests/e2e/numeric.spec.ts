@@ -95,10 +95,14 @@ test("FR-GRD-002: author and independently review numeric rules, then grade unit
     const queued = reviewer.getByRole("button", {
       name: "Browser numeric fixture — v1 · IN_REVIEW",
     });
-    while (!(await queued.count()))
+    while (!(await queued.count())) {
       await reviewer
         .getByRole("button", { name: "Load more", exact: true })
         .click();
+      await expect(reviewer.getByRole("status")).toHaveText(
+        "More items loaded.",
+      );
+    }
     await queued.click();
     const checks = reviewer
       .getByRole("group", { name: "Independent academic checklist" })

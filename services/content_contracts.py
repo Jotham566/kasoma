@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Annotated, Literal
 from uuid import UUID
 
-from pydantic import Field
+from pydantic import Field, StringConstraints
 
 from services.identity_contracts import Contract
 from services.numeric import NumericSpec
@@ -83,6 +83,9 @@ class DraftDocument(Contract):
     correct_choice_id: str = Field(default="", max_length=1)
     maximum_points: int = Field(default=1, ge=1, le=20)
     partial_credit: Literal["ALL_OR_NOTHING"] = "ALL_OR_NOTHING"
+    hints: list[
+        Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=1000)]
+    ] = Field(default_factory=list, max_length=3)
     worked_solution: Text = ""
     remediation: Text = ""
     prerequisite_concept_ids: list[UUID] = Field(default_factory=list, max_length=20)

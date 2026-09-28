@@ -1,5 +1,17 @@
 # Changelog
 
+## 28 September 2026 — reviewed revision hints (local implementation)
+
+- Recommended practice merged to main as `88dd880`; hosted CI passed and its branch was removed.
+- Add authored/reviewed progressive hints, durable disclosure and safe retry/resume.
+- Freeze pre-answer usage and highest level for mastery independence weighting;
+  post-answer remediation preserves original grading/evidence and diagnostics block hints.
+- Add migration 0009, generated contracts, synthetic fixtures and API/browser tests.
+- Require changelog, sprint, traceability and relevant verification/runbook updates
+  alongside each implementation change in `AGENTS.md`.
+- See [verification evidence](docs/implementation/E4_HINTS_VERIFICATION.md); production
+  academic/privacy gates and unseen reassessment remain pending.
+
 ## E5 recommended practice (local synthetic verification)
 
 - Versioned synthetic ranking, prerequisite redirection and immutable replay snapshots.

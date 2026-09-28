@@ -8,6 +8,10 @@ Its completed branch was deleted. The owner subsequently authorized committing a
 pushing this verified slice to main and removing its completed branch. The final
 pre-commit lint, types, generated-contract and source-secret checks passed again.
 
+This slice was subsequently committed and pushed to main as `88dd880`.
+[Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36398742634);
+the completed recommendation branch was removed.
+
 ## Requirements and implementation
 
 FR-MST-006 and FR-REV-001/006: versioned multiplication of gap, academic importance,

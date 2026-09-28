@@ -33,6 +33,9 @@ test("FR-CNT-001–005: independent return, correction, approval and retirement"
     await author.getByLabel("Option B", { exact: true }).fill("Beta");
     await author.getByLabel("Correct option").selectOption("A");
     await author
+      .getByLabel("Hint 1", { exact: true })
+      .fill("Read both labels before selecting.");
+    await author
       .getByLabel("Worked solution", { exact: true })
       .fill("The requested label is Alpha (option A).");
     await author
@@ -75,12 +78,18 @@ test("FR-CNT-001–005: independent return, correction, approval and retirement"
       await reviewer
         .getByRole("button", { name: "Load more", exact: true })
         .click();
+      await expect(reviewer.getByRole("status")).toHaveText(
+        "More items loaded.",
+      );
     }
     await reviewer
       .getByRole("button", {
         name: "Browser synthetic selector — v1 · IN_REVIEW",
       })
       .click();
+    await expect(
+      reviewer.getByRole("region", { name: "Authored hints" }),
+    ).toContainText("Read both labels before selecting.");
     await reviewer
       .getByLabel("Review comments")
       .fill("Make remediation more explicit");

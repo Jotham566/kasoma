@@ -62,7 +62,15 @@ class AssessmentService:
         return actor
 
     def event(
-        self, db: Session, session: UUID, event: str, request: UUID, attempt: UUID | None = None
+        self,
+        db: Session,
+        session: UUID,
+        event: str,
+        request: UUID,
+        attempt: UUID | None = None,
+        *,
+        hint_count: int | None = None,
+        highest_hint_level: int | None = None,
     ) -> None:
         db.add(
             AssessmentEvent(
@@ -71,6 +79,8 @@ class AssessmentService:
                 attempt_id=attempt,
                 type=event,
                 version=1,
+                hint_count=hint_count,
+                highest_hint_level=highest_hint_level,
                 request_id=request,
                 created_at=self.identity.clock(),
             )
@@ -358,6 +368,9 @@ class AssessmentService:
                 )
             else:
                 response_spec = ResponseSpec(choices=document.choices)
+            from services.hints import state
+
+            revealed = state(db, item.id, document) if session.kind == "REVISION" else None
             return LearnerItem(
                 session_item_id=item.id,
                 item_version_id=version.id,
@@ -366,6 +379,8 @@ class AssessmentService:
                 response_spec=response_spec,
                 maximum_points=document.maximum_points,
                 selection_reason=item.reason,
+                hints=revealed.hints if revealed else [],
+                has_more_hints=revealed.has_more_hints if revealed else False,
             )
 
     def submit(
@@ -411,6 +426,9 @@ class AssessmentService:
                     result = grade_choice(attempt_id, version.id, document, body.response.choice_id)
             except ValueError:
                 raise IdentityError("VALIDATION_FAILED", 422) from None
+            from services.hints import counts
+
+            hint_count, highest_hint_level = counts(db, item.id)
             db.add(
                 Attempt(
                     id=attempt_id,
@@ -424,12 +442,19 @@ class AssessmentService:
                     if isinstance(body.response, NumericResponse)
                     else None,
                     submitted_at=self.identity.clock(),
-                    hint_count=0,
+                    hint_count=hint_count,
+                    highest_hint_level=highest_hint_level,
                     channel="WEB",
                 )
             )
             db.flush()
-            result = result.model_copy(update={"mastery_update_status": "COMPLETED"})
+            result = result.model_copy(
+                update={
+                    "mastery_update_status": "COMPLETED",
+                    "hint_count": hint_count,
+                    "highest_hint_level": highest_hint_level,
+                }
+            )
             db.add(
                 Grade(
                     attempt_id=attempt_id,
@@ -450,7 +475,15 @@ class AssessmentService:
             db.flush()
             reconcile(db, actor, self.identity.clock())
             self.event(db, session.id, "attempt.graded", request, attempt_id)
-            self.event(db, session.id, "mastery.updated", request, attempt_id)
+            self.event(
+                db,
+                session.id,
+                "mastery.updated",
+                request,
+                attempt_id,
+                hint_count=hint_count,
+                highest_hint_level=highest_hint_level,
+            )
             completed = (
                 self.diagnostics.view(db, session).answered_count >= session.item_count
                 if session.kind == "DIAGNOSTIC"

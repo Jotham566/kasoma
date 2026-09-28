@@ -59,6 +59,7 @@ def record(db: Session, attempt: Attempt, grade: Grade, at: datetime) -> None:
                 points_awarded=result.points_awarded,
                 points_possible=result.points_possible,
                 hint_count=attempt.hint_count,
+                highest_hint_level=attempt.highest_hint_level,
                 grade_confidence=result.confidence,
                 method=result.method,
                 status=result.status,

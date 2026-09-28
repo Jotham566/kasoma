@@ -139,3 +139,13 @@ Historical evidence is never silently changed.
 ## 11. Seed and fixture content
 
 Development and CI use clearly labelled synthetic questions. Production exports or copyrighted materials must not enter the repository. Fixture items must exercise every response type and edge case without being mistaken for approved learner content.
+
+## Reviewed hint metadata (ADR-022 implementation)
+
+Versioned choice/numeric documents may contain zero to three ordered `hints`, each
+1–1000 characters after trimming. Existing approved versions remain unchanged;
+author a successor version to add hints. The independent feedback/hints review must
+confirm progressive scaffolding without disclosing the answer or worked solution.
+The editor and reviewer display all authored levels; learner routes disclose only
+requested levels. Synthetic fixture text and automated tests do not replace academic
+review of production hints. See [ADR-022](../decisions/ADR/022-reviewed-hints.md).

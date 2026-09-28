@@ -46,6 +46,7 @@ class GradeInput(FrozenModel):
     points_awarded: float = Field(ge=0)
     points_possible: float = Field(gt=0)
     hint_count: int = Field(default=0, ge=0)
+    highest_hint_level: int | None = Field(default=None, ge=0, le=3)
     solution_seen_before_grade: bool = False
     grade_confidence: float = Field(ge=0, le=1)
     method: Literal["DETERMINISTIC", "RUBRIC_MODEL", "HUMAN"]
@@ -132,7 +133,7 @@ def normalize(
         configuration=config,
         input_hash=fingerprint(
             {
-                "grade": grade.model_dump(mode="json"),
+                "grade": grade.model_dump(mode="json", exclude_none=True),
                 "configuration": config.model_dump(),
                 "calculated_at": calculated_at.isoformat(),
             }

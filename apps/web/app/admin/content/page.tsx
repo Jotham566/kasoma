@@ -22,7 +22,7 @@ const labels: Record<string, string> = {
   units_precision: "Units and precision checked or not applicable",
   partial_credit: "Partial-credit policy checked",
   worked_solution: "Worked solution is accurate",
-  feedback: "Feedback and misconception handling",
+  feedback: "Feedback, hints and misconception handling",
   equivalence: "Equivalence checked or no equivalence claimed",
   language_age: "Clear, age-appropriate language",
   accessibility: "Accessible text and media",
@@ -336,6 +336,20 @@ export default function ContentWorkspace() {
               <p className="whitespace-pre-wrap">
                 Remediation: {selected.document.remediation}
               </p>
+              <section aria-label="Authored hints">
+                <h3 className="font-semibold">Hints</h3>
+                <p>
+                  Confirm that hints scaffold thinking without revealing the
+                  answer or worked solution.
+                </p>
+                <ol>
+                  {selected.document.hints?.map((hint, i) => (
+                    <li key={i}>
+                      Level {i + 1}: {hint}
+                    </li>
+                  ))}
+                </ol>
+              </section>
               <dl className="my-4">
                 <dt>Subject / topic / concept</dt>
                 <dd>

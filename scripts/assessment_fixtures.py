@@ -20,12 +20,15 @@ def seed_assessment(
     numeric: bool = False,
     mathematics_only: bool = False,
     diagnostic: bool = False,
+    hints: bool = False,
 ) -> None:
     if identity.settings.app_env not in {"development", "test"}:
         raise ValueError("Synthetic fixtures only")
     prefix = "Synthetic numeric fixture" if numeric else "Synthetic assessment fixture"
     if diagnostic:
         prefix = "Synthetic diagnostic fixture"
+    if hints:
+        prefix += " with hints"
     expected_count = 90 if diagnostic else (5 if numeric else (15 if mathematics_only else 30))
     with Session(identity.engine) as db:
         existing = list(
@@ -128,6 +131,12 @@ def seed_assessment(
                         },
                     }
                 )
+            if hints:
+                doc["hints"] = [
+                    "Identify what the question asks before choosing a response.",
+                    "Compare each part of the prompt with the response you are considering.",
+                    "Check your response carefully against the question's conditions.",
+                ]
             version = content.create(
                 tokens[0],
                 CreateDraft(
@@ -172,6 +181,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--numeric", action="store_true")
     parser.add_argument("--diagnostic", action="store_true")
+    parser.add_argument("--hints", action="store_true")
     args = parser.parse_args()
     config = Settings()
     engine = engine_for(config)
@@ -179,6 +189,7 @@ def main() -> None:
         fake = FakeMessagingProvider()
         seed_assessment(
             IdentityService(engine, config, fake, fake),
+            hints=args.hints,
             numeric=args.numeric,
             diagnostic=args.diagnostic,
         )

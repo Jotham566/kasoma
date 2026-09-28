@@ -11,6 +11,8 @@ from services.assessment_contracts import (
     DiagnosticReceipt,
     DiagnosticView,
     GradeView,
+    HintRequest,
+    HintState,
     LearnerItem,
     RecommendationView,
     SessionView,
@@ -106,3 +108,43 @@ def diagnostic_get(session_id: UUID, request: Request) -> DiagnosticView:
 @router.get("/me/recommendations/next", response_model=RecommendationView)
 def recommendation(subject_id: UUID, request: Request) -> RecommendationView:
     return service(request).recommendation(bearer(request), subject_id)
+
+
+@router.post("/sessions/{session_id}/items/{item_id}/hint", response_model=HintState)
+def revision_hint(
+    session_id: UUID, item_id: UUID, body: HintRequest, request: Request, idempotency_key: Key
+) -> HintState:
+    from services.hints import access
+
+    return access(
+        service(request),
+        bearer(request),
+        session_id=session_id,
+        item_id=item_id,
+        body=body,
+        key=idempotency_key,
+        request=UUID(request.state.request_id),
+    )
+
+
+@router.post("/attempts/{attempt_id}/hint", response_model=HintState)
+def attempt_hint(
+    attempt_id: UUID, body: HintRequest, request: Request, idempotency_key: Key
+) -> HintState:
+    from services.hints import access
+
+    return access(
+        service(request),
+        bearer(request),
+        attempt_id=attempt_id,
+        body=body,
+        key=idempotency_key,
+        request=UUID(request.state.request_id),
+    )
+
+
+@router.get("/attempts/{attempt_id}/hints", response_model=HintState)
+def attempt_hints(attempt_id: UUID, request: Request) -> HintState:
+    from services.hints import access
+
+    return access(service(request), bearer(request), attempt_id=attempt_id)

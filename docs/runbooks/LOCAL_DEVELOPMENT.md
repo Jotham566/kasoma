@@ -264,3 +264,16 @@ configuration in [ADR-021](../decisions/ADR/021-recommended-practice.md); no rea
 curriculum priority or calibrated review schedule is implied. Forward-fix migration
 0008 preserves historical sessions. Disable new recommended starts rather than
 dropping learning or recommendation records during recovery.
+
+## Synthetic reviewed hints
+
+Run `make migrate seed seed-hints` to add reviewed synthetic choice inventory with
+three authored hint levels. The hint fixture identity is distinct from earlier
+fixtures; re-running does not edit published versions. Use the local staff workflow
+to author/review successor versions when hints change. On revision questions, request
+a hint before answering and reload to verify durable disclosure. After answering,
+additional hints support review without changing the saved score or evidence.
+Diagnostics never expose hints. `make replay-mastery replay-recommendations` verifies
+stored evidence read-only; automated integration tests exercise nonempty histories.
+Migration 0009 is additive; retain historical evidence and use forward fixes rather
+than destructive downgrade. See [hint verification](../implementation/E4_HINTS_VERIFICATION.md).
