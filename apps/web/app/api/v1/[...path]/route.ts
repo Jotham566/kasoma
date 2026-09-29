@@ -12,6 +12,8 @@ const allowed: Record<string, string[]> = {
   "auth/logout-all": ["POST"],
   me: ["GET", "PATCH"],
   "me/consents": ["POST"],
+  "me/data-requests": ["GET", "POST"],
+  "admin/data-requests": ["GET"],
   "me/recommendations/next": ["GET"],
   "me/progress": ["GET"],
   "me/session-history": ["GET"],
@@ -63,29 +65,33 @@ async function gateway(
   const reassessment = new RegExp(`^attempts/${uuid}/reassessment$`).test(path);
   const flagReport = new RegExp(`^attempts/${uuid}/flag$`).test(path);
   const flagTriage = new RegExp(`^admin/content-flags/${uuid}$`).test(path);
-  const methods = flagReport
-    ? ["GET", "POST"]
-    : flagTriage
-      ? ["GET", "PATCH"]
-      : reassessment
+  const methods = new RegExp(`^me/data-requests/${uuid}$`).test(path)
+    ? ["GET"]
+    : new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
+      ? ["POST"]
+      : flagReport
         ? ["GET", "POST"]
-        : hintWrite
-          ? ["POST"]
-          : learning
-            ? [
-                learning[1] === "attempts" || learning[1] === "abandon"
-                  ? "POST"
-                  : "GET",
-              ]
-            : learningRead
-              ? ["GET"]
-              : staffVersion
-                ? staffVersion[1] === "reviews"
+        : flagTriage
+          ? ["GET", "PATCH"]
+          : reassessment
+            ? ["GET", "POST"]
+            : hintWrite
+              ? ["POST"]
+              : learning
+                ? [
+                    learning[1] === "attempts" || learning[1] === "abandon"
+                      ? "POST"
+                      : "GET",
+                  ]
+                : learningRead
                   ? ["GET"]
-                  : staffVersion[1]
-                    ? ["POST"]
-                    : ["GET", "PATCH"]
-                : allowed[path];
+                  : staffVersion
+                    ? staffVersion[1] === "reviews"
+                      ? ["GET"]
+                      : staffVersion[1]
+                        ? ["POST"]
+                        : ["GET", "PATCH"]
+                    : allowed[path];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (
@@ -126,9 +132,13 @@ async function gateway(
       if (status) query.set("status", status);
     }
     if (
-      ["admin/items", "admin/content-flags", "me/session-history"].includes(
-        path,
-      )
+      [
+        "admin/items",
+        "admin/content-flags",
+        "me/session-history",
+        "me/data-requests",
+        "admin/data-requests",
+      ].includes(path)
     )
       for (const key of ["cursor", "limit"]) {
         const value = request.nextUrl.searchParams.get(key);

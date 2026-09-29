@@ -4,8 +4,10 @@ Date: 28 September 2026. Synthetic local development only.
 
 Flags/triage was committed and pushed to main as `bd9dae3`; its completed branch was
 removed. [Hosted main CI](https://github.com/Jotham566/kasoma/actions/runs/36411128242).
-Hosted CI for that commit was still running at the final check; it is not counted as passed.
-Multiple-choice work is local on `codex/multiple-choice`, uncommitted for review.
+Hosted CI for flags/triage passed. Multiple-choice support is now committed and pushed
+to main as `02f96bc`; its completed branch was removed.
+[Hosted multiple-choice CI](https://github.com/Jotham566/kasoma/actions/runs/36487637477)
+is tracked separately from the completed local verification below.
 
 ## Requirements and decision
 

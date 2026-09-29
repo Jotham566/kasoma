@@ -225,3 +225,21 @@ content/grade hashes remain unchanged. Reviewed correct_choice_ids is versioned 
 the existing content hash. Grade, mastery, hint and outbox atomicity/immutability remain.
 Use forward fixes with compatible readers; no destructive downgrade of learner evidence.
 See [ADR-026](../decisions/ADR/026-multiple-choice.md).
+
+## Data-request intake persistence (migration 0014)
+
+Identity owns data_subject_requests: server-derived account, EXPORT/DELETE kind,
+recent OTP authentication time, verification method, creation time and explicit
+SIX_YEARS_AFTER_COMPLETION retention policy. With no completion states yet, one
+pending request per account/kind is enforced. data_request_reviews links a single
+independent administrator claim; status derives from the presence of this row.
+Actor/key-scoped data_request_receipts protect retry identity across create/claim.
+These rows are append-only; no free text, credentials or contact details are copied.
+SQL guards check verification age, policy, independent ADMIN claims and timestamps.
+Audit and safe identity-outbox records commit atomically.
+
+This is request evidence, not completed export/deletion. A later reviewed migration
+must implement fulfillment/completion, subsequent requests and six-year retention
+expiry with narrowly scoped legal holds, reconciling immutable historical evidence.
+No indefinite retention, broad delete bypass or general identity impersonation is
+approved. See [ADR-027](../decisions/ADR/027-data-request-intake.md).

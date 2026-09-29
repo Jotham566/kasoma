@@ -323,3 +323,28 @@ a reused key returns 409. Exact set equality earns all points; any other valid s
 scores zero. The stored grader version is `multiple-choice-set-v1`.
 Existing consent, ownership, version pinning, hint, solution, diagnostic seal,
 reassessment and flag controls apply. See [ADR-026](../decisions/ADR/026-multiple-choice.md).
+
+## Data-request intake (ADR-027)
+
+`POST /me/data-requests` accepts only `{kind: EXPORT|DELETE, affirmative: true}` and
+requires Idempotency-Key plus OTP authentication within ten minutes. Return 201 with
+id, kind, status QUEUED/IN_REVIEW, created_at, nullable reviewed_at and retention_policy
+SIX_YEARS_AFTER_COMPLETION. A new key for the same pending kind returns the existing
+request; a reused key for another kind/action returns 409. No learning consent, completed
+profile, age or subject selection is required to request or track privacy rights.
+
+`GET /me/data-requests` lists owned requests; `GET /me/data-requests/{target}` returns
+one owned request or 404. Listing supports UUID cursor and limit 1–50 (default 20),
+ordered by UUID, returning data and next_cursor. Reads require an active session.
+`GET /admin/data-requests` uses the same safe page shape and requires recent ADMIN
+access, auditing the queue read. It exposes no requester identity or internal notes.
+`POST /admin/data-requests/{target}/claim` accepts an empty object and idempotency key,
+requires recent ADMIN authentication, and starts review (200). Own-request claims are
+403; another administrator's claimed request returns 409. Claims never imply fulfillment.
+No update/completion or deletion endpoint exists in this slice.
+
+New intake keys are limited to ten/account/hour; reads and claims to sixty/account/minute.
+Exact-key retries recover current status, after rechecking authentication/authorization.
+Safe identity events and audit records commit atomically with request/review/receipt rows.
+Machine-readable export delivery, anonymization and retention-aware fulfillment remain
+pending. See [ADR-027](../decisions/ADR/027-data-request-intake.md).

@@ -34,7 +34,8 @@ def main():
     node = runtime / "node_modules/node/bin/node"
     if not node.exists():
         run("npm", "install", "--prefix", str(runtime), "--no-audit", "--no-fund", "node@24.21.0")
-    os.environ["PATH"] = f"{node.parent}:{os.environ['PATH']}"
+    run("corepack", "enable", "--install-directory", str(tools / "bin"), "pnpm")
+    os.environ["PATH"] = f"{node.parent}:{tools / 'bin'}:{os.environ['PATH']}"
     os.environ["COREPACK_ENABLE_DOWNLOAD_PROMPT"] = "0"
     run(uv, "sync", "--frozen")
     run("corepack", "pnpm", "install", "--frozen-lockfile")

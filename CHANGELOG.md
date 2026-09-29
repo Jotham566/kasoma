@@ -1,5 +1,19 @@
 # Changelog
 
+## 29 September 2026 — data-request intake (local implementation)
+
+- Multiple-choice support committed and pushed to main as `02f96bc`; completed branch removed.
+- Add recent-OTP export/deletion request intake, owned status and safe acknowledgement,
+  including after learning-consent withdrawal and before profile completion.
+- Add an independent ADMIN review queue/claim, atomic audits/outbox, deduplicated retries,
+  immutable evidence and explicit six-year-after-completion retention policy.
+- Add migration 0014, generated contracts, learner/admin screens and regression tests.
+- Forward request pagination through the web gateway and install repository-local Corepack
+  shims so nested build tasks retain pinned pnpm despite unrelated global installations.
+- Update ADR-027, API/data/runbook documentation, sprint and traceability; see
+  [verification](docs/implementation/E8_DATA_REQUESTS_VERIFICATION.md). Fulfillment,
+  completion evidence, deletion/anonymization and retention jobs remain pending.
+
 ## 28 September 2026 — deterministic multiple choice (local implementation)
 
 - Flags/triage committed and pushed to main as `bd9dae3`; completed branch removed.

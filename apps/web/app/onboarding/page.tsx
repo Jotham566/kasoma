@@ -439,6 +439,12 @@ export default function Onboarding() {
               </button>
             </section>
           )}
+          <Link
+            className="inline-flex min-h-11 items-center underline"
+            href="/privacy"
+          >
+            Request export or deletion of your data
+          </Link>
           <section aria-label="Additional contact">
             <h2 className="text-xl font-semibold my-4">Link another contact</h2>
             <p>

@@ -191,3 +191,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-026: Exact-set deterministic multiple choice](../decisions/ADR/026-multiple-choice.md)
   records canonical sets, all-or-nothing grading and compatible immutable evidence.
+
+- [ADR-027: Minimized data-request intake](../decisions/ADR/027-data-request-intake.md)
+  records rights access, verification, independent review and the fulfillment boundary.

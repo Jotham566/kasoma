@@ -1,26 +1,27 @@
-# Current Sprint: E4 deterministic multiple choice
+# Current Sprint: E8 data-request intake
 
-Flags/triage is committed and pushed to main as `bd9dae3`; the completed branch was
-removed. [Hosted main CI](https://github.com/Jotham566/kasoma/actions/runs/36411128242).
-This next slice is local on `codex/multiple-choice`, uncommitted for review.
+Multiple-choice support is committed and pushed to main as `02f96bc`; its completed
+branch was removed. [Hosted main CI](https://github.com/Jotham566/kasoma/actions/runs/36487637477).
+This next slice is local on `codex/data-requests`, uncommitted for review.
 
 ## Current slice
 
-FR-GRD-001, supporting FR-GRD-005/007, FR-CNT-001/003/004/005, FR-REV-003/005,
-FR-DIAG-004, FR-MST-001/003, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
-Reviewed nonempty answer sets, exact deterministic scoring, canonical retry/storage,
-checkbox players and compatible immutable evidence through additive migration 0013.
-Decision: [ADR-026](../decisions/ADR/026-multiple-choice.md).
-All 294 Python tests and 16 browser tests pass; setup, migrations, contracts, lint/types,
-security and container checks pass. Hosted main CI is still running at the final check.
-Check status and limitations: [multiple-choice verification](E4_MULTIPLE_CHOICE_VERIFICATION.md).
+FR-ID-006 (intake/review portion), supporting FR-OPS-001/003, NFR-SEC-002,
+NFR-ACC-001 and NFR-MNT-001. Requests require recent OTP, not learning consent.
+Owned pending status, safe retry and independent ADMIN review are auditable and atomic.
+Migration 0014 is additive. Export/deletion fulfillment is not implemented or represented
+as complete. Decision: [ADR-027](../decisions/ADR/027-data-request-intake.md).
+All 305 Python tests and 17 browser tests pass. Setup, migration, generated contracts,
+lint/types, security and container checks pass. Hosted main CI is still running at the final check.
+Check status: [data-request verification](E8_DATA_REQUESTS_VERIFICATION.md).
 
 ## Next vertical slice
 
-FR-ID-006: consent-aware learner export/deletion request intake, safe acknowledgement,
-owned status and auditable staff processing workflow, following the approved retention
-policy. Establish the exact deletion/retention boundary before implementing destructive
-processing. Expert short-text benchmark and Week 8 provider gates remain unchanged.
+Continue FR-ID-006 with an owned machine-readable export and safe retrieval/completion
+workflow, excluding authentication secrets, third-party evidence and assessment keys.
+Then implement deletion/anonymization with early session/channel revocation, specific
+legal holds and observable retention jobs through a narrow reviewed processor.
+Resolve the export content/retention boundary before implementing fulfillment.
 
 ## Remaining dependencies and release gates
 

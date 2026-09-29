@@ -339,3 +339,26 @@ schema and API. This keeps synthetic logins within the unchanged 20-per-hour pee
 limit; it does not disable security controls. Every browser test runs once. The browser
 fixture keeps diagnostic inventory in Mathematics, numeric items in Electricity and
 Magnetism, and multiple-choice items in Waves, Light and Sound so selection is deterministic.
+
+## Synthetic data-request intake
+
+Run `make migrate` for additive migration 0014. Sign in with a synthetic identity,
+then open `/privacy`; no profile or learning consent is required. Confirm Export or
+Delete to record a pending request. Recent OTP verification (under ten minutes) is
+required for creation; an active session suffices for owned status reads. A repeat
+same-kind request returns its existing reference, including after a lost acknowledgement.
+Learning withdrawal remains at `/onboarding` and does not remove privacy-request access.
+
+Provision a different synthetic administrator using the existing `make staff-role`
+workflow, then sign in and open `/admin/data-requests`. Queue reads and claims require
+recent ADMIN access. Claiming starts review and creates an audit entry; it does not
+export/delete data or change learning access. There is no completion button or external
+notification. Requester identity is excluded from the queue. Operators must not represent
+this development intake as completed processing or enroll real learners before fulfillment
+and the privacy/legal gates pass. The six-year-after-completion policy is recorded;
+completion deadlines, evidence minimization/expiry and legal holds belong to the next processor.
+
+Setup installs a pnpm Corepack shim in `.local/tools/bin`, ahead of global package
+managers in repository commands. Nested Turborepo tasks therefore retain the pinned
+package manager. If a global pnpm upgrade breaks nested commands, rerun `make setup`;
+do not weaken version enforcement or change the approved packageManager pin.

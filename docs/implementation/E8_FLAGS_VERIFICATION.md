@@ -4,7 +4,7 @@ Date: 28 September 2026. Synthetic local development only.
 
 Flags/triage is committed and pushed to main as `bd9dae3`; its completed branch
 was removed. [Hosted main CI](https://github.com/Jotham566/kasoma/actions/runs/36411128242)
-is tracked separately from the completed local evidence below.
+passed, alongside the completed local evidence below.
 
 ## Requirements and decisions
 

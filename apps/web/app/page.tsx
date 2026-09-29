@@ -82,6 +82,12 @@ export default async function Home() {
           History
         </Link>
       </nav>
+      <Link
+        className="inline-flex min-h-11 items-center underline"
+        href="/privacy"
+      >
+        Your data requests
+      </Link>
       <RecommendationCard />
       <small className="mt-6 block text-slate-600">
         Support reference: {requestId}

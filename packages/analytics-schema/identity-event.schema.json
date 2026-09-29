@@ -5,24 +5,42 @@
   "additionalProperties": false,
   "required": ["id", "user_id", "type", "version", "payload", "created_at"],
   "properties": {
-    "id": { "type": "string", "format": "uuid" },
-    "user_id": { "type": "string", "format": "uuid" },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "user_id": {
+      "type": "string",
+      "format": "uuid"
+    },
     "type": {
       "enum": [
         "registration.completed",
         "identity.verified",
         "identity.logout",
         "profile.updated",
-        "consent.changed"
+        "consent.changed",
+        "data_request.created",
+        "data_request.review_started"
       ]
     },
-    "version": { "const": 1 },
-    "created_at": { "type": "string", "format": "date-time" },
+    "version": {
+      "const": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "payload": {
       "type": "object",
       "additionalProperties": false,
       "required": ["request_id"],
-      "properties": { "request_id": { "type": "string", "format": "uuid" } }
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
     }
   }
 }

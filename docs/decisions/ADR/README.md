@@ -37,3 +37,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-026: Exact-set deterministic multiple choice](026-multiple-choice.md)
   records canonical sets, all-or-nothing grading and compatible immutable evidence.
+
+- [ADR-027: Minimized data-request intake](027-data-request-intake.md)
+  records rights access, verification, independent review and the fulfillment boundary.

@@ -12,8 +12,9 @@ E4 numeric grading is merged (`7d2c8ed`); the MinIO setup repair (`ee73741`) pas
 The E5 diagnostic/mastery and recommended-practice slices are on main (`88dd880`, hosted CI passed).
 Reviewed hints (`3c0c3ba`) and unseen reassessment (`73c1fba`) are on main.
 E6 progress/history is on main (`df855ab`), followed by flags/triage (`bd9dae3`).
-Exact-set multiple-choice support is implemented locally for review; see
-[multiple-choice verification](docs/implementation/E4_MULTIPLE_CHOICE_VERIFICATION.md).
+Exact-set multiple-choice support is on main (`02f96bc`). Data-request intake and
+independent administrator review are local for review; see
+[data-request verification](docs/implementation/E8_DATA_REQUESTS_VERIFICATION.md).
 Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
@@ -136,3 +137,8 @@ This creates five independently reviewed synthetic items in Physics / Waves, Lig
 and Sound. Practice uses checkboxes and exact-set scoring: all correct options and
 no others earn full credit. No partial or negative marking is inferred. See
 [ADR-026](docs/decisions/ADR/026-multiple-choice.md).
+
+Data requests are at `/privacy`, with administrator intake review at
+`/admin/data-requests`. Requesting export/deletion and checking status do not require
+learning consent. Intake requires recent sign-in. This local slice records pending
+requests; it does not export or erase data. See [ADR-027](docs/decisions/ADR/027-data-request-intake.md).
