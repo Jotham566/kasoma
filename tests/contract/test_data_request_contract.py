@@ -33,6 +33,9 @@ def test_minimized_status_and_no_manual_completion():
         "created_at",
         "reviewed_at",
         "retention_policy",
+        "completed_at",
+        "retention_due_at",
+        "download_expires_at",
     }
     with pytest.raises(ValidationError):
         DataRequestClaim(status="COMPLETED")

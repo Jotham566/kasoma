@@ -23,6 +23,10 @@ export function Requests({ staff = false }: { staff?: boolean }) {
     kind: Schema["DataRequestInput"]["kind"];
     target?: string;
   } | null>(null);
+  const [downloadPending, setDownloadPending] = useState<{
+    key: string;
+    target: string;
+  } | null>(null);
   const [busy, setBusy] = useState(true);
   const [status, setStatus] = useState("Loading requests…");
   const mounted = useRef(true);
@@ -49,6 +53,17 @@ export function Requests({ staff = false }: { staff?: boolean }) {
         setRows([]);
         setCursor(null);
         setPending(null);
+        setDownloadPending(null);
+      }
+      if (
+        [
+          "EXPORT_EXPIRED",
+          "EXPORT_LIMIT_REACHED",
+          "RESOURCE_NOT_FOUND",
+          "IDEMPOTENCY_CONFLICT",
+        ].includes(code)
+      ) {
+        setDownloadPending(null);
       }
       setStatus(
         code === "AUTH_REQUIRED" || code === "REAUTH_REQUIRED"
@@ -59,9 +74,13 @@ export function Requests({ staff = false }: { staff?: boolean }) {
               ? "Another administrator must review your request."
               : code === "ALREADY_CLAIMED"
                 ? "Another administrator is reviewing this request. Reload the list."
-                : code === "RATE_LIMITED"
-                  ? "Too many requests. Wait before trying again; saved requests are retained."
-                  : "Could not confirm the operation. Retry the same request or reload the list.",
+                : code === "EXPORT_EXPIRED"
+                  ? "This copy has expired. Submit a new export request."
+                  : code === "EXPORT_LIMIT_REACHED"
+                    ? "This account exceeds the self-service export limit. Your request remains pending for review."
+                    : code === "RATE_LIMITED"
+                      ? "Too many requests. Wait before trying again; saved requests are retained."
+                      : "Could not confirm the operation. Retry the same request or reload the list.",
       );
     } finally {
       if (mounted.current) setBusy(false);
@@ -113,6 +132,38 @@ export function Requests({ staff = false }: { staff?: boolean }) {
       );
     });
   }
+  async function download(target: string) {
+    const operation = downloadPending ?? { key: crypto.randomUUID(), target };
+    setDownloadPending(operation);
+    await run(async () => {
+      const bundle = check(
+        await api().POST("/api/v1/me/data-requests/{target}/export", {
+          params: {
+            path: { target: operation.target },
+            header: { "Idempotency-Key": operation.key },
+          },
+          body: {},
+        }),
+      );
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(bundle, null, 2)], {
+          type: "application/json",
+        }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `kasoma-export-${bundle.request_id}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setDownloadPending(null);
+      await load();
+      setStatus(
+        "Export made available. The same copy is available for 24 hours.",
+      );
+    });
+  }
   return (
     <main className="mx-auto max-w-2xl p-6 space-y-5">
       <Link className="inline-flex min-h-11 items-center underline" href="/">
@@ -123,12 +174,13 @@ export function Requests({ staff = false }: { staff?: boolean }) {
       </h1>
       <p>
         {staff
-          ? "Administrators can claim requests for review. Export generation and deletion processing are not yet available."
+          ? "Administrators can claim requests for review. Only the account owner can download an export. Deletion processing remains pending."
           : "Request a copy of your data or ask for deletion. Learning consent is not required to make or track a request."}
       </p>
       <p>
-        Requests remain pending until processed. This development service does
-        not yet export or delete account data.
+        Exports require a recent sign-in. Downloads include your account and
+        released learning records, with exclusions listed in the file. Deletion
+        requests remain pending.
       </p>
       {!staff && (
         <>
@@ -149,7 +201,10 @@ export function Requests({ staff = false }: { staff?: boolean }) {
               void send();
             }}
           >
-            <fieldset disabled={busy || !!pending} className="space-y-3">
+            <fieldset
+              disabled={busy || !!pending || !!downloadPending}
+              className="space-y-3"
+            >
               <legend>Request type</legend>
               {(["EXPORT", "DELETE"] as const).map((value) => (
                 <label className="flex min-h-11 items-center gap-3" key={value}>
@@ -179,7 +234,7 @@ export function Requests({ staff = false }: { staff?: boolean }) {
             </fieldset>
             <button
               className={button}
-              disabled={busy || (!pending && !affirmative)}
+              disabled={busy || !!downloadPending || (!pending && !affirmative)}
             >
               {pending ? "Retry request" : "Submit request"}
             </button>
@@ -196,12 +251,22 @@ export function Requests({ staff = false }: { staff?: boolean }) {
           void run(async () => {
             await load();
             setPending(null);
+            setDownloadPending(null);
             setStatus("Requests loaded.");
           })
         }
       >
         Reload requests
       </button>
+      {!staff && downloadPending && (
+        <button
+          className={button}
+          disabled={busy}
+          onClick={() => void download(downloadPending.target)}
+        >
+          Retry download
+        </button>
+      )}
       {staff && pending?.target && (
         <button
           className={button}
@@ -221,7 +286,13 @@ export function Requests({ staff = false }: { staff?: boolean }) {
               {row.kind === "EXPORT" ? "Export request" : "Deletion request"}
             </h2>
             <p>Reference: {row.id}</p>
-            <p>{row.status === "QUEUED" ? "Queued for review" : "In review"}</p>
+            <p>
+              {row.status === "COMPLETED"
+                ? "Export made available"
+                : row.status === "QUEUED"
+                  ? "Queued for review"
+                  : "In review"}
+            </p>
             <p>
               Received:{" "}
               {new Date(row.created_at).toLocaleString("en-GB", {
@@ -229,10 +300,28 @@ export function Requests({ staff = false }: { staff?: boolean }) {
               })}{" "}
               (Kampala)
             </p>
+            {row.download_expires_at && (
+              <p>
+                Copy expires:{" "}
+                {new Date(row.download_expires_at).toLocaleString("en-GB", {
+                  timeZone: "Africa/Kampala",
+                })}{" "}
+                (Kampala)
+              </p>
+            )}
+            {!staff && row.kind === "EXPORT" && (
+              <button
+                className={button}
+                disabled={busy || !!pending || !!downloadPending}
+                onClick={() => void download(row.id)}
+              >
+                Download export
+              </button>
+            )}
             {staff && row.status === "QUEUED" && (
               <button
                 className={button}
-                disabled={busy || !!pending}
+                disabled={busy || !!pending || !!downloadPending}
                 onClick={() => void send(row.id)}
               >
                 Claim for review

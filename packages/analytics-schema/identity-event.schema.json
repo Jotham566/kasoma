@@ -21,7 +21,8 @@
         "profile.updated",
         "consent.changed",
         "data_request.created",
-        "data_request.review_started"
+        "data_request.review_started",
+        "data_export.completed"
       ]
     },
     "version": {

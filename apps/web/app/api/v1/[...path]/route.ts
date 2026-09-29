@@ -65,9 +65,10 @@ async function gateway(
   const reassessment = new RegExp(`^attempts/${uuid}/reassessment$`).test(path);
   const flagReport = new RegExp(`^attempts/${uuid}/flag$`).test(path);
   const flagTriage = new RegExp(`^admin/content-flags/${uuid}$`).test(path);
+  const dataExport = new RegExp(`^me/data-requests/${uuid}/export$`).test(path);
   const methods = new RegExp(`^me/data-requests/${uuid}$`).test(path)
     ? ["GET"]
-    : new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
+    : dataExport || new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
       ? ["POST"]
       : flagReport
         ? ["GET", "POST"]
@@ -196,6 +197,11 @@ async function gateway(
         });
       }
     }
+    if (dataExport && upstream.ok) {
+      const disposition = upstream.headers.get("Content-Disposition");
+      if (disposition) response.headers.set("Content-Disposition", disposition);
+    }
+    response.headers.set("X-Content-Type-Options", "nosniff");
     response.headers.set("Cache-Control", "no-store");
     response.headers.set("request_id", requestId);
     return response;

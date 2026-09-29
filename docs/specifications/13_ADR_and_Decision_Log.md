@@ -194,3 +194,5 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-027: Minimized data-request intake](../decisions/ADR/027-data-request-intake.md)
   records rights access, verification, independent review and the fulfillment boundary.
+
+- [ADR-028: Owned bounded data exports](../decisions/ADR/028-owned-data-exports.md)

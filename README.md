@@ -12,9 +12,9 @@ E4 numeric grading is merged (`7d2c8ed`); the MinIO setup repair (`ee73741`) pas
 The E5 diagnostic/mastery and recommended-practice slices are on main (`88dd880`, hosted CI passed).
 Reviewed hints (`3c0c3ba`) and unseen reassessment (`73c1fba`) are on main.
 E6 progress/history is on main (`df855ab`), followed by flags/triage (`bd9dae3`).
-Exact-set multiple-choice support is on main (`02f96bc`). Data-request intake and
-independent administrator review are local for review; see
-[data-request verification](docs/implementation/E8_DATA_REQUESTS_VERIFICATION.md).
+Exact-set multiple-choice support (`02f96bc`) and data-request intake (`68146b9`) are on main.
+Owned JSON exports and expiry are local for review; see
+[export verification](docs/implementation/E8_DATA_EXPORTS_VERIFICATION.md).
 Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
@@ -141,4 +141,6 @@ no others earn full credit. No partial or negative marking is inferred. See
 Data requests are at `/privacy`, with administrator intake review at
 `/admin/data-requests`. Requesting export/deletion and checking status do not require
 learning consent. Intake requires recent sign-in. This local slice records pending
-requests; it does not export or erase data. See [ADR-027](docs/decisions/ADR/027-data-request-intake.md).
+requests. Owners can download bounded JSON exports after recent sign-in; retry copies
+expire after 24 hours. Deletion processing remains pending. See
+[ADR-028](docs/decisions/ADR/028-owned-data-exports.md).

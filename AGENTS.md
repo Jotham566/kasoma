@@ -93,8 +93,9 @@ E0–E4 foundation, identity/consent, content review and deterministic assessmen
 and the E5 synthetic diagnostic/mastery slice are merged. Synthetic recommended
 practice, reviewed hints, unseen reassessment and E6 progress/history are merged.
 Learner flags, independent staff triage and exact-set multiple-choice assessment are
-merged. Data-request intake and administrator review are implemented locally; export
-fulfillment, deletion/anonymization and retention processors remain pending.
+merged. Data-request intake and administrator review are merged. Owned JSON exports,
+completion evidence and 24-hour copy expiry are implemented locally. Deletion/anonymization,
+large-history fulfillment and accountability-retention/legal-hold processors remain pending.
 Academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain

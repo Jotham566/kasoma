@@ -128,3 +128,7 @@ seed-reassessment:
 .PHONY: seed-multiple-choice
 seed-multiple-choice:
 	$(UV) python -m scripts.assessment_fixtures --multiple-choice --hints
+
+.PHONY: expire-exports
+expire-exports:
+	$(UV) python -m scripts.expire_exports

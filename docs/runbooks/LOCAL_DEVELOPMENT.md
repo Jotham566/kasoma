@@ -342,11 +342,11 @@ Magnetism, and multiple-choice items in Waves, Light and Sound so selection is d
 
 ## Synthetic data-request intake
 
-Run `make migrate` for additive migration 0014. Sign in with a synthetic identity,
+Run `make migrate` through additive migration 0015. Sign in with a synthetic identity,
 then open `/privacy`; no profile or learning consent is required. Confirm Export or
 Delete to record a pending request. Recent OTP verification (under ten minutes) is
 required for creation; an active session suffices for owned status reads. A repeat
-same-kind request returns its existing reference, including after a lost acknowledgement.
+pending same-kind request returns its existing reference, including after a lost acknowledgement.
 Learning withdrawal remains at `/onboarding` and does not remove privacy-request access.
 
 Provision a different synthetic administrator using the existing `make staff-role`
@@ -356,9 +356,35 @@ export/delete data or change learning access. There is no completion button or e
 notification. Requester identity is excluded from the queue. Operators must not represent
 this development intake as completed processing or enroll real learners before fulfillment
 and the privacy/legal gates pass. The six-year-after-completion policy is recorded;
-completion deadlines, evidence minimization/expiry and legal holds belong to the next processor.
+export completion now records its deadline; six-year evidence expiry and legal holds
+remain gated.
 
 Setup installs a pnpm Corepack shim in `.local/tools/bin`, ahead of global package
 managers in repository commands. Nested Turborepo tasks therefore retain the pinned
 package manager. If a global pnpm upgrade breaks nested commands, rerun `make setup`;
 do not weaken version enforcement or change the approved packageManager pin.
+
+
+## Synthetic owned exports
+
+After intake, select Download export on `/privacy`. Verify OTP again if sign-in is
+older than ten minutes. The JSON contains own account/released learning records and an
+explicit exclusions manifest. Diagnostic results stay sealed until completion.
+A lost response offers Retry download; reload also exposes the same encrypted snapshot.
+The copy expires 24 hours after generation, including when workers are stopped.
+An expired request cannot regenerate: submit a new explicit EXPORT request. COMPLETED
+means made available, not proof that the user saved it. DELETE remains pending.
+
+`make dev` and the Compose worker each embed one Celery Beat scheduler for a five-minute
+cleanup task. Run only one scheduler for a local stack; do not run native and Compose
+workers together. `make expire-exports` runs the same bounded sweep manually, removing
+up to 100 expired copies. Repeat for a backlog. The sweep is idempotent and emits safe
+correlation/aggregate metadata. A failed periodic invocation is retried at the next tick;
+monitor worker failures and use the manual command to confirm recovery. Never remove
+request/account/audit history to clear an export error. Artifact expiry is separate
+from six-year accountability evidence retention and the approved 35-day backup policy.
+
+EXPORT_LIMIT_REACHED leaves the request pending rather than returning a partial file.
+Large-history fulfillment, exceptional disclosures, deletion/anonymization, legal holds
+and evidence-expiry processors need further implementation and production acceptance.
+No real learner data or provider calls are needed for this synthetic workflow.

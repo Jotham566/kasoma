@@ -40,3 +40,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-027: Minimized data-request intake](027-data-request-intake.md)
   records rights access, verification, independent review and the fulfillment boundary.
+
+- [ADR-028: Owned bounded data exports](028-owned-data-exports.md)
+  records explicit disclosure, encrypted retries, completion and copy expiry.

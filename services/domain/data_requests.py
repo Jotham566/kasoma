@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from services.database import Base
@@ -11,11 +11,13 @@ from services.database import Base
 
 class DataRequest(Base):
     __tablename__ = "data_subject_requests"
-    __table_args__ = (UniqueConstraint("user_id", "kind"),)
     id: Mapped[UUID] = mapped_column(primary_key=True)
     user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), index=True)
     kind: Mapped[str]
     authenticated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    retention_due_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    export_digest: Mapped[str | None]
     verification_method: Mapped[str]
     retention_policy: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
@@ -36,3 +38,14 @@ class DataRequestReceipt(Base):
     key: Mapped[UUID] = mapped_column(primary_key=True)
     request_hash: Mapped[str]
     request_id: Mapped[UUID] = mapped_column(ForeignKey("data_subject_requests.id"))
+
+
+class DataExport(Base):
+    __tablename__ = "data_exports"
+    request_id: Mapped[UUID] = mapped_column(
+        ForeignKey("data_subject_requests.id"), primary_key=True
+    )
+    encrypted_payload: Mapped[str]
+    digest: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

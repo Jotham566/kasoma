@@ -1,9 +1,10 @@
 """FR-ID-006 request intake, acknowledgement and independent admin review.
 
-Learning consent is intentionally not required to exercise privacy rights. No export,
-account deletion, claim of fulfillment or external communication occurs in this slice.
+Learning consent is not required to exercise privacy rights. Export fulfillment is
+owned by data_exports; deletion processing and external communication remain gated.
 """
 
+from datetime import timedelta
 from uuid import UUID, uuid4
 
 from sqlalchemy import select
@@ -27,7 +28,12 @@ class DataRequestService:
                 id=row.id,
                 kind=row.kind,
                 created_at=row.created_at,
-                status="IN_REVIEW" if review else "QUEUED",
+                status="COMPLETED" if row.completed_at else ("IN_REVIEW" if review else "QUEUED"),
+                completed_at=row.completed_at,
+                retention_due_at=row.retention_due_at,
+                download_expires_at=row.completed_at + timedelta(hours=24)
+                if row.completed_at
+                else None,
                 reviewed_at=review.created_at if review else None,
                 retention_policy=row.retention_policy,
             )
@@ -78,7 +84,9 @@ class DataRequestService:
                 raise IdentityError("RATE_LIMITED", 429)
             row = db.scalar(
                 select(DataRequest).where(
-                    DataRequest.user_id == actor, DataRequest.kind == body.kind
+                    DataRequest.user_id == actor,
+                    DataRequest.kind == body.kind,
+                    DataRequest.completed_at.is_(None),
                 )
             )
             if row is None:
@@ -144,6 +152,8 @@ class DataRequestService:
             row = db.scalar(select(DataRequest).where(DataRequest.id == target).with_for_update())
             if row is None:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
+            if row.completed_at:
+                raise IdentityError("REQUEST_COMPLETED", 409)
             if row.user_id == actor:
                 raise IdentityError("SELF_REVIEW_FORBIDDEN", 403)
             review = db.get(DataRequestReview, target)

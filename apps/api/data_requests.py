@@ -3,11 +3,12 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Header, Query, Request
+from fastapi import APIRouter, Header, Query, Request, Response
 
 from apps.api.identity import bearer, service
 from services.content_contracts import ErrorEnvelope
 from services.data_request_contracts import (
+    DataExportBundle,
     DataRequestClaim,
     DataRequestInput,
     DataRequestPage,
@@ -17,7 +18,7 @@ from services.data_requests import DataRequestService
 
 router = APIRouter(
     prefix="/api/v1",
-    responses={s: {"model": ErrorEnvelope} for s in [401, 403, 404, 409, 422, 429]},
+    responses={s: {"model": ErrorEnvelope} for s in [401, 403, 404, 409, 410, 422, 429]},
 )
 
 
@@ -65,3 +66,20 @@ def claim(
     return DataRequestService(service(request)).claim(
         bearer(request), target, idempotency_key, UUID(request.state.request_id)
     )
+
+
+@router.post("/me/data-requests/{target}/export", response_model=DataExportBundle)
+def export(
+    target: UUID,
+    body: DataRequestClaim,
+    request: Request,
+    response: Response,
+    idempotency_key: Annotated[UUID, Header(alias="Idempotency-Key")],
+) -> DataExportBundle:
+    from services.data_exports import download
+
+    result = download(
+        service(request), bearer(request), target, idempotency_key, UUID(request.state.request_id)
+    )
+    response.headers["Content-Disposition"] = f'attachment; filename="kasoma-export-{target}.json"'
+    return result

@@ -555,6 +555,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/data-requests/{target}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Export */
+        post: operations["export_api_v1_me_data_requests__target__export_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/progress": {
         parameters: {
             query?: never;
@@ -861,6 +878,33 @@ export interface components {
              */
             token_type: "Bearer";
         };
+        /** DataExportBundle */
+        DataExportBundle: {
+            /** Exclusions */
+            exclusions: string[];
+            /**
+             * Format Version
+             * @default kasoma-personal-export-v1
+             * @constant
+             */
+            format_version: "kasoma-personal-export-v1";
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Records */
+            records: {
+                [key: string]: {
+                    [key: string]: unknown;
+                }[];
+            };
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+        };
         /** DataRequestClaim */
         DataRequestClaim: Record<string, never>;
         /** DataRequestInput */
@@ -885,11 +929,15 @@ export interface components {
         };
         /** DataRequestView */
         DataRequestView: {
+            /** Completed At */
+            completed_at?: string | null;
             /**
              * Created At
              * Format: date-time
              */
             created_at: string;
+            /** Download Expires At */
+            download_expires_at?: string | null;
             /**
              * Id
              * Format: uuid
@@ -900,6 +948,8 @@ export interface components {
              * @enum {string}
              */
             kind: "EXPORT" | "DELETE";
+            /** Retention Due At */
+            retention_due_at?: string | null;
             /**
              * Retention Policy
              * @default SIX_YEARS_AFTER_COMPLETION
@@ -912,7 +962,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "QUEUED" | "IN_REVIEW";
+            status: "QUEUED" | "IN_REVIEW" | "COMPLETED";
         };
         /** DiagnosticAnswerReference */
         DiagnosticAnswerReference: {
@@ -2548,6 +2598,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -2623,6 +2682,15 @@ export interface operations {
             };
             /** @description Conflict */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4571,6 +4639,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -4651,6 +4728,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -4720,6 +4806,106 @@ export interface operations {
             };
             /** @description Conflict */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    export_api_v1_me_data_requests__target__export_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DataRequestClaim"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataExportBundle"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
                 headers: {
                     [name: string]: unknown;
                 };

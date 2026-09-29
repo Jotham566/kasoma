@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 import AxeBuilder from "@axe-core/playwright";
 
 async function login(page: Page, email: string) {
@@ -123,6 +124,56 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     await expect(
       learner.getByText("Queued for review", { exact: true }),
     ).toBeVisible();
+    let lostExport = false;
+    await learner.route(
+      "**/api/v1/me/data-requests/*/export",
+      async (route) => {
+        if (!lostExport) {
+          lostExport = true;
+          const response = await route.fetch();
+          expect(response.status()).toBe(200);
+          expect(response.headers()["cache-control"]).toBe("no-store");
+          expect(response.headers()["content-disposition"]).toContain(
+            "attachment;",
+          );
+          await route.abort();
+        } else await route.continue();
+      },
+    );
+    await learner
+      .getByRole("button", { name: "Download export", exact: true })
+      .click();
+    await expect(learner.getByRole("status")).toContainText(
+      "Could not confirm the operation",
+    );
+    const downloaded = learner.waitForEvent("download");
+    await learner
+      .getByRole("button", { name: "Retry download", exact: true })
+      .click();
+    const file = await downloaded;
+    expect(file.suggestedFilename()).toMatch(/^kasoma-export-.*\.json$/);
+    const payload = JSON.parse(await readFile((await file.path())!, "utf8"));
+    expect(payload.format_version).toBe("kasoma-personal-export-v1");
+    expect(payload.records.identifiers[0].value).toBe(
+      "privacy-learner@example.invalid",
+    );
+    expect(payload.exclusions.length).toBeGreaterThan(0);
+    await expect(learner.getByRole("status")).toHaveText(
+      "Export made available. The same copy is available for 24 hours.",
+    );
+    await expect(
+      learner.getByText("Export made available", { exact: true }),
+    ).toBeVisible();
+    expect(
+      (await new AxeBuilder({ page: learner }).analyze()).violations,
+    ).toEqual([]);
+    await admin.reload();
+    await expect(
+      entry.getByText("Export made available", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      admin.getByRole("button", { name: "Download export" }),
+    ).toHaveCount(0);
   } finally {
     await Promise.allSettled([learnerContext.close(), adminContext.close()]);
   }

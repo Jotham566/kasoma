@@ -359,6 +359,53 @@
         "title": "Credentials",
         "type": "object"
       },
+      "DataExportBundle": {
+        "additionalProperties": false,
+        "properties": {
+          "exclusions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Exclusions",
+            "type": "array"
+          },
+          "format_version": {
+            "const": "kasoma-personal-export-v1",
+            "default": "kasoma-personal-export-v1",
+            "title": "Format Version",
+            "type": "string"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "records": {
+            "additionalProperties": {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "title": "Records",
+            "type": "object"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "generated_at",
+          "exclusions",
+          "records"
+        ],
+        "title": "DataExportBundle",
+        "type": "object"
+      },
       "DataRequestClaim": {
         "additionalProperties": false,
         "properties": {},
@@ -422,10 +469,34 @@
       "DataRequestView": {
         "additionalProperties": false,
         "properties": {
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
           "created_at": {
             "format": "date-time",
             "title": "Created At",
             "type": "string"
+          },
+          "download_expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Download Expires At"
           },
           "id": {
             "format": "uuid",
@@ -439,6 +510,18 @@
             ],
             "title": "Kind",
             "type": "string"
+          },
+          "retention_due_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retention Due At"
           },
           "retention_policy": {
             "const": "SIX_YEARS_AFTER_COMPLETION",
@@ -461,7 +544,8 @@
           "status": {
             "enum": [
               "QUEUED",
-              "IN_REVIEW"
+              "IN_REVIEW",
+              "COMPLETED"
             ],
             "title": "Status",
             "type": "string"
@@ -3777,6 +3861,16 @@
             },
             "description": "Conflict"
           },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3886,6 +3980,16 @@
               }
             },
             "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
           },
           "422": {
             "content": {
@@ -6277,6 +6381,16 @@
             },
             "description": "Conflict"
           },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6375,6 +6489,16 @@
             },
             "description": "Conflict"
           },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6465,6 +6589,16 @@
             },
             "description": "Conflict"
           },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6487,6 +6621,126 @@
           }
         },
         "summary": "Get"
+      }
+    },
+    "/api/v1/me/data-requests/{target}/export": {
+      "post": {
+        "operationId": "export_api_v1_me_data_requests__target__export_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataRequestClaim"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataExportBundle"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Export"
       }
     },
     "/api/v1/me/progress": {

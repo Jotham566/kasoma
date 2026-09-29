@@ -1,5 +1,18 @@
 # Changelog
 
+## 29 September 2026 — owned data exports (local implementation)
+
+- Data-request intake committed and pushed to main as `68146b9`; completed branch removed.
+- Add recent-OTP owner-only JSON exports with explicit field projections, diagnostic
+  sealing, encrypted frozen retries, atomic completion and six-year retention deadlines.
+- Add migration 0015, 24-hour download expiry, a bounded five-minute worker sweep and
+  `make expire-exports`; expired copies are removed without deleting request evidence.
+- Add learner download/retry UI, generated contracts and API/SQL/browser regressions.
+- Record [ADR-028](docs/decisions/ADR/028-owned-data-exports.md) and update sprint,
+  traceability, API/data/runbook and [verification](docs/implementation/E8_DATA_EXPORTS_VERIFICATION.md).
+- Deletion/anonymization, large-history exports and accountability-retention/legal-hold
+  processing remain pending; this does not establish production privacy acceptance.
+
 ## 29 September 2026 — data-request intake (local implementation)
 
 - Multiple-choice support committed and pushed to main as `02f96bc`; completed branch removed.

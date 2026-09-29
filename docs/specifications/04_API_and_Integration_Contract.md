@@ -328,7 +328,8 @@ reassessment and flag controls apply. See [ADR-026](../decisions/ADR/026-multipl
 
 `POST /me/data-requests` accepts only `{kind: EXPORT|DELETE, affirmative: true}` and
 requires Idempotency-Key plus OTP authentication within ten minutes. Return 201 with
-id, kind, status QUEUED/IN_REVIEW, created_at, nullable reviewed_at and retention_policy
+id, kind, status QUEUED/IN_REVIEW/COMPLETED, created_at, nullable reviewed_at,
+completed_at, retention_due_at, download_expires_at and retention_policy
 SIX_YEARS_AFTER_COMPLETION. A new key for the same pending kind returns the existing
 request; a reused key for another kind/action returns 409. No learning consent, completed
 profile, age or subject selection is required to request or track privacy rights.
@@ -341,10 +342,34 @@ access, auditing the queue read. It exposes no requester identity or internal no
 `POST /admin/data-requests/{target}/claim` accepts an empty object and idempotency key,
 requires recent ADMIN authentication, and starts review (200). Own-request claims are
 403; another administrator's claimed request returns 409. Claims never imply fulfillment.
-No update/completion or deletion endpoint exists in this slice.
+There is no arbitrary status update or deletion-fulfillment endpoint. New claims on
+completed requests return 409; exact claim retries recover current status.
 
 New intake keys are limited to ten/account/hour; reads and claims to sixty/account/minute.
 Exact-key retries recover current status, after rechecking authentication/authorization.
 Safe identity events and audit records commit atomically with request/review/receipt rows.
-Machine-readable export delivery, anonymization and retention-aware fulfillment remain
-pending. See [ADR-027](../decisions/ADR/027-data-request-intake.md).
+See [ADR-027](../decisions/ADR/027-data-request-intake.md) and its export extension below.
+
+## Owned data exports (ADR-028)
+
+`POST /me/data-requests/{target}/export` accepts `{}` and Idempotency-Key. The active
+owner must have verified OTP within ten minutes; learning consent is not required.
+Return 200 `DataExportBundle` with format_version, request_id, generated_at, exclusions
+and allowlisted records. The response uses no-store, nosniff and an attachment filename
+bound to the request UUID. Other owners/admins receive 404; DELETE kinds return 409.
+No public download URL or staff impersonation route is provided.
+
+Completion, digest, six-calendar-year deadline, encrypted retry copy, audit/outbox and
+receipt commit atomically. COMPLETED means made available, not confirmation of saving.
+Same-request downloads return the same snapshot for 24 hours; after expiry return 410
+EXPORT_EXPIRED, never regenerate. A new explicit request may capture newer records.
+Export calls are limited to ten/account/minute, including retries. A reused key for
+another operation returns 409. Exceeding 10,000 related queried rows (besides the account profile) or 2 MiB
+canonical JSON returns 409 EXPORT_LIMIT_REACHED with the request still pending.
+
+Answers, released grades and visible mastery are projected explicitly. Credentials,
+guardian evidence, internal staff/security records, keys/solutions, future assignments
+and unfinished/abandoned diagnostic grades or derived mastery remain excluded. The
+manifest explains the boundary. See [ADR-028](../decisions/ADR/028-owned-data-exports.md).
+Deletion/anonymization, exceptional/large-history disclosure and six-year evidence
+expiry with legal holds remain pending.

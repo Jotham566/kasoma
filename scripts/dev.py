@@ -29,6 +29,8 @@ commands = [
         "--loglevel=INFO",
         "--pool=solo",
         "--concurrency=1",
+        "--beat",
+        "--schedule=.local/celerybeat",
     ],
     ["corepack", "pnpm", "--filter", "@kasoma/web", "dev"],
 ]

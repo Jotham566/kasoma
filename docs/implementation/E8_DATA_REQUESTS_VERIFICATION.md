@@ -4,8 +4,10 @@ Date: 29 September 2026. Synthetic local development only.
 
 Multiple-choice support is committed and pushed to main as `02f96bc`; its completed
 branch was removed. [Hosted main CI](https://github.com/Jotham566/kasoma/actions/runs/36487637477).
-Hosted CI for that pushed commit was still running at the final check; it is not counted as passed.
-Data-request intake is local on `codex/data-requests`, uncommitted for review.
+Hosted CI for that multiple-choice commit passed. Data-request intake is now committed
+and pushed as `68146b9`; its completed branch was removed.
+[Hosted intake CI passed](https://github.com/Jotham566/kasoma/actions/runs/36523648234).
+Subsequent export work is recorded in [export verification](E8_DATA_EXPORTS_VERIFICATION.md).
 
 ## Requirements and boundary
 

@@ -1,27 +1,28 @@
-# Current Sprint: E8 data-request intake
+# Current Sprint: E8 owned data exports
 
-Multiple-choice support is committed and pushed to main as `02f96bc`; its completed
-branch was removed. [Hosted main CI](https://github.com/Jotham566/kasoma/actions/runs/36487637477).
-This next slice is local on `codex/data-requests`, uncommitted for review.
+Data-request intake is committed and pushed to main as `68146b9`; its completed
+branch was removed. [Hosted main CI passed](https://github.com/Jotham566/kasoma/actions/runs/36523648234).
+This next slice is local on `codex/data-exports`, uncommitted for review.
 
 ## Current slice
 
-FR-ID-006 (intake/review portion), supporting FR-OPS-001/003, NFR-SEC-002,
-NFR-ACC-001 and NFR-MNT-001. Requests require recent OTP, not learning consent.
-Owned pending status, safe retry and independent ADMIN review are auditable and atomic.
-Migration 0014 is additive. Export/deletion fulfillment is not implemented or represented
-as complete. Decision: [ADR-027](../decisions/ADR/027-data-request-intake.md).
-All 305 Python tests and 17 browser tests pass. Setup, migration, generated contracts,
-lint/types, security and container checks pass. Hosted main CI is still running at the final check.
-Check status: [data-request verification](E8_DATA_REQUESTS_VERIFICATION.md).
+FR-ID-006 export/completion portion, supporting FR-OPS-001/003, NFR-SEC-001/002,
+NFR-OBS-001, NFR-ACC-001 and NFR-MNT-001. Recently authenticated owners may download
+explicitly projected JSON without learning consent. Encrypted snapshots support frozen
+retries for 24 hours; completion evidence records a six-calendar-year retention deadline.
+Migration 0015 guards both lifecycles. A bounded worker sweeps expired copies every five
+minutes; downloads reject expiry even without cleanup. No public URLs or staff retrieval.
+Decision: [ADR-028](../decisions/ADR/028-owned-data-exports.md).
+All 315 Python tests and 17 browser tests pass. Setup, migrations, generated contracts,
+lint/types, security scans and final container smoke pass.
+Check status: [export verification](E8_DATA_EXPORTS_VERIFICATION.md).
 
 ## Next vertical slice
 
-Continue FR-ID-006 with an owned machine-readable export and safe retrieval/completion
-workflow, excluding authentication secrets, third-party evidence and assessment keys.
-Then implement deletion/anonymization with early session/channel revocation, specific
-legal holds and observable retention jobs through a narrow reviewed processor.
-Resolve the export content/retention boundary before implementing fulfillment.
+Implement the narrow deletion/anonymization workflow for FR-ID-006: early session/channel
+revocation, preserved minimized accountability evidence, scoped legal holds and resumable
+processing. Reconcile immutable learning/content history in an ADR before changing those
+constraints. Large-history export and six-year evidence expiry remain explicit gaps.
 
 ## Remaining dependencies and release gates
 

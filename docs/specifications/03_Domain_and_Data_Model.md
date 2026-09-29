@@ -230,16 +230,33 @@ See [ADR-026](../decisions/ADR/026-multiple-choice.md).
 
 Identity owns data_subject_requests: server-derived account, EXPORT/DELETE kind,
 recent OTP authentication time, verification method, creation time and explicit
-SIX_YEARS_AFTER_COMPLETION retention policy. With no completion states yet, one
-pending request per account/kind is enforced. data_request_reviews links a single
+SIX_YEARS_AFTER_COMPLETION retention policy. One pending request per account/kind
+is enforced. data_request_reviews links a single
 independent administrator claim; status derives from the presence of this row.
 Actor/key-scoped data_request_receipts protect retry identity across create/claim.
-These rows are append-only; no free text, credentials or contact details are copied.
+Original intake, review and receipt fields are append-only; no free text, credentials or contact details are copied.
 SQL guards check verification age, policy, independent ADMIN claims and timestamps.
 Audit and safe identity-outbox records commit atomically.
 
-This is request evidence, not completed export/deletion. A later reviewed migration
-must implement fulfillment/completion, subsequent requests and six-year retention
-expiry with narrowly scoped legal holds, reconciling immutable historical evidence.
+Migration 0015 extends export completion as below. Deletion/anonymization and six-year
+retention expiry with narrowly scoped legal holds remain pending, including reconciliation
+of immutable historical evidence.
 No indefinite retention, broad delete bypass or general identity impersonation is
 approved. See [ADR-027](../decisions/ADR/027-data-request-intake.md).
+
+
+## Owned export persistence (migration 0015)
+
+Nullable completed_at, retention_due_at and export_digest are the only permitted
+request mutations, exactly once for EXPORT, with matching artifact metadata. All other
+request fields remain immutable. A partial unique index limits pending requests per
+account/kind while allowing a new request after completion. Review/receipt evidence
+remains immutable and contains no export body.
+
+`data_exports` holds request_id, encrypted_payload, SHA-256 digest, created_at and
+expires_at exactly 24 hours later. Deferred constraints require atomic completion;
+completion requires the exact six-calendar-year retention deadline. Artifact updates
+and deletion before expiry are prohibited. The bounded sweeper deletes expired copies
+only, retaining request/audit/outbox evidence. Download authorization checks expiry even
+before a sweep runs. Database backups retain their separate approved 35-day policy.
+See [ADR-028](../decisions/ADR/028-owned-data-exports.md).
