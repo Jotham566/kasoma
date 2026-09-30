@@ -1,28 +1,28 @@
-# Current Sprint: E8 owned data exports
+# Current Sprint: E8 deletion-impact preview
 
-Data-request intake is committed and pushed to main as `68146b9`; its completed
-branch was removed. [Hosted main CI passed](https://github.com/Jotham566/kasoma/actions/runs/36523648234).
-This next slice is local on `codex/data-exports`, uncommitted for review.
+Owned exports are committed and pushed to main as `d20c344`; completed branch removed.
+[Hosted export CI passed](https://github.com/Jotham566/kasoma/actions/runs/36529147185).
+This next slice is local on `codex/deletion-readiness`, uncommitted for review.
 
 ## Current slice
 
-FR-ID-006 export/completion portion, supporting FR-OPS-001/003, NFR-SEC-001/002,
-NFR-OBS-001, NFR-ACC-001 and NFR-MNT-001. Recently authenticated owners may download
-explicitly projected JSON without learning consent. Encrypted snapshots support frozen
-retries for 24 hours; completion evidence records a six-calendar-year retention deadline.
-Migration 0015 guards both lifecycles. A bounded worker sweeps expired copies every five
-minutes; downloads reject expiry even without cleanup. No public URLs or staff retrieval.
-Decision: [ADR-028](../decisions/ADR/028-owned-data-exports.md).
-All 315 Python tests and 17 browser tests pass. Setup, migrations, generated contracts,
-lint/types, security scans and final container smoke pass.
-Check status: [export verification](E8_DATA_EXPORTS_VERIFICATION.md).
+FR-ID-006/BR-010 (deletion review prerequisite), supporting FR-OPS-003, NFR-SEC-002,
+NFR-ACC-001 and NFR-MNT-001. An independent ADMIN claimant can inspect bounded counts
+and retention/review categories for a pending DELETE request. Recent authentication,
+claim ownership, read audits and rate limits are enforced. No personal payload is read
+or decrypted. Execution is structurally disabled and unresolved safeguards are explicit.
+Decision: [ADR-029](../decisions/ADR/029-deletion-impact-preview.md).
+All 321 Python tests and 17 browser tests pass, plus setup, migration/seed, generated
+contracts, lint/types, security scans and final container smoke.
+Check status: [deletion-preview verification](E8_DELETION_PREVIEW_VERIFICATION.md).
 
 ## Next vertical slice
 
-Implement the narrow deletion/anonymization workflow for FR-ID-006: early session/channel
-revocation, preserved minimized accountability evidence, scoped legal holds and resumable
-processing. Reconcile immutable learning/content history in an ADR before changing those
-constraints. Large-history export and six-year evidence expiry remain explicit gaps.
+Implement specific-record, time-bounded legal-hold lifecycle and deletion execution state.
+Then review the exact erasure/anonymization migration and recovery plan, reconciling
+immutable learning, content and accountability evidence before destructive execution.
+The preview is not approval to erase, a clearance of legal holds or proof of anonymity.
+Large-history export and six-year evidence expiry remain explicit gaps.
 
 ## Remaining dependencies and release gates
 

@@ -180,6 +180,7 @@ def test_released_answers_grades_mastery_without_content_keys_after_withdrawal(a
     exported = export(client, headers, target)
     assert exported.status_code == 200, exported.text
     records = exported.json()["records"]
+    assert records["profile"][0]["display_name"] == "Synthetic learner"
     assert len(records["answers"]) == len(records["grades"]) == 1
     assert records["grades"][0]["score"] == result.json()["score"]
     assert records["mastery_evidence"] and records["mastery_history"]

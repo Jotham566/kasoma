@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 
+import { DeletionImpact } from "./deletion-impact";
+
 type Schema = components["schemas"];
 const api = () => apiClient("", crypto.randomUUID());
 const button =
@@ -13,6 +15,9 @@ function check<T>(result: { data?: T; error?: Schema["ErrorEnvelope"] }): T {
   return result.data;
 }
 export function Requests({ staff = false }: { staff?: boolean }) {
+  const [preview, setPreview] = useState<Schema["DeletionPreview"] | null>(
+    null,
+  );
   const [rows, setRows] = useState<Schema["DataRequestView"][]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [kind, setKind] =
@@ -44,6 +49,7 @@ export function Requests({ staff = false }: { staff?: boolean }) {
   }
   async function run(action: () => Promise<void>) {
     setBusy(true);
+    setPreview(null);
     setStatus("Saving or loading…");
     try {
       await action();
@@ -72,15 +78,17 @@ export function Requests({ staff = false }: { staff?: boolean }) {
             ? "Administrator access is required."
             : code === "SELF_REVIEW_FORBIDDEN"
               ? "Another administrator must review your request."
-              : code === "ALREADY_CLAIMED"
-                ? "Another administrator is reviewing this request. Reload the list."
-                : code === "EXPORT_EXPIRED"
-                  ? "This copy has expired. Submit a new export request."
-                  : code === "EXPORT_LIMIT_REACHED"
-                    ? "This account exceeds the self-service export limit. Your request remains pending for review."
-                    : code === "RATE_LIMITED"
-                      ? "Too many requests. Wait before trying again; saved requests are retained."
-                      : "Could not confirm the operation. Retry the same request or reload the list.",
+              : code === "REVIEW_OWNERSHIP_REQUIRED"
+                ? "Only the administrator who claimed this request can preview it."
+                : code === "ALREADY_CLAIMED"
+                  ? "Another administrator is reviewing this request. Reload the list."
+                  : code === "EXPORT_EXPIRED"
+                    ? "This copy has expired. Submit a new export request."
+                    : code === "EXPORT_LIMIT_REACHED"
+                      ? "This account exceeds the self-service export limit. Your request remains pending for review."
+                      : code === "RATE_LIMITED"
+                        ? "Too many requests. Wait before trying again; saved requests are retained."
+                        : "Could not confirm the operation. Retry the same request or reload the list.",
       );
     } finally {
       if (mounted.current) setBusy(false);
@@ -244,6 +252,7 @@ export function Requests({ staff = false }: { staff?: boolean }) {
       <p role="status" aria-live="polite">
         {status}
       </p>
+      {staff && preview && <DeletionImpact preview={preview} />}
       <button
         className={button}
         disabled={busy}
@@ -316,6 +325,28 @@ export function Requests({ staff = false }: { staff?: boolean }) {
                 onClick={() => void download(row.id)}
               >
                 Download export
+              </button>
+            )}
+            {staff && row.kind === "DELETE" && row.status === "IN_REVIEW" && (
+              <button
+                className={button}
+                disabled={busy || !!pending}
+                onClick={() =>
+                  void run(async () => {
+                    const result = check(
+                      await api().GET(
+                        "/api/v1/admin/data-requests/{target}/deletion-preview",
+                        { params: { path: { target: row.id } } },
+                      ),
+                    );
+                    setPreview(result);
+                    setStatus(
+                      "Deletion impact loaded. No account data was changed.",
+                    );
+                  })
+                }
+              >
+                Preview deletion impact
               </button>
             )}
             {staff && row.status === "QUEUED" && (

@@ -196,3 +196,5 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
   records rights access, verification, independent review and the fulfillment boundary.
 
 - [ADR-028: Owned bounded data exports](../decisions/ADR/028-owned-data-exports.md)
+
+- [ADR-029: Minimized deletion-impact preview](../decisions/ADR/029-deletion-impact-preview.md)

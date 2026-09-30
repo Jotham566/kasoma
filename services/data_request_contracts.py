@@ -4,6 +4,8 @@ from datetime import datetime
 from typing import Any, Literal
 from uuid import UUID
 
+from pydantic import Field
+
 from services.identity_contracts import Contract
 
 RequestKind = Literal["EXPORT", "DELETE"]
@@ -41,3 +43,38 @@ class DataExportBundle(Contract):
     generated_at: datetime
     exclusions: list[str]
     records: dict[str, list[dict[str, Any]]]
+
+
+RetentionCategory = Literal[
+    "REMOVE_DIRECT_LINKAGE",
+    "ANONYMIZATION_REVIEW",
+    "SIX_YEARS_AFTER_CLOSURE_OR_WITHDRAWAL",
+    "SIX_YEARS_AFTER_COMPLETION",
+    "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION",
+    "EXPIRES_AFTER_24_HOURS",
+    "STAFF_PROVENANCE_REVIEW",
+    "TRANSIENT_EXPIRY",
+]
+
+
+class DeletionSource(Contract):
+    source: str
+    count: int = Field(ge=0, le=10_000)
+    at_least: bool
+    retention: RetentionCategory
+
+
+class DeletionPreview(Contract):
+    request_id: UUID
+    observed_at: datetime
+    execution_enabled: Literal[False] = False
+    sources: list[DeletionSource]
+    blockers: list[
+        Literal[
+            "LEGAL_HOLD_CHECK_UNAVAILABLE",
+            "ERASURE_PROCESSOR_UNAVAILABLE",
+            "ANONYMIZATION_REVIEW_REQUIRED",
+            "STAFF_RECORDS_REQUIRE_REVIEW",
+        ]
+    ]
+    limitations: list[str]

@@ -388,3 +388,25 @@ EXPORT_LIMIT_REACHED leaves the request pending rather than returning a partial 
 Large-history fulfillment, exceptional disclosures, deletion/anonymization, legal holds
 and evidence-expiry processors need further implementation and production acceptance.
 No real learner data or provider calls are needed for this synthetic workflow.
+
+
+## Synthetic deletion-impact review
+
+Create a DELETE request from a synthetic learner account at `/privacy`. With a different
+recently authenticated ADMIN, open `/admin/data-requests` and claim it. Select Preview
+deletion impact; only that claimant can obtain the report. Expand Record counts and
+retention with a pointer or keyboard. The report lists known linked sources, capped
+counts and retention/review categories without learner identifiers, answers or comments.
+A plus mark means a lower bound. Related staff categories overlap; do not sum the table
+as a unique record total. Reload clears the observation; retry a failed preview explicitly.
+
+The report always states that deletion is disabled. Missing legal-hold checks are not
+reported as no holds. Preview does not revoke access, mutate consent, anonymize evidence
+or complete a request. It emits a metadata audit event and uses ten previews/admin/minute;
+failed queries/audits produce a generic error without returning a partial report.
+
+Next work must implement record-specific legal holds and deletion state, review the
+precise erasure/anonymization migration with a recovery plan and run synthetic execution
+checks. Do not remove immutable triggers or manually delete rows to work around blockers.
+A production anonymization/re-identification review and the existing privacy/legal gates
+remain required before real learner use. No external provider calls are required.

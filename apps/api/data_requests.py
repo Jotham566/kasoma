@@ -13,6 +13,7 @@ from services.data_request_contracts import (
     DataRequestInput,
     DataRequestPage,
     DataRequestView,
+    DeletionPreview,
 )
 from services.data_requests import DataRequestService
 
@@ -83,3 +84,10 @@ def export(
     )
     response.headers["Content-Disposition"] = f'attachment; filename="kasoma-export-{target}.json"'
     return result
+
+
+@router.get("/admin/data-requests/{target}/deletion-preview", response_model=DeletionPreview)
+def deletion_preview(target: UUID, request: Request) -> DeletionPreview:
+    from services.deletion_preview import preview
+
+    return preview(service(request), bearer(request), target, UUID(request.state.request_id))

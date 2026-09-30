@@ -64,7 +64,10 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
     user = db.get(User, actor)
     if user is None:
         raise IdentityError("RESOURCE_NOT_FOUND", 404)
-    records["profile"] = [fields(user, "id status display_name birth_date created_at")]
+    records["profile"] = [
+        fields(user, "id status birth_date created_at")
+        | {"display_name": identity.decrypt(user.display_name) if user.display_name else None}
+    ]
     records["identifiers"] = [
         fields(r, "type verified_at") | {"value": identity.decrypt(r.normalized_value_encrypted)}
         for r in rows(select(Identifier).where(Identifier.user_id == actor).order_by(Identifier.id))

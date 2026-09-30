@@ -3,8 +3,10 @@
 Date: 29 September 2026. Synthetic local development only.
 
 Intake `68146b9` is pushed to main; completed branch removed and
-[hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36523648234). Exports are local on
-`codex/data-exports`, uncommitted for review.
+[hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36523648234). Exports are committed as
+`d20c344` on main; the completed `codex/data-exports` branch was removed.
+[Hosted export CI passed](https://github.com/Jotham566/kasoma/actions/runs/36529147185).
+Subsequent work: [deletion-impact preview](E8_DELETION_PREVIEW_VERIFICATION.md).
 
 Requirements: FR-ID-006 (export/completion portion), FR-OPS-001/003,
 NFR-SEC-001/002, NFR-OBS-001, NFR-ACC-001, NFR-MNT-001.

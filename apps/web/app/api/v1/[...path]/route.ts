@@ -66,7 +66,9 @@ async function gateway(
   const flagReport = new RegExp(`^attempts/${uuid}/flag$`).test(path);
   const flagTriage = new RegExp(`^admin/content-flags/${uuid}$`).test(path);
   const dataExport = new RegExp(`^me/data-requests/${uuid}/export$`).test(path);
-  const methods = new RegExp(`^me/data-requests/${uuid}$`).test(path)
+  const methods = new RegExp(
+    `^(?:me/data-requests/${uuid}|admin/data-requests/${uuid}/deletion-preview)$`,
+  ).test(path)
     ? ["GET"]
     : dataExport || new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
       ? ["POST"]

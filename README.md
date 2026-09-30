@@ -13,8 +13,8 @@ The E5 diagnostic/mastery and recommended-practice slices are on main (`88dd880`
 Reviewed hints (`3c0c3ba`) and unseen reassessment (`73c1fba`) are on main.
 E6 progress/history is on main (`df855ab`), followed by flags/triage (`bd9dae3`).
 Exact-set multiple-choice support (`02f96bc`) and data-request intake (`68146b9`) are on main.
-Owned JSON exports and expiry are local for review; see
-[export verification](docs/implementation/E8_DATA_EXPORTS_VERIFICATION.md).
+Owned JSON exports and expiry are on main (`d20c344`). Administrator deletion-impact
+preview is local for review; see [verification](docs/implementation/E8_DELETION_PREVIEW_VERIFICATION.md).
 Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
 and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
 The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
@@ -144,3 +144,9 @@ learning consent. Intake requires recent sign-in. This local slice records pendi
 requests. Owners can download bounded JSON exports after recent sign-in; retry copies
 expire after 24 hours. Deletion processing remains pending. See
 [ADR-028](docs/decisions/ADR/028-owned-data-exports.md).
+
+
+For a pending DELETE request, its independent administrator claimant can preview
+linked record counts and retention requirements at `/admin/data-requests`. The preview
+is audited and cannot enable deletion or revoke access. Legal holds, erasure execution
+and anonymization review remain pending. See [ADR-029](docs/decisions/ADR/029-deletion-impact-preview.md).

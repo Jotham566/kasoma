@@ -260,3 +260,20 @@ and deletion before expiry are prohibited. The bounded sweeper deletes expired c
 only, retaining request/audit/outbox evidence. Download authorization checks expiry even
 before a sweep runs. Database backups retain their separate approved 35-day policy.
 See [ADR-028](../decisions/ADR/028-owned-data-exports.md).
+
+
+## Deletion-impact inventory (ADR-029; no schema migration)
+
+A claimed pending DELETE request may be inspected by its independent ADMIN reviewer.
+`services/deletion_preview.py` counts linked identity, authentication, consent, learning,
+request, export, flag and staff-provenance records using explicit predicates. Unbound
+OTP challenges are attributed by a verified identifier lookup hash; another learner's
+bound challenge is not attributed through that hash. Related staff sources may overlap
+owned sources and require separate review. No stored data is decrypted or projected.
+
+No erasure state, transformed identity, fabricated retention deadline or held-record
+status is introduced. Existing audit_log stores only a metadata access event targeted
+to the request. Shared rate buckets, logs, backups, arbitrary embedded references and
+unimplemented channels remain explicit inventory limitations. Future deletion requires
+record-specific legal holds, reviewed transforms/constraints and recovery evidence;
+the preview is never an execution authorization.

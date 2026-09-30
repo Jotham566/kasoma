@@ -174,6 +174,70 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     await expect(
       admin.getByRole("button", { name: "Download export" }),
     ).toHaveCount(0);
+    const deletion = admin.getByRole("listitem").filter({
+      has: admin.getByRole("heading", {
+        name: "Deletion request",
+        exact: true,
+      }),
+    });
+    await expect(
+      deletion.getByRole("button", { name: "Preview deletion impact" }),
+    ).toHaveCount(0);
+    await deletion.getByRole("button", { name: "Claim for review" }).click();
+    await expect(admin.getByRole("status")).toHaveText(
+      "Review recorded. Fulfillment remains pending.",
+    );
+    let lostPreview = false;
+    await admin.route(
+      "**/api/v1/admin/data-requests/*/deletion-preview",
+      async (route) => {
+        if (!lostPreview) {
+          lostPreview = true;
+          const response = await route.fetch();
+          expect(response.status()).toBe(200);
+          expect((await response.json()).execution_enabled).toBe(false);
+          await route.abort();
+        } else await route.continue();
+      },
+    );
+    await deletion
+      .getByRole("button", { name: "Preview deletion impact" })
+      .click();
+    await expect(admin.getByRole("status")).toContainText(
+      "Could not confirm the operation",
+    );
+    await expect(
+      admin.getByRole("heading", { name: "Deletion impact preview" }),
+    ).toHaveCount(0);
+    await deletion
+      .getByRole("button", { name: "Preview deletion impact" })
+      .click();
+    await expect(admin.getByRole("status")).toHaveText(
+      "Deletion impact loaded. No account data was changed.",
+    );
+    await expect(
+      admin.getByText("Record-specific legal holds have not been checked.", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await admin
+      .getByText("Record counts and retention", { exact: true })
+      .focus();
+    await admin.keyboard.press("Enter");
+    await expect(admin.getByRole("table")).toBeVisible();
+    expect(
+      (await new AxeBuilder({ page: admin }).analyze()).violations,
+    ).toEqual([]);
+    await admin.reload();
+    await expect(admin.getByRole("status")).toHaveText("Requests loaded.");
+    await expect(
+      admin.getByRole("heading", { name: "Deletion impact preview" }),
+    ).toHaveCount(0);
+    await learner.reload();
+    await expect(learner.getByText("In review", { exact: true })).toBeVisible();
+    await expect(
+      learner.getByRole("button", { name: "Preview deletion impact" }),
+    ).toHaveCount(0);
   } finally {
     await Promise.allSettled([learnerContext.close(), adminContext.close()]);
   }

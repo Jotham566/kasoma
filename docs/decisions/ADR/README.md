@@ -43,3 +43,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-028: Owned bounded data exports](028-owned-data-exports.md)
   records explicit disclosure, encrypted retries, completion and copy expiry.
+
+- [ADR-029: Minimized deletion-impact preview](029-deletion-impact-preview.md)
+  records non-destructive review, bounded counts, audit and explicit execution blockers.

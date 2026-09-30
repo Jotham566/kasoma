@@ -1,5 +1,20 @@
 # Changelog
 
+## 29 September 2026 — deletion-impact preview (local implementation)
+
+- Owned exports committed and pushed to main as `d20c344`; completed branch removed.
+- Add a recent-OTP, independent-claimant ADMIN preview of linked record counts and
+  retention/review categories for pending deletion requests, with audited access.
+- Bound per-source counts, account for unbound login challenges and related staff
+  provenance, and exclude another learner's bound guardian challenges from hash matching.
+- Show unresolved legal-hold, erasure and anonymization gates explicitly. Preview does
+  not decrypt personal records, revoke access, change data or authorize deletion.
+- Add API/generated contracts, administrator UI and regression tests; no migration.
+- Correct owner exports to decrypt the display name instead of returning its storage ciphertext;
+  add a profiled-learner regression. Deletion previews still never decrypt personal data.
+- Update [ADR-029](docs/decisions/ADR/029-deletion-impact-preview.md), sprint,
+  traceability, API/data/runbook and [verification](docs/implementation/E8_DELETION_PREVIEW_VERIFICATION.md).
+
 ## 29 September 2026 — owned data exports (local implementation)
 
 - Data-request intake committed and pushed to main as `68146b9`; completed branch removed.

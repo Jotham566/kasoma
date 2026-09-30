@@ -90,6 +90,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/data-requests/{target}/deletion-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Deletion Preview */
+        get: operations["deletion_preview_api_v1_admin_data_requests__target__deletion_preview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/item-versions/{version_id}": {
         parameters: {
             query?: never;
@@ -963,6 +980,45 @@ export interface components {
              * @enum {string}
              */
             status: "QUEUED" | "IN_REVIEW" | "COMPLETED";
+        };
+        /** DeletionPreview */
+        DeletionPreview: {
+            /** Blockers */
+            blockers: ("LEGAL_HOLD_CHECK_UNAVAILABLE" | "ERASURE_PROCESSOR_UNAVAILABLE" | "ANONYMIZATION_REVIEW_REQUIRED" | "STAFF_RECORDS_REQUIRE_REVIEW")[];
+            /**
+             * Execution Enabled
+             * @default false
+             * @constant
+             */
+            execution_enabled: false;
+            /** Limitations */
+            limitations: string[];
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /** Sources */
+            sources: components["schemas"]["DeletionSource"][];
+        };
+        /** DeletionSource */
+        DeletionSource: {
+            /** At Least */
+            at_least: boolean;
+            /** Count */
+            count: number;
+            /**
+             * Retention
+             * @enum {string}
+             */
+            retention: "REMOVE_DIRECT_LINKAGE" | "ANONYMIZATION_REVIEW" | "SIX_YEARS_AFTER_CLOSURE_OR_WITHDRAWAL" | "SIX_YEARS_AFTER_COMPLETION" | "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION" | "EXPIRES_AFTER_24_HOURS" | "STAFF_PROVENANCE_REVIEW" | "TRANSIENT_EXPIRY";
+            /** Source */
+            source: string;
         };
         /** DiagnosticAnswerReference */
         DiagnosticAnswerReference: {
@@ -2651,6 +2707,91 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataRequestView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    deletion_preview_api_v1_admin_data_requests__target__deletion_preview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeletionPreview"];
                 };
             };
             /** @description Unauthorized */

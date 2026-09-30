@@ -561,6 +561,104 @@
         "title": "DataRequestView",
         "type": "object"
       },
+      "DeletionPreview": {
+        "additionalProperties": false,
+        "properties": {
+          "blockers": {
+            "items": {
+              "enum": [
+                "LEGAL_HOLD_CHECK_UNAVAILABLE",
+                "ERASURE_PROCESSOR_UNAVAILABLE",
+                "ANONYMIZATION_REVIEW_REQUIRED",
+                "STAFF_RECORDS_REQUIRE_REVIEW"
+              ],
+              "type": "string"
+            },
+            "title": "Blockers",
+            "type": "array"
+          },
+          "execution_enabled": {
+            "const": false,
+            "default": false,
+            "title": "Execution Enabled",
+            "type": "boolean"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/DeletionSource"
+            },
+            "title": "Sources",
+            "type": "array"
+          }
+        },
+        "required": [
+          "request_id",
+          "observed_at",
+          "sources",
+          "blockers",
+          "limitations"
+        ],
+        "title": "DeletionPreview",
+        "type": "object"
+      },
+      "DeletionSource": {
+        "additionalProperties": false,
+        "properties": {
+          "at_least": {
+            "title": "At Least",
+            "type": "boolean"
+          },
+          "count": {
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "retention": {
+            "enum": [
+              "REMOVE_DIRECT_LINKAGE",
+              "ANONYMIZATION_REVIEW",
+              "SIX_YEARS_AFTER_CLOSURE_OR_WITHDRAWAL",
+              "SIX_YEARS_AFTER_COMPLETION",
+              "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION",
+              "EXPIRES_AFTER_24_HOURS",
+              "STAFF_PROVENANCE_REVIEW",
+              "TRANSIENT_EXPIRY"
+            ],
+            "title": "Retention",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "count",
+          "at_least",
+          "retention"
+        ],
+        "title": "DeletionSource",
+        "type": "object"
+      },
       "DiagnosticAnswerReference": {
         "additionalProperties": false,
         "properties": {
@@ -4013,6 +4111,106 @@
           }
         },
         "summary": "Claim"
+      }
+    },
+    "/api/v1/admin/data-requests/{target}/deletion-preview": {
+      "get": {
+        "operationId": "deletion_preview_api_v1_admin_data_requests__target__deletion_preview_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletionPreview"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Deletion Preview"
       }
     },
     "/api/v1/admin/item-versions/{version_id}": {

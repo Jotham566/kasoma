@@ -373,3 +373,25 @@ and unfinished/abandoned diagnostic grades or derived mastery remain excluded. T
 manifest explains the boundary. See [ADR-028](../decisions/ADR/028-owned-data-exports.md).
 Deletion/anonymization, exceptional/large-history disclosure and six-year evidence
 expiry with legal holds remain pending.
+
+
+## Deletion-impact preview (ADR-029)
+
+`GET /admin/data-requests/{target}/deletion-preview` requires recent OTP, ADMIN,
+a pending DELETE request and an independent claim owned by that administrator.
+Unknown request returns 404; EXPORT returns 409 DELETE_REQUIRED; absent/different
+claim returns 403 REVIEW_OWNERSHIP_REQUIRED; own request returns 403 SELF_REVIEW_FORBIDDEN.
+Limit ten previews/admin/minute, including repeat reads. Each successful read is audited.
+No idempotency key is needed: this observes current counts rather than starting processing.
+
+Return 200 DeletionPreview with request_id, observed_at, execution_enabled=false,
+sources (fixed table code, count, at_least, retention category), known blockers and
+explicit limitations. Each source is bounded to 10,000 with at_least=true when additional
+rows exist. Overlapping staff relationships are not disjoint totals. Responses use
+no-store. Errors never return partial inventories. Only relational counts are queried;
+no identifiers, credentials, answers, guardian evidence or comments are decrypted or exposed.
+
+The schema cannot enable execution. A preview changes only rate bookkeeping and a
+minimized audit entry; it cannot revoke sessions, fulfill deletion, establish legal-hold
+clearance or prove anonymity. Counts can change; future processing must revalidate all
+conditions. See [ADR-029](../decisions/ADR/029-deletion-impact-preview.md).
