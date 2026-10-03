@@ -483,3 +483,31 @@ immediately at processing. Terminal jobs clear candidate payloads. Keep the work
 for expiry. Pause submission and worker polling for rollback, preserve evidence and deploy
 a forward fix; migration 0017 does not provide a destructive downgrade. Raw payloads,
 exception details and bearer tokens must never be logged. No import grants publication.
+
+## Local operations monitoring
+
+Use a provisioned ADMIN at `/admin/operations`, then **Refresh operations**. The snapshot
+is manual-refresh, not a live guarantee; sampling time is displayed in Africa/Kampala.
+Authentication/connection failures clear stale results. `make monitor-operations` samples
+locally and emits active alert metadata, without refreshing the Celery heartbeat.
+`make test-operations` exercises authorization, thresholds, recovery, minimization,
+queue truth, worker heartbeat expiry and the actual registered monitoring task.
+
+The normal Celery operations queue samples every 60 seconds, with a 180-second Redis
+heartbeat TTL. Native/Compose host aliases share the database-name/search-path heartbeat
+scope; API and worker must use the same identity lookup key and database/schema. A missing,
+expired, malformed or future heartbeat is unavailable. A running monitor does not prove
+all queues are consuming, so stalled-import alerts remain independent.
+
+Server-side `.env` settings: `OPS_FAILED_IMPORT_THRESHOLD=1` (last 24 hours),
+`OPS_IMPORT_AGE_SECONDS=300`, `OPS_FLAG_BACKLOG_THRESHOLD=20`. Limits are inclusive.
+Any unresolved HIGH-priority flag or unavailable PostgreSQL/Redis dependency is critical;
+missing heartbeat and configured backlog/failure breaches warn. These defaults are not
+an approved safeguarding response policy or production SLO. Correct the underlying issue
+and refresh; historical failed imports remain counted until their 24-hour window expires.
+
+Investigate dependency/worker health first, preserve failed-job evidence and use the import
+owner workflow to correct/resubmit drafts. Review flags through the existing authorized
+triage workflow. Do not place report text, candidate documents or exception details in
+operational logs. There is no external alert delivery and the sampler cannot log during its
+own complete outage; independent production monitoring is still a release requirement.

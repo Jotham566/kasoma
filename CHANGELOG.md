@@ -1,5 +1,14 @@
 # Changelog
 
+## 3 October 2026 — local operations visibility (verification in progress)
+
+- Publish bounded draft imports as `5bdd122` and remove the completed branch.
+- Add ADMIN-only operational snapshots, bounded queue/flag counts, worker heartbeat and configurable threshold alerts (FR-OPS-002 partial).
+- Add local periodic monitoring and safe alert logs; distinguish unavailable instrumentation from measured zeros. No external notification delivery.
+- Fix cross-application Celery settings reuse with application-local task registration and regressions for monitoring/imports/export expiry.
+- Record ADR-033, generated contracts, configuration/runbook and regression/browser coverage. Full verification is in progress.
+
+
 ## 3 October 2026 — bounded synthetic draft imports
 
 - Publish legal holds (`ec53ac4`) and lint security (`b766266`) to main after full hosted CI passed; remove completed branches.

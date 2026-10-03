@@ -1,0 +1,185 @@
+"""Read-only bounded operational sampling and local allowlisted alerts."""
+
+import json
+from datetime import datetime, timedelta
+from typing import Literal
+from uuid import UUID
+
+from redis import Redis
+from sqlalchemy import Select, func, select
+from sqlalchemy.engine import make_url
+from sqlalchemy.orm import Session
+
+from services.domain.content import ContentImport
+from services.domain.flags import ContentFlag
+from services.health import Health, dependency_health
+from services.identity import IdentityError, IdentityService
+from services.observability import logger
+from services.operations_contracts import (
+    Count,
+    OperationAlert,
+    OperationCounts,
+    OperationsView,
+    OperationThresholds,
+)
+from services.staff import authorize
+
+
+def thresholds(identity: IdentityService) -> OperationThresholds:
+    settings = identity.settings
+    return OperationThresholds(
+        failed_imports=settings.ops_failed_import_threshold,
+        import_age_seconds=settings.ops_import_age_seconds,
+        unresolved_flags=settings.ops_flag_backlog_threshold,
+    )
+
+
+def bounded_count(db: Session, query: Select[tuple[int]]) -> Count:
+    value = db.scalar(select(func.count()).select_from(query.limit(10001).subquery())) or 0
+    return Count(value=min(value, 10000), at_least=value > 10000)
+
+
+def counts(db: Session, now: datetime) -> OperationCounts:
+    pending = select(1).select_from(ContentImport).where(ContentImport.status == "QUEUED")
+    flags = select(1).select_from(ContentFlag).where(ContentFlag.status.in_(["OPEN", "IN_REVIEW"]))
+    oldest = db.scalar(
+        select(func.min(ContentImport.created_at)).where(ContentImport.status == "QUEUED")
+    )
+    return OperationCounts(
+        queued_imports=bounded_count(db, pending),
+        oldest_import_seconds=max(0, int((now - oldest).total_seconds())) if oldest else 0,
+        failed_imports_24h=bounded_count(
+            db,
+            select(1)
+            .select_from(ContentImport)
+            .where(
+                ContentImport.status == "FAILED",
+                ContentImport.finished_at >= now - timedelta(hours=24),
+                ContentImport.finished_at <= now,
+            ),
+        ),
+        unresolved_flags=bounded_count(db, flags),
+        high_priority_flags=bounded_count(db, flags.where(ContentFlag.priority == "HIGH")),
+    )
+
+
+def evaluate(
+    health: Health,
+    worker: Literal["up", "unavailable"],
+    values: OperationCounts | None,
+    limits: OperationThresholds,
+) -> list[OperationAlert]:
+    alerts: list[OperationAlert] = []
+    if health.database == "down":
+        alerts.append(
+            OperationAlert(code="DATABASE_DOWN", severity="CRITICAL", observed=1, threshold=1)
+        )
+    if health.redis == "down":
+        alerts.append(
+            OperationAlert(code="REDIS_DOWN", severity="CRITICAL", observed=1, threshold=1)
+        )
+    if worker == "unavailable":
+        alerts.append(
+            OperationAlert(
+                code="WORKER_HEARTBEAT_MISSING", severity="WARNING", observed=1, threshold=1
+            )
+        )
+    if values:
+        for code, severity, observed, threshold in [
+            ("IMPORT_FAILED", "WARNING", values.failed_imports_24h.value, limits.failed_imports),
+            ("IMPORT_STALLED", "WARNING", values.oldest_import_seconds, limits.import_age_seconds),
+            ("FLAG_BACKLOG", "WARNING", values.unresolved_flags.value, limits.unresolved_flags),
+            ("HIGH_PRIORITY_FLAGS", "CRITICAL", values.high_priority_flags.value, 1),
+        ]:
+            if observed >= threshold:
+                alerts.append(
+                    OperationAlert.model_validate(
+                        {
+                            "code": code,
+                            "severity": severity,
+                            "observed": observed,
+                            "threshold": threshold,
+                        }
+                    )
+                )
+    return alerts
+
+
+def heartbeat_key(identity: IdentityService) -> str:
+    url = make_url(identity.settings.database_url.get_secret_value())
+    # Host aliases differ between native and Compose processes for the same database.
+    scope = json.dumps(
+        {"database": url.database, "options": url.query.get("options", "")}, sort_keys=True
+    )
+    return "kasoma:ops:heartbeat:" + identity.digest("operations-heartbeat", scope)
+
+
+def heartbeat(identity: IdentityService, *, write: bool = False) -> Literal["up", "unavailable"]:
+    try:
+        with Redis.from_url(
+            identity.settings.redis_url.get_secret_value(),
+            socket_connect_timeout=2,
+            socket_timeout=2,
+        ) as cache:
+            now = identity.clock()
+            if write:
+                cache.set(heartbeat_key(identity), now.isoformat(), ex=180)
+                return "up"
+            raw = cache.get(heartbeat_key(identity))
+            if not isinstance(raw, bytes):
+                return "unavailable"
+            at = datetime.fromisoformat(raw.decode())
+            age = (now - at).total_seconds()
+            return "up" if 0 <= age < 180 else "unavailable"
+    except Exception:
+        return "unavailable"
+
+
+def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> OperationsView:
+    health = dependency_health(identity.settings)
+    values = None
+    if health.database == "up":
+        try:
+            with Session(identity.engine) as db:
+                values = counts(db, identity.clock())
+        except Exception:
+            health = health.model_copy(update={"database": "down", "status": "degraded"})
+    worker = heartbeat(identity, write=worker_sample)
+    limits = thresholds(identity)
+    return OperationsView(
+        generated_at=identity.clock(),
+        health=health,
+        worker=worker,
+        counts=values,
+        thresholds=limits,
+        alerts=evaluate(health, worker, values, limits),
+    )
+
+
+def read(identity: IdentityService, token: str) -> OperationsView:
+    with identity.transaction() as db:
+        actor = authorize(identity, db, token, {"ADMIN"})[0]
+        if not identity.rate(db, f"operations-read:{actor}", 20, 60):
+            raise IdentityError("RATE_LIMITED", 429)
+    return snapshot(identity)
+
+
+def emit_alerts(view: OperationsView, request_id: UUID) -> int:
+    for alert in view.alerts:
+        logger.warning(
+            json.dumps(
+                {
+                    "event": "operations.alert",
+                    "schema_version": 1,
+                    "correlation_id": str(request_id),
+                    "channel": "WORKER",
+                    **alert.model_dump(),
+                },
+                sort_keys=True,
+            )
+        )
+    return len(view.alerts)
+
+
+def monitor(identity: IdentityService, request_id: UUID, *, worker_sample: bool = False) -> int:
+    return emit_alerts(snapshot(identity, worker_sample=worker_sample), request_id)

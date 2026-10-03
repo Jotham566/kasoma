@@ -14,6 +14,7 @@ from apps.api.data_requests import router as data_requests_router
 from apps.api.flags import router as flags_router
 from apps.api.identity import router
 from apps.api.import_limit import ImportBodyLimit
+from apps.api.operations import router as operations_router
 from services.config import Settings
 from services.content import ContentError
 from services.database import engine_for
@@ -54,6 +55,7 @@ def create_app(
     app.include_router(assessment_router)
     app.include_router(flags_router)
     app.include_router(data_requests_router)
+    app.include_router(operations_router)
     app.add_middleware(ImportBodyLimit)
     app.add_middleware(
         CORSMiddleware,

@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     consent_policy_version: str = "synthetic-development-v1"
     assessment_session_days: int = Field(default=7, ge=1, le=30)
     assessment_repetition_days: int = Field(default=7, ge=1, le=90)
+    ops_failed_import_threshold: int = Field(default=1, ge=1, le=10000)
+    ops_import_age_seconds: int = Field(default=300, ge=60, le=86400)
+    ops_flag_backlog_threshold: int = Field(default=20, ge=1, le=10000)
     token_issuer: str = "kasoma-local"
     model_provider: Literal["fake", "local"] = "fake"
     model_base_url: str = "http://localhost:11434/v1"

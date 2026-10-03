@@ -207,3 +207,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-032: Bounded asynchronous draft imports](../decisions/ADR/032-bounded-draft-imports.md)
   records synthetic JSON limits, author rechecks, transactional retries and independent review.
+
+- [ADR-033: Local operational health and threshold alerts](../decisions/ADR/033-local-operations-health.md)
+  records minimized ADMIN snapshots, monitoring heartbeats and local alert defaults.

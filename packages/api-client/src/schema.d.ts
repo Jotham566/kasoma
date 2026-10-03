@@ -281,6 +281,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/operations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Operations */
+        get: operations["operations_api_v1_admin_operations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/attempts/{attempt_id}/flag": {
         parameters: {
             query?: never;
@@ -932,6 +949,16 @@ export interface components {
             subjects: components["schemas"]["CatalogEntry"][];
             /** Topics */
             topics: components["schemas"]["CatalogEntry"][];
+        };
+        /** Count */
+        Count: {
+            /**
+             * At Least
+             * @default false
+             */
+            at_least: boolean;
+            /** Value */
+            value: number;
         };
         /** CreateDraft */
         CreateDraft: {
@@ -2015,6 +2042,77 @@ export interface components {
              * @enum {string}
              */
             purpose: "LOGIN" | "LINK";
+        };
+        /** OperationAlert */
+        OperationAlert: {
+            /**
+             * Code
+             * @enum {string}
+             */
+            code: "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS";
+            /** Observed */
+            observed: number;
+            /**
+             * Severity
+             * @enum {string}
+             */
+            severity: "WARNING" | "CRITICAL";
+            /** Threshold */
+            threshold: number;
+        };
+        /** OperationCounts */
+        OperationCounts: {
+            failed_imports_24h: components["schemas"]["Count"];
+            high_priority_flags: components["schemas"]["Count"];
+            /** Oldest Import Seconds */
+            oldest_import_seconds: number;
+            queued_imports: components["schemas"]["Count"];
+            unresolved_flags: components["schemas"]["Count"];
+        };
+        /** OperationThresholds */
+        OperationThresholds: {
+            /** Failed Imports */
+            failed_imports: number;
+            /** Import Age Seconds */
+            import_age_seconds: number;
+            /** Unresolved Flags */
+            unresolved_flags: number;
+        };
+        /** OperationsView */
+        OperationsView: {
+            /** Alerts */
+            alerts: components["schemas"]["OperationAlert"][];
+            counts: components["schemas"]["OperationCounts"] | null;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            health: components["schemas"]["Health"];
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            thresholds: components["schemas"]["OperationThresholds"];
+            /**
+             * Unavailable Metrics
+             * @default [
+             *       "AI_USAGE",
+             *       "MESSAGING_USAGE",
+             *       "GRADING_FAILURE_RATE",
+             *       "REQUEST_LATENCY",
+             *       "MASTERY_LAG",
+             *       "WEBHOOK_FAILURES"
+             *     ]
+             */
+            unavailable_metrics: ("AI_USAGE" | "MESSAGING_USAGE" | "GRADING_FAILURE_RATE" | "REQUEST_LATENCY" | "MASTERY_LAG" | "WEBHOOK_FAILURES")[];
+            /**
+             * Worker
+             * @enum {string}
+             */
+            worker: "up" | "unavailable";
         };
         /** ProfilePatch */
         ProfilePatch: {
@@ -4369,6 +4467,53 @@ export interface operations {
             };
             /** @description Unprocessable Entity */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    operations_api_v1_admin_operations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperationsView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };

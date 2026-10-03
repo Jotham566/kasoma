@@ -290,6 +290,27 @@
         "title": "ContentContext",
         "type": "object"
       },
+      "Count": {
+        "additionalProperties": false,
+        "properties": {
+          "at_least": {
+            "default": false,
+            "title": "At Least",
+            "type": "boolean"
+          },
+          "value": {
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "title": "Count",
+        "type": "object"
+      },
       "CreateDraft": {
         "additionalProperties": false,
         "properties": {
@@ -2648,6 +2669,191 @@
           "code"
         ],
         "title": "OTPVerify",
+        "type": "object"
+      },
+      "OperationAlert": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "enum": [
+              "DATABASE_DOWN",
+              "REDIS_DOWN",
+              "WORKER_HEARTBEAT_MISSING",
+              "IMPORT_FAILED",
+              "IMPORT_STALLED",
+              "FLAG_BACKLOG",
+              "HIGH_PRIORITY_FLAGS"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "observed": {
+            "minimum": 0.0,
+            "title": "Observed",
+            "type": "integer"
+          },
+          "severity": {
+            "enum": [
+              "WARNING",
+              "CRITICAL"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "threshold": {
+            "minimum": 0.0,
+            "title": "Threshold",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "code",
+          "severity",
+          "observed",
+          "threshold"
+        ],
+        "title": "OperationAlert",
+        "type": "object"
+      },
+      "OperationCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "failed_imports_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "high_priority_flags": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "oldest_import_seconds": {
+            "minimum": 0.0,
+            "title": "Oldest Import Seconds",
+            "type": "integer"
+          },
+          "queued_imports": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "unresolved_flags": {
+            "$ref": "#/components/schemas/Count"
+          }
+        },
+        "required": [
+          "queued_imports",
+          "oldest_import_seconds",
+          "failed_imports_24h",
+          "unresolved_flags",
+          "high_priority_flags"
+        ],
+        "title": "OperationCounts",
+        "type": "object"
+      },
+      "OperationThresholds": {
+        "additionalProperties": false,
+        "properties": {
+          "failed_imports": {
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Failed Imports",
+            "type": "integer"
+          },
+          "import_age_seconds": {
+            "maximum": 86400.0,
+            "minimum": 60.0,
+            "title": "Import Age Seconds",
+            "type": "integer"
+          },
+          "unresolved_flags": {
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Unresolved Flags",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "failed_imports",
+          "import_age_seconds",
+          "unresolved_flags"
+        ],
+        "title": "OperationThresholds",
+        "type": "object"
+      },
+      "OperationsView": {
+        "additionalProperties": false,
+        "properties": {
+          "alerts": {
+            "items": {
+              "$ref": "#/components/schemas/OperationAlert"
+            },
+            "title": "Alerts",
+            "type": "array"
+          },
+          "counts": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OperationCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "health": {
+            "$ref": "#/components/schemas/Health"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "thresholds": {
+            "$ref": "#/components/schemas/OperationThresholds"
+          },
+          "unavailable_metrics": {
+            "default": [
+              "AI_USAGE",
+              "MESSAGING_USAGE",
+              "GRADING_FAILURE_RATE",
+              "REQUEST_LATENCY",
+              "MASTERY_LAG",
+              "WEBHOOK_FAILURES"
+            ],
+            "items": {
+              "enum": [
+                "AI_USAGE",
+                "MESSAGING_USAGE",
+                "GRADING_FAILURE_RATE",
+                "REQUEST_LATENCY",
+                "MASTERY_LAG",
+                "WEBHOOK_FAILURES"
+              ],
+              "type": "string"
+            },
+            "title": "Unavailable Metrics",
+            "type": "array"
+          },
+          "worker": {
+            "enum": [
+              "up",
+              "unavailable"
+            ],
+            "title": "Worker",
+            "type": "string"
+          }
+        },
+        "required": [
+          "generated_at",
+          "health",
+          "worker",
+          "counts",
+          "thresholds",
+          "alerts"
+        ],
+        "title": "OperationsView",
         "type": "object"
       },
       "ProfilePatch": {
@@ -6260,6 +6466,54 @@
           }
         },
         "summary": "Create"
+      }
+    },
+    "/api/v1/admin/operations": {
+      "get": {
+        "operationId": "operations_api_v1_admin_operations_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationsView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Operations"
       }
     },
     "/api/v1/attempts/{attempt_id}/flag": {

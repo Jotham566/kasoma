@@ -1,5 +1,5 @@
 from typing import Any
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from celery import Celery
 
@@ -9,6 +9,7 @@ from services.data_exports import expire
 from services.database import engine_for
 from services.identity import IdentityService
 from services.observability import correlation_id, emit, tracer
+from services.operations import monitor
 from services.providers import FakeMessagingProvider
 
 
@@ -29,6 +30,7 @@ def make_worker(settings: Settings) -> Celery:
         task_publish_retry=False,
         task_queues={"operations": {}, "imports": {}},
         beat_schedule={
+            "monitor-operations": {"task": "kasoma.monitor_operations", "schedule": 60.0},
             "expire-exports": {"task": "kasoma.expire_exports", "schedule": 300.0},
             "content-imports": {
                 "task": "kasoma.content_imports",
@@ -38,7 +40,7 @@ def make_worker(settings: Settings) -> Celery:
         },
     )
 
-    @app.task(name="kasoma.smoke", bind=True)  # type: ignore[untyped-decorator]
+    @app.task(shared=False, name="kasoma.smoke", bind=True)  # type: ignore[untyped-decorator]
     def smoke(task: Any) -> dict[str, str]:
         request_id = correlation_id((task.request.headers or {}).get("kasoma_correlation_id"))
         with tracer.start_as_current_span("worker.smoke") as span:
@@ -46,7 +48,7 @@ def make_worker(settings: Settings) -> Celery:
             emit("worker.smoke", request_id, "WORKER", 200)
         return {"correlation_id": request_id, "status": "ok"}
 
-    @app.task(name="kasoma.expire_exports", bind=True)  # type: ignore[untyped-decorator]
+    @app.task(shared=False, name="kasoma.expire_exports", bind=True)  # type: ignore[untyped-decorator]
     def expire_exports(task: Any) -> int:
         request_id = correlation_id((task.request.headers or {}).get("kasoma_correlation_id"))
         engine = engine_for(settings)
@@ -56,12 +58,23 @@ def make_worker(settings: Settings) -> Celery:
         finally:
             engine.dispose()
 
-    @app.task(name="kasoma.content_imports", acks_late=True)  # type: ignore[untyped-decorator]
+    @app.task(shared=False, name="kasoma.content_imports", acks_late=True)  # type: ignore[untyped-decorator]
     def content_imports() -> int:
         engine = engine_for(settings)
         try:
             fake = FakeMessagingProvider()
             return process_imports(IdentityService(engine, settings, fake, fake))
+        finally:
+            engine.dispose()
+
+    @app.task(shared=False, name="kasoma.monitor_operations")  # type: ignore[untyped-decorator]
+    def monitor_operations() -> int:
+        engine = engine_for(settings)
+        try:
+            fake = FakeMessagingProvider()
+            return monitor(
+                IdentityService(engine, settings, fake, fake), uuid4(), worker_sample=True
+            )
         finally:
             engine.dispose()
 

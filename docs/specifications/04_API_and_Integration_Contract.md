@@ -450,3 +450,14 @@ See [ADR-030](../decisions/ADR/030-record-legal-holds.md).
 Generated OpenAPI and TypeScript contracts define the exact request/response fields.
 See [ADR-032](../decisions/ADR/032-bounded-draft-imports.md) and
 [verification](../implementation/E2_IMPORTS_VERIFICATION.md).
+
+## Local operations snapshot (ADR-033)
+
+`GET /api/v1/admin/operations` requires current ADMIN membership; reads are limited to
+20 per account/minute. The no-store `OperationsView` contains UTC sampling time, sanitized
+PostgreSQL/Redis health, monitoring heartbeat availability, configured thresholds,
+bounded counts and typed active alerts. Counts contain only numbers and lower-bound
+indicators; no content/learner/staff IDs or free text. Query failure gives unavailable
+counts and degraded dependency status, never fabricated zeros or raw exception text.
+Uninstrumented AI/messaging/grade-failure/latency/mastery/channel metrics are explicit.
+This read-only extension does not change the public health contract or domain records.

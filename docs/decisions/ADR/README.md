@@ -55,3 +55,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-032: Bounded asynchronous draft imports](032-bounded-draft-imports.md)
   records synthetic JSON limits, author rechecks, transactional retries and independent review.
+
+- [ADR-033: Local operational health and threshold alerts](033-local-operations-health.md)
+  records minimized ADMIN snapshots, monitoring heartbeats and local alert defaults.

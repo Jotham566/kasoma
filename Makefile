@@ -142,3 +142,11 @@ test-tooling:
 .PHONY: process-imports
 process-imports:
 	$(UV) python -m scripts.process_imports
+
+.PHONY: monitor-operations
+monitor-operations:
+	$(UV) python -m scripts.monitor_operations
+
+.PHONY: test-operations
+test-operations:
+	$(UV) pytest tests/contract/test_operations_contract.py tests/integration/test_operations.py --allow-hosts=localhost,127.0.0.1,::1

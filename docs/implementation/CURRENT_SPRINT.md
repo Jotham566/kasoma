@@ -1,4 +1,4 @@
-# Current Sprint: E2 bounded synthetic draft imports
+# Current Sprint: E8 local operations visibility
 
 Legal holds (`ec53ac4`) and dependency remediation (`b766266`) are published to main.
 [Hosted CI](https://github.com/Jotham566/kasoma/actions/runs/37126531374) passed setup,
@@ -6,7 +6,9 @@ clean migrations/seed, lint/types, full tests/contracts/build, browser journeys,
 security audits, image builds/scans and container smoke on 3 October. Completed branches removed.
 Docker recovered during verification; no volumes were reset.
 
-## Active vertical slice
+## Latest completed slice
+
+Bounded synthetic imports are published as `5bdd122`; the completed branch is removed.
 
 FR-CNT-001/002/004/005 and bounded FR-OPS-001/002/003: original synthetic JSON draft
 imports under [ADR-032](../decisions/ADR/032-bounded-draft-imports.md).
@@ -16,11 +18,15 @@ role rechecks, source locators and draft-only review passed verification: 347 Py
 See [import evidence](E2_IMPORTS_VERIFICATION.md).
 The import slice is independent of destructive data-request execution.
 
-## Next vertical slice
+## Active vertical slice
 
+[ADR-033](../decisions/ADR/033-local-operations-health.md) and
+[verification](E8_OPERATIONS_VERIFICATION.md) track
 FR-OPS-002: ADMIN service/queue-failure visibility and configurable local alert thresholds,
 with simulated breach/recovery tests and explicit unavailable metrics for unimplemented AI
-and messaging paths. No external notification delivery is enabled.
+and messaging paths. No external notification delivery is enabled. Native unit tests
+now pass the cross-application worker-settings regression. Database/container acceptance
+is pending fresh hosted CI while Docker awaits its OS administrator prompt.
 
 Prepare the concrete deletion/anonymization transform and recovery plan for required
 review before destructive execution; reconcile immutable learning/content records,
