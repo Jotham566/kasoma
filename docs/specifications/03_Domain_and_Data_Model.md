@@ -277,3 +277,28 @@ to the request. Shared rate buckets, logs, backups, arbitrary embedded reference
 unimplemented channels remain explicit inventory limitations. Future deletion requires
 record-specific legal holds, reviewed transforms/constraints and recovery evidence;
 the preview is never an execution authorization.
+
+## Specific-record legal holds (migration 0016; ADR-030)
+
+`legal_holds` stores UUID id, parent DELETE request_id, record_type/id, decision_reference,
+reason, created_by/at and finite expires_at. Nullable released_at/by/release_reference
+are the only permitted update, together and exactly once while active. Scope, decision,
+reason, creation evidence and expiry cannot be overwritten or extended. Multiple explicit
+holds may reference one record. No account wildcard, arbitrary narrative or payload exists.
+`legal_hold_receipts` binds actor_id/key to request_hash and hold_id; immutable retry evidence.
+
+Database guards enforce an independent ADMIN claim on a pending DELETE request and
+ownership of an existing consent, attempt, content flag or data request. Target rows are
+key-share locked on insert. BEFORE DELETE guards reject active registered holds while
+preserving existing immutability. `record_is_held(kind, target, at_time)` checks unreleased
+holds at created_at <= time < expires_at; deletion guards use the database clock.
+Scope/release evidence is retained with its parent request's six-year-after-completion
+obligation, with no invented expiry while pending. Expiry/release ends preservation effect,
+not evidence retention. Hold evidence deletion and receipt mutation remain prohibited.
+
+The preview adds bounded active counts and hold/receipt inventory. No other immutable
+constraint is relaxed and no UPDATE anonymization or deletion execution state is enabled.
+Future processors must check holds transactionally with compatible locks, expand coverage
+and retain the existing legal/privacy gates. The migration rollback policy is to disable
+new routes while retaining evidence and protections, followed by a forward fix.
+See [ADR-030](../decisions/ADR/030-record-legal-holds.md).

@@ -395,3 +395,39 @@ The schema cannot enable execution. A preview changes only rate bookkeeping and 
 minimized audit entry; it cannot revoke sessions, fulfill deletion, establish legal-hold
 clearance or prove anonymity. Counts can change; future processing must revalidate all
 conditions. See [ADR-029](../decisions/ADR/029-deletion-impact-preview.md).
+
+## Record legal holds (ADR-030)
+
+All paths below are under `/api/v1` and require the pending DELETE request's independent
+ADMIN claimant with recent OTP authentication, including retries. Responses are no-store.
+
+| Method/path | Contract |
+| --- | --- |
+| `GET /admin/data-requests/{target}/holds` | HoldPage: data and next_cursor; UUID cursor, limit 1–50 (default 20), audited, 60 reads/admin/minute |
+| `POST /admin/data-requests/{target}/holds` | HoldInput plus Idempotency-Key UUID; 201 HoldView |
+| `POST /admin/data-requests/{target}/holds/{hold}/release` | HoldRelease plus Idempotency-Key UUID; 200 HoldView |
+
+HoldInput has record_type (CONSENT, ATTEMPT, CONTENT_FLAG, DATA_REQUEST), owned record_id
+UUID, opaque decision_reference UUID, reason (LEGAL_OBLIGATION or SECURITY_INVESTIGATION),
+a timezone-aware finite future expires_at and affirmative=true. Reject extras, narratives,
+unsupported record types and indefinite dates. HoldRelease has only decision_reference
+and affirmative=true. These record an already authorized decision; they do not determine law.
+
+HoldView exposes id, request_id, record_type/id, decision_reference, reason, derived
+ACTIVE/EXPIRED/RELEASED status, created_at/expires_at, nullable released_at/release_reference
+and retention_policy=SIX_YEARS_AFTER_REQUEST_COMPLETION. No actor or learner identifier,
+record body or legal narrative is returned. Expiry does not erase metadata or underlying data.
+New mutations are limited to ten/admin/minute. Exact-key retries return current hold state
+without spending another write quota; the same key with another body/path returns 409
+IDEMPOTENCY_CONFLICT. Equivalent end-time offsets canonicalize to UTC. Authorization is
+always rechecked. Absent/foreign target or hold returns 404; inactive release returns 409
+HOLD_NOT_ACTIVE; a nonfuture end returns 422 HOLD_END_REQUIRED. Claim, self-review, request
+kind/completion and authentication errors use the existing deletion-review codes.
+
+DeletionPreview now includes active_legal_holds (bounded at 10,000) and
+active_holds_at_least. Sources include hold and receipt evidence. ACTIVE_RECORD_HOLDS
+indicates active registered holds; LEGAL_HOLD_COVERAGE_INCOMPLETE is always present.
+The old LEGAL_HOLD_CHECK_UNAVAILABLE schema literal is retained for compatibility but
+is no longer emitted. execution_enabled remains false. Counts are advisory and do not
+clear unrelated records. Learner exports omit internal hold details and hold outbox events.
+See [ADR-030](../decisions/ADR/030-record-legal-holds.md).

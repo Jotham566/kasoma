@@ -1,28 +1,31 @@
-# Current Sprint: E8 deletion-impact preview
+# Current Sprint: E8 specific-record legal holds
 
-Owned exports are committed and pushed to main as `d20c344`; completed branch removed.
-[Hosted export CI passed](https://github.com/Jotham566/kasoma/actions/runs/36529147185).
-This next slice is local on `codex/deletion-readiness`, uncommitted for review.
+Deletion-impact preview is committed and pushed to main as `6f7f210`; completed branch
+`codex/deletion-readiness` removed. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36726790587). The next slice is local on `codex/legal-holds`,
+uncommitted for review.
 
 ## Current slice
 
-FR-ID-006/BR-010 (deletion review prerequisite), supporting FR-OPS-003, NFR-SEC-002,
-NFR-ACC-001 and NFR-MNT-001. An independent ADMIN claimant can inspect bounded counts
-and retention/review categories for a pending DELETE request. Recent authentication,
-claim ownership, read audits and rate limits are enforced. No personal payload is read
-or decrypted. Execution is structurally disabled and unresolved safeguards are explicit.
-Decision: [ADR-029](../decisions/ADR/029-deletion-impact-preview.md).
-All 321 Python tests and 17 browser tests pass, plus setup, migration/seed, generated
-contracts, lint/types, security scans and final container smoke.
-Check status: [deletion-preview verification](E8_DELETION_PREVIEW_VERIFICATION.md).
+FR-ID-006/BR-010 preservation prerequisite, supporting FR-OPS-003, NFR-SEC-002,
+NFR-ACC-001 and NFR-MNT-001. The independent recent-OTP ADMIN claimant can create,
+list and release finite holds on individual owned consent, attempt, content-flag and
+data-request records. Metadata, receipts, audits and safe outbox events are atomic;
+SQL checks enforce ownership and immutability, with active-hold DELETE guards.
+The preview reports active registered holds and explicitly incomplete coverage.
+Deletion remains disabled. Decision: [ADR-030](../decisions/ADR/030-record-legal-holds.md).
+All 337 Python tests and 17 browser tests pass, followed by 22 focused checks for the
+final inventory correction. Setup, lint/types, contracts, build, security and final
+container smoke pass. See [legal-hold verification](E8_LEGAL_HOLDS_VERIFICATION.md).
+The browser run includes the related FR-ID-001 initial-session-check race correction.
 
 ## Next vertical slice
 
-Implement specific-record, time-bounded legal-hold lifecycle and deletion execution state.
-Then review the exact erasure/anonymization migration and recovery plan, reconciling
-immutable learning, content and accountability evidence before destructive execution.
-The preview is not approval to erase, a clearance of legal holds or proof of anonymity.
-Large-history export and six-year evidence expiry remain explicit gaps.
+Implement the deletion execution state and expand hold coverage for the exact deletion
+plan. Review the erasure/anonymization transform, constraints and recovery plan before
+any destructive execution. Reconcile immutable learning, content and accountability
+records, embedded references, logs, backups and representative requests.
+Zero active registered holds is not clearance. Large-history exports and six-year
+evidence expiry remain explicit gaps; production privacy approval is independent.
 
 ## Remaining dependencies and release gates
 

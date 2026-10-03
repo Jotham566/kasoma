@@ -68,10 +68,14 @@ class DeletionPreview(Contract):
     request_id: UUID
     observed_at: datetime
     execution_enabled: Literal[False] = False
+    active_legal_holds: int = Field(default=0, ge=0, le=10_000)
+    active_holds_at_least: bool = False
     sources: list[DeletionSource]
     blockers: list[
         Literal[
             "LEGAL_HOLD_CHECK_UNAVAILABLE",
+            "LEGAL_HOLD_COVERAGE_INCOMPLETE",
+            "ACTIVE_RECORD_HOLDS",
             "ERASURE_PROCESSOR_UNAVAILABLE",
             "ANONYMIZATION_REVIEW_REQUIRED",
             "STAFF_RECORDS_REQUIRE_REVIEW",

@@ -23,7 +23,7 @@ export default function Onboarding() {
   const [linkChallenge, setLinkChallenge] = useState<string | null>(null);
   const [status, setStatus] = useState("Checking your session…");
   const consentRetry = useRef<{ payload: string; key: string } | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(true);
 
   async function load() {
     const api = client();
@@ -54,6 +54,9 @@ export default function Onboarding() {
       })
       .catch(() => {
         if (active) setStatus("Connection interrupted. Please try again.");
+      })
+      .finally(() => {
+        if (active) setBusy(false);
       });
     return () => {
       active = false;

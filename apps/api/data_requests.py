@@ -16,6 +16,8 @@ from services.data_request_contracts import (
     DeletionPreview,
 )
 from services.data_requests import DataRequestService
+from services.legal_hold_contracts import HoldInput, HoldPage, HoldRelease, HoldView
+from services.legal_holds import LegalHoldService
 
 router = APIRouter(
     prefix="/api/v1",
@@ -91,3 +93,40 @@ def deletion_preview(target: UUID, request: Request) -> DeletionPreview:
     from services.deletion_preview import preview
 
     return preview(service(request), bearer(request), target, UUID(request.state.request_id))
+
+
+@router.get("/admin/data-requests/{target}/holds", response_model=HoldPage)
+def holds(
+    target: UUID,
+    request: Request,
+    cursor: UUID | None = None,
+    limit: Annotated[int, Query(ge=1, le=50)] = 20,
+) -> HoldPage:
+    return LegalHoldService(service(request)).listing(
+        bearer(request), target, cursor, limit, UUID(request.state.request_id)
+    )
+
+
+@router.post("/admin/data-requests/{target}/holds", response_model=HoldView, status_code=201)
+def create_hold(
+    target: UUID,
+    body: HoldInput,
+    request: Request,
+    idempotency_key: Annotated[UUID, Header(alias="Idempotency-Key")],
+) -> HoldView:
+    return LegalHoldService(service(request)).create(
+        bearer(request), target, body, idempotency_key, UUID(request.state.request_id)
+    )
+
+
+@router.post("/admin/data-requests/{target}/holds/{hold}/release", response_model=HoldView)
+def release_hold(
+    target: UUID,
+    hold: UUID,
+    body: HoldRelease,
+    request: Request,
+    idempotency_key: Annotated[UUID, Header(alias="Idempotency-Key")],
+) -> HoldView:
+    return LegalHoldService(service(request)).release(
+        bearer(request), target, hold, body, idempotency_key, UUID(request.state.request_id)
+    )

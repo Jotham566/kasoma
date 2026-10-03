@@ -66,35 +66,44 @@ async function gateway(
   const flagReport = new RegExp(`^attempts/${uuid}/flag$`).test(path);
   const flagTriage = new RegExp(`^admin/content-flags/${uuid}$`).test(path);
   const dataExport = new RegExp(`^me/data-requests/${uuid}/export$`).test(path);
-  const methods = new RegExp(
-    `^(?:me/data-requests/${uuid}|admin/data-requests/${uuid}/deletion-preview)$`,
-  ).test(path)
-    ? ["GET"]
-    : dataExport || new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
+  const holdList = new RegExp(`^admin/data-requests/${uuid}/holds$`).test(path);
+  const holdRelease = new RegExp(
+    `^admin/data-requests/${uuid}/holds/${uuid}/release$`,
+  ).test(path);
+  const methods = holdList
+    ? ["GET", "POST"]
+    : holdRelease
       ? ["POST"]
-      : flagReport
-        ? ["GET", "POST"]
-        : flagTriage
-          ? ["GET", "PATCH"]
-          : reassessment
+      : new RegExp(
+            `^(?:me/data-requests/${uuid}|admin/data-requests/${uuid}/deletion-preview)$`,
+          ).test(path)
+        ? ["GET"]
+        : dataExport ||
+            new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
+          ? ["POST"]
+          : flagReport
             ? ["GET", "POST"]
-            : hintWrite
-              ? ["POST"]
-              : learning
-                ? [
-                    learning[1] === "attempts" || learning[1] === "abandon"
-                      ? "POST"
-                      : "GET",
-                  ]
-                : learningRead
-                  ? ["GET"]
-                  : staffVersion
-                    ? staffVersion[1] === "reviews"
+            : flagTriage
+              ? ["GET", "PATCH"]
+              : reassessment
+                ? ["GET", "POST"]
+                : hintWrite
+                  ? ["POST"]
+                  : learning
+                    ? [
+                        learning[1] === "attempts" || learning[1] === "abandon"
+                          ? "POST"
+                          : "GET",
+                      ]
+                    : learningRead
                       ? ["GET"]
-                      : staffVersion[1]
-                        ? ["POST"]
-                        : ["GET", "PATCH"]
-                    : allowed[path];
+                      : staffVersion
+                        ? staffVersion[1] === "reviews"
+                          ? ["GET"]
+                          : staffVersion[1]
+                            ? ["POST"]
+                            : ["GET", "PATCH"]
+                        : allowed[path];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (
@@ -135,6 +144,7 @@ async function gateway(
       if (status) query.set("status", status);
     }
     if (
+      holdList ||
       [
         "admin/items",
         "admin/content-flags",

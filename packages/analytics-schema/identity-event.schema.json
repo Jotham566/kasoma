@@ -22,7 +22,9 @@
         "consent.changed",
         "data_request.created",
         "data_request.review_started",
-        "data_export.completed"
+        "data_export.completed",
+        "legal_hold.created",
+        "legal_hold.released"
       ]
     },
     "version": {

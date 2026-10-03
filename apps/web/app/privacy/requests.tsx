@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 
+import { LegalHolds } from "./legal-holds";
+
 import { DeletionImpact } from "./deletion-impact";
 
 type Schema = components["schemas"];
@@ -348,6 +350,9 @@ export function Requests({ staff = false }: { staff?: boolean }) {
               >
                 Preview deletion impact
               </button>
+            )}
+            {staff && row.kind === "DELETE" && row.status === "IN_REVIEW" && (
+              <LegalHolds target={row.id} onChange={() => setPreview(null)} />
             )}
             {staff && row.status === "QUEUED" && (
               <button

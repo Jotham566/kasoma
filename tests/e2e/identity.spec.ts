@@ -101,7 +101,20 @@ test("web rejects cross-origin mutations and recovers from offline requests", as
     data: {},
   });
   expect(response.status()).toBe(403);
+  let resumeCatalog!: () => void;
+  const catalogGate = new Promise<void>((resolve) => {
+    resumeCatalog = resolve;
+  });
+  await page.route("**/api/v1/curriculum/subjects", async (route) => {
+    await catalogGate;
+    await route.continue();
+  });
   await page.goto("/onboarding");
+  await expect(
+    page.getByRole("button", { name: "Send code", exact: true }),
+  ).toBeDisabled();
+  resumeCatalog();
+  await expect(page.getByRole("status")).toHaveText("Sign in to continue.");
   await page
     .getByLabel("Email or mobile number", { exact: true })
     .fill("offline@example.invalid");

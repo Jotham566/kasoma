@@ -33,6 +33,8 @@ from services.domain.data_requests import (
     DataRequest,
     DataRequestReceipt,
     DataRequestReview,
+    LegalHold,
+    LegalHoldReceipt,
 )
 from services.domain.flags import ContentFlag, FlagHistory, FlagMutationReceipt
 from services.domain.identity import (
@@ -48,6 +50,7 @@ from services.domain.identity import (
 )
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
 from services.identity import IdentityError, IdentityService
+from services.legal_holds import active_count
 from services.staff import authorize
 
 COUNT_LIMIT = 10_000
@@ -79,6 +82,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     attempts = select(Attempt.id).where(Attempt.learner_id == user)
     evidence = select(MasteryEvidence.id).where(MasteryEvidence.learner_id == user)
     requests = select(DataRequest.id).where(DataRequest.user_id == user)
+    holds = select(LegalHold.id).where(LegalHold.request_id.in_(requests))
     flags = select(ContentFlag.id).where(ContentFlag.reporter_id == user)
     authored = select(Item.id).where(Item.author_id == user)
     versions = select(ItemVersion.id).where(
@@ -130,6 +134,8 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
         ),
     ]:
         add(model, condition, "SIX_YEARS_AFTER_COMPLETION")
+    add(LegalHold, LegalHold.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
+    add(LegalHoldReceipt, LegalHoldReceipt.hold_id.in_(holds), "SIX_YEARS_AFTER_COMPLETION")
     add(DataExport, DataExport.request_id.in_(requests), "EXPIRES_AFTER_24_HOURS")
     add(ContentFlag, ContentFlag.reporter_id == user, "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION")
     add(FlagHistory, FlagHistory.flag_id.in_(flags), "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION")
@@ -142,6 +148,8 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     for model, condition in [
         (UserRole, UserRole.user_id == user),
         (DataRequestReview, DataRequestReview.actor_id == user),
+        (LegalHold, or_(LegalHold.created_by == user, LegalHold.released_by == user)),
+        (LegalHoldReceipt, LegalHoldReceipt.actor_id == user),
         (Item, Item.author_id == user),
         (ItemVersion, ItemVersion.id.in_(versions)),
         (ItemMapping, ItemMapping.item_version_id.in_(versions)),
@@ -169,6 +177,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
             AuditLog.actor_id == user,
             AuditLog.target_id == user,
             AuditLog.target_id.in_(requests),
+            AuditLog.target_id.in_(holds),
             AuditLog.target_id.in_(flags),
             AuditLog.target_id.in_(authored),
             AuditLog.target_id.in_(versions),
@@ -198,17 +207,22 @@ def preview(
         if request.completed_at is not None:
             raise IdentityError("REQUEST_COMPLETED", 409)
         sources = inventory(db, request.user_id)
+        held_count, held_at_least = active_count(db, request.user_id, identity.clock())
         result = DeletionPreview(
+            active_legal_holds=held_count,
+            active_holds_at_least=held_at_least,
             request_id=target,
             observed_at=identity.clock(),
             sources=sources,
             blockers=[
-                "LEGAL_HOLD_CHECK_UNAVAILABLE",
+                "LEGAL_HOLD_COVERAGE_INCOMPLETE",
                 "ERASURE_PROCESSOR_UNAVAILABLE",
                 "ANONYMIZATION_REVIEW_REQUIRED",
             ],
             limitations=LIMITATIONS,
         )
+        if held_count:
+            result.blockers.append("ACTIVE_RECORD_HOLDS")
         if any(s.count and s.retention == "STAFF_PROVENANCE_REVIEW" for s in sources):
             result.blockers.append("STAFF_RECORDS_REQUIRE_REVIEW")
         DataRequestService(identity).audit(

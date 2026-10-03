@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
 
 async function login(page: Page, email: string) {
@@ -216,15 +217,133 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       "Deletion impact loaded. No account data was changed.",
     );
     await expect(
-      admin.getByText("Record-specific legal holds have not been checked.", {
-        exact: true,
-      }),
+      admin.getByText(
+        "Legal holds cover four record types; other records still require review.",
+        {
+          exact: true,
+        },
+      ),
     ).toBeVisible();
     await admin
       .getByText("Record counts and retention", { exact: true })
       .focus();
     await admin.keyboard.press("Enter");
     await expect(admin.getByRole("table")).toBeVisible();
+    expect(
+      (await new AxeBuilder({ page: admin }).analyze()).violations,
+    ).toEqual([]);
+    const holds = deletion.getByRole("region", { name: "Record legal holds" });
+    await holds.getByRole("button", { name: "Manage record holds" }).click();
+    await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await holds
+      .getByLabel("Decision reference", { exact: true })
+      .fill(randomUUID());
+    // The browser context defaults to UTC; the form explicitly labels device time.
+    await holds
+      .getByLabel("Hold ends (your device time)")
+      .fill(new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 16));
+    await holds
+      .getByRole("checkbox", {
+        name: "I confirm an authorized preservation decision for this record and period.",
+      })
+      .check();
+    let lostHold = false;
+    await admin.route(
+      "**/api/v1/admin/data-requests/*/holds",
+      async (route) => {
+        if (route.request().method() === "POST" && !lostHold) {
+          lostHold = true;
+          expect((await route.fetch()).status()).toBe(201);
+          await route.abort();
+        } else await route.continue();
+      },
+    );
+    await holds
+      .getByRole("button", { name: "Create hold", exact: true })
+      .click();
+    await expect(holds.getByRole("status")).toContainText(
+      "Could not confirm the operation",
+    );
+    await expect(
+      holds.getByLabel("Record reference", { exact: true }),
+    ).toBeDisabled();
+    await holds.getByRole("button", { name: "Retry hold operation" }).click();
+    await expect(holds.getByRole("status")).toHaveText(
+      "Hold decision recorded. Deletion remains disabled.",
+    );
+    await expect(holds.getByRole("listitem")).toHaveCount(1);
+    await expect(
+      holds.getByRole("checkbox", {
+        name: "I confirm an authorized preservation decision for this record and period.",
+      }),
+    ).not.toBeChecked();
+    await holds
+      .getByLabel("Hold ends (your device time)")
+      .fill(new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 16));
+    await holds
+      .getByRole("checkbox", {
+        name: "I confirm an authorized preservation decision for this record and period.",
+      })
+      .check();
+    await holds
+      .getByLabel("Decision reference", { exact: true })
+      .fill(randomUUID());
+    await holds
+      .getByRole("button", { name: "Create hold", exact: true })
+      .click();
+    await expect(holds.getByRole("listitem")).toHaveCount(2);
+    const requestId = await holds
+      .getByLabel("Record reference", { exact: true })
+      .inputValue();
+    const holdPage = await (
+      await admin.request.get(
+        `/api/v1/admin/data-requests/${requestId}/holds?limit=1`,
+      )
+    ).json();
+    expect(holdPage.data).toHaveLength(1);
+    expect(holdPage.next_cursor).toBeTruthy();
+    const holdNext = await (
+      await admin.request.get(
+        `/api/v1/admin/data-requests/${requestId}/holds?limit=1&cursor=${holdPage.next_cursor}`,
+      )
+    ).json();
+    expect(holdNext.data).toHaveLength(1);
+    expect(holdNext.data[0].id).not.toBe(holdPage.data[0].id);
+    await holds
+      .getByRole("button", { name: /^Release hold / })
+      .first()
+      .click();
+    await holds.getByLabel("Release decision reference").fill(randomUUID());
+    await holds
+      .getByRole("checkbox", {
+        name: "I confirm an authorized release decision for this hold.",
+      })
+      .check();
+    let lostRelease = false;
+    await admin.route(
+      "**/api/v1/admin/data-requests/*/holds/*/release",
+      async (route) => {
+        if (!lostRelease) {
+          lostRelease = true;
+          expect((await route.fetch()).status()).toBe(200);
+          await route.abort();
+        } else await route.continue();
+      },
+    );
+    await holds
+      .getByRole("button", { name: "Confirm release", exact: true })
+      .click();
+    await expect(holds.getByRole("status")).toContainText(
+      "Could not confirm the operation",
+    );
+    await holds.getByRole("button", { name: "Retry hold operation" }).click();
+    await expect(holds.getByText(/— RELEASED/)).toHaveCount(1);
+    await deletion
+      .getByRole("button", { name: "Preview deletion impact" })
+      .click();
+    await expect(
+      admin.getByText("Active registered holds: 1", { exact: true }),
+    ).toBeVisible();
     expect(
       (await new AxeBuilder({ page: admin }).analyze()).violations,
     ).toEqual([]);

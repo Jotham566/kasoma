@@ -198,3 +198,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 - [ADR-028: Owned bounded data exports](../decisions/ADR/028-owned-data-exports.md)
 
 - [ADR-029: Minimized deletion-impact preview](../decisions/ADR/029-deletion-impact-preview.md)
+
+- [ADR-030: Specific-record legal holds](../decisions/ADR/030-record-legal-holds.md)
+  records finite record preservation, independent review, immutable evidence and partial coverage.

@@ -4,7 +4,10 @@ Date: 29 September 2026. Synthetic local development only.
 
 Owned exports `d20c344` are pushed to main; completed branch removed and
 [hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36529147185). Deletion-impact
-preview is local on `codex/deletion-readiness`, uncommitted for review.
+preview was committed and pushed to main on 30 September as `6f7f210`;
+`codex/deletion-readiness` was removed. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36726790587).
+See also the [next slice verification](E8_LEGAL_HOLDS_VERIFICATION.md).
+The evidence below describes this completed slice before ADR-030 hold extensions.
 
 ## Scope and decisions
 

@@ -46,3 +46,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-029: Minimized deletion-impact preview](029-deletion-impact-preview.md)
   records non-destructive review, bounded counts, audit and explicit execution blockers.
+
+- [ADR-030: Specific-record legal holds](030-record-legal-holds.md)
+  records finite record preservation, independent review, immutable evidence and partial coverage.

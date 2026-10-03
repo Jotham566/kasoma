@@ -564,10 +564,24 @@
       "DeletionPreview": {
         "additionalProperties": false,
         "properties": {
+          "active_holds_at_least": {
+            "default": false,
+            "title": "Active Holds At Least",
+            "type": "boolean"
+          },
+          "active_legal_holds": {
+            "default": 0,
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Active Legal Holds",
+            "type": "integer"
+          },
           "blockers": {
             "items": {
               "enum": [
                 "LEGAL_HOLD_CHECK_UNAVAILABLE",
+                "LEGAL_HOLD_COVERAGE_INCOMPLETE",
+                "ACTIVE_RECORD_HOLDS",
                 "ERASURE_PROCESSOR_UNAVAILABLE",
                 "ANONYMIZATION_REVIEW_REQUIRED",
                 "STAFF_RECORDS_REQUIRE_REVIEW"
@@ -1759,6 +1773,217 @@
           "has_more_hints"
         ],
         "title": "HintState",
+        "type": "object"
+      },
+      "HoldInput": {
+        "additionalProperties": false,
+        "properties": {
+          "affirmative": {
+            "const": true,
+            "title": "Affirmative",
+            "type": "boolean"
+          },
+          "decision_reference": {
+            "format": "uuid",
+            "title": "Decision Reference",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "reason": {
+            "enum": [
+              "LEGAL_OBLIGATION",
+              "SECURITY_INVESTIGATION"
+            ],
+            "title": "Reason",
+            "type": "string"
+          },
+          "record_id": {
+            "format": "uuid",
+            "title": "Record Id",
+            "type": "string"
+          },
+          "record_type": {
+            "enum": [
+              "CONSENT",
+              "ATTEMPT",
+              "CONTENT_FLAG",
+              "DATA_REQUEST"
+            ],
+            "title": "Record Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "record_type",
+          "record_id",
+          "decision_reference",
+          "reason",
+          "expires_at",
+          "affirmative"
+        ],
+        "title": "HoldInput",
+        "type": "object"
+      },
+      "HoldPage": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/HoldView"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data",
+          "next_cursor"
+        ],
+        "title": "HoldPage",
+        "type": "object"
+      },
+      "HoldRelease": {
+        "additionalProperties": false,
+        "properties": {
+          "affirmative": {
+            "const": true,
+            "title": "Affirmative",
+            "type": "boolean"
+          },
+          "decision_reference": {
+            "format": "uuid",
+            "title": "Decision Reference",
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision_reference",
+          "affirmative"
+        ],
+        "title": "HoldRelease",
+        "type": "object"
+      },
+      "HoldView": {
+        "additionalProperties": false,
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "decision_reference": {
+            "format": "uuid",
+            "title": "Decision Reference",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "reason": {
+            "enum": [
+              "LEGAL_OBLIGATION",
+              "SECURITY_INVESTIGATION"
+            ],
+            "title": "Reason",
+            "type": "string"
+          },
+          "record_id": {
+            "format": "uuid",
+            "title": "Record Id",
+            "type": "string"
+          },
+          "record_type": {
+            "enum": [
+              "CONSENT",
+              "ATTEMPT",
+              "CONTENT_FLAG",
+              "DATA_REQUEST"
+            ],
+            "title": "Record Type",
+            "type": "string"
+          },
+          "release_reference": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Reference"
+          },
+          "released_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Released At"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "retention_policy": {
+            "const": "SIX_YEARS_AFTER_REQUEST_COMPLETION",
+            "default": "SIX_YEARS_AFTER_REQUEST_COMPLETION",
+            "title": "Retention Policy",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "EXPIRED",
+              "RELEASED"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "request_id",
+          "record_type",
+          "record_id",
+          "decision_reference",
+          "reason",
+          "status",
+          "created_at",
+          "expires_at",
+          "released_at",
+          "release_reference"
+        ],
+        "title": "HoldView",
         "type": "object"
       },
       "InitialRecommendation": {
@@ -4211,6 +4436,383 @@
           }
         },
         "summary": "Deletion Preview"
+      }
+    },
+    "/api/v1/admin/data-requests/{target}/holds": {
+      "get": {
+        "operationId": "holds_api_v1_admin_data_requests__target__holds_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Holds"
+      },
+      "post": {
+        "operationId": "create_hold_api_v1_admin_data_requests__target__holds_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HoldInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Create Hold"
+      }
+    },
+    "/api/v1/admin/data-requests/{target}/holds/{hold}/release": {
+      "post": {
+        "operationId": "release_hold_api_v1_admin_data_requests__target__holds__hold__release_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "hold",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Hold",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HoldRelease"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Release Hold"
       }
     },
     "/api/v1/admin/item-versions/{version_id}": {

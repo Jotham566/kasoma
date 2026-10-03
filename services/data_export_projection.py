@@ -203,7 +203,12 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
     records["account_events"] = [
         fields(r, "type created_at")
         for r in rows(
-            select(IdentityEvent).where(IdentityEvent.user_id == actor).order_by(IdentityEvent.id)
+            select(IdentityEvent)
+            .where(
+                IdentityEvent.user_id == actor,
+                IdentityEvent.type.not_in(["legal_hold.created", "legal_hold.released"]),
+            )
+            .order_by(IdentityEvent.id)
         )
     ]
     # Only taxonomy names referenced by this account, never content keys or future assignments.

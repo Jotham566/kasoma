@@ -107,6 +107,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/data-requests/{target}/holds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Holds */
+        get: operations["holds_api_v1_admin_data_requests__target__holds_get"];
+        put?: never;
+        /** Create Hold */
+        post: operations["create_hold_api_v1_admin_data_requests__target__holds_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/data-requests/{target}/holds/{hold}/release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Release Hold */
+        post: operations["release_hold_api_v1_admin_data_requests__target__holds__hold__release_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/item-versions/{version_id}": {
         parameters: {
             query?: never;
@@ -983,8 +1018,18 @@ export interface components {
         };
         /** DeletionPreview */
         DeletionPreview: {
+            /**
+             * Active Holds At Least
+             * @default false
+             */
+            active_holds_at_least: boolean;
+            /**
+             * Active Legal Holds
+             * @default 0
+             */
+            active_legal_holds: number;
             /** Blockers */
-            blockers: ("LEGAL_HOLD_CHECK_UNAVAILABLE" | "ERASURE_PROCESSOR_UNAVAILABLE" | "ANONYMIZATION_REVIEW_REQUIRED" | "STAFF_RECORDS_REQUIRE_REVIEW")[];
+            blockers: ("LEGAL_HOLD_CHECK_UNAVAILABLE" | "LEGAL_HOLD_COVERAGE_INCOMPLETE" | "ACTIVE_RECORD_HOLDS" | "ERASURE_PROCESSOR_UNAVAILABLE" | "ANONYMIZATION_REVIEW_REQUIRED" | "STAFF_RECORDS_REQUIRE_REVIEW")[];
             /**
              * Execution Enabled
              * @default false
@@ -1547,6 +1592,117 @@ export interface components {
              * Format: uuid
              */
             session_item_id: string;
+        };
+        /** HoldInput */
+        HoldInput: {
+            /**
+             * Affirmative
+             * @constant
+             */
+            affirmative: true;
+            /**
+             * Decision Reference
+             * Format: uuid
+             */
+            decision_reference: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "LEGAL_OBLIGATION" | "SECURITY_INVESTIGATION";
+            /**
+             * Record Id
+             * Format: uuid
+             */
+            record_id: string;
+            /**
+             * Record Type
+             * @enum {string}
+             */
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST";
+        };
+        /** HoldPage */
+        HoldPage: {
+            /** Data */
+            data: components["schemas"]["HoldView"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** HoldRelease */
+        HoldRelease: {
+            /**
+             * Affirmative
+             * @constant
+             */
+            affirmative: true;
+            /**
+             * Decision Reference
+             * Format: uuid
+             */
+            decision_reference: string;
+        };
+        /** HoldView */
+        HoldView: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Decision Reference
+             * Format: uuid
+             */
+            decision_reference: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "LEGAL_OBLIGATION" | "SECURITY_INVESTIGATION";
+            /**
+             * Record Id
+             * Format: uuid
+             */
+            record_id: string;
+            /**
+             * Record Type
+             * @enum {string}
+             */
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST";
+            /** Release Reference */
+            release_reference: string | null;
+            /** Released At */
+            released_at: string | null;
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /**
+             * Retention Policy
+             * @default SIX_YEARS_AFTER_REQUEST_COMPLETION
+             * @constant
+             */
+            retention_policy: "SIX_YEARS_AFTER_REQUEST_COMPLETION";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ACTIVE" | "EXPIRED" | "RELEASED";
         };
         /** InitialRecommendation */
         InitialRecommendation: {
@@ -2792,6 +2948,277 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DeletionPreview"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    holds_api_v1_admin_data_requests__target__holds_get: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HoldPage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    create_hold_api_v1_admin_data_requests__target__holds_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HoldInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HoldView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    release_hold_api_v1_admin_data_requests__target__holds__hold__release_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                target: string;
+                hold: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HoldRelease"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HoldView"];
                 };
             };
             /** @description Unauthorized */

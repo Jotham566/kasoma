@@ -356,8 +356,8 @@ export/delete data or change learning access. There is no completion button or e
 notification. Requester identity is excluded from the queue. Operators must not represent
 this development intake as completed processing or enroll real learners before fulfillment
 and the privacy/legal gates pass. The six-year-after-completion policy is recorded;
-export completion now records its deadline; six-year evidence expiry and legal holds
-remain gated.
+export completion now records its deadline; six-year evidence expiry and complete legal-hold coverage
+remain gated. The record-hold lifecycle below covers four target types.
 
 Setup installs a pnpm Corepack shim in `.local/tools/bin`, ahead of global package
 managers in repository commands. Nested Turborepo tasks therefore retain the pinned
@@ -385,8 +385,8 @@ request/account/audit history to clear an export error. Artifact expiry is separ
 from six-year accountability evidence retention and the approved 35-day backup policy.
 
 EXPORT_LIMIT_REACHED leaves the request pending rather than returning a partial file.
-Large-history fulfillment, exceptional disclosures, deletion/anonymization, legal holds
-and evidence-expiry processors need further implementation and production acceptance.
+Large-history fulfillment, exceptional disclosures, deletion/anonymization, full hold
+coverage and evidence-expiry processors need further implementation and production acceptance.
 No real learner data or provider calls are needed for this synthetic workflow.
 
 
@@ -400,13 +400,47 @@ counts and retention/review categories without learner identifiers, answers or c
 A plus mark means a lower bound. Related staff categories overlap; do not sum the table
 as a unique record total. Reload clears the observation; retry a failed preview explicitly.
 
-The report always states that deletion is disabled. Missing legal-hold checks are not
-reported as no holds. Preview does not revoke access, mutate consent, anonymize evidence
+The report always states that deletion is disabled. Incomplete legal-hold coverage remains an explicit
+blocker even when the active registered count is zero. Preview does not revoke access, mutate consent, anonymize evidence
 or complete a request. It emits a metadata audit event and uses ten previews/admin/minute;
 failed queries/audits produce a generic error without returning a partial report.
 
-Next work must implement record-specific legal holds and deletion state, review the
+Next work must expand record-hold coverage and implement deletion state, review the
 precise erasure/anonymization migration with a recovery plan and run synthetic execution
 checks. Do not remove immutable triggers or manually delete rows to work around blockers.
 A production anonymization/re-identification review and the existing privacy/legal gates
 remain required before real learner use. No external provider calls are required.
+
+## Synthetic record-hold review
+
+After `make migrate` (head 0016), use the same independent ADMIN claimant at
+`/admin/data-requests`. On an in-review DELETE request select Manage record holds.
+Choose Consent, Attempt, Content flag or Data request and supply an owned record UUID,
+an opaque synthetic decision-reference UUID, an approved reason and a finite future
+end date. The form accepts device-local time; displayed evidence uses Kampala time.
+Confirm the authorized decision and create the hold. The default target is the DELETE
+request itself, not the whole account. Never enter personal narratives or real learner data.
+
+Use Release hold with a new authorized decision reference and affirmative confirmation.
+Uncertain responses offer Retry hold operation with the original key/body; do not create
+another hold to recover a lost acknowledgement. Reload holds discards the pending UI
+operation and fetches authoritative metadata. Multiple explicit decisions remain separate.
+An expired hold cannot be released again. Expiry is checked on access without a scheduled
+job, and neither expiry nor release deletes underlying records or evidence.
+
+Creating/releasing a hold clears the displayed deletion preview; fetch a fresh preview
+for active counts. Zero active registered holds never establishes clearance: four record
+types are supported and incomplete coverage stays explicit. Deletion remains disabled.
+Request status stays IN_REVIEW. Hold details/events are internal and excluded from owner
+exports. A hold on request evidence does not extend its disposable export-copy lifetime.
+
+Troubleshooting: sign in again after stale OTP; only the current independent claimant
+may act. Foreign record IDs return a generic not-found response. Wait after rate limits
+(ten new writes or sixty reads/admin/minute). Do not bypass guards, mutate expiry, delete
+hold evidence or downgrade migration 0016. Disable routes and use a reviewed forward fix.
+Remaining work is expanded hold coverage, deletion execution state, reviewed transforms
+and recovery, large-history exports and accountability-expiry processing.
+
+For focused hold/preview regressions, use
+`PYTEST_ADDOPTS='-k "legal_hold or deletion_preview"' make test`. The unfiltered
+`make test` remains the full regression gate; use focused runs for subsequent narrow fixes.

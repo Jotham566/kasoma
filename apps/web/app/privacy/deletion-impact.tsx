@@ -14,6 +14,10 @@ const policies: Record<Preview["sources"][number]["retention"], string> = {
   TRANSIENT_EXPIRY: "Existing short-lived verification expiry policy",
 };
 const blockers: Record<Preview["blockers"][number], string> = {
+  LEGAL_HOLD_COVERAGE_INCOMPLETE:
+    "Legal holds cover four record types; other records still require review.",
+  ACTIVE_RECORD_HOLDS:
+    "Active holds preserve specific records; they do not hold the whole account.",
   LEGAL_HOLD_CHECK_UNAVAILABLE:
     "Record-specific legal holds have not been checked.",
   ERASURE_PROCESSOR_UNAVAILABLE: "The deletion processor is not implemented.",
@@ -33,6 +37,10 @@ export function DeletionImpact({ preview }: { preview: Preview }) {
         Deletion impact preview
       </h2>
       <p>Reference: {preview.request_id}</p>
+      <p>
+        Active registered holds: {preview.active_legal_holds ?? 0}
+        {preview.active_holds_at_least ? "+" : ""}
+      </p>
       <p>
         No deletion is enabled. This preview does not revoke access, remove
         records or complete the request.

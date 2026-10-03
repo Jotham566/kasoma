@@ -7,12 +7,12 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 
 | Requirement | Implementation | Tests / evidence | Status |
 | --- | --- | --- | --- |
-| FR-ID-001 | Email/phone OTP, purpose binding, five-attempt/ten-minute limits, per-contact/peer/device sends | `tests/integration/test_identity.py`, `tests/e2e/identity.spec.ts` | Local implemented; SES/SMS production gates pending |
+| FR-ID-001 | Email/phone OTP, purpose binding, five-attempt/ten-minute limits, per-contact/peer/device sends; initial UI check serializes sign-in actions | `tests/integration/test_identity.py`, `tests/e2e/identity.spec.ts` | Local implemented; SES/SMS production gates pending |
 | FR-ID-002 | Verified identifier linking with uniqueness, encryption and keyed lookup; existing identities never auto-merge | API linking, collision and one-identity tests | Local implemented |
 | FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests | Local implemented; approved wording and WhatsApp integration pending; diagnostic and revision routes enforce current consent |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout | Local implemented |
-| FR-ID-006 | Recent-OTP intake/review and owned allowlisted JSON export; encrypted retries, atomic completion, six-year deadline and 24-hour copy expiry | Contract/API/SQL/browser tests; [intake](E8_DATA_REQUESTS_VERIFICATION.md), [export verification](E8_DATA_EXPORTS_VERIFICATION.md) | Partial: intake/export/expiry merged; audited deletion-impact preview local ([verification](E8_DELETION_PREVIEW_VERIFICATION.md)); erasure/anonymization, large-history fulfillment and accountability retention/legal holds pending |
+| FR-ID-006 | Recent-OTP intake/review and owned allowlisted JSON export; encrypted retries, atomic completion, six-year deadline and 24-hour copy expiry | Contract/API/SQL/browser tests; [intake](E8_DATA_REQUESTS_VERIFICATION.md), [export verification](E8_DATA_EXPORTS_VERIFICATION.md) | Partial: intake/export/expiry and deletion preview merged; specific-record hold lifecycle local ([verification](E8_LEGAL_HOLDS_VERIFICATION.md)); erasure/anonymization, full hold coverage, large-history fulfillment and accountability expiry pending |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -82,3 +82,7 @@ E4 unseen reassessment: [verification report](E4_REASSESSMENT_VERIFICATION.md).
 E6 progress and session history: [verification report](E6_PROGRESS_VERIFICATION.md).
 
 E8 learner flags: [verification report](E8_FLAGS_VERIFICATION.md).
+
+E8 record legal holds: [verification report](E8_LEGAL_HOLDS_VERIFICATION.md), covering
+FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
+Partial coverage never authorizes account erasure.

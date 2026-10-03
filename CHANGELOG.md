@@ -1,5 +1,22 @@
 # Changelog
 
+## 30 September 2026 — specific-record legal holds (local implementation)
+
+- Deletion-impact preview committed and pushed to main as `6f7f210`; completed branch removed.
+- Add recent-OTP independent ADMIN claimant controls for finite holds on owned consent,
+  attempt, content-flag and data-request records, with opaque decision references.
+- Add migration 0016, immutable scope, one-time release, atomic audit/outbox evidence,
+  bounded read/write rates, retry receipts and active-hold DELETE guards.
+- Add administrator create/list/release controls, generated contracts and SQL/API/browser
+  tests for ownership, retries, expiry, rollback and preservation.
+- Show active registered holds in the deletion preview while retaining incomplete-coverage
+  and execution blockers. Exclude internal hold metadata/events from learner exports.
+- Fix an initial-session-check race that could overwrite onboarding action errors; keep
+  actions disabled until initialization settles and add a delayed-response browser regression.
+- Record [ADR-030](docs/decisions/ADR/030-record-legal-holds.md), update sprint, traceability,
+  API/data/runbook and [verification](docs/implementation/E8_LEGAL_HOLDS_VERIFICATION.md).
+  This does not implement erasure, universal hold coverage or retention expiry.
+
 ## 29 September 2026 — deletion-impact preview (local implementation)
 
 - Owned exports committed and pushed to main as `d20c344`; completed branch removed.

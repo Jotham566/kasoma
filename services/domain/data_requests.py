@@ -49,3 +49,27 @@ class DataExport(Base):
     digest: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class LegalHold(Base):
+    __tablename__ = "legal_holds"
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    request_id: Mapped[UUID] = mapped_column(ForeignKey("data_subject_requests.id"), index=True)
+    record_type: Mapped[str]
+    record_id: Mapped[UUID]
+    decision_reference: Mapped[UUID]
+    reason: Mapped[str]
+    created_by: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    released_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    released_by: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"))
+    release_reference: Mapped[UUID | None]
+
+
+class LegalHoldReceipt(Base):
+    __tablename__ = "legal_hold_receipts"
+    actor_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    key: Mapped[UUID] = mapped_column(primary_key=True)
+    request_hash: Mapped[str]
+    hold_id: Mapped[UUID] = mapped_column(ForeignKey("legal_holds.id"))
