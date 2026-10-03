@@ -1,7 +1,7 @@
 # ADR-034: Consent-gated WhatsApp linking with durable message intake
 
 Date: 3 October 2026
-Status: Accepted within delegated MVP implementation discretion; implementation in progress
+Status: Accepted within delegated MVP implementation discretion; local fake implementation verified
 Requirements: FR-WA-001/004/006, FR-ID-003, FR-OPS-001/003/004, NFR-SEC-002, NFR-OBS-001
 
 ## Decision

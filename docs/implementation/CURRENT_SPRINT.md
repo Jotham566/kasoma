@@ -1,4 +1,4 @@
-# Current Sprint: E7 WhatsApp linking
+# Current Sprint: E7 shared WhatsApp practice
 
 Legal holds (`ec53ac4`) and dependency remediation (`b766266`) are published to main.
 [Hosted CI](https://github.com/Jotham566/kasoma/actions/runs/37126531374) passed setup,
@@ -30,16 +30,19 @@ Commit `7218898` is published to main and its branch removed after
 360 Python tests, 19 browser tests, five tooling tests and all setup/migration/build/security/container gates.
 Local Docker recovered without a reset; hosted evidence remains independent.
 
-## Active implementation
+## Next implementation: shared WhatsApp practice
 
-[WhatsApp linking readiness](E7_LINKING_READINESS.md) defines FR-WA-001/004/006 and
-the required privacy/consent gates under ADR-034. Migration 0018, owner code/status/unlink,
-signed durable intake, STOP barriers, transactional processing, fake delivery, expiry and
-owned export/inventory are implemented. 24 focused contract/integration tests passed.
-All 20 browser journeys and an earlier full regression/container pass succeeded. Final
-verification was interrupted by Docker Desktop stopping; exact-snapshot hosted CI is required
-before promotion to main. Final lint/types/contracts pass; acceptance remains pending.
-No external messaging is enabled.
+Local linking/intake/opt-out (`23da19c`) passed every gate in
+[hosted CI](https://github.com/Jotham566/kasoma/actions/runs/37148246698): 395 Python,
+20 browser and five tooling tests, plus setup, clean migrations/seed, lint/types/contracts,
+security and container smoke. See [E7 evidence and next-slice assessment](E7_LINKING_READINESS.md).
+Docker stopped during final native verification; hosted checks independently verified the exact
+snapshot. No volumes were reset. No external messaging is enabled.
+
+Next: FR-WA-002/003/004/005/006 five-question supported practice through shared transactional
+assessment/grading/mastery services. Preserve the web contract and consent/enrollment gates;
+add expiring conversation pointers, explicit reply references, concise feedback and parity/replay
+coverage. Record the new ADR before schema changes. Local fake providers remain mandatory.
 
 Prepare the concrete deletion/anonymization transform and recovery plan for required
 review before destructive execution; reconcile immutable learning/content records,

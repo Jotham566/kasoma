@@ -98,7 +98,9 @@ completion evidence and 24-hour copy expiry are merged. A non-destructive admini
 deletion-impact preview is merged. Specific-record legal holds for consent, attempts,
 content flags and data requests are merged. Bounded synthetic JSON draft imports, source
 locators and atomic worker processing are verified. Local ADMIN operational health and
-threshold alerts are merged; remaining telemetry is pending. Deletion/anonymization, remaining
+threshold alerts are merged; remaining telemetry is pending. Local consent-gated WhatsApp
+linking, signed durable intake, STOP/unlink barriers, fake delivery and expiry are verified.
+Five-question WhatsApp practice and shared grading/mastery parity remain pending. Deletion/anonymization, remaining
 hold coverage, large-history fulfillment and accountability-retention processors remain pending.
 Academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

@@ -216,4 +216,5 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 See [ADR-034](../decisions/ADR/034-whatsapp-linking.md). Defines consent/recent-auth code issue,
 owner/sender uniqueness, exact-byte signature verification, atomic intake, STOP/unlink barriers,
 actor-before-channel lock ordering, fake-only replies, bounded retries and transient expiry.
-Implementation is in progress; academic practice and production transport remain pending.
+Local implementation is verified under [E7 evidence](../implementation/E7_LINKING_READINESS.md);
+academic practice and production transport remain pending.

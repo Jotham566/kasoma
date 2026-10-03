@@ -9,7 +9,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | --- | --- | --- | --- |
 | FR-ID-001 | Email/phone OTP, purpose binding, five-attempt/ten-minute limits, per-contact/peer/device sends; initial UI check serializes sign-in actions | `tests/integration/test_identity.py`, `tests/e2e/identity.spec.ts` | Local implemented; SES/SMS production gates pending |
 | FR-ID-002 | Verified identifier linking with uniqueness, encryption and keyed lookup; existing identities never auto-merge | API linking, collision and one-identity tests | Local implemented |
-| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests | Local implemented; approved wording and WhatsApp integration pending; diagnostic and revision routes enforce current consent |
+| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout | Local implemented |
 | FR-ID-006 | Recent-OTP intake/review and owned allowlisted JSON export; encrypted retries, atomic completion, six-year deadline and 24-hour copy expiry | Contract/API/SQL/browser tests; [intake](E8_DATA_REQUESTS_VERIFICATION.md), [export verification](E8_DATA_EXPORTS_VERIFICATION.md) | Partial: intake/export/expiry and deletion preview merged; specific-record hold lifecycle merged ([verification](E8_LEGAL_HOLDS_VERIFICATION.md)); erasure/anonymization, full hold coverage, large-history fulfillment and accountability expiry pending |
@@ -39,22 +39,22 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history | Progress engine/API/browser tests; [verification](E6_PROGRESS_VERIFICATION.md) | Local synthetic implemented; academic aggregation calibration and large-history performance gates pending |
 | FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
-| FR-WA-001 | — | — | Not started |
+| FR-WA-001 | `services/whatsapp_linking.py`, migration 0018, owned web channel UI | [E7 evidence](E7_LINKING_READINESS.md); expiry/replay/concurrency, consent/minor and sender-collision tests | Local fake linking verified; production provider/pilot gates remain |
 | FR-WA-002 | — | — | Not started |
 | FR-WA-003 | — | — | Not started |
-| FR-WA-004 | Exact-byte signature/strict JSON boundary started; no webhook route yet | `tests/contract/test_whatsapp_ingress.py`; [linking plan](E7_LINKING_READINESS.md) | In progress: durable message-ID deduplication, ordering and shared progress invariants pending |
+| FR-WA-004 | Signed bounded intake, durable message-ID hashes, atomic replay/conflict handling, monotonic status callbacks | [E7 evidence](E7_LINKING_READINESS.md); signature, duplicate/conflict, callback and rollback tests | Transport/linking verified; answer/mastery replay invariants pending practice integration |
 | FR-WA-005 | — | — | Not started |
-| FR-WA-006 | — | — | Not started |
+| FR-WA-006 | Immediate STOP barrier, owner unlink, fake outbound rechecks | [E7 evidence](E7_LINKING_READINESS.md); STOP before worker/delivery, stale code and retry tests | Local opt-out verified; channel practice-session handling pending |
 | FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor; bounded JSON import API/UI and transactional worker | Content tests; import contract/API/browser regressions; [import evidence](E2_IMPORTS_VERIFICATION.md) | Partial: create/edit verified; structured synthetic JSON import verified; other formats and academic release pending |
 | FR-CNT-002 | Role checks and immutable author ownership; self-review blocked even with both roles | API self-review denial; SQL review guard; disabled author approval in browser | Local implemented |
 | FR-CNT-003 | Return, approval, high-risk/disputed second review, retirement and append-only reviews | Full API/browser workflow; two-reviewer and retired-selection tests | Local implemented with synthetic content |
 | FR-CNT-004 | Immutable approved versions, explicit successor drafts and normalized frozen mappings | API mutation rejection; direct SQL history/mapping/attempt tests; retired-version grades/solutions remain unchanged | Partial: choice/numeric attempts and grades pin immutable versions/hash; migration preserves legacy choice rows; rubric pinning pending |
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single/multiple-choice and numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
-| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; other learner events and dispatch pending |
+| FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; channel code/link/unlink/STOP events and safe correlated processing logs are implemented; remaining dispatch pending |
 | FR-OPS-002 | Health shell plus ADMIN snapshot/dashboard, bounded import/flag metrics, monitoring heartbeat and configurable local alerts | [Operations verification](E8_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs, Redis/worker and browser tests | Partial: local visibility verified and merged; AI/messaging/grade-failure/latency/mastery/channel telemetry and production alerting pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
-| FR-OPS-004 | — | — | Not started |
+| FR-OPS-004 | Typed channel attempt/outbound limits, bounded failures and feature flag | [E7 evidence](E7_LINKING_READINESS.md); configuration/rate/failure tests | Local channel limits verified; AI limits and production usage telemetry pending |
 | NFR-PERF-001 | — | — | Not started |
 | NFR-PERF-002 | — | — | Not started |
 | NFR-REL-001 | — | — | Not started |
@@ -91,10 +91,10 @@ E9 lint dependency security remediation (NFR-MNT-001/NFR-SEC-001):
 [ADR-031](../decisions/ADR/031-lint-glob-security.md) and
 [verification](E9_LINT_SECURITY_VERIFICATION.md). No application acceptance inferred.
 
-### E7 linking checkpoint (FR-WA-001/004/006, FR-ID-003/006, FR-OPS-001/003/004)
+### E7 verified local linking (FR-WA-001/004/006, FR-ID-003/006, FR-OPS-001/003/004)
 
-ADR-034 and [readiness evidence](E7_LINKING_READINESS.md) track migration 0018, owner code/status/
-unlink API, signed durable intake, STOP barriers, transactional worker/fake outbox, retention and
-owned export/deletion inventory. 24 focused tests pass. UI/browser, full-suite and security/container
-verification remain pending; this is partial implementation evidence, not completed FR-WA acceptance.
-FR-WA-002/003/005 practice/grading and production transport remain unimplemented.
+Code `23da19c` and [E7 evidence](E7_LINKING_READINESS.md) record migration 0018, owner routes/UI,
+signed durable intake, STOP barriers, transactional processing/fake delivery, expiry and owned
+export/deletion inventory. Hosted CI passed 395 Python, 20 browser and five tooling tests plus
+all setup/migration/lint/type/contract/build/security/container gates. Native Docker interruption
+is recorded separately. FR-WA-002/003/005 practice/grading and production transport remain pending.

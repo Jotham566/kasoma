@@ -1,13 +1,14 @@
 # Changelog
 
-## 3 October 2026 — WhatsApp linking work in progress
+## 3 October 2026 — verified local WhatsApp linking
 
 - Add migration 0018, recent-auth/current-consent single-use codes and owner status/unlink (FR-WA-001/006).
 - Add bounded signed durable webhook intake, atomic deduplication and immediate STOP barriers (FR-WA-004 foundation).
 - Add transactional processing, fake delivery, bounded retries, configurable limits and transient expiry.
 - Include owned channel records in exports and deletion previews; channel hold coverage remains pending.
 - Add generated contracts, channel UI, local simulator, messaging worker and ADR-034.
-- Focused checks and security scans pass; full regression/browser/container verification is in progress.
+- Commit `23da19c` passes full hosted CI: 395 Python, 20 browser and five tooling tests; setup/migrations/seed, lint/types/contracts/build and security/container gates pass.
+- Record the native Docker interruption separately; no reset or weakened gate. Five-question practice and production messaging remain pending.
 
 ## 3 October 2026 — local operations visibility
 
