@@ -49,3 +49,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-030: Specific-record legal holds](030-record-legal-holds.md)
   records finite record preservation, independent review, immutable evidence and partial coverage.
+
+- [ADR-031: Remove vulnerable lint-only glob dependency](031-lint-glob-security.md)
+  records the scoped dependency replacement and directory-discovery compatibility tests.

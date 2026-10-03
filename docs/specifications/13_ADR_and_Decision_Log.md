@@ -201,3 +201,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-030: Specific-record legal holds](../decisions/ADR/030-record-legal-holds.md)
   records finite record preservation, independent review, immutable evidence and partial coverage.
+
+- [ADR-031: Remove vulnerable lint-only glob dependency](../decisions/ADR/031-lint-glob-security.md)
+  records the scoped dependency replacement and directory-discovery compatibility tests.

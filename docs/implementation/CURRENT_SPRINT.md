@@ -1,22 +1,20 @@
-# Current Sprint: E8 specific-record legal holds
+# Current Sprint: legal-hold publication and E9 security maintenance
 
-Deletion-impact preview is committed and pushed to main as `6f7f210`; completed branch
-`codex/deletion-readiness` removed. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36726790587). The next slice is local on `codex/legal-holds`,
-uncommitted for review.
+Record legal holds are committed as `ec53ac4`; publication is awaiting the refreshed
+security gate and hosted CI. The development-tool advisory found on 3 October is
+remediated locally on `codex/lint-security` under
+[ADR-031](../decisions/ADR/031-lint-glob-security.md).
 
-## Current slice
+## Current evidence
 
-FR-ID-006/BR-010 preservation prerequisite, supporting FR-OPS-003, NFR-SEC-002,
-NFR-ACC-001 and NFR-MNT-001. The independent recent-OTP ADMIN claimant can create,
-list and release finite holds on individual owned consent, attempt, content-flag and
-data-request records. Metadata, receipts, audits and safe outbox events are atomic;
-SQL checks enforce ownership and immutability, with active-hold DELETE guards.
-The preview reports active registered holds and explicitly incomplete coverage.
-Deletion remains disabled. Decision: [ADR-030](../decisions/ADR/030-record-legal-holds.md).
-All 337 Python tests and 17 browser tests pass, followed by 22 focused checks for the
-final inventory correction. Setup, lint/types, contracts, build, security and final
-container smoke pass. See [legal-hold verification](E8_LEGAL_HOLDS_VERIFICATION.md).
-The browser run includes the related FR-ID-001 initial-session-check race correction.
+FR-ID-006/BR-010: the legal-hold slice passed 337 Python tests, 17 browser tests and
+22 final focused checks on 30 September. See [verification](E8_LEGAL_HOLDS_VERIFICATION.md).
+NFR-MNT-001/NFR-SEC-001: dependency replacement now passes frozen setup, five actual-plugin
+regressions, 223 Python unit/contract tests, lint/types, generated contracts, native build
+and dependency/security audits. See [verification](E9_LINT_SECURITY_VERIFICATION.md).
+No audit exclusions or lint rules were removed. Docker startup is blocked by the macOS
+administrator prompt for privileged-port configuration. Local database/container checks
+remain unavailable until that prompt is completed; hosted CI provides independent checks.
 
 ## Next vertical slice
 

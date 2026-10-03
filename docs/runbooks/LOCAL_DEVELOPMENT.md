@@ -444,3 +444,19 @@ and recovery, large-history exports and accountability-expiry processing.
 For focused hold/preview regressions, use
 `PYTEST_ADDOPTS='-k "legal_hold or deletion_preview"' make test`. The unfiltered
 `make test` remains the full regression gate; use focused runs for subsequent narrow fixes.
+
+## Dependency maintenance and lint compatibility
+
+After a reviewed dependency change, run `make deps-lock` then `make setup` to refresh
+and validate the frozen lock with the repository-pinned runtime. Avoid a global pnpm
+installation with a different Node version. `make test-tooling` exercises the resolved
+Next lint plugin; it also runs as part of `make test-unit` and `make test`.
+
+ADR-031 scopes the tinyglobby alias to Next's lint plugin 16.3.6 and includes a pinned
+helper patch disabling directory auto-expansion and preserving absolute patterns. Review
+both at the next plugin update; do not copy the alias to other fast-glob consumers.
+`make security` still audits all dependencies without advisory exclusions.
+
+If Docker startup waits for a macOS administrator prompt, complete it locally. Do not
+reset Docker, delete volumes, bypass privilege prompts or claim database/container checks
+passed. Lint, type checks, unit tests and native builds can run while Docker is unavailable.

@@ -86,3 +86,7 @@ E8 learner flags: [verification report](E8_FLAGS_VERIFICATION.md).
 E8 record legal holds: [verification report](E8_LEGAL_HOLDS_VERIFICATION.md), covering
 FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
 Partial coverage never authorizes account erasure.
+
+E9 lint dependency security remediation (NFR-MNT-001/NFR-SEC-001):
+[ADR-031](../decisions/ADR/031-lint-glob-security.md) and
+[verification](E9_LINT_SECURITY_VERIFICATION.md). No application acceptance inferred.

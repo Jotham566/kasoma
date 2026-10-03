@@ -17,7 +17,7 @@ dev: services migrate
 	$(UV) python scripts/dev.py
 test: test-unit
 	$(UV) pytest -m integration --allow-hosts=localhost,127.0.0.1,::1
-test-unit:
+test-unit: test-tooling
 	$(UV) pytest -m 'not integration'
 lint: check-docs
 	$(UV) ruff check .
@@ -132,3 +132,9 @@ seed-multiple-choice:
 .PHONY: expire-exports
 expire-exports:
 	$(UV) python -m scripts.expire_exports
+
+.PHONY: deps-lock test-tooling
+deps-lock:
+	$(PNPM) install --lockfile-only
+test-tooling:
+	node --test scripts/tooling.test.mjs

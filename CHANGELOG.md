@@ -1,5 +1,16 @@
 # Changelog
 
+## 3 October 2026 — lint dependency security remediation
+
+- Commit record legal holds as `ec53ac4` (FR-ID-006, BR-010); publication follows security verification.
+- Remove the newly audited vulnerable braces dependency from Next lint tooling through
+  a scoped tinyglobby override and pinned directory-discovery compatibility patch.
+- Add actual-plugin glob/deep-pattern and lint-rule regressions to `make test-tooling`
+  and `make test-unit`; add pinned-runtime `make deps-lock` for dependency maintenance.
+- Record ADR-031; keep audit severity and all lint rules unchanged.
+- Docker startup currently requires a macOS administrator prompt, blocking local
+  database/container verification. Prior legal-hold integration/browser evidence is retained.
+
 ## 30 September 2026 — specific-record legal holds (local implementation)
 
 - Deletion-impact preview committed and pushed to main as `6f7f210`; completed branch removed.

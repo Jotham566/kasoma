@@ -3,7 +3,8 @@
 Date: 30 September 2026. Synthetic local development only.
 
 Deletion-impact preview `6f7f210` is committed and pushed to main; completed branch
-`codex/deletion-readiness` was removed. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36726790587). Legal holds are local on `codex/legal-holds`, uncommitted for review.
+`codex/deletion-readiness` was removed. [Hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/36726790587). Legal holds were committed on 3 October as `ec53ac4`. Publication is tracked in the
+[current sprint](CURRENT_SPRINT.md); the evidence below was executed on 30 September.
 
 ## Scope and decisions
 

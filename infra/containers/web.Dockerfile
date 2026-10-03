@@ -3,6 +3,7 @@ WORKDIR /app
 ENV COREPACK_HOME=/opt/corepack COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN npm install --global corepack@0.34.0 && corepack prepare pnpm@10.30.2 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+COPY patches patches
 COPY packages packages
 COPY apps/web apps/web
 RUN corepack pnpm install --frozen-lockfile
