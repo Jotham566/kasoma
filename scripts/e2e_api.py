@@ -3,6 +3,7 @@
 import os
 import subprocess
 from datetime import timedelta
+from threading import Event, Thread
 from uuid import uuid4
 
 import uvicorn
@@ -12,6 +13,7 @@ from sqlalchemy.engine import make_url
 from apps.api.main import create_app
 from scripts.assessment_fixtures import seed_assessment
 from services.config import Settings
+from services.content_imports import process_imports
 from services.database import engine_for
 from services.identity import IdentityService
 from services.identity_contracts import OTPRequest, OTPVerify
@@ -45,6 +47,7 @@ def main() -> None:
     service.clock = lambda: clock() - timedelta(seconds=61)
     for label, roles in {
         "author": ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"],
+        "import-author": ["CONTENT_AUTHOR"],
         "reviewer": ["ACADEMIC_REVIEWER"],
         "second": ["ACADEMIC_REVIEWER"],
         "flag-reviewer": ["ACADEMIC_REVIEWER"],
@@ -65,9 +68,19 @@ def main() -> None:
     seed_assessment(service, diagnostic=True, hints=True, mathematics_only=True)
     seed_assessment(service, multiple_choice=True, hints=True)
     seed_assessment(service, reassessment=True, mathematics_only=True, hints=True)
+    stop = Event()
+
+    def drain_imports() -> None:
+        while not stop.wait(0.2):
+            process_imports(service)
+
+    worker = Thread(target=drain_imports, daemon=True)
+    worker.start()
     try:
         uvicorn.run(create_app(config, service), host="127.0.0.1", port=18000, access_log=False)
     finally:
+        stop.set()
+        worker.join(timeout=5)
         engine.dispose()
 
 

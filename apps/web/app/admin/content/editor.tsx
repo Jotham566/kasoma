@@ -140,6 +140,7 @@ export function Editor({
           worked_solution: value("worked_solution"),
           remediation: value("remediation"),
           prerequisite_concept_ids: data.getAll("prerequisites").map(String),
+          source_locator: value("source_locator"),
           source: value("source"),
           rights_status: value("rights_status") as Document["rights_status"],
           rights_evidence: value("rights_evidence"),
@@ -154,8 +155,8 @@ export function Editor({
       </h2>
       <p className="mb-4">
         Text-only choice or numeric response. Drafts may be incomplete;
-        submission validates every required field. No media uploads or imports
-        in this slice.
+        submission validates every required field. No media uploads in this
+        slice.
       </p>
       <label>
         Title
@@ -443,6 +444,7 @@ export function Editor({
           ))}
       </fieldset>
       {area("Source and provenance", "source", initial?.source, 500)}
+      {area("Source locator", "source_locator", initial?.source_locator, 160)}
       <label>
         Rights status
         <select

@@ -87,3 +87,21 @@ class ContentEvent(Base):
     version: Mapped[int]
     request_id: Mapped[UUID]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class ContentImport(Base):
+    __tablename__ = "content_import_jobs"
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    actor_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    key: Mapped[UUID]
+    request_hash: Mapped[str]
+    request_id: Mapped[UUID]
+    payload: Mapped[dict[str, Any] | None] = mapped_column(JSON(none_as_null=True))
+    results: Mapped[list[dict[str, Any]]] = mapped_column(JSON)
+    status: Mapped[str]
+    attempts: Mapped[int]
+    error_code: Mapped[str | None]
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    available_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

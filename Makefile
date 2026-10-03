@@ -138,3 +138,7 @@ deps-lock:
 	$(PNPM) install --lockfile-only
 test-tooling:
 	node --test scripts/tooling.test.mjs
+
+.PHONY: process-imports
+process-imports:
+	$(UV) python -m scripts.process_imports

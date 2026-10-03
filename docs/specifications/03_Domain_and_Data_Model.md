@@ -302,3 +302,15 @@ Future processors must check holds transactionally with compatible locks, expand
 and retain the existing legal/privacy gates. The migration rollback policy is to disable
 new routes while retaining evidence and protections, followed by a forward fix.
 See [ADR-030](../decisions/ADR/030-record-legal-holds.md).
+
+## Bounded import command outbox (ADR-032 / migration 0017)
+
+`content_import_jobs` stores actor/key uniqueness, canonical request hash/correlation,
+validated JSON payload, due/expiry timestamps, bounded attempts, terminal status and
+safe result references. Row locks and actor locks serialize processing and duplicate
+checks. Savepoints roll back every draft/audit/event before recording a failed attempt.
+Immutable request metadata and terminal rows are guarded by database triggers. Payload
+is cleared on completion/failure, with queued expiry at 24 hours. Minimal job metadata is
+staff administrative provenance, included in deletion-impact review and subject to the
+existing six-year-after-closure evidence policy; its retention processor remains pending.
+`DraftDocument.source_locator` is additive; historical stored documents/hashes are not rewritten.

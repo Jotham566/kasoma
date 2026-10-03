@@ -431,3 +431,22 @@ The old LEGAL_HOLD_CHECK_UNAVAILABLE schema literal is retained for compatibilit
 is no longer emitted. execution_enabled remains false. Counts are advisory and do not
 clear unrelated records. Learner exports omit internal hold details and hold outbox events.
 See [ADR-030](../decisions/ADR/030-record-legal-holds.md).
+
+## Implemented bounded synthetic import contract (ADR-032)
+
+- `POST /api/v1/admin/content-imports`: recent CONTENT_AUTHOR, Idempotency-Key UUID;
+  `ImportInput` with `format_version=kasoma-draft-import-v1`, `synthetic=true`, 1–20 records
+  `{subject_id,document,change_reason}`. Maximum 64 KiB before JSON parsing. Returns 202
+  `ImportView` after complete candidate validation. No successor/import approval route.
+- `GET /api/v1/admin/content-imports` and `/{job_id}`: current author, owner-only cursor
+  listing/status. Foreign job IDs return 404. Page limit 1–50; five new submissions/hour,
+  sixty reads/minute/author. Status contains safe result positions/version IDs/outcomes,
+  attempt count and error code; no raw document, bearer or exception detail.
+- Exact actor/key/body replay returns current status; changed body returns 409. Oversize
+  returns 413, invalid schema/taxonomy/provenance 422, rate limit 429. Responses are no-store.
+- Source locator is an additive optional draft field (empty for historical documents);
+  import requires it. Existing independent submission/review/publication gates apply.
+
+Generated OpenAPI and TypeScript contracts define the exact request/response fields.
+See [ADR-032](../decisions/ADR/032-bounded-draft-imports.md) and
+[verification](../implementation/E2_IMPORTS_VERIFICATION.md).

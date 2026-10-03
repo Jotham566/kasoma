@@ -96,7 +96,8 @@ Learner flags, independent staff triage and exact-set multiple-choice assessment
 merged. Data-request intake and administrator review are merged. Owned JSON exports,
 completion evidence and 24-hour copy expiry are merged. A non-destructive administrator
 deletion-impact preview is merged. Specific-record legal holds for consent, attempts,
-content flags and data requests are implemented locally. Deletion/anonymization, remaining
+content flags and data requests are merged. Bounded synthetic JSON draft imports, source
+locators and atomic worker processing are verified. Deletion/anonymization, remaining
 hold coverage, large-history fulfillment and accountability-retention processors remain pending.
 Academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

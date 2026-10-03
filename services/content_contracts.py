@@ -98,6 +98,7 @@ class DraftDocument(Contract):
     worked_solution: Text = ""
     remediation: Text = ""
     prerequisite_concept_ids: list[UUID] = Field(default_factory=list, max_length=20)
+    source_locator: str = Field(default="", max_length=160)
     source: str = Field(default="", max_length=500)
     rights_status: Rights = "UNKNOWN_BLOCKED"
     rights_evidence: str = Field(default="", max_length=1000)

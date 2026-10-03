@@ -1,5 +1,14 @@
 # Changelog
 
+## 3 October 2026 — bounded synthetic draft imports
+
+- Publish legal holds (`ec53ac4`) and lint security (`b766266`) to main after full hosted CI passed; remove completed branches.
+- Add 1–20-record, 64 KiB synthetic JSON author imports (FR-CNT-001), source locators, owner-only status and draft links.
+- Add migration 0017 and PostgreSQL-backed import commands, atomic draft creation, duplicate reporting, author rechecks and bounded retries/expiry.
+- Preserve independent academic review, audit/outbox and synthetic-only eligibility. Add ADR-032, contracts, API/browser/worker tests and `make process-imports`.
+- Add an explicit release-evidence register for missing academic, privacy and provider approvals.
+- Docker recovered; all 347 Python, 18 browser and five tooling tests pass, alongside clean migrations/seed, lint/types/contracts/build, security scans and container smoke. Initial browser-selector failure was corrected; no final failed checks.
+
 ## 3 October 2026 — lint dependency security remediation
 
 - Commit record legal holds as `ec53ac4` (FR-ID-006, BR-010); publication follows security verification.

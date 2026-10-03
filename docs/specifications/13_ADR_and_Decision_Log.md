@@ -204,3 +204,6 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-031: Remove vulnerable lint-only glob dependency](../decisions/ADR/031-lint-glob-security.md)
   records the scoped dependency replacement and directory-discovery compatibility tests.
+
+- [ADR-032: Bounded asynchronous draft imports](../decisions/ADR/032-bounded-draft-imports.md)
+  records synthetic JSON limits, author rechecks, transactional retries and independent review.

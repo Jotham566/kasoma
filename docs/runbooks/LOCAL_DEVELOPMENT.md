@@ -460,3 +460,26 @@ both at the next plugin update; do not copy the alias to other fast-glob consume
 If Docker startup waits for a macOS administrator prompt, complete it locally. Do not
 reset Docker, delete volumes, bypass privilege prompts or claim database/container checks
 passed. Lint, type checks, unit tests and native builds can run while Docker is unavailable.
+
+## Synthetic JSON draft imports
+
+Use a provisioned CONTENT_AUTHOR and recent sign-in at `/admin/content/imports`.
+Upload original synthetic JSON only, at most 64 KiB and 1–20 records, shaped as:
+
+```json
+{"format_version":"kasoma-draft-import-v1","synthetic":true,"records":[{"subject_id":"<catalog UUID>","change_reason":"Import original synthetic fixture","document":{"title":"Synthetic candidate","source":"Original synthetic author fixture","source_locator":"fixture:1","rights_status":"ORIGINAL_KASOMA","rights_evidence":"Original fixture without third-party material"}}]}
+```
+
+Use an actual subject UUID from content context. Additional supported draft fields use
+the generated `DraftDocument` schema. Incomplete drafts can be edited before submission.
+No binary, PDF, archive or media processing is enabled. The normal worker/beat consumes
+`imports` every 30 seconds; `make process-imports` drains up to five due jobs manually.
+Refresh owner status in the UI. Same-file retry after lost acknowledgement retains its
+idempotency key during that page session. A new submission detects already-created owned
+identical documents and reports duplicates. Editing a draft requires normal revision checks.
+
+Transient failures retry at 60/120 seconds, then fail; role revocation or 24-hour expiry fails
+immediately at processing. Terminal jobs clear candidate payloads. Keep the worker running
+for expiry. Pause submission and worker polling for rollback, preserve evidence and deploy
+a forward fix; migration 0017 does not provide a destructive downgrade. Raw payloads,
+exception details and bearer tokens must never be logged. No import grants publication.

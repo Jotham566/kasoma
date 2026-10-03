@@ -23,6 +23,7 @@ const allowed: Record<string, string[]> = {
   "sessions/active": ["GET"],
   "admin/content-context": ["GET"],
   "admin/items": ["GET", "POST"],
+  "admin/content-imports": ["GET", "POST"],
   "admin/content-flags": ["GET"],
 };
 
@@ -70,40 +71,44 @@ async function gateway(
   const holdRelease = new RegExp(
     `^admin/data-requests/${uuid}/holds/${uuid}/release$`,
   ).test(path);
-  const methods = holdList
-    ? ["GET", "POST"]
-    : holdRelease
-      ? ["POST"]
-      : new RegExp(
-            `^(?:me/data-requests/${uuid}|admin/data-requests/${uuid}/deletion-preview)$`,
-          ).test(path)
-        ? ["GET"]
-        : dataExport ||
-            new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
-          ? ["POST"]
-          : flagReport
-            ? ["GET", "POST"]
-            : flagTriage
-              ? ["GET", "PATCH"]
-              : reassessment
-                ? ["GET", "POST"]
-                : hintWrite
-                  ? ["POST"]
-                  : learning
-                    ? [
-                        learning[1] === "attempts" || learning[1] === "abandon"
-                          ? "POST"
-                          : "GET",
-                      ]
-                    : learningRead
-                      ? ["GET"]
-                      : staffVersion
-                        ? staffVersion[1] === "reviews"
-                          ? ["GET"]
-                          : staffVersion[1]
-                            ? ["POST"]
-                            : ["GET", "PATCH"]
-                        : allowed[path];
+  const importRead = new RegExp(`^admin/content-imports/${uuid}$`).test(path);
+  const methods = importRead
+    ? ["GET"]
+    : holdList
+      ? ["GET", "POST"]
+      : holdRelease
+        ? ["POST"]
+        : new RegExp(
+              `^(?:me/data-requests/${uuid}|admin/data-requests/${uuid}/deletion-preview)$`,
+            ).test(path)
+          ? ["GET"]
+          : dataExport ||
+              new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
+            ? ["POST"]
+            : flagReport
+              ? ["GET", "POST"]
+              : flagTriage
+                ? ["GET", "PATCH"]
+                : reassessment
+                  ? ["GET", "POST"]
+                  : hintWrite
+                    ? ["POST"]
+                    : learning
+                      ? [
+                          learning[1] === "attempts" ||
+                          learning[1] === "abandon"
+                            ? "POST"
+                            : "GET",
+                        ]
+                      : learningRead
+                        ? ["GET"]
+                        : staffVersion
+                          ? staffVersion[1] === "reviews"
+                            ? ["GET"]
+                            : staffVersion[1]
+                              ? ["POST"]
+                              : ["GET", "PATCH"]
+                          : allowed[path];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (
@@ -121,9 +126,23 @@ async function gateway(
     if (request.method !== "GET") {
       if (Number(request.headers.get("content-length") ?? 0) > 65536)
         return fail(413, "VALIDATION_FAILED");
-      body = await request.text();
-      if (new TextEncoder().encode(body).length > 65536)
-        return fail(413, "VALIDATION_FAILED");
+      const reader = request.body?.getReader();
+      const decoder = new TextDecoder();
+      let bytes = 0;
+      body = "";
+      if (reader) {
+        while (true) {
+          const chunk = await reader.read();
+          if (chunk.done) break;
+          bytes += chunk.value.byteLength;
+          if (bytes > 65536) {
+            await reader.cancel();
+            return fail(413, "VALIDATION_FAILED");
+          }
+          body += decoder.decode(chunk.value, { stream: true });
+        }
+        body += decoder.decode();
+      }
     }
     if (path === "auth/refresh") {
       body = JSON.stringify({
@@ -147,6 +166,7 @@ async function gateway(
       holdList ||
       [
         "admin/items",
+        "admin/content-imports",
         "admin/content-flags",
         "me/session-history",
         "me/data-requests",

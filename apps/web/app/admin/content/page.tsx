@@ -214,6 +214,11 @@ export default function ContentWorkspace() {
         Sign in or refresh staff verification
       </Link>
       <h1 className="text-3xl font-semibold my-6">Content workspace</h1>
+      {context?.roles.includes("CONTENT_AUTHOR") && (
+        <Link className="underline" href="/admin/content/imports">
+          Import synthetic draft items
+        </Link>
+      )}
       <p>
         Synthetic development only. Workflow approval does not certify academic
         quality or count toward the production content target.

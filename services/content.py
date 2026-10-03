@@ -377,76 +377,88 @@ class ContentService:
     def create(self, token: str, body: CreateDraft, key: UUID, request_id: UUID) -> VersionView:
         with self.identity.transaction() as db:
             actor, roles = authorize(self.identity, db, token, {"CONTENT_AUTHOR"}, recent=True)
-            fingerprint = digest({"action": "create", "body": body.model_dump(mode="json")})
-            replay = self.replay(db, actor, roles, key, fingerprint)
-            if replay:
-                return replay
-            self.validate(db, body.subject_id, body.document, complete=False)
-            if not body.change_reason.strip():
-                raise ContentError("CONTENT_VALIDATION_FAILED", ["change_reason"])
-            now = self.identity.clock()
-            second_review = body.document.high_risk
-            if body.source_version_id:
-                source = self.authorized_version(db, actor, roles, body.source_version_id)
-                item = db.scalar(select(Item).where(Item.id == source.item_id).with_for_update())
-                if (
-                    item is None
-                    or item.author_id != actor
-                    or item.subject_id != body.subject_id
-                    or source.status not in {"APPROVED", "RETIRED"}
-                ):
-                    raise ContentError("FORBIDDEN", status=403)
-                pending = db.scalar(
-                    select(ItemVersion.id).where(
-                        ItemVersion.item_id == item.id,
-                        ItemVersion.status.in_(["DRAFT", "IN_REVIEW"]),
-                    )
-                )
-                if pending:
-                    raise ContentError("VERSION_CONFLICT")
-                version_number = (
-                    db.scalar(
-                        select(func.max(ItemVersion.version)).where(ItemVersion.item_id == item.id)
-                    )
-                    or 0
-                ) + 1
-                second_review = (
-                    second_review or source.requires_second_review or self.disputed(db, item.id)
-                )
-            else:
-                item = Item(id=uuid4(), subject_id=body.subject_id, author_id=actor, created_at=now)
-                db.add(item)
-                db.flush()
-                version_number = 1
-            document = body.document.model_dump(mode="json")
-            version = ItemVersion(
-                id=uuid4(),
-                item_id=item.id,
-                author_id=actor,
-                version=version_number,
-                revision=1,
-                review_round=0,
-                status="DRAFT",
-                document=document,
-                content_hash=digest(document),
-                topic_id=body.document.topic_id,
-                concept_id=body.document.concept_id,
-                requires_second_review=second_review,
-                synthetic=True,
-                created_at=now,
-                updated_at=now,
-            )
-            db.add(version)
-            db.flush()
-            self.mapping_rows(db, version, body.document)
-            db.add(
-                ContentReceipt(
-                    actor_id=actor, key=key, request_hash=fingerprint, item_version_id=version.id
+            return self.create_in_transaction(db, actor, roles, body, key, request_id)
+
+    def create_in_transaction(
+        self,
+        db: Session,
+        actor: UUID,
+        roles: set[str],
+        body: CreateDraft,
+        key: UUID,
+        request_id: UUID,
+    ) -> VersionView:
+        """Called only after current author authorization by HTTP or the import worker."""
+        fingerprint = digest({"action": "create", "body": body.model_dump(mode="json")})
+        replay = self.replay(db, actor, roles, key, fingerprint)
+        if replay:
+            return replay
+        self.validate(db, body.subject_id, body.document, complete=False)
+        if not body.change_reason.strip():
+            raise ContentError("CONTENT_VALIDATION_FAILED", ["change_reason"])
+        now = self.identity.clock()
+        second_review = body.document.high_risk
+        if body.source_version_id:
+            source = self.authorized_version(db, actor, roles, body.source_version_id)
+            item = db.scalar(select(Item).where(Item.id == source.item_id).with_for_update())
+            if (
+                item is None
+                or item.author_id != actor
+                or item.subject_id != body.subject_id
+                or source.status not in {"APPROVED", "RETIRED"}
+            ):
+                raise ContentError("FORBIDDEN", status=403)
+            pending = db.scalar(
+                select(ItemVersion.id).where(
+                    ItemVersion.item_id == item.id,
+                    ItemVersion.status.in_(["DRAFT", "IN_REVIEW"]),
                 )
             )
-            self.audit(db, actor, version, "content.created", body.change_reason, request_id, None)
+            if pending:
+                raise ContentError("VERSION_CONFLICT")
+            version_number = (
+                db.scalar(
+                    select(func.max(ItemVersion.version)).where(ItemVersion.item_id == item.id)
+                )
+                or 0
+            ) + 1
+            second_review = (
+                second_review or source.requires_second_review or self.disputed(db, item.id)
+            )
+        else:
+            item = Item(id=uuid4(), subject_id=body.subject_id, author_id=actor, created_at=now)
+            db.add(item)
             db.flush()
-            return self.view(db, version)
+            version_number = 1
+        document = body.document.model_dump(mode="json")
+        version = ItemVersion(
+            id=uuid4(),
+            item_id=item.id,
+            author_id=actor,
+            version=version_number,
+            revision=1,
+            review_round=0,
+            status="DRAFT",
+            document=document,
+            content_hash=digest(document),
+            topic_id=body.document.topic_id,
+            concept_id=body.document.concept_id,
+            requires_second_review=second_review,
+            synthetic=True,
+            created_at=now,
+            updated_at=now,
+        )
+        db.add(version)
+        db.flush()
+        self.mapping_rows(db, version, body.document)
+        db.add(
+            ContentReceipt(
+                actor_id=actor, key=key, request_hash=fingerprint, item_version_id=version.id
+            )
+        )
+        self.audit(db, actor, version, "content.created", body.change_reason, request_id, None)
+        db.flush()
+        return self.view(db, version)
 
     def mutate(
         self,

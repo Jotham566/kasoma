@@ -52,3 +52,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-031: Remove vulnerable lint-only glob dependency](031-lint-glob-security.md)
   records the scoped dependency replacement and directory-discovery compatibility tests.
+
+- [ADR-032: Bounded asynchronous draft imports](032-bounded-draft-imports.md)
+  records synthetic JSON limits, author rechecks, transactional retries and independent review.

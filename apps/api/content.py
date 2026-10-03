@@ -18,10 +18,12 @@ from services.content_contracts import (
     VersionPage,
     VersionView,
 )
+from services.content_imports import ImportService
+from services.import_contracts import ImportInput, ImportPage, ImportView
 
 router = APIRouter(
     prefix="/api/v1/admin",
-    responses={status: {"model": ErrorEnvelope} for status in [400, 401, 403, 404, 409, 422]},
+    responses={status: {"model": ErrorEnvelope} for status in [400, 401, 403, 404, 409, 422, 429]},
 )
 Key = Annotated[UUID, Header(alias="Idempotency-Key")]
 
@@ -91,3 +93,27 @@ def retire(
     return service(request).mutate(
         bearer(request), version_id, "retire", body, idempotency_key, UUID(request.state.request_id)
     )
+
+
+@router.post(
+    "/content-imports",
+    status_code=202,
+    response_model=ImportView,
+    responses={413: {"model": ErrorEnvelope}, 429: {"model": ErrorEnvelope}},
+)
+def import_drafts(body: ImportInput, request: Request, idempotency_key: Key) -> ImportView:
+    return ImportService(request.app.state.identity).enqueue(
+        bearer(request), body, idempotency_key, UUID(request.state.request_id)
+    )
+
+
+@router.get("/content-imports", response_model=ImportPage)
+def imports(
+    request: Request, cursor: UUID | None = None, limit: Annotated[int, Query(ge=1, le=50)] = 20
+) -> ImportPage:
+    return ImportService(request.app.state.identity).listing(bearer(request), None, cursor, limit)
+
+
+@router.get("/content-imports/{target}", response_model=ImportView)
+def import_status(target: UUID, request: Request) -> ImportView:
+    return ImportService(request.app.state.identity).listing(bearer(request), target).data[0]

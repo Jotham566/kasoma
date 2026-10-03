@@ -185,3 +185,13 @@ response format. Independent reviewers see the full key and all-or-nothing polic
 Academic review must establish that multiple selection is valid for the question;
 synthetic software fixtures do not establish this. Corrections create a successor
 version, preserving prior attempts and grades. See [ADR-026](../decisions/ADR/026-multiple-choice.md).
+
+## Implemented structured synthetic import
+
+[ADR-032](../decisions/ADR/032-bounded-draft-imports.md) adds bounded original-synthetic JSON
+candidates through the existing author/editor workflow. Each candidate preserves source,
+source locator and rights evidence. Whole batches validate before enqueue; workers recheck
+author permissions and save all new drafts atomically. Owned identical candidates are
+reported as duplicates without mutation. Import status is owner-only; imported drafts
+require the existing independent academic/rights checklist before approval. No model,
+PDF/archive/media extraction, third-party-content import or production eligibility is enabled.

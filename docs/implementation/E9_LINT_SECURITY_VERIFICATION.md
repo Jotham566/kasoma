@@ -19,7 +19,9 @@ replacement and compatibility patch. No runtime/data/API changes or audit exempt
   passed on 30 September. On 3 October, 223 Python unit/contract tests passed again.
 - Docker-dependent services/source-scan retries failed because Docker is waiting for a
   macOS privileged-port configuration prompt. No Docker reset or data removal attempted.
-  Current container/migration/integration/browser checks require Docker or hosted CI.
+  Hosted [CI run 37126531374](https://github.com/Jotham566/kasoma/actions/runs/37126531374)
+  subsequently passed all setup/migration/seed, full tests/browser, source/container scans
+  and container smoke steps. Commits ec53ac4 and b766266 are published to main.
 
 Initial replacement testing caught path/automatic-directory-expansion differences.
 The pinned patch explicitly configures compatible directory matching; tests exercise

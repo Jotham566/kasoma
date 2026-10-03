@@ -22,6 +22,7 @@ from services.domain.assessment import (
 from services.domain.content import (
     AuditLog,
     ContentEvent,
+    ContentImport,
     ContentReceipt,
     ContentReview,
     Item,
@@ -147,6 +148,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     # Staff provenance is deliberately separate from owned learning records.
     for model, condition in [
         (UserRole, UserRole.user_id == user),
+        (ContentImport, ContentImport.actor_id == user),
         (DataRequestReview, DataRequestReview.actor_id == user),
         (LegalHold, or_(LegalHold.created_by == user, LegalHold.released_by == user)),
         (LegalHoldReceipt, LegalHoldReceipt.actor_id == user),

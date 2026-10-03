@@ -1,31 +1,36 @@
-# Current Sprint: legal-hold publication and E9 security maintenance
+# Current Sprint: E2 bounded synthetic draft imports
 
-Record legal holds are committed as `ec53ac4`; publication is awaiting the refreshed
-security gate and hosted CI. The development-tool advisory found on 3 October is
-remediated locally on `codex/lint-security` under
-[ADR-031](../decisions/ADR/031-lint-glob-security.md).
+Legal holds (`ec53ac4`) and dependency remediation (`b766266`) are published to main.
+[Hosted CI](https://github.com/Jotham566/kasoma/actions/runs/37126531374) passed setup,
+clean migrations/seed, lint/types, full tests/contracts/build, browser journeys,
+security audits, image builds/scans and container smoke on 3 October. Completed branches removed.
+Docker recovered during verification; no volumes were reset.
 
-## Current evidence
+## Active vertical slice
 
-FR-ID-006/BR-010: the legal-hold slice passed 337 Python tests, 17 browser tests and
-22 final focused checks on 30 September. See [verification](E8_LEGAL_HOLDS_VERIFICATION.md).
-NFR-MNT-001/NFR-SEC-001: dependency replacement now passes frozen setup, five actual-plugin
-regressions, 223 Python unit/contract tests, lint/types, generated contracts, native build
-and dependency/security audits. See [verification](E9_LINT_SECURITY_VERIFICATION.md).
-No audit exclusions or lint rules were removed. Docker startup is blocked by the macOS
-administrator prompt for privileged-port configuration. Local database/container checks
-remain unavailable until that prompt is completed; hosted CI provides independent checks.
+FR-CNT-001/002/004/005 and bounded FR-OPS-001/002/003: original synthetic JSON draft
+imports under [ADR-032](../decisions/ADR/032-bounded-draft-imports.md).
+Author UI/API, durable command outbox, transactional worker, duplicates, retries,
+role rechecks, source locators and draft-only review passed verification: 347 Python,
+18 browser and five tooling tests; clean migrations, contracts, builds and security/container checks.
+See [import evidence](E2_IMPORTS_VERIFICATION.md).
+The import slice is independent of destructive data-request execution.
 
 ## Next vertical slice
 
-Implement the deletion execution state and expand hold coverage for the exact deletion
-plan. Review the erasure/anonymization transform, constraints and recovery plan before
-any destructive execution. Reconcile immutable learning, content and accountability
-records, embedded references, logs, backups and representative requests.
-Zero active registered holds is not clearance. Large-history exports and six-year
-evidence expiry remain explicit gaps; production privacy approval is independent.
+FR-OPS-002: ADMIN service/queue-failure visibility and configurable local alert thresholds,
+with simulated breach/recovery tests and explicit unavailable metrics for unimplemented AI
+and messaging paths. No external notification delivery is enabled.
+
+Prepare the concrete deletion/anonymization transform and recovery plan for required
+review before destructive execution; reconcile immutable learning/content records,
+remaining legal holds, logs/backups and representative requests. Continue unaffected
+MVP work while academic/privacy/production approvals are outstanding.
+Large-history export and six-year evidence expiry remain explicit gaps.
 
 ## Remaining dependencies and release gates
+
+See the [release evidence register](RELEASE_GATES.md) for responsible functions and required artifacts.
 
 - Named owners, kickoff date, delivery and academic reviewer capacity.
 - Exact NCDC mappings, content rights, balanced inventory, reviewed equivalent pairs

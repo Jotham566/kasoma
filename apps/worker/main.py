@@ -4,6 +4,7 @@ from uuid import UUID
 from celery import Celery
 
 from services.config import Settings
+from services.content_imports import process_imports
 from services.data_exports import expire
 from services.database import engine_for
 from services.identity import IdentityService
@@ -26,7 +27,15 @@ def make_worker(settings: Settings) -> Celery:
         task_default_queue="operations",
         broker_connection_retry_on_startup=True,
         task_publish_retry=False,
-        beat_schedule={"expire-exports": {"task": "kasoma.expire_exports", "schedule": 300.0}},
+        task_queues={"operations": {}, "imports": {}},
+        beat_schedule={
+            "expire-exports": {"task": "kasoma.expire_exports", "schedule": 300.0},
+            "content-imports": {
+                "task": "kasoma.content_imports",
+                "schedule": 30.0,
+                "options": {"queue": "imports"},
+            },
+        },
     )
 
     @app.task(name="kasoma.smoke", bind=True)  # type: ignore[untyped-decorator]
@@ -44,6 +53,15 @@ def make_worker(settings: Settings) -> Celery:
         try:
             fake = FakeMessagingProvider()
             return expire(IdentityService(engine, settings, fake, fake), UUID(request_id))
+        finally:
+            engine.dispose()
+
+    @app.task(name="kasoma.content_imports", acks_late=True)  # type: ignore[untyped-decorator]
+    def content_imports() -> int:
+        engine = engine_for(settings)
+        try:
+            fake = FakeMessagingProvider()
+            return process_imports(IdentityService(engine, settings, fake, fake))
         finally:
             engine.dispose()
 
