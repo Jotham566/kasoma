@@ -163,3 +163,7 @@ process-messages:
 export KASOMA_WHATSAPP_TEXT
 simulate-whatsapp:
 	$(UV) python -m scripts.simulate_whatsapp
+
+.PHONY: test-assessment-transactions
+test-assessment-transactions:
+	$(UV) pytest tests/integration/test_assessment_transactions.py --allow-hosts=localhost,127.0.0.1,::1

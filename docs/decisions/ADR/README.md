@@ -61,3 +61,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-034: Consent-gated WhatsApp linking](034-whatsapp-linking.md)
   records bounded signed intake, fake delivery, STOP barriers, retries and transient retention.
+
+- [ADR-035: Shared assessment transactions](035-shared-assessment-transactions.md)
+  records internal actor authorization and atomic reuse of existing grading/mastery operations.

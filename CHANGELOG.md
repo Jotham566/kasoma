@@ -217,3 +217,10 @@ Record meaningful repository and product changes here. A documentation baseline 
 - Added immutable mastery evidence, baseline estimates/history and offline replay.
 - Added generated contracts, browser results, migration and regression evidence.
 - Full adaptive recommendation factors and academic calibration remain pending.
+
+### In progress — shared assessment transactions (FR-WA-003/004)
+
+- Extract internal actor-authorized start/serve/submit methods while preserving web contracts.
+- Keep deterministic grading, mastery, receipts and outbox events in the caller transaction.
+- Add rollback/committed-retry and current account/consent/enrollment/ownership regressions.
+- Record ADR-035. Database verification is pending because the local Docker engine is unavailable.

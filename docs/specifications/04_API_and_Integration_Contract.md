@@ -486,3 +486,11 @@ This read-only extension does not change the public health contract or domain re
 
 The browser proxy exposes owner routes only; provider webhooks terminate directly at the API.
 Generated OpenAPI is the exact field contract. See [readiness](../implementation/E7_LINKING_READINESS.md).
+
+## Internal assessment transaction boundary (ADR-035, implementation in progress)
+
+Public web authentication, schemas and idempotency fingerprints remain unchanged. Internal
+start/serve/submit operations accept a trusted actor and caller-owned transaction, rechecking
+current account, consent, level and enrollment. They do not commit and are not exposed as HTTP
+actor-override endpoints. This enables future atomic channel receipt/learning writes without
+manufacturing bearer tokens; channel grading remains disabled pending its migration and tests.

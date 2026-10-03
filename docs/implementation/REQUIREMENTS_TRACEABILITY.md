@@ -98,3 +98,10 @@ signed durable intake, STOP barriers, transactional processing/fake delivery, ex
 export/deletion inventory. Hosted CI passed 395 Python, 20 browser and five tooling tests plus
 all setup/migration/lint/type/contract/build/security/container gates. Native Docker interruption
 is recorded separately. FR-WA-002/003/005 practice/grading and production transport remain pending.
+
+### Shared-service follow-up in progress (FR-WA-002/003/004)
+
+ADR-035 and `tests/integration/test_assessment_transactions.py` cover the planned internal
+transaction boundary needed for channel parity. Web behavior, schemas and receipt hashes remain
+unchanged. Unit checks pass; new database regressions remain unexecuted pending PostgreSQL/hosted CI.
+This is not evidence that WhatsApp practice or parity is implemented.

@@ -218,3 +218,10 @@ owner/sender uniqueness, exact-byte signature verification, atomic intake, STOP/
 actor-before-channel lock ordering, fake-only replies, bounded retries and transient expiry.
 Local implementation is verified under [E7 evidence](../implementation/E7_LINKING_READINESS.md);
 academic practice and production transport remain pending.
+
+### ADR-035 — shared transaction-scoped assessment
+
+See [ADR-035](../decisions/ADR/035-shared-assessment-transactions.md). Internal actor-authorized
+start/serve/submit operations preserve web contracts and existing grading/mastery behavior while
+allowing the next channel slice to commit receipts and learning evidence atomically. Implementation
+and database regressions are pending; no WhatsApp grading is enabled by the refactor alone.

@@ -39,7 +39,7 @@ from services.domain.assessment import (
 )
 from services.domain.content import ItemVersion
 from services.domain.curriculum import Level, Subject, Topic
-from services.domain.identity import LearnerProfile
+from services.domain.identity import LearnerProfile, User
 from services.grading import grade_choice, grade_multiple_choice, grade_numeric
 from services.identity import IdentityError, IdentityService
 from services.mastery import reconcile
@@ -55,6 +55,14 @@ class AssessmentService:
 
     def authorize(self, db: Session, token: str, subject: UUID | None = None) -> UUID:
         actor = self.identity.authenticate(db, token).user_id
+        return self.authorize_actor(db, actor, subject)
+
+    def authorize_actor(self, db: Session, actor: UUID, subject: UUID | None = None) -> UUID:
+        """Internal trusted-actor entry only; every call rechecks current authorization."""
+        self.identity.lock(db, str(actor))
+        user = db.get(User, actor, populate_existing=True)
+        if user is None or user.status != "ACTIVE":
+            raise IdentityError("AUTH_REQUIRED", 401)
         profile = self.identity.profile(db, actor)
         if not profile.learning_allowed:
             raise IdentityError("CONSENT_REQUIRED", 403)
@@ -166,119 +174,124 @@ class AssessmentService:
 
     def start(self, token: str, body: StartRevision, key: UUID, request: UUID) -> SessionView:
         with Session(self.identity.engine) as db, db.begin():
-            actor = self.authorize(db, token, body.subject_id)
-            fingerprint = self.identity.digest("assessment", "start:" + body.model_dump_json())
-            receipt = self.replay(db, actor, key, fingerprint)
-            if receipt:
-                return self.view(db, self.owned(db, actor, receipt.session_id))
-            # Expire all stale revision reservations under the same learner lock.
-            # Otherwise an expired manual plan can still hold the topic's unique index.
-            for stale in db.scalars(
-                select(AssessmentSession).where(
-                    AssessmentSession.learner_id == actor,
-                    AssessmentSession.subject_id == body.subject_id,
-                    AssessmentSession.kind == "REVISION",
-                    AssessmentSession.status == "ACTIVE",
-                    AssessmentSession.expires_at <= self.identity.clock(),
-                )
-            ):
-                stale.status = "EXPIRED"
-            db.flush()
-            recommended = body.mode == "RECOMMENDED"
-            if not recommended:
-                topic = db.get(Topic, body.topic_id)
-                if not topic or topic.subject_id != body.subject_id:
-                    raise IdentityError("VALIDATION_FAILED", 422)
-            active = db.scalar(
-                select(AssessmentSession)
-                .where(
-                    AssessmentSession.learner_id == actor,
-                    AssessmentSession.subject_id == body.subject_id,
-                    AssessmentSession.kind == "REVISION",
-                    AssessmentSession.recommendation_snapshot.is_not(None)
-                    if recommended
-                    else AssessmentSession.topic_id == body.topic_id,
-                    AssessmentSession.status == "ACTIVE",
-                )
-                .order_by(AssessmentSession.started_at)
-            )
-            if active:
-                if active.item_count != body.desired_item_count:
-                    raise IdentityError("VERSION_CONFLICT", 409)
-                session = active
-            else:
-                if not self.identity.rate(db, "assessment-start:" + str(actor), 30, 3600):
-                    raise IdentityError("USAGE_LIMIT_REACHED", 429)
-                snapshot = None
-                topic_id = body.topic_id
-                reason = "Practice the topic you selected."
-                reasons = [reason] * body.desired_item_count
-                plan_version = "topic-choice-v1"
-                if recommended:
-                    from services.recommendations import plan
+            actor = self.identity.authenticate(db, token).user_id
+            return self.start_in_transaction(db, actor, body, key, request)
 
-                    try:
-                        selected = plan(self, db, actor, body.subject_id, body.desired_item_count)
-                    except ValueError as error:
-                        raise IdentityError("CONTENT_NOT_APPROVED", 409) from error
-                    if selected.topic_id is None:
-                        raise IdentityError("INSUFFICIENT_CONTENT", 409)
-                    topic_id, reason = selected.topic_id, selected.learner_text
-                    reasons = list(selected.item_reasons)
-                    plan_version = selected.inputs.configuration.algorithm_version
-                    snapshot = selected.model_dump(mode="json")
-                    candidates = [
-                        self.content.assessment_version(db, version, body.subject_id)
-                        for version in selected.item_version_ids
-                    ]
-                else:
-                    candidates = [
-                        v
-                        for v in self.diagnostics.candidates(db, actor, body.subject_id)
-                        if v.topic_id == topic_id
-                    ][: body.desired_item_count]
-                    candidates = [
-                        self.content.assessment_version(db, v.id, body.subject_id)
-                        for v in candidates
-                    ]
-                if len(candidates) < body.desired_item_count:
-                    raise IdentityError("INSUFFICIENT_CONTENT", 409)
-                session = AssessmentSession(
-                    id=uuid4(),
-                    learner_id=actor,
-                    subject_id=body.subject_id,
-                    topic_id=topic_id,
-                    recommendation_snapshot=snapshot,
-                    status="ACTIVE",
-                    item_count=len(candidates),
-                    reason=reason,
-                    plan_version=plan_version,
-                    started_at=self.identity.clock(),
-                    expires_at=self.identity.clock()
-                    + timedelta(days=self.identity.settings.assessment_session_days),
-                )
-                db.add(session)
-                db.flush()
-                db.add_all(
-                    [
-                        SessionItem(
-                            id=uuid4(),
-                            session_id=session.id,
-                            item_version_id=v.id,
-                            position=i + 1,
-                            reason=reasons[i],
-                        )
-                        for i, v in enumerate(candidates)
-                    ]
-                )
-                self.event(db, session.id, "session.started", request)
-            db.add(
-                AssessmentReceipt(
-                    learner_id=actor, key=key, request_hash=fingerprint, session_id=session.id
-                )
+    def start_in_transaction(
+        self, db: Session, actor: UUID, body: StartRevision, key: UUID, request: UUID
+    ) -> SessionView:
+        self.authorize_actor(db, actor, body.subject_id)
+        fingerprint = self.identity.digest("assessment", "start:" + body.model_dump_json())
+        receipt = self.replay(db, actor, key, fingerprint)
+        if receipt:
+            return self.view(db, self.owned(db, actor, receipt.session_id))
+        # Expire all stale revision reservations under the same learner lock.
+        # Otherwise an expired manual plan can still hold the topic's unique index.
+        for stale in db.scalars(
+            select(AssessmentSession).where(
+                AssessmentSession.learner_id == actor,
+                AssessmentSession.subject_id == body.subject_id,
+                AssessmentSession.kind == "REVISION",
+                AssessmentSession.status == "ACTIVE",
+                AssessmentSession.expires_at <= self.identity.clock(),
             )
+        ):
+            stale.status = "EXPIRED"
+        db.flush()
+        recommended = body.mode == "RECOMMENDED"
+        if not recommended:
+            topic = db.get(Topic, body.topic_id)
+            if not topic or topic.subject_id != body.subject_id:
+                raise IdentityError("VALIDATION_FAILED", 422)
+        active = db.scalar(
+            select(AssessmentSession)
+            .where(
+                AssessmentSession.learner_id == actor,
+                AssessmentSession.subject_id == body.subject_id,
+                AssessmentSession.kind == "REVISION",
+                AssessmentSession.recommendation_snapshot.is_not(None)
+                if recommended
+                else AssessmentSession.topic_id == body.topic_id,
+                AssessmentSession.status == "ACTIVE",
+            )
+            .order_by(AssessmentSession.started_at)
+        )
+        if active:
+            if active.item_count != body.desired_item_count:
+                raise IdentityError("VERSION_CONFLICT", 409)
+            session = active
+        else:
+            if not self.identity.rate(db, "assessment-start:" + str(actor), 30, 3600):
+                raise IdentityError("USAGE_LIMIT_REACHED", 429)
+            snapshot = None
+            topic_id = body.topic_id
+            reason = "Practice the topic you selected."
+            reasons = [reason] * body.desired_item_count
+            plan_version = "topic-choice-v1"
+            if recommended:
+                from services.recommendations import plan
+
+                try:
+                    selected = plan(self, db, actor, body.subject_id, body.desired_item_count)
+                except ValueError as error:
+                    raise IdentityError("CONTENT_NOT_APPROVED", 409) from error
+                if selected.topic_id is None:
+                    raise IdentityError("INSUFFICIENT_CONTENT", 409)
+                topic_id, reason = selected.topic_id, selected.learner_text
+                reasons = list(selected.item_reasons)
+                plan_version = selected.inputs.configuration.algorithm_version
+                snapshot = selected.model_dump(mode="json")
+                candidates = [
+                    self.content.assessment_version(db, version, body.subject_id)
+                    for version in selected.item_version_ids
+                ]
+            else:
+                candidates = [
+                    v
+                    for v in self.diagnostics.candidates(db, actor, body.subject_id)
+                    if v.topic_id == topic_id
+                ][: body.desired_item_count]
+                candidates = [
+                    self.content.assessment_version(db, v.id, body.subject_id) for v in candidates
+                ]
+            if len(candidates) < body.desired_item_count:
+                raise IdentityError("INSUFFICIENT_CONTENT", 409)
+            session = AssessmentSession(
+                id=uuid4(),
+                learner_id=actor,
+                subject_id=body.subject_id,
+                topic_id=topic_id,
+                recommendation_snapshot=snapshot,
+                status="ACTIVE",
+                item_count=len(candidates),
+                reason=reason,
+                plan_version=plan_version,
+                started_at=self.identity.clock(),
+                expires_at=self.identity.clock()
+                + timedelta(days=self.identity.settings.assessment_session_days),
+            )
+            db.add(session)
             db.flush()
-            return self.view(db, session)
+            db.add_all(
+                [
+                    SessionItem(
+                        id=uuid4(),
+                        session_id=session.id,
+                        item_version_id=v.id,
+                        position=i + 1,
+                        reason=reasons[i],
+                    )
+                    for i, v in enumerate(candidates)
+                ]
+            )
+            self.event(db, session.id, "session.started", request)
+        db.add(
+            AssessmentReceipt(
+                learner_id=actor, key=key, request_hash=fingerprint, session_id=session.id
+            )
+        )
+        db.flush()
+        return self.view(db, session)
 
     def recommendation(self, token: str, subject: UUID) -> RecommendationView:
         from services.recommendations import plan
@@ -351,176 +364,192 @@ class AssessmentService:
 
     def next_item(self, token: str, session_id: UUID, request: UUID) -> LearnerItem:
         with Session(self.identity.engine) as db, db.begin():
-            actor = self.authorize(db, token)
-            session = self.owned(db, actor, session_id)
-            self.authorize(db, token, session.subject_id)
-            if session.status != "ACTIVE":
-                raise IdentityError("SESSION_NOT_ACTIVE", 409)
-            item = self.pending(db, session.id)
-            if item is None and session.kind == "DIAGNOSTIC":
-                item = self.diagnostics.assign(db, session)
-            if item is None:
-                raise IdentityError("SESSION_NOT_ACTIVE", 409)
-            version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
-            document = DraftDocument.model_validate(version.document)
-            if item.served_at is None:
-                item.served_at = self.identity.clock()
-                self.event(db, session.id, "item.served", request)
-            if document.response_type == "NUMERIC":
-                spec = document.numeric_spec
-                if spec is None:
-                    raise IdentityError("CONTENT_NOT_APPROVED", 409)
-                response_spec: ResponseSpec | MultipleChoiceResponseSpec | NumericResponseSpec = (
-                    NumericResponseSpec(
-                        unit_options=[u.label for u in spec.units],
-                        accepted_forms=spec.accepted_forms,
-                        significant_figures_policy=spec.significant_figures_policy,
-                        significant_figures=spec.significant_figures,
-                    )
-                )
-            elif document.response_type == "MULTIPLE_CHOICE":
-                response_spec = MultipleChoiceResponseSpec(choices=document.choices)
-            else:
-                response_spec = ResponseSpec(choices=document.choices)
-            from services.hints import state
+            actor = self.identity.authenticate(db, token).user_id
+            return self.next_item_in_transaction(db, actor, session_id, request)
 
-            revealed = state(db, item.id, document) if session.kind == "REVISION" else None
-            return LearnerItem(
-                session_item_id=item.id,
-                item_version_id=version.id,
-                position=item.position,
-                prompt_blocks=[PromptBlock(content=document.prompt)],
-                response_spec=response_spec,
-                maximum_points=document.maximum_points,
-                selection_reason=item.reason,
-                hints=revealed.hints if revealed else [],
-                has_more_hints=revealed.has_more_hints if revealed else False,
+    def next_item_in_transaction(
+        self, db: Session, actor: UUID, session_id: UUID, request: UUID
+    ) -> LearnerItem:
+        self.authorize_actor(db, actor)
+        session = self.owned(db, actor, session_id)
+        self.authorize_actor(db, actor, session.subject_id)
+        if session.status != "ACTIVE":
+            raise IdentityError("SESSION_NOT_ACTIVE", 409)
+        item = self.pending(db, session.id)
+        if item is None and session.kind == "DIAGNOSTIC":
+            item = self.diagnostics.assign(db, session)
+        if item is None:
+            raise IdentityError("SESSION_NOT_ACTIVE", 409)
+        version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
+        document = DraftDocument.model_validate(version.document)
+        if item.served_at is None:
+            item.served_at = self.identity.clock()
+            self.event(db, session.id, "item.served", request)
+        if document.response_type == "NUMERIC":
+            spec = document.numeric_spec
+            if spec is None:
+                raise IdentityError("CONTENT_NOT_APPROVED", 409)
+            response_spec: ResponseSpec | MultipleChoiceResponseSpec | NumericResponseSpec = (
+                NumericResponseSpec(
+                    unit_options=[u.label for u in spec.units],
+                    accepted_forms=spec.accepted_forms,
+                    significant_figures_policy=spec.significant_figures_policy,
+                    significant_figures=spec.significant_figures,
+                )
             )
+        elif document.response_type == "MULTIPLE_CHOICE":
+            response_spec = MultipleChoiceResponseSpec(choices=document.choices)
+        else:
+            response_spec = ResponseSpec(choices=document.choices)
+        from services.hints import state
+
+        revealed = state(db, item.id, document) if session.kind == "REVISION" else None
+        return LearnerItem(
+            session_item_id=item.id,
+            item_version_id=version.id,
+            position=item.position,
+            prompt_blocks=[PromptBlock(content=document.prompt)],
+            response_spec=response_spec,
+            maximum_points=document.maximum_points,
+            selection_reason=item.reason,
+            hints=revealed.hints if revealed else [],
+            has_more_hints=revealed.has_more_hints if revealed else False,
+        )
 
     def submit(
         self, token: str, session_id: UUID, body: SubmitAnswer, key: UUID, request: UUID
     ) -> GradeView | DiagnosticReceipt:
         with Session(self.identity.engine) as db, db.begin():
-            actor = self.authorize(db, token)
-            session = self.owned(db, actor, session_id)
-            self.authorize(db, token, session.subject_id)
-            fingerprint = self.identity.digest(
-                "assessment", str(session_id) + ":answer:" + body.model_dump_json()
-            )
-            receipt = self.replay(db, actor, key, fingerprint)
-            if receipt and receipt.attempt_id:
-                return (
-                    DiagnosticReceipt(attempt_id=receipt.attempt_id)
-                    if session.kind == "DIAGNOSTIC"
-                    else self.grade(db, receipt.attempt_id)
-                )
-            if db.scalar(
-                select(Attempt.id).where(
-                    Attempt.session_item_id == body.session_item_id, Attempt.learner_id == actor
-                )
-            ):
-                raise IdentityError("ITEM_ALREADY_ANSWERED", 409)
-            if session.status != "ACTIVE":
-                raise IdentityError("SESSION_NOT_ACTIVE", 409)
-            item = self.pending(db, session.id)
-            if item is None or item.id != body.session_item_id or item.served_at is None:
-                raise IdentityError("RESOURCE_NOT_FOUND", 404)
-            version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
-            document = DraftDocument.model_validate(version.document)
-            attempt_id = uuid4()
-            if document.response_type != body.response.type:
-                raise IdentityError("VALIDATION_FAILED", 422)
-            try:
-                if isinstance(body.response, NumericResponse):
-                    result = grade_numeric(
-                        attempt_id, version.id, document, body.response.value, body.response.unit
-                    )
-                elif isinstance(body.response, MultipleChoiceResponse):
-                    result = grade_multiple_choice(
-                        attempt_id, version.id, document, body.response.choice_ids
-                    )
-                else:
-                    result = grade_choice(attempt_id, version.id, document, body.response.choice_id)
-            except ValueError:
-                raise IdentityError("VALIDATION_FAILED", 422) from None
-            from services.hints import counts
+            actor = self.identity.authenticate(db, token).user_id
+            return self.submit_in_transaction(db, actor, session_id, body, key, request)
 
-            hint_count, highest_hint_level = counts(db, item.id)
-            db.add(
-                Attempt(
-                    id=attempt_id,
-                    learner_id=actor,
-                    session_item_id=item.id,
-                    item_version_id=version.id,
-                    choice_id=body.response.choice_id
-                    if isinstance(body.response, ChoiceResponse)
-                    else None,
-                    response=None
-                    if isinstance(body.response, ChoiceResponse)
-                    else body.response.model_dump(mode="json"),
-                    submitted_at=self.identity.clock(),
-                    hint_count=hint_count,
-                    highest_hint_level=highest_hint_level,
-                    channel="WEB",
+    def submit_in_transaction(
+        self,
+        db: Session,
+        actor: UUID,
+        session_id: UUID,
+        body: SubmitAnswer,
+        key: UUID,
+        request: UUID,
+    ) -> GradeView | DiagnosticReceipt:
+        self.authorize_actor(db, actor)
+        session = self.owned(db, actor, session_id)
+        self.authorize_actor(db, actor, session.subject_id)
+        fingerprint = self.identity.digest(
+            "assessment", str(session_id) + ":answer:" + body.model_dump_json()
+        )
+        receipt = self.replay(db, actor, key, fingerprint)
+        if receipt and receipt.attempt_id:
+            return (
+                DiagnosticReceipt(attempt_id=receipt.attempt_id)
+                if session.kind == "DIAGNOSTIC"
+                else self.grade(db, receipt.attempt_id)
+            )
+        if db.scalar(
+            select(Attempt.id).where(
+                Attempt.session_item_id == body.session_item_id, Attempt.learner_id == actor
+            )
+        ):
+            raise IdentityError("ITEM_ALREADY_ANSWERED", 409)
+        if session.status != "ACTIVE":
+            raise IdentityError("SESSION_NOT_ACTIVE", 409)
+        item = self.pending(db, session.id)
+        if item is None or item.id != body.session_item_id or item.served_at is None:
+            raise IdentityError("RESOURCE_NOT_FOUND", 404)
+        version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
+        document = DraftDocument.model_validate(version.document)
+        attempt_id = uuid4()
+        if document.response_type != body.response.type:
+            raise IdentityError("VALIDATION_FAILED", 422)
+        try:
+            if isinstance(body.response, NumericResponse):
+                result = grade_numeric(
+                    attempt_id, version.id, document, body.response.value, body.response.unit
                 )
-            )
-            db.flush()
-            result = result.model_copy(
-                update={
-                    "mastery_update_status": "COMPLETED",
-                    "hint_count": hint_count,
-                    "highest_hint_level": highest_hint_level,
-                }
-            )
-            db.add(
-                Grade(
-                    attempt_id=attempt_id,
-                    item_version_id=version.id,
-                    answer_specification_hash=version.content_hash,
-                    result=result.model_dump(mode="json"),
+            elif isinstance(body.response, MultipleChoiceResponse):
+                result = grade_multiple_choice(
+                    attempt_id, version.id, document, body.response.choice_ids
                 )
+            else:
+                result = grade_choice(attempt_id, version.id, document, body.response.choice_id)
+        except ValueError:
+            raise IdentityError("VALIDATION_FAILED", 422) from None
+        from services.hints import counts
+
+        hint_count, highest_hint_level = counts(db, item.id)
+        db.add(
+            Attempt(
+                id=attempt_id,
+                learner_id=actor,
+                session_item_id=item.id,
+                item_version_id=version.id,
+                choice_id=body.response.choice_id
+                if isinstance(body.response, ChoiceResponse)
+                else None,
+                response=None
+                if isinstance(body.response, ChoiceResponse)
+                else body.response.model_dump(mode="json"),
+                submitted_at=self.identity.clock(),
+                hint_count=hint_count,
+                highest_hint_level=highest_hint_level,
+                channel="WEB",
             )
-            db.add(
-                AssessmentReceipt(
-                    learner_id=actor,
-                    key=key,
-                    request_hash=fingerprint,
-                    session_id=session.id,
-                    attempt_id=attempt_id,
-                )
+        )
+        db.flush()
+        result = result.model_copy(
+            update={
+                "mastery_update_status": "COMPLETED",
+                "hint_count": hint_count,
+                "highest_hint_level": highest_hint_level,
+            }
+        )
+        db.add(
+            Grade(
+                attempt_id=attempt_id,
+                item_version_id=version.id,
+                answer_specification_hash=version.content_hash,
+                result=result.model_dump(mode="json"),
             )
-            db.flush()
-            reconcile(db, actor, self.identity.clock())
-            self.event(db, session.id, "attempt.graded", request, attempt_id)
+        )
+        db.add(
+            AssessmentReceipt(
+                learner_id=actor,
+                key=key,
+                request_hash=fingerprint,
+                session_id=session.id,
+                attempt_id=attempt_id,
+            )
+        )
+        db.flush()
+        reconcile(db, actor, self.identity.clock())
+        self.event(db, session.id, "attempt.graded", request, attempt_id)
+        self.event(
+            db,
+            session.id,
+            "mastery.updated",
+            request,
+            attempt_id,
+            hint_count=hint_count,
+            highest_hint_level=highest_hint_level,
+        )
+        completed = (
+            self.diagnostics.view(db, session).answered_count >= session.item_count
+            if session.kind == "DIAGNOSTIC"
+            else self.pending(db, session.id) is None
+        )
+        if completed and session.kind == "REASSESSMENT":
+            self.event(db, session.id, "reassessment.completed", request, attempt_id)
+        if completed:
+            if session.kind == "DIAGNOSTIC":
+                self.diagnostics.complete(db, session)
+            session.status, session.completed_at = "COMPLETED", self.identity.clock()
             self.event(
                 db,
                 session.id,
-                "mastery.updated",
+                "diagnostic.completed" if session.kind == "DIAGNOSTIC" else "session.completed",
                 request,
-                attempt_id,
-                hint_count=hint_count,
-                highest_hint_level=highest_hint_level,
             )
-            completed = (
-                self.diagnostics.view(db, session).answered_count >= session.item_count
-                if session.kind == "DIAGNOSTIC"
-                else self.pending(db, session.id) is None
-            )
-            if completed and session.kind == "REASSESSMENT":
-                self.event(db, session.id, "reassessment.completed", request, attempt_id)
-            if completed:
-                if session.kind == "DIAGNOSTIC":
-                    self.diagnostics.complete(db, session)
-                session.status, session.completed_at = "COMPLETED", self.identity.clock()
-                self.event(
-                    db,
-                    session.id,
-                    "diagnostic.completed" if session.kind == "DIAGNOSTIC" else "session.completed",
-                    request,
-                )
-            return (
-                DiagnosticReceipt(attempt_id=attempt_id) if session.kind == "DIAGNOSTIC" else result
-            )
+        return DiagnosticReceipt(attempt_id=attempt_id) if session.kind == "DIAGNOSTIC" else result
 
     def grade(self, db: Session, attempt_id: UUID) -> GradeView:
         grade = db.get(Grade, attempt_id)

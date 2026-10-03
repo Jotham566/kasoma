@@ -66,3 +66,11 @@ See the [release evidence register](RELEASE_GATES.md) for responsible functions 
 Prior evidence: [reassessment](E4_REASSESSMENT_VERIFICATION.md),
 [hints](E4_HINTS_VERIFICATION.md), [recommendations](E5_RECOMMENDATIONS_VERIFICATION.md),
 [diagnostics](E5_VERIFICATION.md), [traceability](REQUIREMENTS_TRACEABILITY.md).
+
+## Active shared-service change
+
+[ADR-035](../decisions/ADR/035-shared-assessment-transactions.md) records the first dependency:
+transaction-scoped start/serve/submit methods with current internal actor authorization. Web
+wrappers preserve existing canonical receipts and grading/mastery behavior. Unit/lint/type checks
+are being run; new rollback, retry and authorization integration regressions await available
+PostgreSQL or hosted CI. No WhatsApp attempts or conversation state are enabled yet.
