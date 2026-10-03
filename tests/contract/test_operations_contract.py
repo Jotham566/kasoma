@@ -115,7 +115,13 @@ def test_operational_worker_schedule():
 
 
 @pytest.mark.parametrize(
-    "task_name", ["kasoma.monitor_operations", "kasoma.content_imports", "kasoma.expire_exports"]
+    "task_name",
+    [
+        "kasoma.monitor_operations",
+        "kasoma.content_imports",
+        "kasoma.expire_exports",
+        "kasoma.channel_messages",
+    ],
 )
 def test_worker_tasks_keep_their_own_application_settings(monkeypatch, task_name):
     """App factories must not reuse another app's database/credential closure."""

@@ -15,6 +15,8 @@ from apps.api.flags import router as flags_router
 from apps.api.identity import router
 from apps.api.import_limit import ImportBodyLimit
 from apps.api.operations import router as operations_router
+from apps.api.whatsapp import router as whatsapp_router
+from apps.api.whatsapp import webhook_router
 from services.config import Settings
 from services.content import ContentError
 from services.database import engine_for
@@ -22,6 +24,7 @@ from services.health import Health, dependency_health
 from services.identity import IdentityError, IdentityService
 from services.observability import correlation_id, emit, tracer
 from services.providers import FakeMessagingProvider, MailpitEmailProvider
+from services.whatsapp_ingress import WebhookRejected
 
 
 class Live(BaseModel):
@@ -56,6 +59,8 @@ def create_app(
     app.include_router(flags_router)
     app.include_router(data_requests_router)
     app.include_router(operations_router)
+    app.include_router(whatsapp_router)
+    app.include_router(webhook_router)
     app.add_middleware(ImportBodyLimit)
     app.add_middleware(
         CORSMiddleware,
@@ -81,8 +86,13 @@ def create_app(
             response.headers["request_id"] = request_id
             response.headers["X-Content-Type-Options"] = "nosniff"
             response.headers["Cache-Control"] = "no-store"
-            emit("api.request", request_id, "WEB", response.status_code)
+            channel = "WHATSAPP" if request.url.path == "/api/v1/webhooks/whatsapp" else "WEB"
+            emit("api.request", request_id, channel, response.status_code)
             return response
+
+    @app.exception_handler(WebhookRejected)
+    async def webhook_error(request: Request, exc: WebhookRejected) -> JSONResponse:
+        return error(request, exc.status, exc.code, "Webhook could not be accepted.")
 
     @app.exception_handler(IdentityError)
     async def identity_error(request: Request, exc: IdentityError) -> JSONResponse:

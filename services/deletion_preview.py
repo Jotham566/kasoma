@@ -50,6 +50,14 @@ from services.domain.identity import (
     UserRole,
 )
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
+from services.domain.messaging import (
+    ChannelLink,
+    ChannelMutationReceipt,
+    ChannelSender,
+    InboundMessage,
+    LinkCode,
+    OutboundMessage,
+)
 from services.identity import IdentityError, IdentityService
 from services.legal_holds import active_count
 from services.staff import authorize
@@ -59,7 +67,7 @@ LIMITATIONS = [
     "Advisory counts may change; this is not an execution plan or legal-hold clearance.",
     "Shared rate buckets, operational logs, backups and arbitrary embedded references "
     "need separate review.",
-    "WhatsApp/channel links are not implemented; this does not establish channel erasure.",
+    "Channel inventory excludes unbound sender history; channel legal-hold coverage is pending.",
     "Related staff records may also concern other people and are not account-owned data.",
 ]
 
@@ -106,6 +114,20 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
         ),
         "TRANSIENT_EXPIRY",
     )
+    add(ChannelLink, ChannelLink.user_id == user, "REMOVE_DIRECT_LINKAGE")
+    for model, condition in [
+        (LinkCode, LinkCode.user_id == user),
+        (ChannelMutationReceipt, ChannelMutationReceipt.actor_id == user),
+        (InboundMessage, InboundMessage.actor_id == user),
+        (OutboundMessage, OutboundMessage.actor_id == user),
+        (
+            ChannelSender,
+            ChannelSender.sender_hash.in_(
+                select(ChannelLink.sender_hash).where(ChannelLink.user_id == user)
+            ),
+        ),
+    ]:
+        add(model, condition, "TRANSIENT_EXPIRY")
     add(Consent, Consent.user_id == user, "SIX_YEARS_AFTER_CLOSURE_OR_WITHDRAWAL")
     for model, condition in [
         (IdentityEvent, IdentityEvent.user_id == user),

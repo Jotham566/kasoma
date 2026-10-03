@@ -12,6 +12,8 @@ const allowed: Record<string, string[]> = {
   "auth/logout-all": ["POST"],
   me: ["GET", "PATCH"],
   "me/consents": ["POST"],
+  "channels/whatsapp/link-code": ["POST"],
+  "channels/whatsapp/link": ["GET", "DELETE"],
   "me/data-requests": ["GET", "POST"],
   "admin/data-requests": ["GET"],
   "me/recommendations/next": ["GET"],
@@ -242,4 +244,4 @@ async function gateway(
     return fail(503, "SERVICE_UNAVAILABLE");
   }
 }
-export { gateway as GET, gateway as POST, gateway as PATCH };
+export { gateway as GET, gateway as POST, gateway as PATCH, gateway as DELETE };

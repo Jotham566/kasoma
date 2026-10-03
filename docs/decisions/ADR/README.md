@@ -58,3 +58,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-033: Local operational health and threshold alerts](033-local-operations-health.md)
   records minimized ADMIN snapshots, monitoring heartbeats and local alert defaults.
+
+- [ADR-034: Consent-gated WhatsApp linking](034-whatsapp-linking.md)
+  records bounded signed intake, fake delivery, STOP barriers, retries and transient retention.

@@ -1,12 +1,22 @@
 # Changelog
 
-## 3 October 2026 — local operations visibility (verification in progress)
+## 3 October 2026 — WhatsApp linking work in progress
+
+- Add migration 0018, recent-auth/current-consent single-use codes and owner status/unlink (FR-WA-001/006).
+- Add bounded signed durable webhook intake, atomic deduplication and immediate STOP barriers (FR-WA-004 foundation).
+- Add transactional processing, fake delivery, bounded retries, configurable limits and transient expiry.
+- Include owned channel records in exports and deletion previews; channel hold coverage remains pending.
+- Add generated contracts, channel UI, local simulator, messaging worker and ADR-034.
+- Focused checks and security scans pass; full regression/browser/container verification is in progress.
+
+## 3 October 2026 — local operations visibility
 
 - Publish bounded draft imports as `5bdd122` and remove the completed branch.
 - Add ADMIN-only operational snapshots, bounded queue/flag counts, worker heartbeat and configurable threshold alerts (FR-OPS-002 partial).
 - Add local periodic monitoring and safe alert logs; distinguish unavailable instrumentation from measured zeros. No external notification delivery.
 - Fix cross-application Celery settings reuse with application-local task registration and regressions for monitoring/imports/export expiry.
-- Record ADR-033, generated contracts, configuration/runbook and regression/browser coverage. Full verification is in progress.
+- Record ADR-033, generated contracts, configuration/runbook and regression/browser coverage. Full hosted CI passes: 360 Python, 19 browser and five tooling tests plus all setup/migration/build/security/container gates.
+- Publish `7218898` to main and remove the completed operations branch.
 
 
 ## 3 October 2026 — bounded synthetic draft imports

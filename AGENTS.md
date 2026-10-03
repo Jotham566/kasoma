@@ -97,7 +97,8 @@ merged. Data-request intake and administrator review are merged. Owned JSON expo
 completion evidence and 24-hour copy expiry are merged. A non-destructive administrator
 deletion-impact preview is merged. Specific-record legal holds for consent, attempts,
 content flags and data requests are merged. Bounded synthetic JSON draft imports, source
-locators and atomic worker processing are verified. Deletion/anonymization, remaining
+locators and atomic worker processing are verified. Local ADMIN operational health and
+threshold alerts are merged; remaining telemetry is pending. Deletion/anonymization, remaining
 hold coverage, large-history fulfillment and accountability-retention processors remain pending.
 Academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

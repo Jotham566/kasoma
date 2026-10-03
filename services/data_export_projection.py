@@ -24,6 +24,7 @@ from services.domain.data_requests import DataRequest
 from services.domain.flags import ContentFlag
 from services.domain.identity import Consent, Identifier, IdentityEvent, LearnerSubject, User
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
+from services.domain.messaging import ChannelLink, InboundMessage, OutboundMessage
 from services.identity import IdentityError, IdentityService
 from services.mastery_engine import Estimate, Evidence
 
@@ -198,6 +199,33 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
         fields(r, "id kind created_at completed_at retention_due_at")
         for r in rows(
             select(DataRequest).where(DataRequest.user_id == actor).order_by(DataRequest.id)
+        )
+    ]
+    records["channel_links"] = [
+        fields(r, "id status revision linked_at opted_out_at")
+        | {
+            "identifier": identity.decrypt(r.external_identifier_encrypted)
+            if r.external_identifier_encrypted
+            else None
+        }
+        for r in rows(
+            select(ChannelLink).where(ChannelLink.user_id == actor).order_by(ChannelLink.id)
+        )
+    ]
+    records["channel_inbound"] = [
+        fields(r, "id command status received_at processed_at")
+        for r in rows(
+            select(InboundMessage)
+            .where(InboundMessage.actor_id == actor)
+            .order_by(InboundMessage.id)
+        )
+    ]
+    records["channel_outbound"] = [
+        fields(r, "id template status created_at sent_at")
+        for r in rows(
+            select(OutboundMessage)
+            .where(OutboundMessage.actor_id == actor)
+            .order_by(OutboundMessage.id)
         )
     ]
     records["account_events"] = [

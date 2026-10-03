@@ -11,6 +11,7 @@ from services.identity import IdentityService
 from services.observability import correlation_id, emit, tracer
 from services.operations import monitor
 from services.providers import FakeMessagingProvider
+from services.whatsapp_jobs import process_messages
 
 
 def make_worker(settings: Settings) -> Celery:
@@ -28,8 +29,13 @@ def make_worker(settings: Settings) -> Celery:
         task_default_queue="operations",
         broker_connection_retry_on_startup=True,
         task_publish_retry=False,
-        task_queues={"operations": {}, "imports": {}},
+        task_queues={"operations": {}, "imports": {}, "messaging": {}},
         beat_schedule={
+            "channel-messages": {
+                "task": "kasoma.channel_messages",
+                "schedule": 10.0,
+                "options": {"queue": "messaging"},
+            },
             "monitor-operations": {"task": "kasoma.monitor_operations", "schedule": 60.0},
             "expire-exports": {"task": "kasoma.expire_exports", "schedule": 300.0},
             "content-imports": {
@@ -75,6 +81,15 @@ def make_worker(settings: Settings) -> Celery:
             return monitor(
                 IdentityService(engine, settings, fake, fake), uuid4(), worker_sample=True
             )
+        finally:
+            engine.dispose()
+
+    @app.task(shared=False, name="kasoma.channel_messages", acks_late=True)  # type: ignore[untyped-decorator]
+    def channel_messages() -> int:
+        engine = engine_for(settings)
+        try:
+            fake = FakeMessagingProvider()
+            return process_messages(IdentityService(engine, settings, fake, fake))
         finally:
             engine.dispose()
 

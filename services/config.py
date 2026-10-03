@@ -47,6 +47,13 @@ class Settings(BaseSettings):
     mailpit_port: int = 1025
     sms_provider: Literal["fake"] = "fake"
     whatsapp_provider: Literal["fake"] = "fake"
+    whatsapp_app_secret: SecretStr | None = None
+    whatsapp_verify_token: SecretStr | None = None
+    whatsapp_business_id: Literal["synthetic-business"] = "synthetic-business"
+    whatsapp_phone_number_id: Literal["synthetic-phone"] = "synthetic-phone"
+    whatsapp_outbound_enabled: bool = False
+    whatsapp_outbound_per_minute: int = Field(default=10, ge=1, le=60)
+    whatsapp_link_attempts_per_minute: int = Field(default=5, ge=1, le=20)
     otp_provider: Literal["fake"] = "fake"
     allow_external_api_calls: bool = False
     allow_google_free_tier_eval: bool = False

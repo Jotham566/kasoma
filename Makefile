@@ -150,3 +150,16 @@ monitor-operations:
 .PHONY: test-operations
 test-operations:
 	$(UV) pytest tests/contract/test_operations_contract.py tests/integration/test_operations.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-whatsapp
+test-whatsapp:
+	$(UV) pytest tests/contract/test_whatsapp_ingress.py tests/integration/test_whatsapp_linking.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: process-messages
+process-messages:
+	$(UV) python -m scripts.process_messages
+
+.PHONY: simulate-whatsapp
+export KASOMA_WHATSAPP_TEXT
+simulate-whatsapp:
+	$(UV) python -m scripts.simulate_whatsapp

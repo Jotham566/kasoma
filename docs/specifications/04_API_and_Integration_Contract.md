@@ -461,3 +461,28 @@ indicators; no content/learner/staff IDs or free text. Query failure gives unava
 counts and degraded dependency status, never fabricated zeros or raw exception text.
 Uninstrumented AI/messaging/grade-failure/latency/mastery/channel metrics are explicit.
 This read-only extension does not change the public health contract or domain records.
+
+## Synthetic WhatsApp linking implementation (ADR-034)
+
+- `POST /api/v1/channels/whatsapp/link-code`: recent owner authentication, current-policy
+  learning consent and UUID `Idempotency-Key`; 201 returns a one-time 12-hex code, UUID,
+  five-minute expiry and synthetic marker. Five new requests/hour; valid same-key retries
+  return the original code, expired/revoked/consumed retries return 410.
+- `GET /api/v1/channels/whatsapp/link`: authenticated owned status, link UUID/revision,
+  link/opt-out times and local outbound flag. No sender/phone identifiers. 60 reads/minute.
+- `DELETE /api/v1/channels/whatsapp/link`: recent authentication, UUID key and body
+  `{expected_link_id, expected_revision}`; mismatches return 409. Current consent is not
+  required to unlink. Cancels codes and pending replies, clears the bound encrypted number,
+  and returns current owned status. Actor/key retries cannot undo a later link.
+- `GET /api/v1/webhooks/whatsapp`: constant-time local verify-token comparison and bounded
+  numeric challenge. `POST` verifies exact raw bytes with `X-Hub-Signature-256` before JSON,
+  caps streaming bodies at 64 KiB and normalized batches at 20. The configured synthetic
+  business/phone IDs must match. Accepted means durable receipt, not completed processing.
+  Exact duplicates are acknowledged; conflicting ID reuse returns 409 and rolls back the batch.
+  Events older than 30 days or over five minutes in the future are rejected.
+- Every unique STOP sets a delivery barrier before acknowledgement. Worker processing rechecks
+  current consent, code/sender ownership and expiry. Replies use only the deterministic fake.
+  Production callbacks/delivery and WhatsApp practice have not passed acceptance.
+
+The browser proxy exposes owner routes only; provider webhooks terminate directly at the API.
+Generated OpenAPI is the exact field contract. See [readiness](../implementation/E7_LINKING_READINESS.md).

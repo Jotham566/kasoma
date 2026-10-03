@@ -88,6 +88,12 @@ export default async function Home() {
       >
         Your data requests
       </Link>
+      <Link
+        className="inline-flex min-h-11 items-center underline"
+        href="/channels/whatsapp"
+      >
+        WhatsApp channel
+      </Link>
       <RecommendationCard />
       <small className="mt-6 block text-slate-600">
         Support reference: {requestId}

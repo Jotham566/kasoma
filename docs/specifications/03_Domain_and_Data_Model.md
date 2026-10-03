@@ -314,3 +314,21 @@ is cleared on completion/failure, with queued expiry at 24 hours. Minimal job me
 staff administrative provenance, included in deletion-impact review and subject to the
 existing six-year-after-closure evidence policy; its retention processor remains pending.
 `DraftDocument.source_locator` is additive; historical stored documents/hashes are not rewritten.
+
+## Local channel linking (ADR-034 / migration 0018)
+
+Additive tables: `link_codes`, `channel_senders`, `channel_links`, `inbound_messages`,
+`outbound_messages`, `channel_mutation_receipts`. Unique actor/key codes and mutation receipts,
+unique provider-message hashes, one bound sender and one link per learner enforce ownership.
+Code and channel triggers prevent code resurrection, owner reassignment and stale revision writes.
+The link UUID plus revision protects unlink across expiry/recreation. STOP retains ownership;
+UNLINKED clears the encrypted identifier and permits explicit later rebinding.
+
+Raw bodies, contact names and arbitrary message text are not stored. Persist keyed message/payload/
+sender/code hashes, encrypted transient recipients and normalized commands/status. Clear transient
+recipients/code hashes at terminal processing, expire code hashes at five minutes, code/mutation
+receipts at 24 hours and transport/unlinked rows at 30 days in bounded batches. STOPPED links remain
+bound account records; account erasure and channel legal-hold coverage are pending. Owned export
+includes bound channel status/identifier and minimized actor-owned receipt metadata, excluding
+unbound sender history. Deletion preview includes the new relational inventory without claiming
+permission to erase or complete legal-hold coverage.

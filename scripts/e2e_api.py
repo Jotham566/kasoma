@@ -7,6 +7,7 @@ from threading import Event, Thread
 from uuid import uuid4
 
 import uvicorn
+from pydantic import SecretStr
 from sqlalchemy import text
 from sqlalchemy.engine import make_url
 
@@ -20,6 +21,7 @@ from services.identity_contracts import OTPRequest, OTPVerify
 from services.providers import FakeMessagingProvider
 from services.seed import seed
 from services.staff import provision
+from services.whatsapp_jobs import process_messages
 
 
 def main() -> None:
@@ -69,11 +71,14 @@ def main() -> None:
     seed_assessment(service, diagnostic=True, hints=True, mathematics_only=True)
     seed_assessment(service, multiple_choice=True, hints=True)
     seed_assessment(service, reassessment=True, mathematics_only=True, hints=True)
+    config.whatsapp_app_secret = SecretStr("synthetic-e2e-channel-signing-000000000")
+    config.whatsapp_outbound_enabled = True
     stop = Event()
 
     def drain_imports() -> None:
         while not stop.wait(0.2):
             process_imports(service)
+            process_messages(service)
 
     worker = Thread(target=drain_imports, daemon=True)
     worker.start()

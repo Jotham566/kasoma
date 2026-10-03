@@ -210,3 +210,10 @@ These decisions are implementation defaults, not substitutes for Ugandan legal a
 
 - [ADR-033: Local operational health and threshold alerts](../decisions/ADR/033-local-operations-health.md)
   records minimized ADMIN snapshots, monitoring heartbeats and local alert defaults.
+
+### ADR-034 — local WhatsApp linking and durable intake
+
+See [ADR-034](../decisions/ADR/034-whatsapp-linking.md). Defines consent/recent-auth code issue,
+owner/sender uniqueness, exact-byte signature verification, atomic intake, STOP/unlink barriers,
+actor-before-channel lock ordering, fake-only replies, bounded retries and transient expiry.
+Implementation is in progress; academic practice and production transport remain pending.

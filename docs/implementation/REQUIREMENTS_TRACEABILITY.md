@@ -42,7 +42,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-WA-001 | — | — | Not started |
 | FR-WA-002 | — | — | Not started |
 | FR-WA-003 | — | — | Not started |
-| FR-WA-004 | — | — | Not started |
+| FR-WA-004 | Exact-byte signature/strict JSON boundary started; no webhook route yet | `tests/contract/test_whatsapp_ingress.py`; [linking plan](E7_LINKING_READINESS.md) | In progress: durable message-ID deduplication, ordering and shared progress invariants pending |
 | FR-WA-005 | — | — | Not started |
 | FR-WA-006 | — | — | Not started |
 | FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor; bounded JSON import API/UI and transactional worker | Content tests; import contract/API/browser regressions; [import evidence](E2_IMPORTS_VERIFICATION.md) | Partial: create/edit verified; structured synthetic JSON import verified; other formats and academic release pending |
@@ -52,7 +52,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single/multiple-choice and numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; other learner events and dispatch pending |
-| FR-OPS-002 | Health shell plus ADMIN snapshot/dashboard, bounded import/flag metrics, monitoring heartbeat and configurable local alerts | [Operations verification](E8_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs, Redis/worker and browser tests | Partial: local visibility verification in progress; AI/messaging/grade-failure/latency/mastery/channel telemetry and production alerting pending |
+| FR-OPS-002 | Health shell plus ADMIN snapshot/dashboard, bounded import/flag metrics, monitoring heartbeat and configurable local alerts | [Operations verification](E8_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs, Redis/worker and browser tests | Partial: local visibility verified and merged; AI/messaging/grade-failure/latency/mastery/channel telemetry and production alerting pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
 | FR-OPS-004 | — | — | Not started |
 | NFR-PERF-001 | — | — | Not started |
@@ -90,3 +90,11 @@ Partial coverage never authorizes account erasure.
 E9 lint dependency security remediation (NFR-MNT-001/NFR-SEC-001):
 [ADR-031](../decisions/ADR/031-lint-glob-security.md) and
 [verification](E9_LINT_SECURITY_VERIFICATION.md). No application acceptance inferred.
+
+### E7 linking checkpoint (FR-WA-001/004/006, FR-ID-003/006, FR-OPS-001/003/004)
+
+ADR-034 and [readiness evidence](E7_LINKING_READINESS.md) track migration 0018, owner code/status/
+unlink API, signed durable intake, STOP barriers, transactional worker/fake outbox, retention and
+owned export/deletion inventory. 24 focused tests pass. UI/browser, full-suite and security/container
+verification remain pending; this is partial implementation evidence, not completed FR-WA acceptance.
+FR-WA-002/003/005 practice/grading and production transport remain unimplemented.

@@ -1,4 +1,4 @@
-# Current Sprint: E8 local operations visibility
+# Current Sprint: E7 WhatsApp linking
 
 Legal holds (`ec53ac4`) and dependency remediation (`b766266`) are published to main.
 [Hosted CI](https://github.com/Jotham566/kasoma/actions/runs/37126531374) passed setup,
@@ -18,15 +18,28 @@ role rechecks, source locators and draft-only review passed verification: 347 Py
 See [import evidence](E2_IMPORTS_VERIFICATION.md).
 The import slice is independent of destructive data-request execution.
 
-## Active vertical slice
+## Operations verification complete
 
 [ADR-033](../decisions/ADR/033-local-operations-health.md) and
 [verification](E8_OPERATIONS_VERIFICATION.md) track
 FR-OPS-002: ADMIN service/queue-failure visibility and configurable local alert thresholds,
 with simulated breach/recovery tests and explicit unavailable metrics for unimplemented AI
-and messaging paths. No external notification delivery is enabled. Native unit tests
-now pass the cross-application worker-settings regression. Database/container acceptance
-is pending fresh hosted CI while Docker awaits its OS administrator prompt.
+and messaging paths. No external notification delivery is enabled.
+Commit `7218898` is published to main and its branch removed after
+[full hosted CI passed](https://github.com/Jotham566/kasoma/actions/runs/37131981381):
+360 Python tests, 19 browser tests, five tooling tests and all setup/migration/build/security/container gates.
+Local Docker recovered without a reset; hosted evidence remains independent.
+
+## Active implementation
+
+[WhatsApp linking readiness](E7_LINKING_READINESS.md) defines FR-WA-001/004/006 and
+the required privacy/consent gates under ADR-034. Migration 0018, owner code/status/unlink,
+signed durable intake, STOP barriers, transactional processing, fake delivery, expiry and
+owned export/inventory are implemented. 24 focused contract/integration tests passed.
+All 20 browser journeys and an earlier full regression/container pass succeeded. Final
+verification was interrupted by Docker Desktop stopping; exact-snapshot hosted CI is required
+before promotion to main. Final lint/types/contracts pass; acceptance remains pending.
+No external messaging is enabled.
 
 Prepare the concrete deletion/anonymization transform and recovery plan for required
 review before destructive execution; reconcile immutable learning/content records,

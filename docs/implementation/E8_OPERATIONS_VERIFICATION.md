@@ -12,7 +12,7 @@ structured alert metadata through a periodic local Celery sampler. No personal/d
 record IDs, source documents, report text or exception details are returned or logged.
 Manual sampling cannot impersonate a live worker heartbeat. No database migration is added.
 
-## Verification in progress
+## Verification
 
 - `make openapi format lint test-unit typecheck`: 236 unit/contract and five tooling tests
   pass, along with lint/format/Python and TypeScript checks and contract generation.
@@ -27,12 +27,22 @@ Manual sampling cannot impersonate a live worker heartbeat. No database migratio
   before reporting final results. Three new isolated regressions reproduced cross-app
   Celery settings reuse. Application-local registrations fix this for monitoring, imports
   and export expiry. All three regressions now pass in the 236-test unit suite.
-  Fresh full database/container verification remains required.
+  Hosted CI subsequently passed the complete suite and container gates.
 - Docker again awaits its macOS administrator prompt after the prior process interruption.
   The final container smoke process also stopped before completion; it is not a pass.
 - Initial failures: wrong ErrorEnvelope import corrected before generation; identical
   unit/integration test basenames caused pytest collection conflict, fixed by renaming
   the contract test. No existing acceptance tests were weakened.
+
+## Final hosted acceptance
+
+[CI run 37131981381](https://github.com/Jotham566/kasoma/actions/runs/37131981381) passed
+setup, services, clean migrations/seed, lint/types, all tests, generated contracts, builds,
+browser journeys, dependency/source/container scans and container smoke for commit
+`7218898`. The commit is pushed to main and the completed operations branch is removed.
+The passing suite contains 360 Python tests (236 unit/contract, 124 integration),
+19 browser tests and five tooling regressions. The earlier interrupted local runs and
+corrected failures above are retained as history, not final acceptance failures.
 
 ## Changed components
 

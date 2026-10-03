@@ -11,6 +11,7 @@ from services.domain import (  # noqa: F401
     flags,
     identity,
     mastery,
+    messaging,
 )
 
 settings = Settings()
