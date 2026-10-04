@@ -575,3 +575,8 @@ same loopback ports. Unknown `KASOMA_E2E_BROWSER` values fail before test execut
 The engine matrix does not replace branded current/previous-browser and physical Android/Safari
 release checks. No real account, learner data or external messaging/model service is involved. See
 [browser evidence](../implementation/E9_BROWSER_COVERAGE_VERIFICATION.md).
+
+The assessment journey reports `cold_question_transfer` aggregate bytes and enforces the decimal
+250 KB target from a fresh context. It includes all encoded response bodies/headers through initial
+question rendering and network quiet; the fixture contains no question media. Do not substitute a
+warm-cache measurement, skip failed measurements or raise the budget to make a run pass.

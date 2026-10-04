@@ -38,6 +38,66 @@ test("FR-REV/GRD: retry after lost acknowledgement, resume, keyboard grading and
   await expect(
     page.getByRole("button", { name: "Show worked solution" }),
   ).toHaveCount(0);
+  // NFR-BW-001: a new context has no onboarding/navigation asset cache. The
+  // original fixture has no question media, so count every completed response.
+  const coldContext = await browser.newContext({
+    storageState: await page.context().storageState(),
+    serviceWorkers: "block",
+  });
+  try {
+    const cold = await coldContext.newPage();
+    const transfers: Promise<{
+      bytes: number;
+      body: number;
+      headers: number;
+      script: boolean;
+    }>[] = [];
+    cold.on("requestfinished", (request) => {
+      transfers.push(
+        request.sizes().then((sizes) => ({
+          bytes: sizes.responseBodySize + sizes.responseHeadersSize,
+          body: sizes.responseBodySize,
+          headers: sizes.responseHeadersSize,
+          script: request.resourceType() === "script",
+        })),
+      );
+    });
+    await cold.goto(page.url());
+    await expect(
+      cold.getByRole("heading", { name: "Question 1 of 5" }),
+    ).toBeVisible();
+    // Used only to delimit initial transfer measurement, after the real UI assertion.
+    await cold.waitForLoadState("networkidle");
+    const resources = await Promise.all(transfers);
+    const bytes = resources.reduce(
+      (total, resource) => total + resource.bytes,
+      0,
+    );
+    const scripts = resources.filter((resource) => resource.script).length;
+    expect(scripts).toBeGreaterThan(0);
+    expect(resources.every((resource) => resource.bytes > 0)).toBe(true);
+    expect(
+      resources.every(
+        (resource) =>
+          resource.body >= 0 &&
+          resource.headers >= 0 &&
+          (!resource.script || resource.body > 0),
+      ),
+    ).toBe(true);
+    console.log(
+      JSON.stringify({
+        metric: "cold_question_transfer",
+        browser: browser.browserType().name(),
+        response_bytes: bytes,
+        resources: resources.length,
+        scripts,
+        limit_bytes: 250000,
+      }),
+    );
+    expect(bytes).toBeLessThanOrEqual(250000);
+  } finally {
+    await coldContext.close();
+  }
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.getByLabel("Alpha", { exact: true }).check();
   let lost = false;

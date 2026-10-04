@@ -29,3 +29,18 @@ Chrome/Edge/Firefox releases. WebKit on Linux does not establish Safari/macOS/iO
 Android Chrome, branded/versioned browser checks, screen-reader/manual accessibility and low-bandwidth
 transfer budgets remain release work. Record exact tested versions/platforms with their evidence;
 do not infer full NFR-COMP-001 or WCAG acceptance from an automated axe or engine-suite pass.
+
+## Cold question transfer budget
+
+The existing assessment journey now opens a fresh browser context with only authentication cookies,
+blocks service workers and loads the actual first-question session URL. After asserting that the
+question renders, wait for initial network quiet and sum encoded response body plus header bytes
+from every completed request. The original fixture has no question media, so nothing is excluded.
+Require nonempty script transfers and nonnegative measurements; missing size data cannot pass.
+Report only engine, aggregate bytes/request/script counts and the 250,000-byte ceiling. No URLs,
+cookies, identities, answers or raw payloads enter metrics.
+
+This deliberately conservative decimal 250 KB check addresses NFR-BW-001. It includes initial
+prefetches and headers; it does not claim mobile-network latency or load-test acceptance. All three
+engines must execute the same budget assertion. No runtime transfer measurement is claimed until
+hosted execution succeeds.

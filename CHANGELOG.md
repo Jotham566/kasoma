@@ -2,6 +2,7 @@
 
 ## 4 October 2026 — browser engine regression matrix
 
+- Add a cold-context first-question transfer assertion (NFR-BW-001), counting encoded bodies and headers against 250,000 bytes; runtime measurements remain pending.
 - Extend `make e2e` to sequential Chromium, Firefox and WebKit runs with fresh synthetic fixtures per shard (NFR-COMP-001/NFR-ACC-001).
 - Add prescribed engine install/list/focused commands and CI coverage; preserve all existing assertions. No application architecture change.
 - Lint/types/contracts and three 20-case inventories pass; native execution fails at database setup, so 60 browser executions remain pending hosted verification. Branded/mobile/version coverage remains a release gate.

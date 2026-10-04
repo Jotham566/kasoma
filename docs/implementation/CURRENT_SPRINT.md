@@ -62,3 +62,7 @@ The full journey suite is configured for isolated sequential Chromium, Firefox a
 Three inventories of 20 cases pass discovery; native runtime setup fails without PostgreSQL.
 Hosted 60-execution acceptance is pending. [Browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md).
 Branded current/previous versions and physical Android/Safari checks remain open.
+
+NFR-BW-001: the assessment journey measures encoded first-question transfer in a fresh context
+with no warm onboarding cache, includes response headers/prefetch and enforces 250,000 bytes.
+Only aggregate numeric metrics are logged. Real runtime measurements remain pending hosted checks.
