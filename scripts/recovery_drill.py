@@ -17,6 +17,10 @@ from sqlalchemy.exc import DBAPIError
 
 from scripts.recovery_fixture import populate
 from services.config import Settings
+from services.domain.assessment import Attempt, Grade
+from services.domain.content import ItemVersion
+from services.domain.identity import Consent
+from services.domain.mastery import MasteryEvidence
 
 
 def validate_name(name: str) -> str:
@@ -112,8 +116,8 @@ def drill(settings: Settings) -> dict[str, object]:
         engines.extend([source_engine, restored_engine])
         stage = "CAPTURE_INVENTORY"
         before = inventory(source_engine)
-        for table in ("attempts", "grades", "mastery_evidence", "consents", "item_versions"):
-            if before.get(table, (0, ""))[0] == 0:
+        for model in (Attempt, Grade, MasteryEvidence, Consent, ItemVersion):
+            if before.get(model.__tablename__, (0, ""))[0] == 0:
                 raise RuntimeError("Synthetic evidence fixture is incomplete")
         Path(".local").mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(prefix="recovery-", dir=".local") as directory:

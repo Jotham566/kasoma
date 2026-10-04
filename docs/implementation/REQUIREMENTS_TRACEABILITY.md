@@ -27,7 +27,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-GRD-001 | Pinned single-choice and canonical exact-set multiple-choice graders, reviewed keys and checkbox delivery | Exhaustive subset/permutation tests, publication/API/DB/retry/replay/diagnostic/reassessment and browser checks; [verification](E4_MULTIPLE_CHOICE_VERIFICATION.md) | Local deterministic implementation; synthetic evidence is not academic benchmark approval |
 | FR-GRD-002 | Reviewed numeric contracts, exact rational grading, unit conversions, inclusive tolerances, precision and accepted forms | `tests/contract/test_numeric.py`, `tests/integration/test_numeric_workflow.py`, `tests/e2e/numeric.spec.ts` | Local deterministic implementation; synthetic regression/property cases are not expert academic benchmark approval |
 | FR-GRD-003 | Offline version-pinned synthetic candidate validator (ADR-040) | 40 strict-output contract cases | Partial foundation; no learner short-text grading |
-| FR-GRD-004 | Payload-free candidate fallback; fake independent passes with global repair/time/token/request ceilings (ADR-041) | 40 validation cases and 15 rehearsal cases; E4 verification reports | Validation verified; rehearsal hosted checks pending; learner fallback and calibration pending |
+| FR-GRD-004 | Payload-free candidate fallback; fake independent passes with global repair/time/token/request ceilings (ADR-041) | 40 validation cases and 15 rehearsal cases; E4 verification reports | Validation and fake rehearsal verified; learner fallback and calibration pending |
 | FR-GRD-005 | Typed deterministic feedback; exact authored-feedback allowlists for synthetic rubric candidates | API/browser feedback journeys and strict candidate cases | Deterministic feedback and offline validation verified; learner rubric feedback pending |
 | FR-GRD-006 | Reviewed versioned hints, append-only usage and frozen pre-answer count/highest level; independence weighting with unchanged points | `tests/contract/test_hint_contract.py`, `tests/integration/test_hints.py`, `tests/e2e/hints.spec.ts`; [verification](E4_HINTS_VERIFICATION.md) | Local synthetic verified (235 Python tests / 12 browser tests); production hint academic review pending |
 | FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision gating and permanent diagnostic solution block implemented |
@@ -163,3 +163,8 @@ the pending telemetry note above; remaining AI/HTTP/production metrics and relea
 NFR-REL-002/NFR-SEC-002/NFR-MNT-001 local recovery preparation: [E9 evidence](E9_RECOVERY_VERIFICATION.md).
 Isolated source/destination backup/restore, row parity and immutable guards require hosted execution;
 profile/cleanup contract tests alone do not establish recovery acceptance. Production PITR remains open.
+
+ADR-041 fake orchestration is verified for `2ce14c3` by
+[CI 37222368566](https://github.com/Jotham566/kasoma/actions/runs/37222368566): 534 Python,
+20 browser and five tooling checks plus clean migrations/security/container gates. All automatic
+learner scoring remains disabled. This supersedes earlier rehearsal-pending notes.
