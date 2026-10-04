@@ -22,6 +22,8 @@ class Incoming:
     status_reference: str | None
     delivery_status: str | None
     provider_at: datetime
+    reply_reference: str | None = None
+    reply_encrypted: str | None = None
 
 
 def sequence(value: Any) -> list[Any]:
@@ -89,6 +91,7 @@ def parse(identity: IdentityService, payload: dict[str, Any]) -> list[Incoming]:
                 if at <= now - timedelta(days=30) or at > now + timedelta(minutes=5):
                     raise ValueError("Expired or future event")
                 command, hashed_code, delivery, reference = "UNSUPPORTED", None, None, None
+                reply_reference, reply_encrypted = None, None
                 event_key = f"message:{provider_id}"
                 if statuses:
                     delivery = string(message.get("status"), 16).upper()
@@ -101,12 +104,18 @@ def parse(identity: IdentityService, payload: dict[str, Any]) -> list[Incoming]:
                     words = body.strip().upper().split()
                     if words == ["STOP"]:
                         command = "STOP"
-                    elif words == ["HELP"]:
-                        command = "HELP"
+                    elif len(words) == 1 and words[0] in {"HELP", "START", "CONTINUE", "PROGRESS"}:
+                        command = words[0]
                     elif len(words) == 2 and words[0] == "LINK":
                         command = "LINK"
                         if re.fullmatch(r"[0-9A-F]{12}", words[1]):
                             hashed_code = code_hash(identity, words[1])
+                    elif "context" in message and len(body) <= 96:
+                        reference = string(object_value(message["context"]).get("id"), 256)
+                        if re.fullmatch(r"wamid\.[A-Za-z0-9_.=+/-]{1,240}", reference) is None:
+                            raise ValueError("Invalid reply reference")
+                        command, reply_reference = "ANSWER", reference
+                        reply_encrypted = identity.encrypt(body)
                 canonical = json.dumps(message, sort_keys=True, separators=(",", ":"))
                 results.append(
                     Incoming(
@@ -119,6 +128,8 @@ def parse(identity: IdentityService, payload: dict[str, Any]) -> list[Incoming]:
                         status_reference=reference,
                         delivery_status=delivery,
                         provider_at=at,
+                        reply_reference=reply_reference,
+                        reply_encrypted=reply_encrypted,
                     )
                 )
     return results

@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, ForeignKey, UniqueConstraint
+from sqlalchemy import JSON, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from services.database import Base
@@ -57,6 +57,8 @@ class InboundMessage(Base):
     code_hash: Mapped[str | None]
     status_reference: Mapped[str | None]
     delivery_status: Mapped[str | None]
+    reply_reference: Mapped[str | None]
+    reply_encrypted: Mapped[str | None]
     provider_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     available_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
@@ -75,6 +77,10 @@ class OutboundMessage(Base):
     recipient_hash: Mapped[str]
     recipient_encrypted: Mapped[str | None]
     template: Mapped[str]
+    link_revision: Mapped[int | None]
+    session_item_id: Mapped[UUID | None] = mapped_column(ForeignKey("session_items.id"))
+    attempt_id: Mapped[UUID | None] = mapped_column(ForeignKey("attempts.id"))
+    menu_topic_ids: Mapped[list[str] | None] = mapped_column(JSON(none_as_null=True))
     status: Mapped[str]
     provider_id: Mapped[str | None] = mapped_column(unique=True)
     attempts: Mapped[int]
@@ -91,3 +97,16 @@ class ChannelMutationReceipt(Base):
     key: Mapped[UUID] = mapped_column(primary_key=True)
     request_hash: Mapped[str]
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class ConversationState(Base):
+    __tablename__ = "conversation_states"
+    link_id: Mapped[UUID] = mapped_column(ForeignKey("channel_links.id"), primary_key=True)
+    actor_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    link_revision: Mapped[int]
+    session_id: Mapped[UUID | None] = mapped_column(ForeignKey("assessment_sessions.id"))
+    expected_outbound_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("outbound_messages.id", ondelete="CASCADE")
+    )
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

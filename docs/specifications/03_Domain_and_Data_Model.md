@@ -341,3 +341,22 @@ Existing response-format, active-assignment, approved-version, ownership and app
 remain in force. Historical evidence is not rewritten. Application capability checks additionally
 reject rich/oversized questions before channel selection, serving or submission. Conversation
 state and webhook-driven attempts remain pending.
+
+## Local conversation state (ADR-038, migration 0020)
+
+`conversation_states` holds one actor/link-revision-bound session pointer and expected outgoing
+reply UUID per channel link, expiring 24 hours after activity. Menu topic UUIDs and question/grade
+references are stored on outgoing rows; rendering rechecks current ownership, consent, enrollment
+and approval. A database trigger guards conversation ownership and five-item revision shape.
+Deleting an expired referenced outgoing receipt also removes its transient pointer by cascade.
+
+Incoming structured replies store a bounded encrypted body only when intake can bind the provider
+context to an active recipient/link and current sent menu/question. Worker validation repeats that
+check and clears the encrypted field on terminal processing; queued replies expire at 24 hours.
+Unbound text is not retained. STOP intake and web unlink remove the pointer and cancel pending
+outbound messages, preserving shared assessment evidence. Owned exports and deletion previews
+include minimized conversation state. Remaining channel holds/account erasure remain separate gaps.
+
+`channel-transport-event.schema.json` records only event name, correlation UUID, channel, status
+and schema version for worker intake/drain and wake-up failures. Message bodies and identifiers
+are never operational event fields.

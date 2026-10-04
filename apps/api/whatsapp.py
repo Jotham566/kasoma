@@ -86,4 +86,7 @@ async def receive(request: Request) -> WebhookAccepted:
         request.headers.get("x-hub-signature-256"),
         UUID(request.state.request_id),
     )
+    await run_in_threadpool(
+        request.app.state.channel_wakeup, service(request).settings, request.state.request_id
+    )
     return WebhookAccepted()

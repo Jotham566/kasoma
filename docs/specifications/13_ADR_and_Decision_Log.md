@@ -240,3 +240,10 @@ See [ADR-037](../decisions/ADR/037-channel-assessment-provenance.md). Trusted in
 operations reuse grading/mastery and enforce five-item approved channel capability. Public API
 contracts remain WEB-only; migration 0019 preserves immutable evidence with explicit provenance.
 Verification is pending; this does not enable webhook-driven practice.
+
+### ADR-038 — local five-question conversations
+
+See [ADR-038](../decisions/ADR/038-local-whatsapp-practice.md). START/CONTINUE use explicit topic
+menus and five-item shared revision sessions. Replies bind to the exact sent menu/question;
+STOP/unlink invalidates transient pointers. Approved references are rendered under current access,
+with bounded encrypted intake and a local queue wake-up. Application verification is pending.

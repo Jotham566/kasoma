@@ -2,10 +2,16 @@
 
 from uuid import UUID, uuid4
 
-from sqlalchemy import select, update
+from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
-from services.domain.messaging import ChannelSender, InboundMessage, OutboundMessage
+from services.domain.messaging import (
+    ChannelLink,
+    ChannelSender,
+    ConversationState,
+    InboundMessage,
+    OutboundMessage,
+)
 from services.identity import IdentityService
 from services.whatsapp_ingress import WebhookRejected, authenticate_and_decode
 from services.whatsapp_linking import channel_lock
@@ -42,6 +48,15 @@ def ingest(identity: IdentityService, raw: bytes, signature: str | None, request
                 if item.command == "STOP":
                     sender.barrier_at = now
                     db.execute(
+                        delete(ConversationState).where(
+                            ConversationState.link_id.in_(
+                                select(ChannelLink.id).where(
+                                    ChannelLink.sender_hash == item.sender_hash
+                                )
+                            )
+                        )
+                    )
+                    db.execute(
                         update(OutboundMessage)
                         .where(
                             OutboundMessage.recipient_hash == item.sender_hash,
@@ -52,6 +67,33 @@ def ingest(identity: IdentityService, raw: bytes, signature: str | None, request
                 if fresh:
                     sender.last_provider_at = item.provider_at
             sender.updated_at = now
+            command, reply_reference, reply_encrypted = (
+                item.command,
+                item.reply_reference,
+                item.reply_encrypted,
+            )
+            if command == "ANSWER":
+                bound = db.scalar(
+                    select(OutboundMessage.id)
+                    .join(
+                        ConversationState,
+                        ConversationState.expected_outbound_id == OutboundMessage.id,
+                    )
+                    .join(ChannelLink, ChannelLink.id == ConversationState.link_id)
+                    .where(
+                        OutboundMessage.provider_id == reply_reference,
+                        OutboundMessage.recipient_hash == item.sender_hash,
+                        OutboundMessage.status.in_(["SENT", "DELIVERED", "READ"]),
+                        OutboundMessage.template.in_(["PRACTICE_MENU", "PRACTICE_QUESTION"]),
+                        OutboundMessage.link_revision == ChannelLink.revision,
+                        ChannelLink.sender_hash == item.sender_hash,
+                        ChannelLink.status == "ACTIVE",
+                        ConversationState.expires_at > now,
+                        ConversationState.link_revision == ChannelLink.revision,
+                    )
+                )
+                if bound is None:
+                    command, reply_reference, reply_encrypted = "UNSUPPORTED", None, None
             db.add(
                 InboundMessage(
                     id=uuid4(),
@@ -61,11 +103,13 @@ def ingest(identity: IdentityService, raw: bytes, signature: str | None, request
                     sender_hash=item.sender_hash,
                     sender_encrypted=item.sender_encrypted,
                     actor_id=None,
-                    command=item.command,
+                    command=command,
                     code_hash=item.code_hash,
                     status_reference=item.status_reference,
                     delivery_status=item.delivery_status,
                     provider_at=item.provider_at,
+                    reply_reference=reply_reference,
+                    reply_encrypted=reply_encrypted,
                     received_at=now,
                     available_at=now,
                     processed_at=None,

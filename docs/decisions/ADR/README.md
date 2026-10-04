@@ -70,3 +70,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-037: Channel-safe shared assessment operations](037-channel-assessment-provenance.md)
   records internal provenance, supported selection and cross-channel continuation constraints.
+
+- [ADR-038: Bound local WhatsApp practice conversations](038-local-whatsapp-practice.md)
+  records exact reply context, transient pointers, shared atomic learning and safe fake delivery.

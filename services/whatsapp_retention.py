@@ -9,6 +9,7 @@ from services.domain.messaging import (
     ChannelLink,
     ChannelMutationReceipt,
     ChannelSender,
+    ConversationState,
     InboundMessage,
     LinkCode,
     OutboundMessage,
@@ -21,6 +22,10 @@ def expire(identity: IdentityService) -> int:
     with Session(identity.engine) as db, db.begin():
         channel_lock(identity, db)
         now = identity.clock()
+        expired = (
+            select(ConversationState.link_id).where(ConversationState.expires_at <= now).limit(100)
+        )
+        db.execute(delete(ConversationState).where(ConversationState.link_id.in_(expired)))
         # Bounded batches avoid monopolizing the mutation lock as histories grow.
         codes = (
             select(LinkCode.id)
@@ -69,6 +74,7 @@ def expire(identity: IdentityService) -> int:
                 processed_at=now,
                 sender_encrypted=None,
                 code_hash=None,
+                reply_encrypted=None,
             )
         )
         horizon = now - timedelta(days=30)

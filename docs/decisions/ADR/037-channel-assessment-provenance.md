@@ -1,7 +1,7 @@
 # ADR-037: Channel-safe shared assessment operations
 
 Date: 4 October 2026
-Status: Accepted within delegated MVP implementation discretion; implementation in progress
+Status: Accepted within delegated MVP implementation discretion; base implementation verified; follow-up delivery work in progress
 Requirements: FR-WA-002/003/004, FR-CNT-004, FR-GRD-001/002, FR-MST-001
 
 ## Decision

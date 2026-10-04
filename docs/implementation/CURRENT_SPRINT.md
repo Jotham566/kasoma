@@ -92,3 +92,11 @@ clean migration and integration acceptance must be obtained from hosted CI befor
 
 ADR-036 feedback projection now has deterministic bounds and protected web fallback tests. It
 remains a pure helper; the conversation worker must authorize the submitted grade before delivery.
+
+## Current continuation — 4 October 2026
+
+Channel foundation `c0b5b55` is on main after hosted CI 37217857047 passed all gates (437 Python,
+20 browser, five tooling). Both completed foundation branches were removed. Internal three-format
+score/mastery parity is verified. ADR-038 now implements the signed conversation flow, exact reply
+binding, minimized transient state, safe dynamic delivery and bounded local wake-up; acceptance is
+pending. See [conversation verification](E7_CONVERSATION_VERIFICATION.md).

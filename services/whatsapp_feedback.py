@@ -18,20 +18,8 @@ def feedback_text(
     """Caller must authorize the owned, submitted grade; no diagnostic feedback is permitted."""
     if not 1 <= position <= 5 or not 1 <= limit <= MAX_MESSAGE_CHARS:
         raise ValueError("Invalid feedback bounds")
-    url = urlsplit(app_public_url)
-    require_local(app_public_url, {"web"})
-    if (
-        url.scheme not in {"http", "https"}
-        or url.username is not None
-        or url.password is not None
-        or url.query
-        or url.fragment
-        or url.path not in {"", "/"}
-        or any(c.isspace() for c in app_public_url)
-    ):
-        raise ValueError("Invalid public application origin")
     # The UUID selects an owned session after normal web authentication; it is not a token.
-    link = app_public_url.rstrip("/") + "/revise?session=" + str(session_id)
+    link = application_origin(app_public_url) + "/revise?session=" + str(session_id)
     prefix = f"Answer {position}/5 saved. Points: {grade.points_awarded}/{grade.points_possible}."
     continuation = (
         "Five answers saved." if position == 5 else "Send CONTINUE for the next question."
@@ -48,3 +36,19 @@ def feedback_text(
         if detail and not RICH_CONTENT.search(detail) and len(complete) <= limit
         else minimal
     )
+
+
+def application_origin(app_public_url: str) -> str:
+    url = urlsplit(app_public_url)
+    require_local(app_public_url, {"web"})
+    if (
+        url.scheme not in {"http", "https"}
+        or url.username is not None
+        or url.password is not None
+        or url.query
+        or url.fragment
+        or url.path not in {"", "/"}
+        or any(c.isspace() for c in app_public_url)
+    ):
+        raise ValueError("Invalid public application origin")
+    return app_public_url.rstrip("/")

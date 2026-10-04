@@ -11,10 +11,21 @@
     "schema_version"
   ],
   "properties": {
-    "event": { "enum": ["api.request", "worker.smoke"] },
-    "correlation_id": { "type": "string", "format": "uuid" },
-    "channel": { "enum": ["WEB", "WORKER"] },
-    "status": { "type": "integer" },
-    "schema_version": { "const": 1 }
+    "event": {
+      "enum": ["api.request", "worker.smoke"]
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "channel": {
+      "enum": ["WEB", "WORKER", "WHATSAPP"]
+    },
+    "status": {
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": 1
+    }
   }
 }

@@ -503,3 +503,17 @@ start schemas still reject WHATSAPP. Channel callers must first authorize the li
 Only explicit-topic five-item revision plans whose assigned versions pass approval and channel
 format checks can run through these internal methods. Unsupported sessions fail closed without
 replacing assignments. This is not a new HTTP endpoint or a webhook practice enablement.
+
+## Local practice webhook flow (ADR-038, verification pending)
+
+Signed text commands START, CONTINUE, PROGRESS and HELP require a currently linked, consented
+actor for practice. START/CONTINUE shows enrolled topic choices or resumes the current five-item
+revision. A menu choice or objective answer must include Meta-shaped `context.id` matching the
+current successfully sent outgoing menu/question. Missing, stale or foreign context cannot select
+or grade an assignment. Grade feedback includes the existing authenticated `/revise?session=UUID`
+link; CONTINUE serves the next question. PROGRESS provides the authenticated web progress link.
+
+Encrypted structured reply text is bounded to 96 characters and transient; arbitrary conversation
+text is discarded. After durable intake, a bounded best-effort local Redis wake-up requests a queue
+drain. Broker outages preserve accepted messages and rely on periodic recovery. New replies remain
+fake-only; no cloud transport or public actor/channel override is introduced.

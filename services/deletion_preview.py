@@ -54,6 +54,7 @@ from services.domain.messaging import (
     ChannelLink,
     ChannelMutationReceipt,
     ChannelSender,
+    ConversationState,
     InboundMessage,
     LinkCode,
     OutboundMessage,
@@ -117,6 +118,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     add(ChannelLink, ChannelLink.user_id == user, "REMOVE_DIRECT_LINKAGE")
     for model, condition in [
         (LinkCode, LinkCode.user_id == user),
+        (ConversationState, ConversationState.actor_id == user),
         (ChannelMutationReceipt, ChannelMutationReceipt.actor_id == user),
         (InboundMessage, InboundMessage.actor_id == user),
         (OutboundMessage, OutboundMessage.actor_id == user),

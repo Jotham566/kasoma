@@ -45,7 +45,9 @@ def identity(request):
     now = [datetime(2026, 9, 23, 12, 0, tzinfo=UTC)]
     messages = FakeMessagingProvider()
     service = IdentityService(local, config, messages, messages, lambda: now[0], lambda: "246810")
-    with TestClient(create_app(config, service)) as client:
+    with TestClient(
+        create_app(config, service, channel_wakeup=lambda settings, request_id: None)
+    ) as client:
         yield service, client, messages, now
     local.dispose()
     # Keep isolated synthetic schema for debugging; no destructive teardown.

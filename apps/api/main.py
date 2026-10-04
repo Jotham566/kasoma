@@ -32,10 +32,15 @@ class Live(BaseModel):
 
 
 def create_app(
-    settings: Settings | None = None, identity: IdentityService | None = None
+    settings: Settings | None = None,
+    identity: IdentityService | None = None,
+    channel_wakeup: Callable[[Settings, str], None] | None = None,
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        from services.whatsapp_wakeup import wake
+
+        app.state.channel_wakeup = channel_wakeup or wake
         app.state.settings = settings or Settings()
         config = app.state.settings
         engine = engine_for(config)

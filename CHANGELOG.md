@@ -246,3 +246,17 @@ Record meaningful repository and product changes here. A documentation baseline 
 - Extend ADR-036 with bounded shared-grade feedback and authenticated web solution links.
 - Preserve complete academic instructions or use the web fallback; reject secret-bearing origins.
 - Add format, length, continuation and link-safety regressions; delivery integration remains pending.
+
+### 4 October 2026 — verified channel assessment foundation
+
+- Publish `c0b5b55` to main after all hosted gates passed: 437 Python, 20 browser and five tooling
+  tests, including six channel capability/parity regressions. Remove completed foundation branches.
+
+### In progress — signed local five-question conversation (FR-WA-002–006)
+
+- Record ADR-038; add migration 0020 for expiring link-revision-bound conversation pointers and
+  encrypted transient structured replies. Bind numbered menus/answers to the exact sent question.
+- Reuse shared atomic assessment operations; reconstruct approved question and grade references
+  under current authorization before fake delivery. STOP/unlink clears the channel pointer.
+- Add bounded local wake-up after durable intake, transport schemas, exports/inventory and complete
+  synthetic flow, replay, withdrawal, STOP, rollback and expiry tests. Hosted verification pending.

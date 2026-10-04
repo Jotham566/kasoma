@@ -3,13 +3,14 @@
 from datetime import timedelta
 from uuid import UUID, uuid4
 
-from sqlalchemy import select, update
+from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
 from services.domain.messaging import (
     ChannelLink,
     ChannelMutationReceipt,
     ChannelSender,
+    ConversationState,
     LinkCode,
     OutboundMessage,
 )
@@ -139,6 +140,8 @@ class LinkingService:
                 .where(LinkCode.user_id == actor, LinkCode.code_hash.is_not(None))
                 .values(code_hash=None, revoked_at=now)
             )
+            if link:
+                db.execute(delete(ConversationState).where(ConversationState.link_id == link.id))
             if link and link.status != "UNLINKED":
                 sender = db.get(ChannelSender, link.sender_hash)
                 if sender:

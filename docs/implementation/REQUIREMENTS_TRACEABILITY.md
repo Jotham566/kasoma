@@ -119,3 +119,13 @@ Conversation/reply binding, outbound practice and end-to-end parity remain separ
 FR-WA-005: `services/whatsapp_feedback.py` and `tests/contract/test_whatsapp_feedback.py` add
 concise shared-grade projection, lossless-or-web fallback and safe local session links. Actual
 channel feedback delivery remains pending conversation integration.
+
+### E7 channel foundation verified; conversation in progress
+
+Commit `c0b5b55` passed CI 37217857047 with 437 Python, 20 browser and five tooling checks plus
+clean migrations, contracts, security and containers. This supersedes pending-execution notes
+above for ADR-037 and proves internal FR-WA-002/003/004 capability/parity. ADR-038, migration 0020,
+`services/whatsapp_practice.py`, `whatsapp_render.py`, `whatsapp_wakeup.py` and
+`tests/integration/test_whatsapp_practice.py` address signed end-to-end FR-WA-002/003/004/005/006
+and transient FR-ID-006 inventory; those application acceptance gates remain pending.
+NFR-PERF-002 has a bounded wake-up implementation, but measured p95 latency remains unverified.

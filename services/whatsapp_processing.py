@@ -6,6 +6,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
+from services.content import ContentError
 from services.domain.identity import Identifier, User
 from services.domain.messaging import (
     ChannelLink,
@@ -14,7 +15,7 @@ from services.domain.messaging import (
     LinkCode,
     OutboundMessage,
 )
-from services.identity import IdentityService
+from services.identity import IdentityError, IdentityService
 from services.observability import emit
 from services.whatsapp_linking import channel_lock
 
@@ -110,27 +111,27 @@ def queue_reply(
     row: InboundMessage,
     link: ChannelLink | None,
     template: str,
-) -> None:
+) -> OutboundMessage:
     now = identity.clock()
-    db.add(
-        OutboundMessage(
-            id=uuid4(),
-            inbound_id=row.id,
-            link_id=link.id if link else None,
-            actor_id=row.actor_id,
-            recipient_hash=row.sender_hash,
-            recipient_encrypted=row.sender_encrypted,
-            template=template,
-            status="PENDING",
-            provider_id=None,
-            attempts=0,
-            error_code=None,
-            created_at=now,
-            available_at=now,
-            sent_at=None,
-            status_at=None,
-        )
+    outgoing = OutboundMessage(
+        id=uuid4(),
+        inbound_id=row.id,
+        link_id=link.id if link else None,
+        actor_id=row.actor_id,
+        recipient_hash=row.sender_hash,
+        recipient_encrypted=row.sender_encrypted,
+        template=template,
+        status="PENDING",
+        provider_id=None,
+        attempts=0,
+        error_code=None,
+        created_at=now,
+        available_at=now,
+        sent_at=None,
+        status_at=None,
     )
+    db.add(outgoing)
+    return outgoing
 
 
 def apply_status(db: Session, row: InboundMessage) -> None:
@@ -195,6 +196,7 @@ def process_one(identity: IdentityService) -> bool:
             row.status = "REJECTED" if row.error_code else "PROCESSED"
         if row.status != "QUEUED":
             row.processed_at, row.sender_encrypted, row.code_hash = now, None, None
+            row.reply_encrypted = None
         db.flush()
         event, correlation = "channel.inbound." + row.status.lower(), str(row.request_id)
         status = 200 if row.status == "PROCESSED" else 503
@@ -227,5 +229,24 @@ def apply_command(
                 .where(OutboundMessage.link_id == link.id, OutboundMessage.status == "PENDING")
                 .values(status="CANCELLED", recipient_encrypted=None, error_code="STOPPED")
             )
+    elif row.command in {"START", "CONTINUE", "PROGRESS", "ANSWER", "HELP"} and link:
+        sender = db.get(ChannelSender, row.sender_hash)
+        if (
+            link.status != "ACTIVE"
+            or row.received_at < link.linked_at
+            or (sender and sender.barrier_at and sender.barrier_at >= link.linked_at)
+            or not allowed(identity, db, actor)
+        ):
+            row.error_code = "CHANNEL_NOT_ACTIVE"
+            return
+        from services.whatsapp_practice import process, queue
+
+        try:
+            with db.begin_nested():
+                process(identity, db, row, link)
+                db.flush()
+        except (IdentityError, ContentError, ValueError):
+            row.error_code = "PRACTICE_UNAVAILABLE"
+            queue(identity, db, row, link, "PRACTICE_NOTICE")
     else:
         queue_reply(identity, db, row, link, "HELP" if row.command == "HELP" else "UNSUPPORTED")

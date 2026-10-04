@@ -24,7 +24,12 @@ from services.domain.data_requests import DataRequest
 from services.domain.flags import ContentFlag
 from services.domain.identity import Consent, Identifier, IdentityEvent, LearnerSubject, User
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
-from services.domain.messaging import ChannelLink, InboundMessage, OutboundMessage
+from services.domain.messaging import (
+    ChannelLink,
+    ConversationState,
+    InboundMessage,
+    OutboundMessage,
+)
 from services.identity import IdentityError, IdentityService
 from services.mastery_engine import Estimate, Evidence
 
@@ -210,6 +215,14 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
         }
         for r in rows(
             select(ChannelLink).where(ChannelLink.user_id == actor).order_by(ChannelLink.id)
+        )
+    ]
+    records["channel_conversations"] = [
+        fields(r, "link_id session_id updated_at expires_at")
+        for r in rows(
+            select(ConversationState)
+            .where(ConversationState.actor_id == actor)
+            .order_by(ConversationState.link_id)
         )
     ]
     records["channel_inbound"] = [

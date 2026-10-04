@@ -171,3 +171,7 @@ test-assessment-transactions:
 .PHONY: test-channel-assessment
 test-channel-assessment:
 	$(UV) pytest tests/integration/test_channel_assessment.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-whatsapp-practice
+test-whatsapp-practice:
+	$(UV) pytest tests/integration/test_whatsapp_practice.py --allow-hosts=localhost,127.0.0.1,::1

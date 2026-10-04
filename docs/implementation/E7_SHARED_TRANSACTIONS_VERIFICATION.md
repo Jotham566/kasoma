@@ -69,3 +69,15 @@ rejected. Pure tests cover these boundaries; this is not evidence of outbound pr
 `make format lint test-unit` passes 308 unit/contract and five tooling tests with feedback
 formatting. Session capability validation now acquires approved-version locks in stable item
 order, matching topic selection. Hosted regression for this final snapshot is still required.
+
+## Hosted channel foundation acceptance — 4 October 2026
+
+- `dd1c8d8` passed [CI 37217488323](https://github.com/Jotham566/kasoma/actions/runs/37217488323):
+  290 unit/contract + 141 integration = 431 Python, 20 browser and five tooling tests.
+- `c0b5b55` passed [CI 37217857047](https://github.com/Jotham566/kasoma/actions/runs/37217857047):
+  290 unit/contract + 147 integration = 437 Python, 20 browser and five tooling tests.
+- Both runs passed setup, clean migrations/seed, lint/types/contracts/build, security and container
+  smoke. Both are on main and their completed branches were removed. The six new parity/database
+  cases passed. Local Docker failures above remain recorded as failed native attempts.
+- This verifies internal capability and objective parity, not the subsequent feedback/conversation
+  delivery changes. See [conversation verification](E7_CONVERSATION_VERIFICATION.md).

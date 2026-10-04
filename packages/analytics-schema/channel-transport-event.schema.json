@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Minimized channel transport operational event (not learner analytics)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event",
+    "correlation_id",
+    "channel",
+    "status",
+    "schema_version"
+  ],
+  "properties": {
+    "event": {
+      "enum": [
+        "channel.inbound.queued",
+        "channel.inbound.processed",
+        "channel.inbound.rejected",
+        "channel.inbound.failed",
+        "channel.batch_processed",
+        "channel.wakeup_failed"
+      ]
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "channel": {
+      "enum": ["WHATSAPP", "WORKER"]
+    },
+    "status": {
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": 1
+    }
+  }
+}

@@ -7,8 +7,9 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from services.content import ContentError
 from services.domain.messaging import ChannelLink, ChannelSender, OutboundMessage
-from services.identity import IdentityService
+from services.identity import IdentityError, IdentityService
 from services.whatsapp_linking import channel_lock
 from services.whatsapp_processing import allowed
 
@@ -17,7 +18,9 @@ TEMPLATES = {
     "STOPPED": "Kasoma replies are stopped. Manage your channel in your web account.",
     "HELP": "Manage linking in your Kasoma web account. Send LINK followed by its code, or STOP.",
     "LINK_REJECTED": "That link could not be completed. Get a new code in your Kasoma web account.",
-    "UNSUPPORTED": "Local commands: LINK, HELP and STOP. Practice is not available yet.",
+    "UNSUPPORTED": (
+        "Send HELP for supported commands. Reply directly to a menu or question, or send STOP."
+    ),
 }
 
 
@@ -77,6 +80,7 @@ def deliver_one(identity: IdentityService, provider: Delivery) -> bool:
             or link.sender_hash != row.recipient_hash
             or link.user_id != row.actor_id
             or link.linked_at > row.created_at
+            or (row.link_revision is not None and row.link_revision != link.revision)
         ):
             reason = "LINK_CHANGED"
         elif not identity.rate(
@@ -89,13 +93,22 @@ def deliver_one(identity: IdentityService, provider: Delivery) -> bool:
         if reason:
             row.status, row.error_code, row.recipient_encrypted = "CANCELLED", reason, None
             return True
+        if row.template.startswith("PRACTICE_") or row.template == "PROGRESS":
+            from services.whatsapp_render import render_practice
+
+            try:
+                body = render_practice(identity, db, row)
+            except (IdentityError, ContentError, ValueError):
+                row.status, row.error_code = "CANCELLED", "PRACTICE_UNAVAILABLE"
+                row.recipient_encrypted = None
+                return True
+        else:
+            body = TEMPLATES[row.template]
         row.attempts += 1
         try:
             if not row.recipient_encrypted:
                 raise ValueError("Missing recipient")
-            result = provider.send(
-                row.id, identity.decrypt(row.recipient_encrypted), TEMPLATES[row.template]
-            )
+            result = provider.send(row.id, identity.decrypt(row.recipient_encrypted), body)
             # This adapter accepts synthetic IDs only; no real transport can be enabled here.
             if result != f"wamid.fake.{row.id}":
                 raise ValueError("Invalid fake receipt")
