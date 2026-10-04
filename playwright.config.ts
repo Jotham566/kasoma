@@ -1,7 +1,17 @@
 import { defineConfig } from "@playwright/test";
+
+const browserName = process.env.KASOMA_E2E_BROWSER ?? "chromium";
+if (
+  browserName !== "chromium" &&
+  browserName !== "firefox" &&
+  browserName !== "webkit"
+) {
+  throw new Error("KASOMA_E2E_BROWSER must be chromium, firefox or webkit");
+}
+
 export default defineConfig({
   testDir: "./tests/e2e",
-  use: { baseURL: "http://127.0.0.1:13000" },
+  use: { baseURL: "http://127.0.0.1:13000", browserName },
   webServer: [
     {
       command: "uv run --frozen python -m scripts.e2e_api",

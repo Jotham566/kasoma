@@ -38,7 +38,7 @@ make test
 make openapi-check
 make build
 # First browser installation only:
-PATH="$PWD/.local/runtime/node_modules/node/bin:$PATH" corepack pnpm exec playwright install chromium
+make e2e-install
 make e2e
 make security
 make containers
@@ -334,7 +334,7 @@ Migration 0013 preserves existing choice/numeric evidence. Deploy generated cont
 and compatible players together and recover through forward fixes after new content
 exists. Neither this fixture nor migration authorizes production learner data.
 
-`make e2e` runs two sequential Playwright shards, each with a fresh isolated migrated
+`make e2e` runs two sequential Playwright shards per engine (Chromium, Firefox, WebKit), each with a fresh isolated migrated
 schema and API. This keeps synthetic logins within the unchanged 20-per-hour peer
 limit; it does not disable security controls. Every browser test runs once. The browser
 fixture keeps diagnostic inventory in Mathematics, numeric items in Electricity and
@@ -563,3 +563,15 @@ volumes. Temporary backup files are private and removed on exit. Native Docker m
 This is a logical local fixture drill, not 35-day production PITR or RPO/RTO acceptance. See
 [ADR-042](../decisions/ADR/042-isolated-local-recovery-drill.md) and
 [verification](../implementation/E9_RECOVERY_VERIFICATION.md).
+
+## Browser engine matrix
+
+`make e2e-install` installs the pinned Chromium, Firefox and WebKit engines. `make e2e-list`
+checks the selected test inventory without launching browsers. `make e2e` runs all three engines
+sequentially with isolated synthetic schemas per shard. Focused debugging uses
+`make e2e-chromium`, `make e2e-firefox` or `make e2e-webkit`; do not run these concurrently on the
+same loopback ports. Unknown `KASOMA_E2E_BROWSER` values fail before test execution.
+
+The engine matrix does not replace branded current/previous-browser and physical Android/Safari
+release checks. No real account, learner data or external messaging/model service is involved. See
+[browser evidence](../implementation/E9_BROWSER_COVERAGE_VERIFICATION.md).

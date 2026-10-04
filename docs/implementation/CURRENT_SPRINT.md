@@ -53,3 +53,10 @@ original synthetic evidence and local PostgreSQL tooling. Native creation fails 
 unavailable; real restore verification remains pending. [Recovery evidence](E9_RECOVERY_VERIFICATION.md).
 The [short-text integration assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies the
 remaining rubric/pending-result/mastery boundaries; no candidate is inserted as a learner grade.
+
+## Browser engine coverage
+
+The full journey suite is configured for isolated sequential Chromium, Firefox and WebKit runs.
+Three inventories of 20 cases pass discovery; native runtime setup fails without PostgreSQL.
+Hosted 60-execution acceptance is pending. [Browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md).
+Branded current/previous versions and physical Android/Safari checks remain open.

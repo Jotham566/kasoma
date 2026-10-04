@@ -44,8 +44,9 @@ openapi:
 openapi-check:
 	$(UV) python scripts/check_contract.py
 e2e:
-	$(PNPM) exec playwright test --shard=1/2
-	$(PNPM) exec playwright test --shard=2/2
+	$(MAKE) e2e-chromium
+	$(MAKE) e2e-firefox
+	$(MAKE) e2e-webkit
 build:
 	$(PNPM) build
 containers:
@@ -183,3 +184,20 @@ test-channel-operations:
 .PHONY: recovery-drill
 recovery-drill:
 	$(UV) python -m scripts.recovery_drill
+
+.PHONY: e2e-install e2e-list e2e-chromium e2e-firefox e2e-webkit
+e2e-install:
+	$(PNPM) exec playwright install --with-deps chromium firefox webkit
+e2e-list:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --list
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --list
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --list
+e2e-chromium:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=1/2
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=2/2
+e2e-firefox:
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=1/2
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=2/2
+e2e-webkit:
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=1/2
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=2/2

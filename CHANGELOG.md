@@ -1,5 +1,11 @@
 # Changelog
 
+## 4 October 2026 — browser engine regression matrix
+
+- Extend `make e2e` to sequential Chromium, Firefox and WebKit runs with fresh synthetic fixtures per shard (NFR-COMP-001/NFR-ACC-001).
+- Add prescribed engine install/list/focused commands and CI coverage; preserve all existing assertions. No application architecture change.
+- Lint/types/contracts and three 20-case inventories pass; native execution fails at database setup, so 60 browser executions remain pending hosted verification. Branded/mobile/version coverage remains a release gate.
+
 ## 4 October 2026 — isolated synthetic recovery drill
 
 - Add `make recovery-drill`, original synthetic assessment fixtures and a hosted CI recovery gate for NFR-REL-002.

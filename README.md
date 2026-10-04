@@ -38,7 +38,7 @@ installs locked dependencies and generates ignored local credentials. Existing
 `.env` and database state are preserved. Web: localhost:3000; API: localhost:8000;
 Mailpit: localhost:8025; MinIO console: localhost:9001.
 
-Run `make lint typecheck test openapi-check build`, install Chromium with the
+Run `make lint typecheck test openapi-check build`, install the three test browser engines with the
 command in the [local runbook](docs/runbooks/LOCAL_DEVELOPMENT.md), then run
 `make e2e security containers`. Missing dependencies fail clearly. The runbook
 covers native Ollama, safe shutdown, migrations, CI and deferred evaluation gates.
