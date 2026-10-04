@@ -407,7 +407,8 @@ ADMIN claimant with recent OTP authentication, including retries. Responses are 
 | `POST /admin/data-requests/{target}/holds` | HoldInput plus Idempotency-Key UUID; 201 HoldView |
 | `POST /admin/data-requests/{target}/holds/{hold}/release` | HoldRelease plus Idempotency-Key UUID; 200 HoldView |
 
-HoldInput has record_type (CONSENT, ATTEMPT, CONTENT_FLAG, DATA_REQUEST), owned record_id
+HoldInput has record_type (CONSENT, ATTEMPT, CONTENT_FLAG, DATA_REQUEST, GRADE,
+MASTERY_EVIDENCE, MASTERY_HISTORY), owned record_id
 UUID, opaque decision_reference UUID, reason (LEGAL_OBLIGATION or SECURITY_INVESTIGATION),
 a timezone-aware finite future expires_at and affirmative=true. Reject extras, narratives,
 unsupported record types and indefinite dates. HoldRelease has only decision_reference
@@ -535,3 +536,13 @@ Thresholds add channel failure counts, pending age, p95 milliseconds and a minim
 New warning codes are CHANNEL_INBOUND_FAILED, CHANNEL_OUTBOUND_FAILED, CHANNEL_STALLED and
 CHANNEL_DISPATCH_SLOW. Missing database/query results remain unavailable, not zero. Existing
 uninstrumented metrics still include AI/SMS/email usage and pre-intake webhook failures.
+
+## Learning-record hold references (ADR-043)
+
+The existing hold routes additionally accept GRADE, MASTERY_EVIDENCE and MASTERY_HISTORY.
+For GRADE, record_id is the grade's attempt_id; for the other two it is the record's own id.
+Ownership is checked through immutable parent relationships; absent or foreign targets return 404.
+No parent/child cascade of hold scope is implied. All recent-auth, independent claimant, rate,
+idempotency, expiry, release and audit controls remain unchanged. Generated enums and administrator
+labels reflect seven supported targets; deletion and complete hold coverage remain unavailable.
+See [ADR-043](../decisions/ADR/043-learning-record-holds.md).

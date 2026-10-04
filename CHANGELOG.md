@@ -1,5 +1,11 @@
 # Changelog
 
+## 4 October 2026 — individual learning-record holds
+
+- Extend FR-ID-006/BR-010 preservation to grades, mastery evidence and mastery history under ADR-043; keep independent recent-OTP ADMIN claim, finite exact-record decisions and immutable audit receipts.
+- Add migration 0022 ownership/DELETE guards and generated API/client enums; clarify grade attempt references and seven supported types in the administrator UI.
+- Add ownership, direct-SQL, release/expiry, immutable-evidence and export-boundary tests. Deletion remains disabled and hold coverage remains incomplete.
+
 ## 4 October 2026 — restricted assessment login verification
 
 - Add a real temporary PostgreSQL login test for NFR-SEC-002: synthetic objective assessment and idempotent mastery recording with narrowly enumerated writes.

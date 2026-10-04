@@ -218,7 +218,7 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     );
     await expect(
       admin.getByText(
-        "Legal holds cover four record types; other records still require review.",
+        "Legal holds cover seven record types; other records still require review.",
         {
           exact: true,
         },
@@ -235,6 +235,18 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     const holds = deletion.getByRole("region", { name: "Record legal holds" });
     await holds.getByRole("button", { name: "Manage record holds" }).click();
     await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await expect(holds.getByLabel("Record type").locator("option")).toHaveText([
+      "Data request",
+      "Consent",
+      "Attempt",
+      "Content flag",
+      "Grade (attempt reference)",
+      "Mastery evidence",
+      "Mastery history",
+    ]);
+    await expect(
+      holds.getByText(/For a grade, use its attempt reference/),
+    ).toBeVisible();
     await holds
       .getByLabel("Decision reference", { exact: true })
       .fill(randomUUID());

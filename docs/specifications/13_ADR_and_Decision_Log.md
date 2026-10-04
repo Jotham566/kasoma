@@ -272,3 +272,9 @@ schema repair and fail-closed budgets produce internal candidates only; automati
 See [ADR-042](../decisions/ADR/042-isolated-local-recovery-drill.md). A local-only command creates
 its own source/destination databases, verifies restored synthetic evidence and cleans up only
 owned temporary databases. No developer-database overwrite, production PITR or RPO/RTO claim.
+
+### ADR-043 — individual learning-record holds
+
+See [ADR-043](../decisions/ADR/043-learning-record-holds.md). Extend the partial hold registry to
+grades, mastery evidence and mastery history with exact ownership and row locks. Grade references
+use attempt_id. Existing immutability and independent authorization remain; deletion stays disabled.

@@ -7,7 +7,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from services.data_requests import DataRequestService
-from services.domain.assessment import Attempt
+from services.domain.assessment import Attempt, Grade
 from services.domain.data_requests import (
     DataRequest,
     DataRequestReview,
@@ -16,6 +16,7 @@ from services.domain.data_requests import (
 )
 from services.domain.flags import ContentFlag
 from services.domain.identity import Consent
+from services.domain.mastery import MasteryEvidence, MasteryHistory
 from services.identity import IdentityError, IdentityService
 from services.legal_hold_contracts import HoldInput, HoldPage, HoldRelease, HoldView, RecordType
 from services.staff import authorize
@@ -127,6 +128,19 @@ class LegalHoldService:
                 ),
                 "ATTEMPT": select(Attempt.id).where(
                     Attempt.id == body.record_id, Attempt.learner_id == request.user_id
+                ),
+                "GRADE": select(Grade.attempt_id)
+                .join(Attempt)
+                .where(Grade.attempt_id == body.record_id, Attempt.learner_id == request.user_id),
+                "MASTERY_EVIDENCE": select(MasteryEvidence.id).where(
+                    MasteryEvidence.id == body.record_id,
+                    MasteryEvidence.learner_id == request.user_id,
+                ),
+                "MASTERY_HISTORY": select(MasteryHistory.id)
+                .join(MasteryEvidence)
+                .where(
+                    MasteryHistory.id == body.record_id,
+                    MasteryEvidence.learner_id == request.user_id,
                 ),
                 "CONTENT_FLAG": select(ContentFlag.id).where(
                     ContentFlag.id == body.record_id, ContentFlag.reporter_id == request.user_id

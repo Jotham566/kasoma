@@ -15,7 +15,7 @@ const policies: Record<Preview["sources"][number]["retention"], string> = {
 };
 const blockers: Record<Preview["blockers"][number], string> = {
   LEGAL_HOLD_COVERAGE_INCOMPLETE:
-    "Legal holds cover four record types; other records still require review.",
+    "Legal holds cover seven record types; other records still require review.",
   ACTIVE_RECORD_HOLDS:
     "Active holds preserve specific records; they do not hold the whole account.",
   LEGAL_HOLD_CHECK_UNAVAILABLE:

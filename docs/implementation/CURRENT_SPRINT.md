@@ -32,6 +32,10 @@ mastery evidence and explicit permission denials. Hosted database execution is p
 fixture cannot connect. Default application credentials are unchanged.
 [Permission evidence](E9_RUNTIME_ROLE_VERIFICATION.md).
 
+FR-ID-006/BR-010: ADR-043 adds exact grade/mastery evidence/history hold targets with ownership
+locks and unchanged immutable protections. Local 397 unit/contract checks pass; hosted migration/
+application acceptance is pending. [Learning hold evidence](E8_LEARNING_HOLDS_VERIFICATION.md).
+
 ## Next dependencies and acceptance work
 
 The [short-text integration assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies the

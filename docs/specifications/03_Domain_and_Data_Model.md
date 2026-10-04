@@ -369,3 +369,16 @@ must explicitly allow the submitted channel. Existing immutable attempts are unt
 Add status/time indexes for incoming and outgoing message cohorts/oldest pending age, plus partial
 indexes for accepted outgoing cohorts and feedback send timestamps. No new personal-data table,
 retention category or learning evidence is introduced. Operational values are derived snapshots.
+
+## Learning-record hold targets (migration 0022; ADR-043)
+
+The hold record_type constraint also permits GRADE, MASTERY_EVIDENCE and MASTERY_HISTORY.
+GRADE record_id is grades.attempt_id and ownership follows attempts.learner_id. Evidence uses
+mastery_evidence.id/learner_id; history uses mastery_estimate_history.id with ownership through
+its evidence row. Both service and SQL guard key-share lock targets and joined ownership rows.
+New BEFORE DELETE guards preserve held records without removing any existing immutable trigger.
+
+Scope remains one named record; related attempts, estimates and other evidence are not implicitly
+held. Existing four target types and all decision/release/retention controls remain unchanged.
+Coverage is still incomplete and no erasure or anonymization is enabled. See
+[ADR-043](../decisions/ADR/043-learning-record-holds.md).

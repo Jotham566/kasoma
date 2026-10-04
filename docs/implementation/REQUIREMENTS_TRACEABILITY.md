@@ -181,3 +181,8 @@ for exact scope and limits; earlier pending entries are historical, not current 
 NFR-SEC-002 assessment database permission profile: [verification](E9_RUNTIME_ROLE_VERIFICATION.md).
 The focused real-login integration test is implemented; hosted acceptance is pending. Local database
 setup is unavailable. Production role provisioning and complete module grant coverage remain partial.
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002 learning-record holds:
+[verification](E8_LEARNING_HOLDS_VERIFICATION.md), [ADR-043](../decisions/ADR/043-learning-record-holds.md).
+Grade/mastery evidence/history ownership and guards are implemented with hosted acceptance pending;
+full hold coverage and deletion remain incomplete.

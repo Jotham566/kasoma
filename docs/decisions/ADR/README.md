@@ -76,3 +76,15 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-039: Minimized local channel operations](039-local-channel-operations.md)
   records bounded queue cohorts, fake-dispatch sampling and operational thresholds.
+
+- [ADR-040: Synthetic short-text candidate validation](040-short-text-candidate-validation.md)
+  records strict offline rubric/evidence checks without learner scoring.
+
+- [ADR-041: Budgeted synthetic dual-pass rehearsal](041-synthetic-short-text-rehearsal.md)
+  records independent fake passes and bounded repair/request/token/deadline behavior.
+
+- [ADR-042: Isolated synthetic recovery drill](042-isolated-local-recovery-drill.md)
+  records owned temporary databases and verified logical recovery without developer data copies.
+
+- [ADR-043: Individual learning-record holds](043-learning-record-holds.md)
+  adds explicit grade, mastery evidence and mastery history preservation targets.

@@ -39,3 +39,17 @@ def test_release_requires_affirmative_decision_reference():
         HoldRelease.model_validate({"affirmative": True})
     with pytest.raises(ValidationError):
         HoldRelease.model_validate({"affirmative": False, "decision_reference": uuid4()})
+
+
+@pytest.mark.parametrize("kind", ["GRADE", "MASTERY_EVIDENCE", "MASTERY_HISTORY"])
+def test_learning_record_hold_uses_exact_uuid(kind):
+    record = uuid4()
+    body = HoldInput(
+        record_type=kind,
+        record_id=record,
+        decision_reference=uuid4(),
+        reason="LEGAL_OBLIGATION",
+        expires_at="2027-01-01T12:00:00Z",
+        affirmative=True,
+    )
+    assert body.record_type == kind and body.record_id == record

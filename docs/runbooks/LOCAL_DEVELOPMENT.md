@@ -604,3 +604,13 @@ Do not run this against production or real learner data. This is also included i
 Default application credentials remain unchanged; this is not a production provisioning command.
 See [permission verification](../implementation/E9_RUNTIME_ROLE_VERIFICATION.md) for grant scope,
 the item-version row-lock constraint and remaining production role/MFA gates.
+
+## Learning-record holds
+
+After `make migrate` applies 0022, the existing independent ADMIN DELETE-request claimant can
+record an already authorized hold for a grade, mastery evidence or mastery history row. For a grade,
+use the attempt reference; other kinds use their own record UUID. The hold covers only that row,
+not its parents, children or an entire account. Never infer deletion clearance from a zero count.
+Expiry/release does not remove immutable evidence. See
+[verification](../implementation/E8_LEARNING_HOLDS_VERIFICATION.md) and
+[ADR-043](../decisions/ADR/043-learning-record-holds.md).

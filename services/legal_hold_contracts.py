@@ -8,7 +8,15 @@ from pydantic import AwareDatetime
 
 from services.identity_contracts import Contract
 
-RecordType = Literal["CONSENT", "ATTEMPT", "CONTENT_FLAG", "DATA_REQUEST"]
+RecordType = Literal[
+    "CONSENT",
+    "ATTEMPT",
+    "CONTENT_FLAG",
+    "DATA_REQUEST",
+    "GRADE",
+    "MASTERY_EVIDENCE",
+    "MASTERY_HISTORY",
+]
 HoldReason = Literal["LEGAL_OBLIGATION", "SECURITY_INVESTIGATION"]
 
 

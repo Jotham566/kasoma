@@ -2001,7 +2001,10 @@
               "CONSENT",
               "ATTEMPT",
               "CONTENT_FLAG",
-              "DATA_REQUEST"
+              "DATA_REQUEST",
+              "GRADE",
+              "MASTERY_EVIDENCE",
+              "MASTERY_HISTORY"
             ],
             "title": "Record Type",
             "type": "string"
@@ -2110,7 +2113,10 @@
               "CONSENT",
               "ATTEMPT",
               "CONTENT_FLAG",
-              "DATA_REQUEST"
+              "DATA_REQUEST",
+              "GRADE",
+              "MASTERY_EVIDENCE",
+              "MASTERY_HISTORY"
             ],
             "title": "Record Type",
             "type": "string"
