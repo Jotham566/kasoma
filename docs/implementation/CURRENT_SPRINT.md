@@ -67,10 +67,16 @@ Prior evidence: [reassessment](E4_REASSESSMENT_VERIFICATION.md),
 [hints](E4_HINTS_VERIFICATION.md), [recommendations](E5_RECOMMENDATIONS_VERIFICATION.md),
 [diagnostics](E5_VERIFICATION.md), [traceability](REQUIREMENTS_TRACEABILITY.md).
 
-## Active shared-service change
+## Verified shared-service foundation
 
 [ADR-035](../decisions/ADR/035-shared-assessment-transactions.md) records the first dependency:
 transaction-scoped start/serve/submit methods with current internal actor authorization. Web
-wrappers preserve existing canonical receipts and grading/mastery behavior. Unit/lint/type checks
-are being run; new rollback, retry and authorization integration regressions await available
-PostgreSQL or hosted CI. No WhatsApp attempts or conversation state are enabled yet.
+wrappers preserve existing canonical receipts and grading/mastery behavior. Commit `50044d4` is
+published on main after [hosted CI](https://github.com/Jotham566/kasoma/actions/runs/37149982356)
+passed 398 Python, 20 browser and five tooling tests plus every setup, migration, security and
+build gate. No WhatsApp attempts or conversation state are enabled yet.
+
+The independent [ADR-036](../decisions/ADR/036-whatsapp-objective-message-format.md) formatting
+boundary is in progress: bounded lossless question rendering and typed numbered/numeric reply
+normalization. Conversation persistence and reply binding remain unimplemented; no channel
+learning behavior is enabled by these pure helpers.

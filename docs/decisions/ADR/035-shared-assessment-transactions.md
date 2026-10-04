@@ -1,7 +1,7 @@
 # ADR-035: Shared transaction-scoped assessment operations
 
 Date: 3 October 2026
-Status: Accepted within delegated implementation discretion; implementation in progress
+Status: Accepted within delegated implementation discretion; implementation verified (hosted CI 37149982356)
 Requirements: FR-WA-002/003/004, FR-ID-003, FR-REV-001/002, FR-GRD-001/002, FR-MST-001
 
 ## Decision

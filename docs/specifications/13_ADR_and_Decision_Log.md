@@ -223,5 +223,13 @@ academic practice and production transport remain pending.
 
 See [ADR-035](../decisions/ADR/035-shared-assessment-transactions.md). Internal actor-authorized
 start/serve/submit operations preserve web contracts and existing grading/mastery behavior while
-allowing the next channel slice to commit receipts and learning evidence atomically. Implementation
-and database regressions are pending; no WhatsApp grading is enabled by the refactor alone.
+allowing the next channel slice to commit receipts and learning evidence atomically. Commit
+`50044d4` and database regressions passed hosted CI 37149982356; no WhatsApp grading is enabled
+by the refactor alone.
+
+### ADR-036 — bounded objective message format
+
+See [ADR-036](../decisions/ADR/036-whatsapp-objective-message-format.md). Independently reviewed
+WHATSAPP suitability, plain-text and length checks precede selection. Numbered choice and exact
+numeric replies normalize to existing response schemas. The conversation layer must bind replies
+to the exact question before invoking the parser; no grading or practice is enabled here alone.

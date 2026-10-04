@@ -64,3 +64,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-035: Shared assessment transactions](035-shared-assessment-transactions.md)
   records internal actor authorization and atomic reuse of existing grading/mastery operations.
+
+- [ADR-036: Objective WhatsApp message format](036-whatsapp-objective-message-format.md)
+  records bounded lossless questions and normalization into shared response schemas.

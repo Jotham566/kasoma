@@ -99,9 +99,14 @@ export/deletion inventory. Hosted CI passed 395 Python, 20 browser and five tool
 all setup/migration/lint/type/contract/build/security/container gates. Native Docker interruption
 is recorded separately. FR-WA-002/003/005 practice/grading and production transport remain pending.
 
-### Shared-service follow-up in progress (FR-WA-002/003/004)
+### Verified shared-service foundation (FR-WA-002/003/004)
 
-ADR-035 and `tests/integration/test_assessment_transactions.py` cover the planned internal
+ADR-035 and `tests/integration/test_assessment_transactions.py` cover the verified internal
 transaction boundary needed for channel parity. Web behavior, schemas and receipt hashes remain
-unchanged. Unit checks pass; new database regressions remain unexecuted pending PostgreSQL/hosted CI.
+unchanged. Commit `50044d4` passed hosted CI 37149982356: 398 Python tests, 20 browser and
+five tooling checks, including all three new database regressions and the complete release pipeline.
 This is not evidence that WhatsApp practice or parity is implemented.
+
+ADR-036 adds an independent channel-formatting boundary and contract regressions toward
+FR-WA-002/003/005. This boundary neither chooses approved versions nor binds learner replies;
+those integration gates and full channel parity remain pending.
