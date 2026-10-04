@@ -511,3 +511,23 @@ owner workflow to correct/resubmit drafts. Review flags through the existing aut
 triage workflow. Do not place report text, candidate documents or exception details in
 operational logs. There is no external alert delivery and the sampler cannot log during its
 own complete outage; independent production monitoring is still a release requirement.
+
+## Local WhatsApp practice verification
+
+Run `make migrate` for migration 0020 and `make test-whatsapp-practice` for signed synthetic
+five-question flows across the three supported objective formats. Fixtures independently review
+their synthetic questions, link a consented synthetic account and capture fake replies in memory.
+No provider calls, real phone numbers or learner data are used. `make test-channel-assessment`
+separately proves shared web/channel grading and mastery parity.
+
+START shows enrolled topic choices; reply to the exact menu message with its displayed number.
+Reply to each exact question using one option number, comma-separated multiple selections, or
+`value | unit` as instructed. After feedback, CONTINUE requests the next question. A bare or stale
+reply cannot answer another question. PROGRESS links to the authenticated web page. STOP/unlink
+cancels delivery and clears channel state without removing submitted learning evidence.
+
+The local API wakes the messaging queue after durable intake; `make process-messages` and periodic
+worker draining remain recovery paths. Wake-up failures are minimized operational events; broker
+outage does not undo intake. Rate limits still apply and latency/load acceptance remains pending.
+Dynamic delivery rechecks current consent, enrollment, content approval and link revision.
+See [conversation evidence](../implementation/E7_CONVERSATION_VERIFICATION.md) for exact results.

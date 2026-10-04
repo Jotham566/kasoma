@@ -236,3 +236,43 @@ def test_retired_question_is_cancelled_before_delivery(identity, content):
     with Session(flow.service.engine) as db:
         outgoing = db.scalar(select(OutboundMessage).where(OutboundMessage.status == "CANCELLED"))
         assert outgoing.error_code == "PRACTICE_UNAVAILABLE"
+
+
+def test_two_unique_answers_to_one_question_grade_once(identity, content):
+    from concurrent.futures import ThreadPoolExecutor
+
+    flow = Flow(identity, content)
+    reference = flow.begin()
+    first = flow.incoming("1", reference)
+    second = flow.incoming("2", reference)
+    # Both are durably accepted before either is processed; actor/channel locks serialize grading.
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        assert all(pool.map(lambda _: process_one(flow.service), range(2)))
+    for _ in range(3):
+        process_one(flow.service)
+    assert send_webhook(identity, first).status_code == 200
+    assert send_webhook(identity, second).status_code == 200
+    with Session(flow.service.engine) as db:
+        assert db.scalar(select(func.count()).select_from(Attempt)) == 1
+        assert db.scalar(select(func.count()).select_from(MasteryEvidence)) == 1
+        assert all(r.reply_encrypted is None for r in db.scalars(select(InboundMessage)))
+
+
+def test_broker_wakeup_failure_keeps_durable_webhook_accepted(identity, monkeypatch, caplog):
+    from services.whatsapp_wakeup import wake
+    from tests.integration.test_whatsapp_linking import ready as ready_link
+
+    service, client, _, now = identity
+    ready_link(identity)
+    client.app.state.channel_wakeup = wake
+
+    def unavailable(*args, **kwargs):
+        raise RuntimeError("CANARY broker credential failure")
+
+    monkeypatch.setattr("services.whatsapp_wakeup.Celery", unavailable)
+    assert send_webhook(identity, payload(now[0], "HELP")).status_code == 200
+    with Session(service.engine) as db:
+        row = db.scalar(select(InboundMessage))
+        assert row.status == "QUEUED"
+    assert process_one(service)
+    assert "channel.wakeup_failed" in caplog.text and "CANARY" not in caplog.text

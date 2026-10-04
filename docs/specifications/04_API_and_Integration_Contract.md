@@ -495,7 +495,7 @@ current account, consent, level and enrollment. They do not commit and are not e
 actor-override endpoints. This enables future atomic channel receipt/learning writes without
 manufacturing bearer tokens; channel grading remains disabled pending its migration and tests.
 
-## Internal channel capability (ADR-037, implementation in progress)
+## Internal channel capability (ADR-037, verified foundation)
 
 Shared start/next/submit methods accept a trusted internal `channel` argument. Default WEB and its
 receipt fingerprints are unchanged. WHATSAPP fingerprints use a separate namespace, and public

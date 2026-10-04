@@ -17,7 +17,9 @@ version eligibility, repetition exclusions and ADR-036 capability checks before 
 existing five-item revision session can continue across channels only if every assigned version
 is currently approved and channel-suitable. Do not silently replace assignments, start a second
 active plan or shorten an unsuitable plan. Diagnostics, reassessments and recommended-plan starts
-remain web operations. Recheck suitability before serving or accepting a channel answer.
+remain web operations. Recheck suitability before serving or accepting an answer on either channel. A WHATSAPP-only
+version must not become WEB-eligible merely because its session is shared. Owned post-grade
+results remain accessible through the existing protected web results/solution flow.
 
 Migration 0019 permits immutable attempts with WEB or WHATSAPP provenance and adds a database
 insert guard for five-item revision assignments explicitly marked WHATSAPP-suitable. Existing

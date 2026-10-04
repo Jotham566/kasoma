@@ -193,7 +193,9 @@ export default function WhatsApp() {
       <p>
         STOP blocks replies and keeps channel ownership. Unlink releases it and
         cancels unused codes. Request a fresh code after STOP to link again.
-        Practice through WhatsApp is not available yet.
+        Local synthetic practice supports START and CONTINUE with five
+        questions. Reply directly to the latest menu or question. Real WhatsApp
+        delivery is not enabled.
       </p>
     </main>
   );

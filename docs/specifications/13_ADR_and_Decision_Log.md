@@ -239,7 +239,7 @@ to the exact question before invoking the parser; no grading or practice is enab
 See [ADR-037](../decisions/ADR/037-channel-assessment-provenance.md). Trusted internal channel
 operations reuse grading/mastery and enforce five-item approved channel capability. Public API
 contracts remain WEB-only; migration 0019 preserves immutable evidence with explicit provenance.
-Verification is pending; this does not enable webhook-driven practice.
+Commit `c0b5b55` passed CI 37217857047; the foundation alone does not enable webhook-driven practice.
 
 ### ADR-038 — local five-question conversations
 

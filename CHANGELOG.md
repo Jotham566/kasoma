@@ -260,3 +260,7 @@ Record meaningful repository and product changes here. A documentation baseline 
   under current authorization before fake delivery. STOP/unlink clears the channel pointer.
 - Add bounded local wake-up after durable intake, transport schemas, exports/inventory and complete
   synthetic flow, replay, withdrawal, STOP, rollback and expiry tests. Hosted verification pending.
+
+- Align local channel instructions and development runbook with exact-reply practice controls.
+- Recheck the requested channel on serving/submission so a WHATSAPP-only version cannot be
+  answered through WEB simply by resuming its shared session.

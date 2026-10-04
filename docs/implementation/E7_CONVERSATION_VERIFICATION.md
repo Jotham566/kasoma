@@ -11,7 +11,7 @@ parity. This report covers the subsequent signed conversation integration, not t
 
 - `make format lint openapi-check test-unit`: local checks pass 310 unit/contract and five tooling
   tests so far; generated HTTP contracts are unchanged. Initial line-length/type issues were fixed.
-- `make test-whatsapp-practice`: nine real-database cases cover five-question single-choice,
+- `make test-whatsapp-practice`: eleven real-database cases cover five-question single-choice,
   multiple-choice and numeric delivery, duplicate IDs, missing/stale contexts, STOP-before-worker,
   consent withdrawal and retirement before delivery, savepoint rollback/retry, expiry and owned projections.
 - Run clean setup/migrations/seed, full test/browser suites, security audits/scans and containers
@@ -46,3 +46,14 @@ data deletion was performed; hosted clean-schema verification is required for th
 Permanent stale/unauthorized/retired dynamic replies are cancelled without provider retries.
 Unexpected provider failures retain the existing bounded retry policy. Outgoing references are
 flushed before binding a conversation pointer, preserving foreign-key insertion order.
+
+Follow-up: add concurrent distinct-message answers to the same question (one attempt/evidence),
+align local web/runbook instructions and reconcile superseded foundation status notes. Local lint,
+types, contracts and 310 unit/contract tests pass; hosted acceptance for the final snapshot remains required.
+
+Review found a cross-channel continuation edge: WEB entry points must also recheck the version
+channel label. Added this check and a WA-only content regression; no published content or existing
+attempts are changed. The ADR-037 clarification preserves reviewed channel suitability.
+
+Add an API regression for a broker wake-up exception returning durable acceptance and
+leaves the message available to the recovery drain. No broker diagnostic or credentials are logged.

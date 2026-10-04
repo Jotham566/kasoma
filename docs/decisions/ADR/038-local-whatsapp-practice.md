@@ -7,11 +7,15 @@ Requirements: FR-WA-002/003/004/005/006, FR-ID-003/006, FR-CNT-004, NFR-PERF-002
 ## Decision
 
 Enable only local fake transport and independently reviewed synthetic objective content. START
-presents enrolled subject/topic choices; a numbered reply explicitly selects a topic. CONTINUE
+presents enrolled subject/topic choices when no active channel session exists; a numbered reply
+explicitly selects a topic. With an active pointer, START resumes rather than replacing assignments. CONTINUE
 resumes the channel's five-item revision pointer and serves the current unanswered assignment.
 After an answer, send concise shared-grade feedback with the authenticated web link; CONTINUE
 serves the next question. PROGRESS returns a protected web progress link until a shared concise
 progress projection is verified. HELP lists the commands. No free-form tutoring is enabled.
+
+Migration 0020 also extends the channel insert guard to honor WEB suitability on shared sessions,
+closing the WA-only continuation edge without rewriting any existing evidence.
 
 Store one expiring conversation per link, bound to its current revision, with either a finite
 menu of topic UUIDs or an owned session pointer. Keep the exact outgoing menu/question UUID and

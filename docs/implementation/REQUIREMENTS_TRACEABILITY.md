@@ -40,10 +40,10 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
 | FR-WA-001 | `services/whatsapp_linking.py`, migration 0018, owned web channel UI | [E7 evidence](E7_LINKING_READINESS.md); expiry/replay/concurrency, consent/minor and sender-collision tests | Local fake linking verified; production provider/pilot gates remain |
-| FR-WA-002 | — | — | Not started |
-| FR-WA-003 | — | — | Not started |
+| FR-WA-002 | Shared five-item channel selection; reply-bound menus and conversation pointers | `test_channel_assessment.py`; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Internal selection verified; signed conversation acceptance pending |
+| FR-WA-003 | Shared transactional graders/mastery with immutable channel provenance | [Foundation evidence](E7_SHARED_TRANSACTIONS_VERIFICATION.md); three-format database parity | Internal parity verified; final webhook integration pending |
 | FR-WA-004 | Signed bounded intake, durable message-ID hashes, atomic replay/conflict handling, monotonic status callbacks | [E7 evidence](E7_LINKING_READINESS.md); signature, duplicate/conflict, callback and rollback tests | Transport/linking verified; answer/mastery replay invariants pending practice integration |
-| FR-WA-005 | — | — | Not started |
+| FR-WA-005 | Bounded question/feedback formatters and authenticated web fallback | `test_whatsapp_format.py`, `test_whatsapp_feedback.py`; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Pure formatting checks pass; delivery acceptance pending |
 | FR-WA-006 | Immediate STOP barrier, owner unlink, fake outbound rechecks | [E7 evidence](E7_LINKING_READINESS.md); STOP before worker/delivery, stale code and retry tests | Local opt-out verified; channel practice-session handling pending |
 | FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor; bounded JSON import API/UI and transactional worker | Content tests; import contract/API/browser regressions; [import evidence](E2_IMPORTS_VERIFICATION.md) | Partial: create/edit verified; structured synthetic JSON import verified; other formats and academic release pending |
 | FR-CNT-002 | Role checks and immutable author ownership; self-review blocked even with both roles | API self-review denial; SQL review guard; disabled author approval in browser | Local implemented |
@@ -56,7 +56,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
 | FR-OPS-004 | Typed channel attempt/outbound limits, bounded failures and feature flag | [E7 evidence](E7_LINKING_READINESS.md); configuration/rate/failure tests | Local channel limits verified; AI limits and production usage telemetry pending |
 | NFR-PERF-001 | — | — | Not started |
-| NFR-PERF-002 | — | — | Not started |
+| NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
 | NFR-REL-001 | — | — | Not started |
 | NFR-REL-002 | — | — | Not started |
 | NFR-SCL-001 | — | — | Not started |
@@ -113,7 +113,7 @@ those integration gates and full channel parity remain pending.
 
 ADR-037, migration 0019 and `tests/integration/test_channel_assessment.py` address internal
 FR-WA-002/003/004, FR-CNT-004, FR-GRD-001/002 and FR-MST-001 channel capability/provenance.
-The added parity and database tests are pending execution; no new application acceptance is claimed.
+The six added parity/database cases passed in CI 37217857047 for `c0b5b55`.
 Conversation/reply binding, outbound practice and end-to-end parity remain separate gates.
 
 FR-WA-005: `services/whatsapp_feedback.py` and `tests/contract/test_whatsapp_feedback.py` add
@@ -123,9 +123,13 @@ channel feedback delivery remains pending conversation integration.
 ### E7 channel foundation verified; conversation in progress
 
 Commit `c0b5b55` passed CI 37217857047 with 437 Python, 20 browser and five tooling checks plus
-clean migrations, contracts, security and containers. This supersedes pending-execution notes
-above for ADR-037 and proves internal FR-WA-002/003/004 capability/parity. ADR-038, migration 0020,
+clean migrations, contracts, security and containers. This proves internal FR-WA-002/003/004 capability/parity. ADR-038, migration 0020,
 `services/whatsapp_practice.py`, `whatsapp_render.py`, `whatsapp_wakeup.py` and
 `tests/integration/test_whatsapp_practice.py` address signed end-to-end FR-WA-002/003/004/005/006
 and transient FR-ID-006 inventory; those application acceptance gates remain pending.
 NFR-PERF-002 has a bounded wake-up implementation, but measured p95 latency remains unverified.
+
+Follow-up FR-CNT-004/FR-WA-003 regression rejects WEB serving/submission of WHATSAPP-only
+versions, including direct database insertion, while preserving valid channel attempts.
+The conversation suite adds pending hosted checks for accepted intake after a failed broker
+wake-up and one attempt/mastery update for concurrent distinct replies to one question.

@@ -10,6 +10,17 @@ depends_on = None
 
 def upgrade() -> None:
     op.execute("""
+    CREATE OR REPLACE FUNCTION channel_attempt_guard() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      IF NOT EXISTS(SELECT 1 FROM session_items si
+        JOIN assessment_sessions s ON s.id=si.session_id
+        JOIN item_versions v ON v.id=si.item_version_id
+        WHERE si.id=NEW.session_item_id
+          AND (v.document->'channel_suitability')::jsonb ? NEW.channel
+          AND (NEW.channel='WEB' OR (s.kind='REVISION' AND s.item_count=5)))
+      THEN RAISE EXCEPTION 'Unsupported channel assignment'; END IF;
+      RETURN NEW;
+    END $$;
     ALTER TABLE inbound_messages ADD COLUMN reply_reference text;
     ALTER TABLE inbound_messages ADD COLUMN reply_encrypted text;
     ALTER TABLE inbound_messages DROP CONSTRAINT inbound_messages_command_check;

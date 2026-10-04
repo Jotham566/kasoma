@@ -1,83 +1,50 @@
-# E7 shared assessment transaction verification
+# E7 shared assessment and channel foundation verification
 
-Status: transaction boundary verified; channel practice remains pending.
-Requirements: FR-WA-002/003/004, FR-ID-003, FR-REV-001/002, FR-GRD-001/002, FR-MST-001.
-Decision: [ADR-035](../decisions/ADR/035-shared-assessment-transactions.md).
+Status: published and verified through `c0b5b55`; conversation delivery is separate.
+Requirements: FR-WA-002/003/004/005, FR-ID-003, FR-REV-001/002, FR-CNT-004,
+FR-GRD-001/002, FR-MST-001.
+Decisions: [ADR-035](../decisions/ADR/035-shared-assessment-transactions.md),
+[ADR-036](../decisions/ADR/036-whatsapp-objective-message-format.md),
+[ADR-037](../decisions/ADR/037-channel-assessment-provenance.md).
 
-`AssessmentService.start_in_transaction`, `next_item_in_transaction` and
-`submit_in_transaction` reuse existing grading/mastery and receipt logic in a caller transaction.
-`authorize_actor` obtains the identity actor lock and reloads current account state before
-checking consent, S4 level and subject enrollment. Public web wrappers authenticate the existing
-bearer and call these operations. No HTTP actor override or WHATSAPP provenance is enabled.
+## Hosted acceptance
 
-New integration regressions cover rollback of session/assignment/attempt/grade/receipt/mastery/
-events together, committed retry through the unchanged web fingerprint, foreign ownership,
-unknown and disabled actors (including an ORM-cached stale user), consent withdrawal and enrollment.
-Use `make test-assessment-transactions` for focused checks; all ordinary `make test` suites also
-collect them. Existing full assessment/diagnostic/numeric/multiple-choice/hint/reassessment tests
-remain necessary because the web wrappers now use the extracted operations.
+| Commit | CI | Passing tests |
+| --- | --- | --- |
+| `50044d4` shared transactions | [37149982356](https://github.com/Jotham566/kasoma/actions/runs/37149982356) | 257 unit/contract + 141 integration = 398 Python; 20 browser; five tooling |
+| `dd1c8d8` objective formatting | [37217488323](https://github.com/Jotham566/kasoma/actions/runs/37217488323) | 290 unit/contract + 141 integration = 431 Python; 20 browser; five tooling |
+| `c0b5b55` channel provenance | [37217857047](https://github.com/Jotham566/kasoma/actions/runs/37217857047) | 290 unit/contract + 147 integration = 437 Python; 20 browser; five tooling |
 
-Executed locally: `make format lint openapi-check test-unit` passes (257 Python unit/contract
-and five tooling tests), with unchanged generated API contracts. Docker remains unavailable after
-a normal restart, so database acceptance was obtained from
-[hosted CI 37149982356](https://github.com/Jotham566/kasoma/actions/runs/37149982356) on exact
-commit `50044d4`: 398 Python tests (257 unit/contract and 141 integration), 20 browser and five
-tooling tests passed. Setup, clean migrations/seed, lint/types/contracts/build, security and
-container smoke all passed. The commit is published on main. No migration or environment change is required
-for this refactor. No academic/production or WhatsApp-practice acceptance is claimed.
+Every run passed setup, clean migrations/seed, lint/types/contracts/build, dependency/source/image
+security gates and container smoke. All three commits are on main; completed branches were removed.
+Public OpenAPI/TypeScript contracts are unchanged. Migration 0019 adds channel evidence guards.
 
-## Independent formatting boundary
+## Verified behavior
 
-[ADR-036](../decisions/ADR/036-whatsapp-objective-message-format.md) and
-`tests/contract/test_whatsapp_format.py` cover 33 pure formatting/normalization cases.
-`make format lint test-unit` passes 290 unit/contract tests plus five tooling checks. Questions
-must be explicitly WHATSAPP-suitable, plain text and fit without truncation; responses preserve
-numeric representation and normalize to existing schemas. These helpers do not select approved
-versions, authenticate message senders, bind reply context or create attempts. Integration remains
-pending. The initial significant-figures fixture was corrected to exclude fractions, preserving
-the existing academic rule rather than weakening it.
+Transaction-scoped start/serve/submit operations reuse existing graders, canonical web receipts,
+mastery and outbox logic. Internal actor authorization locks/reloads current account state and
+checks consent, S4 level and subject enrollment. Rollback removes session/assignment/attempt/grade/
+receipt/mastery/events together; unknown/inactive/foreign actors receive no bypass.
 
-`make security` passed on 4 October after a transient dependency-audit connection reset on the
-first attempt; both Python and JavaScript audits report no known vulnerabilities. Formatting
-changes do not alter database schemas or public contracts. Full hosted regression remains pending
-for this independent boundary.
+Objective questions require explicit WHATSAPP suitability, plain supported representation and
+complete-message bounds. Numbered choice/multiple-choice and numeric replies normalize into the
+existing contracts without a second grader. Numeric representation preserves significant figures.
 
-## Channel assessment foundation
+Internal WHATSAPP operations accept exactly five-item topic revision, filter capability before
+selection, preserve assignments on supported web continuation, and recheck current approval.
+Channel receipts use their own namespace; public clients cannot spoof WHATSAPP provenance.
+Six real-database cases prove three-format grade/mastery evidence parity, retry identity, current
+approval, unsupported plans, web continuation and immutable database channel guards.
+Use `make test-assessment-transactions` and `make test-channel-assessment` for focused checks.
 
-ADR-037 and migration 0019 add a trusted internal channel parameter, namespaced channel receipts,
-capability-aware selection and full five-item assignment checks on continuation. The migration
-preserves existing immutable evidence/response/ownership guards and adds channel shape protection.
-`make test-channel-assessment` exercises single-choice, multiple-choice and numeric score/mastery
-parity, replay, public spoof rejection, web continuation, withdrawal and direct database guards.
-Local Docker is unavailable (missing engine socket); new integration and clean-migration evidence
-is pending hosted CI. No practice worker or conversation state is enabled by this dependency.
+## Native limitations and follow-up
 
-Local channel checks: `make format lint openapi-check test-unit` passed 290 unit/contract and
-five tooling tests; generated contracts are unchanged. `make services migrate seed` stopped at
-services because Docker is unavailable. `make test-channel-assessment` collected six cases but
-all six failed at database fixture setup (no PostgreSQL connection); none reached an application
-assertion. These failures do not count as migration or parity acceptance.
-`make security` also passed Bandit, local secret checks and Python/JavaScript dependency audits.
+Local formatting, lint, type, unit and security checks passed. Docker subsequently became unavailable
+without a running engine socket; focused channel tests produced six database fixture setup errors,
+and migration/setup could not connect. Those are failed native attempts, not passing evidence.
+Hosted checks above independently verified the exact source and clean schema. No volumes were reset.
+A transient dependency-audit connection reset passed on retry without dependency changes.
 
-## Concise feedback formatter
-
-ADR-036 now covers post-grade text with complete-message bounds, shared-grade points, complete
-reviewed next action or web fallback, and STOP/CONTINUE instructions. Session links use the
-existing authenticated revise page; origins containing credentials, query data or fragments are
-rejected. Pure tests cover these boundaries; this is not evidence of outbound practice acceptance.
-
-`make format lint test-unit` passes 308 unit/contract and five tooling tests with feedback
-formatting. Session capability validation now acquires approved-version locks in stable item
-order, matching topic selection. Hosted regression for this final snapshot is still required.
-
-## Hosted channel foundation acceptance — 4 October 2026
-
-- `dd1c8d8` passed [CI 37217488323](https://github.com/Jotham566/kasoma/actions/runs/37217488323):
-  290 unit/contract + 141 integration = 431 Python, 20 browser and five tooling tests.
-- `c0b5b55` passed [CI 37217857047](https://github.com/Jotham566/kasoma/actions/runs/37217857047):
-  290 unit/contract + 147 integration = 437 Python, 20 browser and five tooling tests.
-- Both runs passed setup, clean migrations/seed, lint/types/contracts/build, security and container
-  smoke. Both are on main and their completed branches were removed. The six new parity/database
-  cases passed. Local Docker failures above remain recorded as failed native attempts.
-- This verifies internal capability and objective parity, not the subsequent feedback/conversation
-  delivery changes. See [conversation verification](E7_CONVERSATION_VERIFICATION.md).
+The subsequent concise-feedback formatter, stable content lock order and signed conversation
+integration are tracked in [conversation verification](E7_CONVERSATION_VERIFICATION.md). No full
+WhatsApp, latency, academic or production acceptance is inferred from these foundation results.

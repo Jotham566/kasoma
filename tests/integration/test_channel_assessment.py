@@ -274,3 +274,57 @@ def test_web_plan_can_resume_on_channel_without_replacing_assignments(content):
         db.execute(
             text("UPDATE attempts SET channel='WEB' WHERE learner_id=:actor"), {"actor": actor}
         )
+
+
+def test_whatsapp_only_version_does_not_become_web_eligible_by_session_resume(content):
+    identity, client, actors, _, _, plan = ready(content, channel_suitability=["WHATSAPP"])
+    service = AssessmentService(identity)
+    actor = actor_id(client, actors["learner"])
+    with Session(identity.engine) as db, db.begin():
+        session = service.start_in_transaction(
+            db, actor, StartRevision.model_validate(plan), uuid4(), uuid4(), channel="WHATSAPP"
+        )
+        item = service.next_item_in_transaction(db, actor, session.id, uuid4(), channel="WHATSAPP")
+    assert (
+        client.get(
+            f"/api/v1/sessions/{session.id}/next-item", headers=actors["learner"]
+        ).status_code
+        == 409
+    )
+    response = client.post(
+        f"/api/v1/sessions/{session.id}/attempts",
+        headers=actors["learner"] | {"Idempotency-Key": str(uuid4())},
+        json={"session_item_id": str(item.session_item_id), "response": {"choice_id": "A"}},
+    )
+    assert response.status_code == 409
+    with (
+        pytest.raises(DBAPIError, match="Unsupported channel assignment"),
+        Session(identity.engine) as db,
+        db.begin(),
+    ):
+        db.execute(
+            text("""INSERT INTO attempts
+          (id,learner_id,session_item_id,item_version_id,choice_id,submitted_at,hint_count,channel)
+          VALUES (:id,:actor,:item,:version,'A',:at,0,'WEB')"""),
+            {
+                "id": uuid4(),
+                "actor": actor,
+                "item": item.session_item_id,
+                "version": item.item_version_id,
+                "at": identity.clock(),
+            },
+        )
+    with Session(identity.engine) as db, db.begin():
+        assert db.scalar(select(func.count()).select_from(Attempt)) == 0
+        grade = service.submit_in_transaction(
+            db,
+            actor,
+            session.id,
+            SubmitAnswer.model_validate(
+                {"session_item_id": item.session_item_id, "response": {"choice_id": "A"}}
+            ),
+            uuid4(),
+            uuid4(),
+            channel="WHATSAPP",
+        )
+        assert grade.score == 1

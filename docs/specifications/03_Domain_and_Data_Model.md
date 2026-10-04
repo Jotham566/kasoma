@@ -360,3 +360,6 @@ include minimized conversation state. Remaining channel holds/account erasure re
 `channel-transport-event.schema.json` records only event name, correlation UUID, channel, status
 and schema version for worker intake/drain and wake-up failures. Message bodies and identifiers
 are never operational event fields.
+
+Migration 0020 also strengthens new-attempt channel checks for WEB resumes: the assigned version
+must explicitly allow the submitted channel. Existing immutable attempts are untouched.

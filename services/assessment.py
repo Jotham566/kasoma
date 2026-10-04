@@ -435,6 +435,8 @@ class AssessmentService:
             raise IdentityError("SESSION_NOT_ACTIVE", 409)
         version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
         document = DraftDocument.model_validate(version.document)
+        if channel not in document.channel_suitability:
+            raise IdentityError("CONTENT_NOT_APPROVED", 409)
         if item.served_at is None:
             item.served_at = self.identity.clock()
             self.event(db, session.id, "item.served", request)
@@ -519,6 +521,8 @@ class AssessmentService:
             raise IdentityError("RESOURCE_NOT_FOUND", 404)
         version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
         document = DraftDocument.model_validate(version.document)
+        if channel not in document.channel_suitability:
+            raise IdentityError("CONTENT_NOT_APPROVED", 409)
         attempt_id = uuid4()
         if document.response_type != body.response.type:
             raise IdentityError("VALIDATION_FAILED", 422)
