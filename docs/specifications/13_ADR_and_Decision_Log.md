@@ -247,3 +247,9 @@ See [ADR-038](../decisions/ADR/038-local-whatsapp-practice.md). START/CONTINUE u
 menus and five-item shared revision sessions. Replies bind to the exact sent menu/question;
 STOP/unlink invalidates transient pointers. Approved references are rendered under current access,
 with bounded encrypted intake and a local queue wake-up. Application verification is pending.
+
+### ADR-039 — minimized channel operations
+
+See [ADR-039](../decisions/ADR/039-local-channel-operations.md). Extend ADMIN operations with
+bounded channel cohorts/queue age and sampled fake-dispatch timing. Typed local thresholds use
+existing safe alert logging. No learner delivery, load/SLO, cloud or production claim is implied.

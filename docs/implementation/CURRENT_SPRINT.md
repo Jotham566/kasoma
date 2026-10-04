@@ -47,3 +47,10 @@ No elapsed time or synthetic test pass substitutes for those approvals.
 Prior evidence: [imports](E2_IMPORTS_VERIFICATION.md), [linking](E7_LINKING_READINESS.md),
 [legal holds](E8_LEGAL_HOLDS_VERIFICATION.md), [reassessment](E4_REASSESSMENT_VERIFICATION.md),
 [progress](E6_PROGRESS_VERIFICATION.md), [traceability](REQUIREMENTS_TRACEABILITY.md).
+
+## Independent channel operations follow-up
+
+ADR-039 adds bounded channel queue/status/timing visibility to the existing ADMIN dashboard.
+Migration 0021 contains indexes only. Generated contracts, typed thresholds, alert schemas and
+unit/database/browser regressions accompany the implementation. Verification is pending; local
+fake-dispatch percentiles cannot satisfy the release latency/load gate by themselves.

@@ -264,3 +264,11 @@ Record meaningful repository and product changes here. A documentation baseline 
 - Align local channel instructions and development runbook with exact-reply practice controls.
 - Recheck the requested channel on serving/submission so a WHATSAPP-only version cannot be
   answered through WEB simply by resuming its shared session.
+
+### In progress — local channel operations (FR-OPS-002/004)
+
+- Record ADR-039 and add operational indexes in migration 0021.
+- Extend minimized ADMIN snapshots with bounded queue/status cohorts, oldest age and sampled
+  local fake-dispatch p95; expose no-sample state and sample truncation explicitly.
+- Add typed local thresholds, safe alert schema, generated contracts, dashboard and regression tests.
+- No production messaging, external notifications or release latency acceptance is implied.

@@ -517,3 +517,21 @@ Encrypted structured reply text is bounded to 96 characters and transient; arbit
 text is discarded. After durable intake, a bounded best-effort local Redis wake-up requests a queue
 drain. Broker outages preserve accepted messages and rely on periodic recovery. New replies remain
 fake-only; no cloud transport or public actor/channel override is introduced.
+
+## Channel operational projection (ADR-039, verification pending)
+
+`GET /admin/operations` keeps current ADMIN/rate authorization and adds optional
+`counts.channel`: bounded incoming/outgoing pending counts, oldest age, recent received/created
+message status cohorts and `feedback_dispatch`. Each count has `value` and `at_least`; the cap
+remains 10,000. Failure/cancellation cohorts use receipt/creation time, not completion time.
+
+`feedback_dispatch` contains `sample_size` (0–1,000), `sample_capped`, nullable `p95_ms`, and
+`measure=LOCAL_FAKE_ACCEPTANCE`. It samples the latest eligible feedback dispatches sent during
+the preceding 24 hours and measures durable receipt to fake transport acceptance. No observations
+returns null p95. It is not proof of learner receipt or load-tested latency. No message, answer,
+command, actor, recipient or domain record IDs enter the view.
+
+Thresholds add channel failure counts, pending age, p95 milliseconds and a minimum sample size.
+New warning codes are CHANNEL_INBOUND_FAILED, CHANNEL_OUTBOUND_FAILED, CHANNEL_STALLED and
+CHANNEL_DISPATCH_SLOW. Missing database/query results remain unavailable, not zero. Existing
+uninstrumented metrics still include AI/SMS/email usage and pre-intake webhook failures.

@@ -363,3 +363,9 @@ are never operational event fields.
 
 Migration 0020 also strengthens new-attempt channel checks for WEB resumes: the assigned version
 must explicitly allow the submitted channel. Existing immutable attempts are untouched.
+
+## Local channel operational indexes (ADR-039, migration 0021)
+
+Add status/time indexes for incoming and outgoing message cohorts/oldest pending age, plus partial
+indexes for accepted outgoing cohorts and feedback send timestamps. No new personal-data table,
+retention category or learning evidence is introduced. Operational values are derived snapshots.

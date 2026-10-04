@@ -942,6 +942,19 @@ export interface components {
             /** Syllabus Reference */
             syllabus_reference?: string | null;
         };
+        /** ChannelCounts */
+        ChannelCounts: {
+            accepted_outbound_created_24h: components["schemas"]["Count"];
+            cancelled_outbound_created_24h: components["schemas"]["Count"];
+            failed_inbound_received_24h: components["schemas"]["Count"];
+            failed_outbound_created_24h: components["schemas"]["Count"];
+            feedback_dispatch: components["schemas"]["DispatchTiming"];
+            /** Oldest Pending Seconds */
+            oldest_pending_seconds: number;
+            queued_inbound: components["schemas"]["Count"];
+            queued_outbound: components["schemas"]["Count"];
+            rejected_inbound_received_24h: components["schemas"]["Count"];
+        };
         /** ChannelLinkView */
         ChannelLinkView: {
             /** Link Id */
@@ -1287,6 +1300,21 @@ export interface components {
              * @constant
              */
             synthetic: true;
+        };
+        /** DispatchTiming */
+        DispatchTiming: {
+            /**
+             * Measure
+             * @default LOCAL_FAKE_ACCEPTANCE
+             * @constant
+             */
+            measure: "LOCAL_FAKE_ACCEPTANCE";
+            /** P95 Ms */
+            p95_ms: number | null;
+            /** Sample Capped */
+            sample_capped: boolean;
+            /** Sample Size */
+            sample_size: number;
         };
         /** DraftDocument */
         DraftDocument: {
@@ -2147,7 +2175,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS";
+            code: "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW";
             /** Observed */
             observed: number;
             /**
@@ -2160,6 +2188,7 @@ export interface components {
         };
         /** OperationCounts */
         OperationCounts: {
+            channel?: components["schemas"]["ChannelCounts"] | null;
             failed_imports_24h: components["schemas"]["Count"];
             high_priority_flags: components["schemas"]["Count"];
             /** Oldest Import Seconds */
@@ -2169,6 +2198,26 @@ export interface components {
         };
         /** OperationThresholds */
         OperationThresholds: {
+            /**
+             * Channel Dispatch Min Samples
+             * @default 20
+             */
+            channel_dispatch_min_samples: number;
+            /**
+             * Channel Dispatch P95 Ms
+             * @default 1500
+             */
+            channel_dispatch_p95_ms: number;
+            /**
+             * Channel Failures
+             * @default 1
+             */
+            channel_failures: number;
+            /**
+             * Channel Queue Age Seconds
+             * @default 60
+             */
+            channel_queue_age_seconds: number;
             /** Failed Imports */
             failed_imports: number;
             /** Import Age Seconds */

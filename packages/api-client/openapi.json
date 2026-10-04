@@ -101,6 +101,53 @@
         "title": "CatalogEntry",
         "type": "object"
       },
+      "ChannelCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "accepted_outbound_created_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "cancelled_outbound_created_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "failed_inbound_received_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "failed_outbound_created_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "feedback_dispatch": {
+            "$ref": "#/components/schemas/DispatchTiming"
+          },
+          "oldest_pending_seconds": {
+            "minimum": 0.0,
+            "title": "Oldest Pending Seconds",
+            "type": "integer"
+          },
+          "queued_inbound": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "queued_outbound": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "rejected_inbound_received_24h": {
+            "$ref": "#/components/schemas/Count"
+          }
+        },
+        "required": [
+          "queued_inbound",
+          "queued_outbound",
+          "oldest_pending_seconds",
+          "failed_inbound_received_24h",
+          "rejected_inbound_received_24h",
+          "failed_outbound_created_24h",
+          "cancelled_outbound_created_24h",
+          "accepted_outbound_created_24h",
+          "feedback_dispatch"
+        ],
+        "title": "ChannelCounts",
+        "type": "object"
+      },
       "ChannelLinkView": {
         "additionalProperties": false,
         "properties": {
@@ -934,6 +981,46 @@
           "result"
         ],
         "title": "DiagnosticView",
+        "type": "object"
+      },
+      "DispatchTiming": {
+        "additionalProperties": false,
+        "properties": {
+          "measure": {
+            "const": "LOCAL_FAKE_ACCEPTANCE",
+            "default": "LOCAL_FAKE_ACCEPTANCE",
+            "title": "Measure",
+            "type": "string"
+          },
+          "p95_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95 Ms"
+          },
+          "sample_capped": {
+            "title": "Sample Capped",
+            "type": "boolean"
+          },
+          "sample_size": {
+            "maximum": 1000.0,
+            "minimum": 0.0,
+            "title": "Sample Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sample_size",
+          "sample_capped",
+          "p95_ms"
+        ],
+        "title": "DispatchTiming",
         "type": "object"
       },
       "DraftDocument": {
@@ -2791,7 +2878,11 @@
               "IMPORT_FAILED",
               "IMPORT_STALLED",
               "FLAG_BACKLOG",
-              "HIGH_PRIORITY_FLAGS"
+              "HIGH_PRIORITY_FLAGS",
+              "CHANNEL_INBOUND_FAILED",
+              "CHANNEL_OUTBOUND_FAILED",
+              "CHANNEL_STALLED",
+              "CHANNEL_DISPATCH_SLOW"
             ],
             "title": "Code",
             "type": "string"
@@ -2827,6 +2918,16 @@
       "OperationCounts": {
         "additionalProperties": false,
         "properties": {
+          "channel": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChannelCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "failed_imports_24h": {
             "$ref": "#/components/schemas/Count"
           },
@@ -2858,6 +2959,34 @@
       "OperationThresholds": {
         "additionalProperties": false,
         "properties": {
+          "channel_dispatch_min_samples": {
+            "default": 20,
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Channel Dispatch Min Samples",
+            "type": "integer"
+          },
+          "channel_dispatch_p95_ms": {
+            "default": 1500,
+            "maximum": 60000.0,
+            "minimum": 1.0,
+            "title": "Channel Dispatch P95 Ms",
+            "type": "integer"
+          },
+          "channel_failures": {
+            "default": 1,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Channel Failures",
+            "type": "integer"
+          },
+          "channel_queue_age_seconds": {
+            "default": 60,
+            "maximum": 86400.0,
+            "minimum": 1.0,
+            "title": "Channel Queue Age Seconds",
+            "type": "integer"
+          },
           "failed_imports": {
             "maximum": 10000.0,
             "minimum": 1.0,

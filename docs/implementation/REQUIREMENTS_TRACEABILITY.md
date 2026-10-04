@@ -133,3 +133,8 @@ Follow-up FR-CNT-004/FR-WA-003 regression rejects WEB serving/submission of WHAT
 versions, including direct database insertion, while preserving valid channel attempts.
 The conversation suite adds pending hosted checks for accepted intake after a failed broker
 wake-up and one attempt/mastery update for concurrent distinct replies to one question.
+
+ADR-039, `services/channel_operations.py`, migration 0021 and the channel operations contract/
+integration/browser checks address local FR-OPS-002/004 and NFR-OBS-001 visibility. New operational
+acceptance is pending; counts and fake-dispatch timings do not establish NFR-PERF-002 or production
+messaging/notification coverage. [Verification](E8_CHANNEL_OPERATIONS_VERIFICATION.md).

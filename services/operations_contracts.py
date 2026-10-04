@@ -14,12 +14,32 @@ class Count(Contract):
     at_least: bool = False
 
 
+class DispatchTiming(Contract):
+    sample_size: int = Field(ge=0, le=1000)
+    sample_capped: bool
+    p95_ms: int | None = Field(ge=0)
+    measure: Literal["LOCAL_FAKE_ACCEPTANCE"] = "LOCAL_FAKE_ACCEPTANCE"
+
+
+class ChannelCounts(Contract):
+    queued_inbound: Count
+    queued_outbound: Count
+    oldest_pending_seconds: int = Field(ge=0)
+    failed_inbound_received_24h: Count
+    rejected_inbound_received_24h: Count
+    failed_outbound_created_24h: Count
+    cancelled_outbound_created_24h: Count
+    accepted_outbound_created_24h: Count
+    feedback_dispatch: DispatchTiming
+
+
 class OperationCounts(Contract):
     queued_imports: Count
     oldest_import_seconds: int = Field(ge=0)
     failed_imports_24h: Count
     unresolved_flags: Count
     high_priority_flags: Count
+    channel: ChannelCounts | None = None
 
 
 AlertCode = Literal[
@@ -30,6 +50,10 @@ AlertCode = Literal[
     "IMPORT_STALLED",
     "FLAG_BACKLOG",
     "HIGH_PRIORITY_FLAGS",
+    "CHANNEL_INBOUND_FAILED",
+    "CHANNEL_OUTBOUND_FAILED",
+    "CHANNEL_STALLED",
+    "CHANNEL_DISPATCH_SLOW",
 ]
 
 
@@ -44,6 +68,10 @@ class OperationThresholds(Contract):
     failed_imports: int = Field(ge=1, le=10000)
     import_age_seconds: int = Field(ge=60, le=86400)
     unresolved_flags: int = Field(ge=1, le=10000)
+    channel_failures: int = Field(default=1, ge=1, le=10000)
+    channel_queue_age_seconds: int = Field(default=60, ge=1, le=86400)
+    channel_dispatch_p95_ms: int = Field(default=1500, ge=1, le=60000)
+    channel_dispatch_min_samples: int = Field(default=20, ge=1, le=1000)
 
 
 class OperationsView(Contract):

@@ -531,3 +531,20 @@ worker draining remain recovery paths. Wake-up failures are minimized operationa
 outage does not undo intake. Rate limits still apply and latency/load acceptance remains pending.
 Dynamic delivery rechecks current consent, enrollment, content approval and link revision.
 See [conversation evidence](../implementation/E7_CONVERSATION_VERIFICATION.md) for exact results.
+
+## Local channel operational visibility
+
+After migration 0021, refresh `/admin/operations` as ADMIN to inspect incoming/outgoing queue
+counts, oldest pending age, and recent received/created cohorts by current status. Counts cap at
+10,000 and explicitly mark lower bounds. Follow `make process-messages` recovery only after checking
+configuration/consent/STOP state; do not reset rows or erase attempts to clear an alert.
+
+`OPS_CHANNEL_FAILURE_THRESHOLD` defaults to 1, `OPS_CHANNEL_QUEUE_AGE_SECONDS` to 60,
+`OPS_CHANNEL_DISPATCH_P95_MS` to 1500 and `OPS_CHANNEL_DISPATCH_MIN_SAMPLES` to 20. Alerts use
+inclusive boundaries; cancellation/rejection alone does not alert. Values are engineering defaults,
+not production SLO approval. Local alerts do not notify external services.
+
+Dispatch p95 uses nearest rank over at most the latest 1,000 eligible feedback send observations
+in 24 hours. No samples means unavailable timing. It measures incoming durable receipt to local
+fake transport acceptance; real learner delivery, HTTP/AI latency and agreed-load evidence require
+separate tests. See [channel operations evidence](../implementation/E8_CHANNEL_OPERATIONS_VERIFICATION.md).

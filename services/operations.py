@@ -31,6 +31,10 @@ def thresholds(identity: IdentityService) -> OperationThresholds:
         failed_imports=settings.ops_failed_import_threshold,
         import_age_seconds=settings.ops_import_age_seconds,
         unresolved_flags=settings.ops_flag_backlog_threshold,
+        channel_failures=settings.ops_channel_failure_threshold,
+        channel_queue_age_seconds=settings.ops_channel_queue_age_seconds,
+        channel_dispatch_p95_ms=settings.ops_channel_dispatch_p95_ms,
+        channel_dispatch_min_samples=settings.ops_channel_dispatch_min_samples,
     )
 
 
@@ -40,6 +44,8 @@ def bounded_count(db: Session, query: Select[tuple[int]]) -> Count:
 
 
 def counts(db: Session, now: datetime) -> OperationCounts:
+    from services.channel_operations import channel_counts
+
     pending = select(1).select_from(ContentImport).where(ContentImport.status == "QUEUED")
     flags = select(1).select_from(ContentFlag).where(ContentFlag.status.in_(["OPEN", "IN_REVIEW"]))
     oldest = db.scalar(
@@ -60,6 +66,7 @@ def counts(db: Session, now: datetime) -> OperationCounts:
         ),
         unresolved_flags=bounded_count(db, flags),
         high_priority_flags=bounded_count(db, flags.where(ContentFlag.priority == "HIGH")),
+        channel=channel_counts(db, now),
     )
 
 
@@ -97,6 +104,38 @@ def evaluate(
                         {
                             "code": code,
                             "severity": severity,
+                            "observed": observed,
+                            "threshold": threshold,
+                        }
+                    )
+                )
+    if values and values.channel:
+        channel = values.channel
+        observations = [
+            (
+                "CHANNEL_INBOUND_FAILED",
+                channel.failed_inbound_received_24h.value,
+                limits.channel_failures,
+            ),
+            (
+                "CHANNEL_OUTBOUND_FAILED",
+                channel.failed_outbound_created_24h.value,
+                limits.channel_failures,
+            ),
+            ("CHANNEL_STALLED", channel.oldest_pending_seconds, limits.channel_queue_age_seconds),
+        ]
+        timing = channel.feedback_dispatch
+        if timing.p95_ms is not None and timing.sample_size >= limits.channel_dispatch_min_samples:
+            observations.append(
+                ("CHANNEL_DISPATCH_SLOW", timing.p95_ms, limits.channel_dispatch_p95_ms)
+            )
+        for code, observed, threshold in observations:
+            if observed >= threshold:
+                alerts.append(
+                    OperationAlert.model_validate(
+                        {
+                            "code": code,
+                            "severity": "WARNING",
                             "observed": observed,
                             "threshold": threshold,
                         }

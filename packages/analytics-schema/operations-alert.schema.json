@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Minimized operational threshold alert",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event",
+    "schema_version",
+    "correlation_id",
+    "channel",
+    "code",
+    "severity",
+    "observed",
+    "threshold"
+  ],
+  "properties": {
+    "event": {
+      "const": "operations.alert"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "correlation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "channel": {
+      "const": "WORKER"
+    },
+    "code": {
+      "enum": [
+        "DATABASE_DOWN",
+        "REDIS_DOWN",
+        "WORKER_HEARTBEAT_MISSING",
+        "IMPORT_FAILED",
+        "IMPORT_STALLED",
+        "FLAG_BACKLOG",
+        "HIGH_PRIORITY_FLAGS",
+        "CHANNEL_INBOUND_FAILED",
+        "CHANNEL_OUTBOUND_FAILED",
+        "CHANNEL_STALLED",
+        "CHANNEL_DISPATCH_SLOW"
+      ]
+    },
+    "severity": {
+      "enum": ["WARNING", "CRITICAL"]
+    },
+    "observed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "threshold": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

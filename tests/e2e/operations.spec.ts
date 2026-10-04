@@ -27,6 +27,14 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
   await expect(
     page.getByRole("heading", { name: "Instrumentation still pending" }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Local channel delivery" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("No feedback dispatch samples in the last 24 hours.", {
+      exact: true,
+    }),
+  ).toBeVisible();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.route("**/api/v1/admin/operations", (route) =>
     route.abort("failed"),

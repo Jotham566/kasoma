@@ -16,6 +16,12 @@ const messages: Record<
   IMPORT_STALLED: "Queued imports have exceeded the age threshold",
   FLAG_BACKLOG: "Unresolved flag backlog exceeded its threshold",
   HIGH_PRIORITY_FLAGS: "High-priority flags need attention",
+  CHANNEL_INBOUND_FAILED: "Failed incoming channel messages need investigation",
+  CHANNEL_OUTBOUND_FAILED:
+    "Failed outgoing channel messages need investigation",
+  CHANNEL_STALLED: "Pending channel messages exceeded the age threshold",
+  CHANNEL_DISPATCH_SLOW:
+    "Local feedback dispatch exceeded its timing threshold",
 };
 
 export default function Operations() {
@@ -55,6 +61,33 @@ export default function Operations() {
         ["Failed imports in the last 24 hours", view.counts.failed_imports_24h],
         ["Unresolved content flags", view.counts.unresolved_flags],
         ["High-priority unresolved flags", view.counts.high_priority_flags],
+      ] as const)
+    : [];
+  const channel = view?.counts?.channel;
+  const channelCounters = channel
+    ? ([
+        ["Queued incoming messages", channel.queued_inbound],
+        ["Queued outgoing messages", channel.queued_outbound],
+        [
+          "Failed incoming messages received in the last 24 hours",
+          channel.failed_inbound_received_24h,
+        ],
+        [
+          "Rejected incoming messages received in the last 24 hours",
+          channel.rejected_inbound_received_24h,
+        ],
+        [
+          "Failed outgoing messages created in the last 24 hours",
+          channel.failed_outbound_created_24h,
+        ],
+        [
+          "Cancelled outgoing messages created in the last 24 hours",
+          channel.cancelled_outbound_created_24h,
+        ],
+        [
+          "Transport-accepted outgoing messages created in the last 24 hours",
+          channel.accepted_outbound_created_24h,
+        ],
       ] as const)
     : [];
   return (
@@ -145,6 +178,69 @@ export default function Operations() {
               zero.
             </p>
           )}
+          <section aria-label="Local channel operations" className="space-y-3">
+            <h2 className="text-xl font-semibold">Local channel delivery</h2>
+            {channel ? (
+              <>
+                <table className="w-full text-left">
+                  <thead>
+                    <tr>
+                      <th scope="col">Metric</th>
+                      <th scope="col">Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {channelCounters.map(([label, count]) => (
+                      <tr key={label}>
+                        <th className="py-2 font-normal" scope="row">
+                          {label}
+                        </th>
+                        <td>
+                          {count.at_least ? "At least " : ""}
+                          {count.value}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p>
+                  Oldest pending channel message:{" "}
+                  {channel.oldest_pending_seconds} seconds. Alert threshold:{" "}
+                  {view.thresholds.channel_queue_age_seconds} seconds.
+                </p>
+                <p>
+                  Recent cohort counts show current message status, not the time
+                  a failure or cancellation occurred.
+                </p>
+                {channel.feedback_dispatch.p95_ms === null ? (
+                  <p>No feedback dispatch samples in the last 24 hours.</p>
+                ) : (
+                  <p>
+                    Feedback dispatch p95: {channel.feedback_dispatch.p95_ms} ms
+                    across {channel.feedback_dispatch.sample_size} samples.
+                    {channel.feedback_dispatch.sample_capped
+                      ? " Only the latest 1,000 samples are included."
+                      : ""}
+                  </p>
+                )}
+                <p>
+                  Timing measures durable receipt to local fake transport
+                  acceptance. It does not prove delivery to a learner or a
+                  release latency target.
+                </p>
+                <p>
+                  Dispatch alert: {view.thresholds.channel_dispatch_p95_ms} ms
+                  with at least {view.thresholds.channel_dispatch_min_samples}{" "}
+                  samples. Failure alert: {view.thresholds.channel_failures}{" "}
+                  recent messages.
+                </p>
+              </>
+            ) : (
+              <p>
+                Channel metrics unavailable. Missing values do not mean zero.
+              </p>
+            )}
+          </section>
           <Link className="underline" href="/admin/flags">
             Review content flags
           </Link>
@@ -152,9 +248,9 @@ export default function Operations() {
             Instrumentation still pending
           </h2>
           <p>
-            AI and messaging usage, grading-failure rates, latency
-            distributions, mastery lag and WhatsApp failures are not yet
-            measured here. No external notifications are sent.
+            AI, SMS and email usage, grading-failure rates, HTTP latency,
+            mastery lag and webhook failures before durable intake remain
+            unmeasured. No external notifications are sent.
           </p>
         </>
       )}

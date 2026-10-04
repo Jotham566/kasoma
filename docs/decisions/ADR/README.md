@@ -73,3 +73,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-038: Bound local WhatsApp practice conversations](038-local-whatsapp-practice.md)
   records exact reply context, transient pointers, shared atomic learning and safe fake delivery.
+
+- [ADR-039: Minimized local channel operations](039-local-channel-operations.md)
+  records bounded queue cohorts, fake-dispatch sampling and operational thresholds.
