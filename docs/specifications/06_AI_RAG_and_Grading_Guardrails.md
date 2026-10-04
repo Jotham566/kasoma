@@ -211,3 +211,10 @@ Paid evaluation runs require an explicit command/profile, named budget owner, ma
 - Limit context, output tokens and concurrent calls.
 - Do not send direct identifiers to model providers.
 - Store learner answer text only as required for grading/audit and under retention rules.
+
+## Implementation evidence
+
+The initial offline validator is recorded in [ADR-040](../decisions/ADR/040-short-text-candidate-validation.md)
+and [E4 verification](../implementation/E4_SHORT_TEXT_VALIDATION_VERIFICATION.md). It accepts exact
+response quotes and authored feedback only; a valid candidate does not authorize a learner score.
+All eligibility, gateway, dual-pass, calibration and learner fallback requirements above still apply.

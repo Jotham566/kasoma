@@ -1,5 +1,17 @@
 # Changelog
 
+## 4 October 2026 — verified five-question WhatsApp conversations
+
+- Promote `5063528` to main after full hosted CI 37220225176: 469 Python, 20 browser and five tooling checks plus clean migrations/security/container gates.
+- Verify signed reply-bound practice, shared objective scoring/mastery, safe feedback, STOP/expiry, concurrent duplicate protection and broker-outage recovery.
+- Remove the completed conversation branch. Production and academic acceptance remain gated.
+
+## 4 October 2026 — synthetic short-text validation foundation
+
+- Add strict version-pinned rubric candidate validation for FR-GRD-003/004/005, with 40 deterministic contract cases and ADR-040.
+- Reject malformed/coerced output, unsupported evidence/context and caller safety flags; return candidates only, never learner scores.
+- Local formatting/lint/types/contracts and 357 unit/contract plus five tooling checks pass. Academic calibration, gateway orchestration and learner integration remain pending.
+
 ## 3 October 2026 — verified local WhatsApp linking
 
 - Add migration 0018, recent-auth/current-consent single-use codes and owner status/unlink (FR-WA-001/006).

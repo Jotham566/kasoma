@@ -1,0 +1,23 @@
+# E4 synthetic short-text validation evidence
+
+Requirements: FR-GRD-003/004/005 (partial, offline foundation).
+Decision: [ADR-040](../decisions/ADR/040-short-text-candidate-validation.md).
+
+`services/short_text_validation.py` validates strict candidate JSON against a version-pinned
+synthetic rubric and supplied response. `tests/contract/test_short_text_validation.py` covers
+40 cases, including malformed/duplicate JSON, strict finite scores, complete rubric criteria,
+maximum/sum bounds, exact excerpts, authored feedback, misconception allowlists and caller flags.
+There are no database writes, HTTP routes, model calls or learner scores in this slice.
+
+`make format lint openapi-check test-unit` passes 357 unit/contract tests and five tooling checks.
+The 162 existing integration cases are deselected by this unit command, not claimed as run.
+HTTP contracts are unchanged. Native PostgreSQL/Docker remains unavailable as documented in
+[channel operations evidence](E8_CHANNEL_OPERATIONS_VERIFICATION.md). No inference evaluation
+was requested or executed. Full short-text acceptance remains blocked on the academic and
+integration gates in ADR-040 and the [release register](RELEASE_GATES.md).
+
+A quote check establishes source provenance only. The adversarial fixture verifies that embedded
+instructions cannot alter the validator's schema/point bounds; it does not establish detection
+or model resistance to prompt injection. Semantic grading validity remains an expert benchmark gate.
+
+`make security` also passes Bandit, local secret checks and both dependency audits.

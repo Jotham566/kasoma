@@ -1,7 +1,7 @@
 # ADR-038: Bound local WhatsApp practice conversations
 
 Date: 4 October 2026
-Status: Accepted within delegated MVP implementation discretion; implementation in progress
+Status: Accepted within delegated MVP implementation discretion; synthetic implementation verified by CI 37220225176
 Requirements: FR-WA-002/003/004/005/006, FR-ID-003/006, FR-CNT-004, NFR-PERF-002
 
 ## Decision

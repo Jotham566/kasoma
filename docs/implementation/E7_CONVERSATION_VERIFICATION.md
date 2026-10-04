@@ -1,6 +1,6 @@
 # E7 local conversation verification
 
-Status: implementation in progress; clean migration and application acceptance pending.
+Status: synthetic/local application verified; production and measured performance gates remain.
 Requirements: FR-WA-002/003/004/005/006, FR-ID-003/006, FR-CNT-004, NFR-PERF-002.
 Decision: [ADR-038](../decisions/ADR/038-local-whatsapp-practice.md).
 
@@ -57,3 +57,13 @@ attempts are changed. The ADR-037 clarification preserves reviewed channel suita
 
 Add an API regression for a broker wake-up exception returning durable acceptance and
 leaves the message available to the recovery drain. No broker diagnostic or credentials are logged.
+
+## Final hosted acceptance and publication
+
+Commit `5063528` passed [CI 37220225176](https://github.com/Jotham566/kasoma/actions/runs/37220225176):
+310 unit/contract plus 159 integration tests (469 Python total), 20 browser tests and five tooling
+checks. Setup, clean migrations/seed, lint/types/contracts/build, security audits/source/image scans
+and container smoke all passed. This includes the final concurrent-answer, broker-outage and
+WEB/WHATSAPP suitability regressions. Promoted to main; the conversation branch was removed.
+Earlier pending/native-failure notes above describe the pre-hosted attempts, not final acceptance.
+No external transport, model evaluation, academic calibration or latency/load gate was exercised.

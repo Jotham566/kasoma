@@ -101,7 +101,8 @@ locators and atomic worker processing are verified. Local ADMIN operational heal
 threshold alerts are merged; remaining telemetry is pending. Local consent-gated WhatsApp
 linking, signed durable intake, STOP/unlink barriers, fake delivery and expiry are verified.
 Internal channel selection and objective grading/mastery parity are verified under ADR-037.
-End-to-end five-question WhatsApp conversation practice remains pending verification. Deletion/anonymization, remaining
+End-to-end five-question WhatsApp conversations, reply binding, shared grading, STOP/expiry and
+safe fake delivery are verified under ADR-038. Deletion/anonymization, remaining
 hold coverage, large-history fulfillment and accountability-retention processors remain pending.
 Academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

@@ -1,6 +1,6 @@
 # Current Sprint: E7 shared WhatsApp practice
 
-Updated 4 October 2026. Main is `c0b5b55`; all completed foundation branches have been removed.
+Updated 4 October 2026. Main is `5063528`; the completed conversation and foundation branches have been removed.
 
 ## Latest verified slice
 
@@ -15,23 +15,18 @@ Prior verified dependencies include local linking/intake/STOP (`23da19c`), share
 (`50044d4`) and objective question/reply formatting (`dd1c8d8`). These are synthetic/local gates;
 no production messaging or academic content approval follows from these tests.
 
-## Active implementation
+## Conversation acceptance
 
-[ADR-038](../decisions/ADR/038-local-whatsapp-practice.md) and migration 0020 implement signed
-five-question conversations, exact menu/question reply binding, minimized transient encrypted
-answers, safe dynamic fake delivery, STOP/unlink invalidation and local queue wake-up. Commit
-`a440182` is undergoing hosted verification. Follow-up concurrency coverage and aligned web/runbook
-instructions are being checked. No end-to-end conversation acceptance is claimed yet.
-
-Native `make format lint openapi-check test-unit` passes 310 unit/contract and five tooling tests.
-Security audits pass. Docker has no running socket; migration and focused database checks fail at
-connection/setup, before application assertions. No volumes were reset. Hosted clean-schema checks
-must pass for the final snapshot before promotion. See [conversation evidence](E7_CONVERSATION_VERIFICATION.md).
+Commit `5063528` passed full [CI 37220225176](https://github.com/Jotham566/kasoma/actions/runs/37220225176):
+469 Python, 20 browser and five tooling checks, clean migrations and all security/container gates.
+It is on main; the conversation branch has been removed. This verifies signed reply-bound practice,
+shared grading/mastery, STOP/expiry, broker-outage recovery and channel-suitability enforcement.
+Native database checks failed at setup because Docker/PostgreSQL is unavailable; hosted proof is
+separate and does not claim native acceptance. See [conversation evidence](E7_CONVERSATION_VERIFICATION.md).
 
 ## Next implementation and gates
 
-Finish conversation regression, retry/out-of-order and delivery authorization checks, then publish
-verified work and remove its branch. Measure deterministic feedback latency under the normal worker;
+Finish pending channel operations hosted verification. Measure deterministic feedback latency under the normal worker;
 functional tests alone do not establish NFR-PERF-002. Continue remaining telemetry/usage controls and
 guarded short-text preparation within the synthetic profile.
 
@@ -54,3 +49,10 @@ ADR-039 adds bounded channel queue/status/timing visibility to the existing ADMI
 Migration 0021 contains indexes only. Generated contracts, typed thresholds, alert schemas and
 unit/database/browser regressions accompany the implementation. Verification is pending; local
 fake-dispatch percentiles cannot satisfy the release latency/load gate by themselves.
+
+## Next short-text boundary
+
+ADR-040 adds offline strict candidate validation for FR-GRD-003/004/005. Forty fixture cases pass;
+357 unit/contract and five tooling checks pass with lint/types/contracts. No short-text learner
+route or model execution is enabled. Next: budgeted fake gateway orchestration and dual independent
+passes with bounded repair, retaining academic calibration and learner fallback gates.

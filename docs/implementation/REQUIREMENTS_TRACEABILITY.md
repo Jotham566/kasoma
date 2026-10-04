@@ -26,8 +26,8 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-REV-006 | Versioned reasons, home target/time card, per-item selection reasons and diagnostic action | API safe projection, sparse text, accessible browser practice | Local synthetic implemented |
 | FR-GRD-001 | Pinned single-choice and canonical exact-set multiple-choice graders, reviewed keys and checkbox delivery | Exhaustive subset/permutation tests, publication/API/DB/retry/replay/diagnostic/reassessment and browser checks; [verification](E4_MULTIPLE_CHOICE_VERIFICATION.md) | Local deterministic implementation; synthetic evidence is not academic benchmark approval |
 | FR-GRD-002 | Reviewed numeric contracts, exact rational grading, unit conversions, inclusive tolerances, precision and accepted forms | `tests/contract/test_numeric.py`, `tests/integration/test_numeric_workflow.py`, `tests/e2e/numeric.spec.ts` | Local deterministic implementation; synthetic regression/property cases are not expert academic benchmark approval |
-| FR-GRD-003 | — | — | Not started |
-| FR-GRD-004 | — | — | Not started |
+| FR-GRD-003 | Offline version-pinned synthetic candidate validator (ADR-040) | 40 strict-output contract cases | Partial foundation; no learner short-text grading |
+| FR-GRD-004 | Candidate validation failures return LOW_CONFIDENCE without payload | Malformed, evidence, bounds and flag cases | Partial foundation; orchestration and learner fallback pending |
 | FR-GRD-005 | Typed deterministic correct/missing elements and authored remediation | API score/feedback and browser correct/incorrect journey | Choice and numeric correct/missing feedback implemented; rubric feedback pending |
 | FR-GRD-006 | Reviewed versioned hints, append-only usage and frozen pre-answer count/highest level; independence weighting with unchanged points | `tests/contract/test_hint_contract.py`, `tests/integration/test_hints.py`, `tests/e2e/hints.spec.ts`; [verification](E4_HINTS_VERIFICATION.md) | Local synthetic verified (235 Python tests / 12 browser tests); production hint academic review pending |
 | FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision gating and permanent diagnostic solution block implemented |
@@ -40,11 +40,11 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
 | FR-WA-001 | `services/whatsapp_linking.py`, migration 0018, owned web channel UI | [E7 evidence](E7_LINKING_READINESS.md); expiry/replay/concurrency, consent/minor and sender-collision tests | Local fake linking verified; production provider/pilot gates remain |
-| FR-WA-002 | Shared five-item channel selection; reply-bound menus and conversation pointers | `test_channel_assessment.py`; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Internal selection verified; signed conversation acceptance pending |
-| FR-WA-003 | Shared transactional graders/mastery with immutable channel provenance | [Foundation evidence](E7_SHARED_TRANSACTIONS_VERIFICATION.md); three-format database parity | Internal parity verified; final webhook integration pending |
-| FR-WA-004 | Signed bounded intake, durable message-ID hashes, atomic replay/conflict handling, monotonic status callbacks | [E7 evidence](E7_LINKING_READINESS.md); signature, duplicate/conflict, callback and rollback tests | Transport/linking verified; answer/mastery replay invariants pending practice integration |
-| FR-WA-005 | Bounded question/feedback formatters and authenticated web fallback | `test_whatsapp_format.py`, `test_whatsapp_feedback.py`; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Pure formatting checks pass; delivery acceptance pending |
-| FR-WA-006 | Immediate STOP barrier, owner unlink, fake outbound rechecks | [E7 evidence](E7_LINKING_READINESS.md); STOP before worker/delivery, stale code and retry tests | Local opt-out verified; channel practice-session handling pending |
+| FR-WA-002 | Shared five-item channel selection; reply-bound menus and conversation pointers | `test_channel_assessment.py`; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Local signed five-question conversation verified; production gates remain |
+| FR-WA-003 | Shared transactional graders/mastery with immutable channel provenance | [Foundation evidence](E7_SHARED_TRANSACTIONS_VERIFICATION.md); three-format database parity | Local internal and signed webhook parity verified |
+| FR-WA-004 | Signed bounded intake, durable message-ID hashes, atomic replay/conflict handling, monotonic status callbacks | [E7 evidence](E7_LINKING_READINESS.md); signature, duplicate/conflict, callback and rollback tests | Local transport and answer/mastery replay invariants verified |
+| FR-WA-005 | Bounded question/feedback formatters and authenticated web fallback | `test_whatsapp_format.py`, `test_whatsapp_feedback.py`; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Formatting and authorized fake delivery verified; production pending |
+| FR-WA-006 | Immediate STOP barrier, owner unlink, fake outbound rechecks | [E7 evidence](E7_LINKING_READINESS.md); STOP before worker/delivery, stale code and retry tests | Local opt-out and transient practice invalidation verified; learning evidence retained |
 | FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor; bounded JSON import API/UI and transactional worker | Content tests; import contract/API/browser regressions; [import evidence](E2_IMPORTS_VERIFICATION.md) | Partial: create/edit verified; structured synthetic JSON import verified; other formats and academic release pending |
 | FR-CNT-002 | Role checks and immutable author ownership; self-review blocked even with both roles | API self-review denial; SQL review guard; disabled author approval in browser | Local implemented |
 | FR-CNT-003 | Return, approval, high-risk/disputed second review, retirement and append-only reviews | Full API/browser workflow; two-reviewer and retired-selection tests | Local implemented with synthetic content |
@@ -138,3 +138,15 @@ ADR-039, `services/channel_operations.py`, migration 0021 and the channel operat
 integration/browser checks address local FR-OPS-002/004 and NFR-OBS-001 visibility. New operational
 acceptance is pending; counts and fake-dispatch timings do not establish NFR-PERF-002 or production
 messaging/notification coverage. [Verification](E8_CHANNEL_OPERATIONS_VERIFICATION.md).
+
+FR-GRD-003/004/005 offline validation: [E4 evidence](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md).
+Strict output, rubric/evidence/context checks are implemented; validated candidates never authorize
+scores. Production eligibility, academic calibration and the learner vertical path remain pending.
+
+### E7 final signed conversation acceptance
+
+Commit `5063528` passed [CI 37220225176](https://github.com/Jotham566/kasoma/actions/runs/37220225176),
+469 Python, 20 browser and five tooling checks with all setup/migration/build/security/container
+gates. This supersedes the preceding conversation-pending notes for FR-WA-002/003/004/005/006
+and FR-CNT-004. See [final evidence](E7_CONVERSATION_VERIFICATION.md). Production transport,
+academic approval and measured latency/load remain pending.

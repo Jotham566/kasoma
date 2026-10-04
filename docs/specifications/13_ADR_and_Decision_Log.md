@@ -246,10 +246,17 @@ Commit `c0b5b55` passed CI 37217857047; the foundation alone does not enable web
 See [ADR-038](../decisions/ADR/038-local-whatsapp-practice.md). START/CONTINUE use explicit topic
 menus and five-item shared revision sessions. Replies bind to the exact sent menu/question;
 STOP/unlink invalidates transient pointers. Approved references are rendered under current access,
-with bounded encrypted intake and a local queue wake-up. Application verification is pending.
+with bounded encrypted intake and a local queue wake-up. Commit `5063528` passed full hosted
+CI 37220225176 (469 Python, 20 browser and five tooling checks); production gates remain.
 
 ### ADR-039 — minimized channel operations
 
 See [ADR-039](../decisions/ADR/039-local-channel-operations.md). Extend ADMIN operations with
 bounded channel cohorts/queue age and sampled fake-dispatch timing. Typed local thresholds use
 existing safe alert logging. No learner delivery, load/SLO, cloud or production claim is implied.
+
+### ADR-040 — synthetic short-text candidate validation
+
+See [ADR-040](../decisions/ADR/040-short-text-candidate-validation.md). Strict rubric/evidence/context
+validation rejects unsupported candidate output without learner scoring. Independent passes,
+repair, academic calibration and learner fallback remain required integration gates.
