@@ -266,3 +266,9 @@ repair, academic calibration and learner fallback remain required integration ga
 See [ADR-041](../decisions/ADR/041-synthetic-short-text-rehearsal.md). The shared gateway gains
 additive structured task/ceiling fields and deterministic fixtures. Independent passes, one global
 schema repair and fail-closed budgets produce internal candidates only; automatic scoring stays off.
+
+### ADR-042 — isolated synthetic recovery drill
+
+See [ADR-042](../decisions/ADR/042-isolated-local-recovery-drill.md). A local-only command creates
+its own source/destination databases, verifies restored synthetic evidence and cleans up only
+owned temporary databases. No developer-database overwrite, production PITR or RPO/RTO claim.

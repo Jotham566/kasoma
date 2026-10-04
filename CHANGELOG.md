@@ -1,5 +1,11 @@
 # Changelog
 
+## 4 October 2026 — isolated synthetic recovery drill
+
+- Add `make recovery-drill`, original synthetic assessment fixtures and a hosted CI recovery gate for NFR-REL-002.
+- Restore only into a fresh database created by the drill; compare every table inventory, pgvector and selected immutable guards; never overwrite or copy the developer database.
+- Add ADR-042, 15 profile/cleanup contract cases and a runbook. Native database creation is unavailable; hosted restore acceptance and production PITR/RPO/RTO remain pending.
+
 ## 4 October 2026 — verified local channel operations
 
 - Promote `34950b0` to main after full CI 37221185319: 479 Python, 20 browser and five tooling checks plus clean migrations, security scans and container smoke.

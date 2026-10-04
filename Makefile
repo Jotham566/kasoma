@@ -179,3 +179,7 @@ test-whatsapp-practice:
 .PHONY: test-channel-operations
 test-channel-operations:
 	$(UV) pytest tests/integration/test_channel_operations.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: recovery-drill
+recovery-drill:
+	$(UV) python -m scripts.recovery_drill

@@ -159,3 +159,7 @@ ADR-039 local channel operations acceptance is now verified for `34950b0` by
 [CI 37221185319](https://github.com/Jotham566/kasoma/actions/runs/37221185319): 479 Python,
 20 browser and five tooling checks plus clean migrations/security/container gates. This supersedes
 the pending telemetry note above; remaining AI/HTTP/production metrics and release SLOs stay open.
+
+NFR-REL-002/NFR-SEC-002/NFR-MNT-001 local recovery preparation: [E9 evidence](E9_RECOVERY_VERIFICATION.md).
+Isolated source/destination backup/restore, row parity and immutable guards require hosted execution;
+profile/cleanup contract tests alone do not establish recovery acceptance. Production PITR remains open.

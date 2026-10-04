@@ -548,3 +548,18 @@ Dispatch p95 uses nearest rank over at most the latest 1,000 eligible feedback s
 in 24 hours. No samples means unavailable timing. It measures incoming durable receipt to local
 fake transport acceptance; real learner delivery, HTTP/AI latency and agreed-load evidence require
 separate tests. See [channel operations evidence](../implementation/E8_CHANNEL_OPERATIONS_VERIFICATION.md).
+
+## Isolated synthetic recovery drill
+
+Run `make recovery-drill` after `make setup services`. It creates fresh randomly named source and
+destination databases on the standard local Compose PostgreSQL service, migrates and seeds original
+synthetic evidence, performs pg_dump/pg_restore, verifies row parity/pgvector/immutable guards, and
+cleans up only those databases. It never copies or overwrites your configured development database.
+The report contains no raw records, tokens, credentials or subprocess diagnostics.
+
+A failed command reports a fixed stage and any exact temporary database names it could not remove.
+Inspect that specific run before cleanup; never drop by prefix, force active sessions or reset Docker
+volumes. Temporary backup files are private and removed on exit. Native Docker must be available.
+This is a logical local fixture drill, not 35-day production PITR or RPO/RTO acceptance. See
+[ADR-042](../decisions/ADR/042-isolated-local-recovery-drill.md) and
+[verification](../implementation/E9_RECOVERY_VERIFICATION.md).

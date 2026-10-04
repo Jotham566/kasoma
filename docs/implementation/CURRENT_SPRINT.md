@@ -44,3 +44,11 @@ Week 8 provider decision, production OTP/MFA, restricted roles, restore/load and
 No synthetic test, elapsed time or implementation ADR substitutes for those approvals.
 
 See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete evidence map.
+
+## Independent recovery preparation
+
+ADR-042 adds `make recovery-drill` and its hosted CI gate. The drill uses only databases it creates,
+original synthetic evidence and local PostgreSQL tooling. Native creation fails while Docker is
+unavailable; real restore verification remains pending. [Recovery evidence](E9_RECOVERY_VERIFICATION.md).
+The [short-text integration assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies the
+remaining rubric/pending-result/mastery boundaries; no candidate is inserted as a learner grade.
