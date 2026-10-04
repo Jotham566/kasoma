@@ -36,6 +36,10 @@ OTP/rate records. Row locks protect rate refresh against cleanup. Local 400 unit
 acceptance is pending;
 [expiry evidence](E1_EPHEMERAL_EXPIRY_VERIFICATION.md).
 
+FR-GRD-003/004: the synthetic criterion context now carries required rubric text/evidence/error/
+inference material, with v2 rehearsal prompts and 13 additional boundary/privacy cases. Local
+413 unit/contract checks pass; persisted approved rubrics and learner scoring remain unavailable.
+
 ## Next dependencies and acceptance work
 
 The [short-text integration assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies the

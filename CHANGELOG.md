@@ -1,5 +1,11 @@
 # Changelog
 
+## 4 October 2026 — explicit synthetic rubric material
+
+- Require criterion text, acceptable evidence, common errors and prohibited inferences in the offline short-text context (FR-GRD-003/004; specified rubric fields).
+- Bound and redact criterion material, preserve explicit empty error/inference lists, and version both fake rehearsal prompts as v2.
+- Add 13 context/privacy cases and verify both independent passes receive the complete rubric. Local 413 unit/contract checks pass; persistence, academic approval and learner scoring remain pending. No architecture or API change.
+
 ## 4 October 2026 — verified API timing
 
 - Promote `74a4a8f` after CI 37226011029 passes 556 Python, 60 browser and five tooling checks, clean migration/recovery, security and container gates.

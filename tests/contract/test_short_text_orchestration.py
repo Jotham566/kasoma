@@ -16,7 +16,16 @@ def context():
         rubric_version_id=UUID(int=1),
         item_version_id=UUID(int=2),
         maximum_points=1,
-        criteria=[{"criterion_id": "R1", "maximum_points": 1}],
+        criteria=[
+            {
+                "criterion_id": "R1",
+                "maximum_points": 1,
+                "criterion_text": "Name the original synthetic label.",
+                "acceptable_evidence": ["synthetic"],
+                "common_errors": ["A different label is supplied."],
+                "prohibited_inferences": ["Do not infer an omitted label."],
+            }
+        ],
         misconception_ids=[],
         correct_elements=["Synthetic match."],
         missing_elements=["Synthetic missing."],
@@ -76,6 +85,12 @@ def test_independent_passes_share_context_not_candidates(context):
     assert result.input_tokens == result.output_tokens == 200
     assert result.rubric_version_id == context.rubric_version_id
     first, second = gateway.calls
+    assert first.prompt_version == "synthetic-short-text-criteria-first-v2"
+    assert second.prompt_version == "synthetic-short-text-evidence-first-v2"
+    for task in (first, second):
+        assert task.structured_input["rubric"]["criteria"] == [
+            context.criteria[0].model_dump(mode="json")
+        ]
     assert first.prompt_version != second.prompt_version
     assert first.context_references == second.context_references
     assert first.structured_input["rubric"] == second.structured_input["rubric"]

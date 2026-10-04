@@ -17,8 +17,22 @@ def context():
         item_version_id=UUID(int=2),
         maximum_points=2,
         criteria=[
-            {"criterion_id": "R1", "maximum_points": 1},
-            {"criterion_id": "R2", "maximum_points": 1},
+            {
+                "criterion_id": "R1",
+                "maximum_points": 1,
+                "criterion_text": "Identify the first synthetic property.",
+                "acceptable_evidence": ["synthetic property"],
+                "common_errors": ["Only an unrelated label is given."],
+                "prohibited_inferences": ["Do not infer a property from an omitted statement."],
+            },
+            {
+                "criterion_id": "R2",
+                "maximum_points": 1,
+                "criterion_text": "Identify the second synthetic property.",
+                "acceptable_evidence": ["second synthetic property"],
+                "common_errors": [],
+                "prohibited_inferences": ["Do not infer the second property from the first."],
+            },
         ],
         misconception_ids=["M1"],
         correct_elements=["You identified the synthetic property."],
@@ -196,3 +210,43 @@ def test_context_requires_coherent_versioned_synthetic_rubric(context):
         data.update(mutation)
         with pytest.raises(ValidationError):
             SyntheticRubricContext.model_validate(data)
+
+
+@pytest.mark.parametrize(
+    "field", ["criterion_text", "acceptable_evidence", "common_errors", "prohibited_inferences"]
+)
+def test_rubric_context_requires_explicit_criterion_material(context, field):
+    data = context.model_dump()
+    del data["criteria"][0][field]
+    with pytest.raises(ValidationError):
+        SyntheticRubricContext.model_validate(data)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("criterion_text", "   "),
+        ("criterion_text", "x" * 2001),
+        ("acceptable_evidence", []),
+        ("acceptable_evidence", [" "]),
+        ("acceptable_evidence", ["entry"] * 11),
+        ("common_errors", [" "]),
+        ("prohibited_inferences", [" "]),
+        ("prohibited_inferences", ["entry"] * 11),
+    ],
+)
+def test_rubric_context_rejects_empty_or_unbounded_criterion_material(context, field, value):
+    data = context.model_dump()
+    data["criteria"][0][field] = value
+    with pytest.raises(ValidationError):
+        SyntheticRubricContext.model_validate(data)
+
+
+def test_rubric_material_is_not_exposed_by_repr_or_error_text(context):
+    assert "synthetic property" not in repr(context)
+    assert "synthetic property" not in repr(context.criteria[0])
+    data = context.model_dump()
+    data["criteria"][0]["acceptable_evidence"] = "CANARY-private-rubric"
+    with pytest.raises(ValidationError) as invalid:
+        SyntheticRubricContext.model_validate(data)
+    assert "CANARY" not in str(invalid.value)

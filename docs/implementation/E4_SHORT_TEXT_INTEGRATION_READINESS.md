@@ -11,9 +11,10 @@ supports only choice/multiple-choice/numeric. `GradeView` admits only definitive
 results. `AssessmentService.view`, `grade` and `result`, and `mastery.record`, deserialize that
 same contract. A LOW_CONFIDENCE result must not be disguised as a zero-point GradeView.
 
-The specified `rubrics` and `rubric_criteria` entities do not yet exist. The rehearsal's criterion
-IDs/maxima are fixture metadata, not complete academic rubrics. They lack approved acceptable
-evidence, common errors and prohibited inference. Its wording is not a benchmark-approved prompt.
+The specified `rubrics` and `rubric_criteria` entities do not yet exist. The rehearsal now requires
+explicit criterion text, acceptable evidence, common errors and prohibited inference, in addition
+to IDs/maxima. These remain original fixture material without academic approval or a persistence/
+review workflow. Synthetic v2 prompt wording is not a benchmark-approved production prompt.
 
 ## Next complete learner slice
 

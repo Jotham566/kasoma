@@ -222,3 +222,8 @@ All eligibility, gateway, dual-pass, calibration and learner fallback requiremen
 The next fake-only orchestration boundary is [ADR-041](../decisions/ADR/041-synthetic-short-text-rehearsal.md),
 with [verification](../implementation/E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md). It preserves all
 academic enablement gates and does not introduce live inference or learner scores.
+
+The synthetic v2 rehearsal contexts additionally require explicit criterion text, acceptable evidence,
+common errors and prohibited inferences. Both passes receive the same bounded authored fixture
+material. Field presence and structural validation do not establish academic correctness, approved
+context provenance or model eligibility; all learner-scoring gates above remain mandatory.

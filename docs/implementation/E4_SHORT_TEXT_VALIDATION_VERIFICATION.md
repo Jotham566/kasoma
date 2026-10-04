@@ -29,3 +29,19 @@ Commit `3b74f5b` passed [CI 37221835579](https://github.com/Jotham566/kasoma/act
 Setup, clean migrations/seed, lint/types/contracts/build, security audits/scans and container smoke
 all passed. Promoted to main; the completed validation branch was removed. This validates the
 offline foundation, not academic agreement or learner short-text enablement.
+
+## Explicit criterion material follow-up
+
+The synthetic context now also requires criterion_text, acceptable_evidence, common_errors and
+prohibited_inferences, as specified by the domain rubric model. Text is trimmed, nonblank and
+bounded to 2,000 characters; each list is bounded to ten entries. Acceptable evidence must have at
+least one entry. Errors/inferences require explicit lists but permit an authored empty list rather
+than inventing content. These are internal synthetic resource bounds, not an approved academic
+eligibility policy. Repr and validation-error strings omit input material.
+
+Thirteen new cases verify required fields, whitespace/size/list limits and redaction. Existing
+candidate score/provenance/context/flag checks still apply. Both independent fake passes receive
+the same complete criterion material under distinct synthetic v2 prompt versions. The current
+local `make format lint openapi-check test-unit` run passes 413 unit/contract and five tooling
+checks. Hosted full regression is pending; approved persisted rubrics, calibration and learner
+integration remain required. No HTTP schema, database migration or architecture changes.

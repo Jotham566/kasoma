@@ -31,3 +31,8 @@ Commit `2ce14c3` passed [CI 37222368566](https://github.com/Jotham566/kasoma/act
 Setup, clean migrations/seed, lint/types/contracts/build, security scans/audits and container smoke
 all passed. Promoted to main; the completed orchestration branch was removed. This supersedes
 pre-hosted pending notes and proves fake orchestration only, not academic or learner scoring gates.
+
+The criterion-material follow-up versions both synthetic prompts to v2 and verifies that each
+receives criterion text, acceptable evidence, common errors and prohibited inference through the
+same structured rubric field. It does not share candidates between passes or enable scoring.
+See [context verification](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md).

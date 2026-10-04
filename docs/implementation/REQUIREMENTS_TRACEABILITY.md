@@ -199,3 +199,9 @@ the completed branch removed. Aggregated p95/load evidence remains pending.
 NFR-SEC-002 restricted-login follow-up: first hosted execution found a missing users-row locking
 grant in the test profile. The narrow display_name update grant now enables the existing trigger;
 identity/status/birth-date denial assertions remain. Acceptance is pending a complete rerun.
+
+FR-GRD-003/004 criterion-material follow-up: the offline context now requires the specified
+criterion text, acceptable evidence, common errors and prohibited inferences. Thirteen new
+boundary/privacy cases pass locally; fake prompt versions are v2. See
+[validation evidence](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md). Persistence, academic approval,
+calibrated enablement and the learner fallback path remain incomplete.

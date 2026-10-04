@@ -90,7 +90,7 @@ def rehearse_short_text(
                 return result("BUDGET")
             task = ModelTask(
                 task="grade_short_answer",
-                prompt_version=f"synthetic-short-text-{evaluation_order}-v1"
+                prompt_version=f"synthetic-short-text-{evaluation_order}-v2"
                 + ("-repair" if repair else ""),
                 text="",  # Untrusted response stays in its structured field, not instructions.
                 context_references=[context.item_version_id, context.rubric_version_id],
