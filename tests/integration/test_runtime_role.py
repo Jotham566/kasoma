@@ -92,6 +92,11 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                 db.execute(
                     text(f"GRANT UPDATE (id) ON {quoted_schema}.item_versions TO {quoted_role}")
                 )
+                # attempt_hint_guard locks users; allow only the mutable profile-name
+                # column, never identity/status/birth-date or role changes.
+                db.execute(
+                    text(f"GRANT UPDATE (display_name) ON {quoted_schema}.users TO {quoted_role}")
+                )
         except DBAPIError:
             # A server-side dynamic SQL error can include expanded password text.
             raise RuntimeError("Temporary role provisioning failed; diagnostics withheld") from None
@@ -134,6 +139,9 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
             f"UPDATE {quoted_schema}.grades SET answer_specification_hash = 'tampered'",
             f"UPDATE {quoted_schema}.user_roles SET role = 'ADMIN'",
             f"UPDATE {quoted_schema}.item_versions SET status = 'RETIRED'",
+            f"UPDATE {quoted_schema}.users SET id = gen_random_uuid()",
+            f"UPDATE {quoted_schema}.users SET status = 'DISABLED'",
+            f"UPDATE {quoted_schema}.users SET birth_date = '2000-01-01'",
             "SET session_replication_role = replica",
             "SET ROLE kasoma",
             "SELECT rolpassword FROM pg_authid",
@@ -162,6 +170,11 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                 )
                 db.execute(
                     text(f"REVOKE ALL ON ALL TABLES IN SCHEMA {quoted_schema} FROM {quoted_role}")
+                )
+                db.execute(
+                    text(
+                        f"REVOKE UPDATE (display_name) ON {quoted_schema}.users FROM {quoted_role}"
+                    )
                 )
                 db.execute(text(f"REVOKE ALL ON SCHEMA {quoted_schema} FROM {quoted_role}"))
                 db.execute(text(f"DROP ROLE {quoted_role}"))

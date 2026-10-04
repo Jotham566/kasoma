@@ -346,3 +346,8 @@ Record meaningful repository and product changes here. A documentation baseline 
   local fake-dispatch p95; expose no-sample state and sample truncation explicitly.
 - Add typed local thresholds, safe alert schema, generated contracts, dashboard and regression tests.
 - No production messaging, external notifications or release latency acceptance is implied.
+
+## 4 October 2026 — restricted-login row-lock correction
+
+- Fix the NFR-SEC-002 test grant profile after CI 37227070209 exposed the attempt-hint guard's users-row lock requirement.
+- Permit only the existing mutable display_name field; add explicit denied identity/status/birth-date writes and exact column-grant cleanup. Production credentials remain unchanged; rerun required.

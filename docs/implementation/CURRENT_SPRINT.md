@@ -52,3 +52,8 @@ The [release register](RELEASE_GATES.md) tracks missing kickoff/capacity, exact 
 and approved inventory, expert benchmarks, privacy/guardian/DPIA, Week 8 provider choice, production
 OTP/MFA/restricted roles, managed PITR/RPO/RTO, branded/mobile/versioned browser and pilot sign-offs.
 The approved 12-week deadline and all acceptance thresholds remain unchanged.
+
+Runtime-role verification follow-up: hosted CI 37227070209 exposed the existing users-row lock in
+attempt_hint_guard. The test profile adds only the mutable display_name column grant and verifies
+identity/status/birth-date remain denied. All 162 existing integration cases passed; the corrected
+restricted-login case and full pipeline are pending rerun. No production credential change.

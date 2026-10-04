@@ -35,3 +35,14 @@ No migration, API contract, dependency or architectural decision changes. Defaul
 credentials remain unchanged. This tests the assessment permission profile only; complete module
 and worker grants, separate migration/runtime credentials, deployment provisioning, production MFA
 and role governance remain release gates. It does not establish database row-level tenant isolation.
+
+The first hosted run 37227070209 passed all 162 existing integration cases but the new restricted
+login correctly failed the attempt-hint guard's users-row lock. PostgreSQL requires an UPDATE
+privilege for SELECT FOR UPDATE. The test profile now grants only UPDATE(display_name), the
+mutable encrypted field used by existing profile editing, and explicitly verifies that users.id,
+status and birth_date remain unwritable. This does not assert that display names are immutable or
+that application ownership checks are implemented by database RLS. The grant is revoked during
+exact-role cleanup. Full hosted verification must be rerun before promotion.
+
+CI now runs the focused `make test-runtime-role` immediately after recovery, before the complete
+regression suite, so grant-profile failures surface early. The full integration suite still includes it.

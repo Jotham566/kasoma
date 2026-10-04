@@ -195,3 +195,7 @@ and other privacy processors remain separate gaps.
 NFR-OBS-001/FR-OPS-002 timing is verified at `74a4a8f` in hosted CI 37226011029: 556 Python,
 60 browser and five tooling checks plus recovery, security and container gates. Main updated and
 the completed branch removed. Aggregated p95/load evidence remains pending.
+
+NFR-SEC-002 restricted-login follow-up: first hosted execution found a missing users-row locking
+grant in the test profile. The narrow display_name update grant now enables the existing trigger;
+identity/status/birth-date denial assertions remain. Acceptance is pending a complete rerun.
