@@ -11,7 +11,7 @@ then cleans up only the databases it created. The configured developer database 
 modified. There is no external inference, messaging, cloud storage or production-data access.
 
 Files: `scripts/recovery_drill.py`, `scripts/recovery_fixture.py`, Makefile, CI workflow and
-`tests/contract/test_recovery_drill.py`. Fifteen contract cases cover unsafe profile/name rejection,
+`tests/contract/test_recovery_drill.py`. Sixteen contract cases cover unsafe profile/name rejection,
 partial creation, migration-failure cleanup ownership and diagnostic minimization. Fixture mocking
 does not constitute backup/restore acceptance.
 
@@ -21,5 +21,13 @@ is required. Production 35-day PITR, encrypted recovery copies, agreed RPO/RTO a
 rehearsal remain open in the [release register](RELEASE_GATES.md).
 
 Local `make format lint openapi-check test-unit security` passes 387 unit/contract and five tooling
-checks, including 15 recovery safety cases, plus formatting/types/contracts and security/dependency
+checks, including the first 15 recovery safety cases, plus formatting/types/contracts and security/dependency
 audits. The 162 integration cases remain deselected locally; real restore proof is still pending.
+
+Follow-up adds explicit driver rejection and includes both recovery scripts in standard mypy
+coverage. An initial duplicate-module diagnostic was fixed by making `scripts` an explicit package.
+The recovery gate runs immediately after service/migration setup for earlier restore feedback;
+all existing full application/browser/security gates still follow it.
+
+Follow-up local lint/types/contracts and 388 unit/contract plus five tooling checks pass; the new
+16th safety case rejects non-PostgreSQL schemes before any resource operation.

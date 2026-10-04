@@ -33,6 +33,7 @@ def test_both_generated_names_are_accepted():
 @pytest.mark.parametrize(
     "url",
     [
+        "http://kasoma:secret@localhost:55432/kasoma",
         "postgresql+psycopg://kasoma:secret@remote.invalid:55432/kasoma",
         "postgresql+psycopg://kasoma:secret@localhost:5432/kasoma",
         "postgresql+psycopg://other:secret@localhost:55432/kasoma",

@@ -21,3 +21,11 @@ instructions cannot alter the validator's schema/point bounds; it does not estab
 or model resistance to prompt injection. Semantic grading validity remains an expert benchmark gate.
 
 `make security` also passes Bandit, local secret checks and both dependency audits.
+
+## Hosted acceptance
+
+Commit `3b74f5b` passed [CI 37221835579](https://github.com/Jotham566/kasoma/actions/runs/37221835579):
+357 unit/contract and 162 integration tests (519 Python), 20 browser and five tooling checks.
+Setup, clean migrations/seed, lint/types/contracts/build, security audits/scans and container smoke
+all passed. Promoted to main; the completed validation branch was removed. This validates the
+offline foundation, not academic agreement or learner short-text enablement.

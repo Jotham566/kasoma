@@ -43,7 +43,7 @@ select = ["E", "F", "I", "UP", "B"]
 plugins = ["pydantic.mypy"]
 python_version = "3.12"
 strict = true
-files = ["apps", "services"]
+files = ["apps", "services", "scripts/recovery_drill.py", "scripts/recovery_fixture.py"]
 
 [[tool.mypy.overrides]]
 module = ["celery", "celery.*"]

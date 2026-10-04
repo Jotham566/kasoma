@@ -29,6 +29,7 @@ def local_database_url(settings: Settings) -> URL:
     url = make_url(settings.database_url.get_secret_value())
     if (
         settings.app_env != "development"
+        or url.drivername != "postgresql+psycopg"
         or url.host not in {"localhost", "127.0.0.1"}
         or url.port != 55432
         or url.username != "kasoma"

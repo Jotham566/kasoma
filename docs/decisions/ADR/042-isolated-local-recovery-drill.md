@@ -6,7 +6,7 @@ Requirements: NFR-REL-002, NFR-SEC-002, NFR-MNT-001
 
 ## Decision
 
-Add `make recovery-drill` to the normal hosted verification pipeline after migrations/tests. It
+Add `make recovery-drill` to the normal hosted verification pipeline after service/migration setup and before the full regression suite. It
 requires the standard loopback Compose development database profile. It never dumps, restores
 over, seeds or drops the configured developer database. Instead, generate one random suffix and
 create two new databases named `kasoma_drill_src_<32 hex>` and `kasoma_drill_dst_<32 hex>`.
