@@ -89,3 +89,6 @@ all existing evidence guards. Real-database tests cover three objective formats 
 receipt replay/conflicts, web continuation, approval withdrawal and direct database protection.
 Verification is pending; no webhook learning is enabled. Local Docker has no engine socket, so
 clean migration and integration acceptance must be obtained from hosted CI before promotion.
+
+ADR-036 feedback projection now has deterministic bounds and protected web fallback tests. It
+remains a pure helper; the conversation worker must authorize the submitted grade before delivery.

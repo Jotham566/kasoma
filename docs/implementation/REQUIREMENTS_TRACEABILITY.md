@@ -115,3 +115,7 @@ ADR-037, migration 0019 and `tests/integration/test_channel_assessment.py` addre
 FR-WA-002/003/004, FR-CNT-004, FR-GRD-001/002 and FR-MST-001 channel capability/provenance.
 The added parity and database tests are pending execution; no new application acceptance is claimed.
 Conversation/reply binding, outbound practice and end-to-end parity remain separate gates.
+
+FR-WA-005: `services/whatsapp_feedback.py` and `tests/contract/test_whatsapp_feedback.py` add
+concise shared-grade projection, lossless-or-web fallback and safe local session links. Actual
+channel feedback delivery remains pending conversation integration.

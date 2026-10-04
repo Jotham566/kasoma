@@ -58,3 +58,14 @@ services because Docker is unavailable. `make test-channel-assessment` collected
 all six failed at database fixture setup (no PostgreSQL connection); none reached an application
 assertion. These failures do not count as migration or parity acceptance.
 `make security` also passed Bandit, local secret checks and Python/JavaScript dependency audits.
+
+## Concise feedback formatter
+
+ADR-036 now covers post-grade text with complete-message bounds, shared-grade points, complete
+reviewed next action or web fallback, and STOP/CONTINUE instructions. Session links use the
+existing authenticated revise page; origins containing credentials, query data or fragments are
+rejected. Pure tests cover these boundaries; this is not evidence of outbound practice acceptance.
+
+`make format lint test-unit` passes 308 unit/contract and five tooling tests with feedback
+formatting. Session capability validation now acquires approved-version locks in stable item
+order, matching topic selection. Hosted regression for this final snapshot is still required.

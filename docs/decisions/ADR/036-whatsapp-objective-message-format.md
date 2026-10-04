@@ -28,6 +28,16 @@ current question: without an unambiguous binding, request a reply to the questio
 Conversation persistence, menus, STOP/session handling and atomic worker integration follow as
 separate implementation work. This pure boundary does not enable practice by itself.
 
+## Post-grade feedback
+
+Project the shared grade's awarded/possible points and concise reviewed next action only after
+owned revision submission. If the complete next action is rich or does not fit, omit it and link
+to the existing authenticated `/revise?session=<UUID>` page; never truncate academic instructions.
+Every message includes the web link and STOP instruction, and CONTINUE until the fifth answer.
+The complete message must respect the same ceiling. Only the configured local application origin
+is accepted; credentials, query parameters, fragments and path prefixes are rejected to prevent
+secret-bearing links. This pure formatter does not authorize delivery or expose sealed diagnostics.
+
 ## Verification
 
 Use deterministic contract tests for complete-message limits, unsupported/rich prompts, explicit

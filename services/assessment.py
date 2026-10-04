@@ -185,7 +185,14 @@ class AssessmentService:
             raise IdentityError("VALIDATION_FAILED", 422)
         from services.whatsapp_format import supports
 
-        items = list(db.scalars(select(SessionItem).where(SessionItem.session_id == session.id)))
+        items = list(
+            db.scalars(
+                select(SessionItem)
+                .join(ItemVersion, ItemVersion.id == SessionItem.item_version_id)
+                .where(SessionItem.session_id == session.id)
+                .order_by(ItemVersion.item_id, ItemVersion.id)
+            )
+        )
         if len(items) != 5:
             raise IdentityError("CONTENT_NOT_APPROVED", 409)
         for item in items:

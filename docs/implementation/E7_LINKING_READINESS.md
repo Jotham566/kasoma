@@ -85,12 +85,12 @@ configure bounded local usage limits. Never enter a real learner number or data.
 
 ## Next slice assessment — shared five-question practice
 
-Read-only inspection confirms that `AssessmentService.start`, `next_item` and `submit` currently
-open their own transactions and authorize web tokens; `StartRevision.channel` currently permits
-WEB only. The next slice must extract shared transaction-scoped actor-authorized operations,
-retaining actor locks, current account/consent/enrollment checks, content eligibility, idempotent
-attempt receipts, deterministic graders and atomic mastery/event updates. The channel worker
-will call those operations within its receipt transaction, never fabricate a learner token.
+The shared transaction-scoped actor-authorized operations are now verified in commit `50044d4`
+under ADR-035; see [transaction evidence](E7_SHARED_TRANSACTIONS_VERIFICATION.md). Public
+`StartRevision.channel` remains WEB-only. ADR-036 question/reply formatting and ADR-037 internal
+channel provenance/capability checks are under verification. The channel worker will call shared
+operations within its receipt transaction, preserving current account/consent/enrollment checks,
+content eligibility, idempotency, deterministic grading and atomic mastery/event updates.
 
 Add expiring conversation/session pointers and supported-content selection for five-question
 sessions. Commands START/CONTINUE/PROGRESS/HELP/STOP must remain explicit. Structured answers need

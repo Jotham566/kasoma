@@ -240,3 +240,9 @@ Record meaningful repository and product changes here. A documentation baseline 
 - Preserve WEB HTTP schemas and receipt hashes; separate internal WHATSAPP fingerprints.
 - Add objective score/mastery parity, replay, current approval and database guard regressions.
 - Webhook conversation and delivery integration remain pending.
+
+### In progress — concise channel feedback (FR-WA-005)
+
+- Extend ADR-036 with bounded shared-grade feedback and authenticated web solution links.
+- Preserve complete academic instructions or use the web fallback; reject secret-bearing origins.
+- Add format, length, continuation and link-safety regressions; delivery integration remains pending.
