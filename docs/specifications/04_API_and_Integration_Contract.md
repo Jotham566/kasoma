@@ -494,3 +494,12 @@ start/serve/submit operations accept a trusted actor and caller-owned transactio
 current account, consent, level and enrollment. They do not commit and are not exposed as HTTP
 actor-override endpoints. This enables future atomic channel receipt/learning writes without
 manufacturing bearer tokens; channel grading remains disabled pending its migration and tests.
+
+## Internal channel capability (ADR-037, implementation in progress)
+
+Shared start/next/submit methods accept a trusted internal `channel` argument. Default WEB and its
+receipt fingerprints are unchanged. WHATSAPP fingerprints use a separate namespace, and public
+start schemas still reject WHATSAPP. Channel callers must first authorize the linked sender.
+Only explicit-topic five-item revision plans whose assigned versions pass approval and channel
+format checks can run through these internal methods. Unsupported sessions fail closed without
+replacing assignments. This is not a new HTTP endpoint or a webhook practice enablement.

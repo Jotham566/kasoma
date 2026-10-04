@@ -67,3 +67,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-036: Objective WhatsApp message format](036-whatsapp-objective-message-format.md)
   records bounded lossless questions and normalization into shared response schemas.
+
+- [ADR-037: Channel-safe shared assessment operations](037-channel-assessment-provenance.md)
+  records internal provenance, supported selection and cross-channel continuation constraints.

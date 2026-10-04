@@ -110,3 +110,8 @@ This is not evidence that WhatsApp practice or parity is implemented.
 ADR-036 adds an independent channel-formatting boundary and contract regressions toward
 FR-WA-002/003/005. This boundary neither chooses approved versions nor binds learner replies;
 those integration gates and full channel parity remain pending.
+
+ADR-037, migration 0019 and `tests/integration/test_channel_assessment.py` address internal
+FR-WA-002/003/004, FR-CNT-004, FR-GRD-001/002 and FR-MST-001 channel capability/provenance.
+The added parity and database tests are pending execution; no new application acceptance is claimed.
+Conversation/reply binding, outbound practice and end-to-end parity remain separate gates.

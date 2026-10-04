@@ -41,3 +41,20 @@ the existing academic rule rather than weakening it.
 first attempt; both Python and JavaScript audits report no known vulnerabilities. Formatting
 changes do not alter database schemas or public contracts. Full hosted regression remains pending
 for this independent boundary.
+
+## Channel assessment foundation
+
+ADR-037 and migration 0019 add a trusted internal channel parameter, namespaced channel receipts,
+capability-aware selection and full five-item assignment checks on continuation. The migration
+preserves existing immutable evidence/response/ownership guards and adds channel shape protection.
+`make test-channel-assessment` exercises single-choice, multiple-choice and numeric score/mastery
+parity, replay, public spoof rejection, web continuation, withdrawal and direct database guards.
+Local Docker is unavailable (missing engine socket); new integration and clean-migration evidence
+is pending hosted CI. No practice worker or conversation state is enabled by this dependency.
+
+Local channel checks: `make format lint openapi-check test-unit` passed 290 unit/contract and
+five tooling tests; generated contracts are unchanged. `make services migrate seed` stopped at
+services because Docker is unavailable. `make test-channel-assessment` collected six cases but
+all six failed at database fixture setup (no PostgreSQL connection); none reached an application
+assertion. These failures do not count as migration or parity acceptance.
+`make security` also passed Bandit, local secret checks and Python/JavaScript dependency audits.

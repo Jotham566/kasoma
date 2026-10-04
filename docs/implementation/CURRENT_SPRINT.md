@@ -80,3 +80,12 @@ The independent [ADR-036](../decisions/ADR/036-whatsapp-objective-message-format
 boundary is in progress: bounded lossless question rendering and typed numbered/numeric reply
 normalization. Conversation persistence and reply binding remain unimplemented; no channel
 learning behavior is enabled by these pure helpers.
+
+## Active channel assessment foundation
+
+[ADR-037](../decisions/ADR/037-channel-assessment-provenance.md) adds trusted internal channel
+provenance, capability-aware selection and five-item continuation checks. Migration 0019 preserves
+all existing evidence guards. Real-database tests cover three objective formats and mastery parity,
+receipt replay/conflicts, web continuation, approval withdrawal and direct database protection.
+Verification is pending; no webhook learning is enabled. Local Docker has no engine socket, so
+clean migration and integration acceptance must be obtained from hosted CI before promotion.

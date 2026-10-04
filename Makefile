@@ -167,3 +167,7 @@ simulate-whatsapp:
 .PHONY: test-assessment-transactions
 test-assessment-transactions:
 	$(UV) pytest tests/integration/test_assessment_transactions.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-channel-assessment
+test-channel-assessment:
+	$(UV) pytest tests/integration/test_channel_assessment.py --allow-hosts=localhost,127.0.0.1,::1

@@ -172,19 +172,55 @@ class AssessmentService:
             raise IdentityError("IDEMPOTENCY_CONFLICT", 409)
         return receipt
 
+    @staticmethod
+    def check_channel(channel: str) -> None:
+        if channel not in {"WEB", "WHATSAPP"}:
+            raise IdentityError("VALIDATION_FAILED", 422)
+
+    def channel_session(self, db: Session, session: AssessmentSession, channel: str) -> None:
+        self.check_channel(channel)
+        if channel == "WEB":
+            return
+        if session.kind != "REVISION" or session.item_count != 5:
+            raise IdentityError("VALIDATION_FAILED", 422)
+        from services.whatsapp_format import supports
+
+        items = list(db.scalars(select(SessionItem).where(SessionItem.session_id == session.id)))
+        if len(items) != 5:
+            raise IdentityError("CONTENT_NOT_APPROVED", 409)
+        for item in items:
+            version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
+            if not supports(DraftDocument.model_validate(version.document)):
+                raise IdentityError("CONTENT_NOT_APPROVED", 409)
+
     def start(self, token: str, body: StartRevision, key: UUID, request: UUID) -> SessionView:
         with Session(self.identity.engine) as db, db.begin():
             actor = self.identity.authenticate(db, token).user_id
             return self.start_in_transaction(db, actor, body, key, request)
 
     def start_in_transaction(
-        self, db: Session, actor: UUID, body: StartRevision, key: UUID, request: UUID
+        self,
+        db: Session,
+        actor: UUID,
+        body: StartRevision,
+        key: UUID,
+        request: UUID,
+        *,
+        channel: str = "WEB",
     ) -> SessionView:
         self.authorize_actor(db, actor, body.subject_id)
-        fingerprint = self.identity.digest("assessment", "start:" + body.model_dump_json())
+        self.check_channel(channel)
+        if channel == "WHATSAPP" and (body.mode != "TOPIC" or body.desired_item_count != 5):
+            raise IdentityError("VALIDATION_FAILED", 422)
+        fingerprint = self.identity.digest(
+            "assessment",
+            ("" if channel == "WEB" else "WHATSAPP:") + "start:" + body.model_dump_json(),
+        )
         receipt = self.replay(db, actor, key, fingerprint)
         if receipt:
-            return self.view(db, self.owned(db, actor, receipt.session_id))
+            existing = self.owned(db, actor, receipt.session_id)
+            self.channel_session(db, existing, channel)
+            return self.view(db, existing)
         # Expire all stale revision reservations under the same learner lock.
         # Otherwise an expired manual plan can still hold the topic's unique index.
         for stale in db.scalars(
@@ -219,6 +255,7 @@ class AssessmentService:
         if active:
             if active.item_count != body.desired_item_count:
                 raise IdentityError("VERSION_CONFLICT", 409)
+            self.channel_session(db, active, channel)
             session = active
         else:
             if not self.identity.rate(db, "assessment-start:" + str(actor), 30, 3600):
@@ -248,7 +285,9 @@ class AssessmentService:
             else:
                 candidates = [
                     v
-                    for v in self.diagnostics.candidates(db, actor, body.subject_id)
+                    for v in self.diagnostics.candidates(
+                        db, actor, body.subject_id, channel=channel
+                    )
                     if v.topic_id == topic_id
                 ][: body.desired_item_count]
                 candidates = [
@@ -368,11 +407,18 @@ class AssessmentService:
             return self.next_item_in_transaction(db, actor, session_id, request)
 
     def next_item_in_transaction(
-        self, db: Session, actor: UUID, session_id: UUID, request: UUID
+        self,
+        db: Session,
+        actor: UUID,
+        session_id: UUID,
+        request: UUID,
+        *,
+        channel: str = "WEB",
     ) -> LearnerItem:
         self.authorize_actor(db, actor)
         session = self.owned(db, actor, session_id)
         self.authorize_actor(db, actor, session.subject_id)
+        self.channel_session(db, session, channel)
         if session.status != "ACTIVE":
             raise IdentityError("SESSION_NOT_ACTIVE", 409)
         item = self.pending(db, session.id)
@@ -431,12 +477,19 @@ class AssessmentService:
         body: SubmitAnswer,
         key: UUID,
         request: UUID,
+        *,
+        channel: str = "WEB",
     ) -> GradeView | DiagnosticReceipt:
         self.authorize_actor(db, actor)
         session = self.owned(db, actor, session_id)
         self.authorize_actor(db, actor, session.subject_id)
+        self.check_channel(channel)
         fingerprint = self.identity.digest(
-            "assessment", str(session_id) + ":answer:" + body.model_dump_json()
+            "assessment",
+            ("" if channel == "WEB" else "WHATSAPP:")
+            + str(session_id)
+            + ":answer:"
+            + body.model_dump_json(),
         )
         receipt = self.replay(db, actor, key, fingerprint)
         if receipt and receipt.attempt_id:
@@ -445,6 +498,7 @@ class AssessmentService:
                 if session.kind == "DIAGNOSTIC"
                 else self.grade(db, receipt.attempt_id)
             )
+        self.channel_session(db, session, channel)
         if db.scalar(
             select(Attempt.id).where(
                 Attempt.session_item_id == body.session_item_id, Attempt.learner_id == actor
@@ -492,7 +546,7 @@ class AssessmentService:
                 submitted_at=self.identity.clock(),
                 hint_count=hint_count,
                 highest_hint_level=highest_hint_level,
-                channel="WEB",
+                channel=channel,
             )
         )
         db.flush()

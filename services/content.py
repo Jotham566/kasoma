@@ -608,8 +608,11 @@ class ContentService:
         excluded: set[UUID],
         count: int,
         lock: bool = True,
+        channel: str = "WEB",
     ) -> list[ItemVersion]:
         """Local synthetic planner; publication remains this module's authority."""
+        if channel not in {"WEB", "WHATSAPP"}:
+            raise ValueError("Unsupported assessment channel")
         versions = db.scalars(
             select(ItemVersion)
             .join(Item)
@@ -633,8 +636,13 @@ class ContentService:
                 continue
             seen.add(version.item_id)
             document = DraftDocument.model_validate(version.document)
-            if "WEB" not in document.channel_suitability:
+            if channel not in document.channel_suitability:
                 continue
+            if channel == "WHATSAPP":
+                from services.whatsapp_format import supports
+
+                if not supports(document):
+                    continue
             if lock:
                 db.refresh(version, with_for_update=True)
             if version.status != "APPROVED":

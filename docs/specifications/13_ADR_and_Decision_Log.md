@@ -233,3 +233,10 @@ See [ADR-036](../decisions/ADR/036-whatsapp-objective-message-format.md). Indepe
 WHATSAPP suitability, plain-text and length checks precede selection. Numbered choice and exact
 numeric replies normalize to existing response schemas. The conversation layer must bind replies
 to the exact question before invoking the parser; no grading or practice is enabled here alone.
+
+### ADR-037 — channel assessment provenance
+
+See [ADR-037](../decisions/ADR/037-channel-assessment-provenance.md). Trusted internal channel
+operations reuse grading/mastery and enforce five-item approved channel capability. Public API
+contracts remain WEB-only; migration 0019 preserves immutable evidence with explicit provenance.
+Verification is pending; this does not enable webhook-driven practice.

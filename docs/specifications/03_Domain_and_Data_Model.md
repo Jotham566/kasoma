@@ -332,3 +332,12 @@ bound account records; account erasure and channel legal-hold coverage are pendi
 includes bound channel status/identifier and minimized actor-owned receipt metadata, excluding
 unbound sender history. Deletion preview includes the new relational inventory without claiming
 permission to erase or complete legal-hold coverage.
+
+## Channel provenance foundation (ADR-037)
+
+Migration 0019 extends the immutable `attempts.channel` constraint to WEB and WHATSAPP and adds
+an insert guard requiring a five-item revision assignment with explicit WHATSAPP suitability.
+Existing response-format, active-assignment, approved-version, ownership and append-only guards
+remain in force. Historical evidence is not rewritten. Application capability checks additionally
+reject rich/oversized questions before channel selection, serving or submission. Conversation
+state and webhook-driven attempts remain pending.

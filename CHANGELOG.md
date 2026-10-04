@@ -232,3 +232,11 @@ Record meaningful repository and product changes here. A documentation baseline 
 - Normalize numbered choice/multiple-choice and exact numeric replies into shared contracts.
 - Record ADR-036 and add key-leakage, malformed-response, length and shared-grader regressions.
 - Question/reply binding and the conversation worker remain pending.
+
+### In progress — channel assessment provenance (FR-WA-002/003/004)
+
+- Record ADR-037 and additive migration 0019 for immutable WHATSAPP attempt provenance.
+- Filter supported questions before selection and validate complete five-item plans on continuation.
+- Preserve WEB HTTP schemas and receipt hashes; separate internal WHATSAPP fingerprints.
+- Add objective score/mastery parity, replay, current approval and database guard regressions.
+- Webhook conversation and delivery integration remain pending.

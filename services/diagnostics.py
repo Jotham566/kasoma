@@ -38,7 +38,9 @@ class Diagnostics:
         self.assessment = assessment
         self.identity = assessment.identity
 
-    def candidates(self, db: Session, actor: UUID, subject: UUID) -> list[ItemVersion]:
+    def candidates(
+        self, db: Session, actor: UUID, subject: UUID, *, channel: str = "WEB"
+    ) -> list[ItemVersion]:
         excluded = set(
             db.scalars(
                 select(ItemVersion.item_id)
@@ -64,7 +66,7 @@ class Diagnostics:
         ):
             result.extend(
                 self.assessment.content.assessment_candidates(
-                    db, subject, topic.id, excluded, 1000, lock=False
+                    db, subject, topic.id, excluded, 1000, lock=False, channel=channel
                 )
             )
         return result
