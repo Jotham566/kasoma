@@ -106,7 +106,9 @@ End-to-end five-question WhatsApp conversations, reply binding, shared grading, 
 safe fake delivery are verified under ADR-038. Deletion/anonymization, remaining
 hold coverage, large-history fulfillment and accountability-retention processors remain pending.
 Offline synthetic short-text candidate validation and budgeted fake dual-pass rehearsal are
-verified; learner short-text integration, academic calibration and production deployment remain pending. See
+verified. Isolated synthetic logical recovery and Chromium/Firefox/WebKit journeys with a
+cold question transfer budget are verified. Learner short-text integration, academic calibration,
+production PITR/RPO/RTO and branded/mobile browser acceptance remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

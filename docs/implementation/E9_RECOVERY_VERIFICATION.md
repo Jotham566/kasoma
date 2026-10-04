@@ -2,7 +2,7 @@
 
 Requirements: NFR-REL-002, NFR-SEC-002, NFR-MNT-001 (local preparation only).
 Decision: [ADR-042](../decisions/ADR/042-isolated-local-recovery-drill.md).
-Status: implementation awaiting hosted real-database verification.
+Status: synthetic logical restore verified; production recovery gates remain.
 
 `make recovery-drill` creates its own source/destination databases, runs migrations and original
 synthetic content/identity/assessment fixtures, backs up and restores using matching PostgreSQL
@@ -39,3 +39,15 @@ the isolated source, then failed CAPTURE_INVENTORY. The nonempty-evidence check 
 instead of the actual `consent_records` table. Cleanup succeeded with no databases left behind.
 Use authoritative ORM table names for all five required evidence classes. Repeat real restore
 and full hosted checks before acceptance; this failed run does not prove backup/restore.
+
+## Final hosted verification
+
+Commit `42a6e08` passed [CI 37223872075](https://github.com/Jotham566/kasoma/actions/runs/37223872075):
+388 unit/contract plus 162 integration tests (550 Python), 20 browser and five tooling checks;
+all setup/migration/lint/type/contract/build/security/container gates passed. The real drill restored
+52 tables and 270 rows in 424 ms, verified pgvector and immutable guards, and reported no cleanup
+failures. Source/destination inventories matched before and after guard probes.
+
+Promoted to main and the completed recovery branch removed. This supersedes earlier pending notes
+while preserving the initial failed native/hosted attempts above. Logical fixture restore timing
+is not production RTO, PITR, encryption or data-loss/RPO evidence.

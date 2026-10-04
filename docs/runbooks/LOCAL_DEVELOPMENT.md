@@ -580,3 +580,15 @@ The assessment journey reports `cold_question_transfer` aggregate bytes and enfo
 250 KB target from a fresh context. It includes all encoded response bodies/headers through initial
 question rendering and network quiet; the fixture contains no question media. Do not substitute a
 warm-cache measurement, skip failed measurements or raise the budget to make a run pass.
+
+## Correlated API response-start timing
+
+Each `api.request` operational event now includes integer `response_start_ms`, measured using a
+monotonic clock from middleware entry to response headers. It excludes body/network delivery.
+The trace also records response status and the same timing. Requests retain their UUID correlation
+header, safe error envelope and no-store policy. No URL, query, credential, identity or payload
+is logged. Worker events remain compatible without the optional timing field.
+
+Use the event only for local investigation; aggregated REQUEST_LATENCY remains unavailable in
+the ADMIN dashboard. Do not infer a latency/load SLO from one sample. See
+[verification](../implementation/E8_REQUEST_TIMING_VERIFICATION.md).

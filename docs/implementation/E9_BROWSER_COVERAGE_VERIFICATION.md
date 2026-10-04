@@ -1,7 +1,7 @@
 # E9 browser engine verification
 
 Requirements: NFR-COMP-001, NFR-ACC-001, NFR-MNT-001 (partial compatibility coverage).
-Status: engine matrix configured; runtime acceptance pending hosted execution.
+Status: synthetic engine matrix and cold-transfer budget verified; branded/mobile release gates remain.
 
 `make e2e` now runs the full existing journey suite separately in Chromium, Firefox and WebKit.
 Each engine runs two sequential shards. Every invocation starts fresh isolated migrated synthetic
@@ -44,3 +44,20 @@ This deliberately conservative decimal 250 KB check addresses NFR-BW-001. It inc
 prefetches and headers; it does not claim mobile-network latency or load-test acceptance. All three
 engines must execute the same budget assertion. No runtime transfer measurement is claimed until
 hosted execution succeeds.
+
+## Final hosted verification
+
+Commit `96a16d0` passed [CI 37224172033](https://github.com/Jotham566/kasoma/actions/runs/37224172033):
+550 Python, 60 browser executions (20 each in Chromium/Firefox/WebKit) and five tooling checks.
+Clean setup/migrations, isolated logical recovery, lint/types/contracts/build, security scans/audits
+and container smoke all passed. Promoted to main; the completed browser branch was removed.
+
+| Engine | Cold response bytes including headers | Resources | Scripts | Ceiling |
+| --- | ---: | ---: | ---: | ---: |
+| Chromium | 191389 | 24 | 10 | 250000 |
+| Firefox | 194127 | 26 | 10 | 250000 |
+| WebKit | 193475 | 26 | 10 | 250000 |
+
+These are real Playwright wire-size measurements for the original media-free synthetic question
+fixture, not the earlier static gzip estimate or a warm-cache navigation. Branded previous/current
+releases, physical mobile devices, media budgets and network latency remain separate gates.

@@ -1,7 +1,7 @@
 # ADR-042: Isolated synthetic logical recovery drill
 
 Date: 4 October 2026
-Status: Accepted within delegated test/engineering discretion; verification pending
+Status: Accepted within delegated test/engineering discretion; local synthetic implementation verified by CI 37223872075
 Requirements: NFR-REL-002, NFR-SEC-002, NFR-MNT-001
 
 ## Decision

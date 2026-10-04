@@ -24,6 +24,11 @@
     "status": {
       "type": "integer"
     },
+    "response_start_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Server middleware entry to response headers; excludes network/body delivery."
+    },
     "schema_version": {
       "const": 1
     }

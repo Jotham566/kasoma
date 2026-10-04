@@ -24,7 +24,9 @@ def correlation_id(value: str | None) -> str:
         return str(uuid4())
 
 
-def emit(event: str, request_id: str, channel: str, status: int) -> None:
+def emit(
+    event: str, request_id: str, channel: str, status: int, *, response_start_ms: int | None = None
+) -> None:
     logger.info(
         json.dumps(
             {
@@ -33,6 +35,11 @@ def emit(event: str, request_id: str, channel: str, status: int) -> None:
                 "channel": channel,
                 "status": status,
                 "schema_version": 1,
+                **(
+                    {"response_start_ms": response_start_ms}
+                    if response_start_ms is not None
+                    else {}
+                ),
             },
             sort_keys=True,
         )

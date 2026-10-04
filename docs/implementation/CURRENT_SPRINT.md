@@ -1,68 +1,45 @@
-# Current Sprint: E4 guarded short-text preparation
+# Current Sprint: remaining MVP operational and grading gates
 
-Updated 4 October 2026. Main is `2ce14c3`. Completed conversation and channel operations branches
-have been removed. All work remains synthetic/local; no production model or messaging is enabled.
+Updated 4 October 2026. Main is `96a16d0`. Completed conversation, channel operations, short-text
+foundation, recovery and browser branches have been removed. Work remains synthetic/local.
 
-## Latest verified slices
+## Verified implementation
 
-- Five-question signed WhatsApp practice (`5063528`): [CI 37220225176](https://github.com/Jotham566/kasoma/actions/runs/37220225176),
-  469 Python, 20 browser and five tooling checks. Reply binding, shared score/mastery parity,
-  concurrency/replay, STOP/expiry, broker recovery and reviewed channel suitability pass.
-  [Conversation evidence](E7_CONVERSATION_VERIFICATION.md).
-- Minimized ADMIN channel operations (`34950b0`): [CI 37221185319](https://github.com/Jotham566/kasoma/actions/runs/37221185319),
-  479 Python, 20 browser and five tooling checks. Queue/status cohorts, bounded fake-dispatch p95
-  and threshold alerts pass. [Operations evidence](E8_CHANNEL_OPERATIONS_VERIFICATION.md).
+| Slice | Commit / hosted CI | Evidence |
+| --- | --- | --- |
+| Signed five-question WhatsApp practice | `5063528` / 37220225176 | 469 Python, 20 browser, five tooling checks; [report](E7_CONVERSATION_VERIFICATION.md) |
+| Minimized channel operations | `34950b0` / 37221185319 | 479 Python, 20 browser, five tooling checks; [report](E8_CHANNEL_OPERATIONS_VERIFICATION.md) |
+| Strict synthetic rubric candidate validation | `3b74f5b` / 37221835579 | 519 Python, 20 browser, five tooling checks; [report](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md) |
+| Fake dual-pass/budgeted rehearsal | `2ce14c3` / 37222368566 | 534 Python, 20 browser, five tooling checks; [report](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md) |
+| Isolated logical recovery | `42a6e08` / 37223872075 | 550 Python, 20 browser, five tooling checks; 52 tables/270 rows restored; [report](E9_RECOVERY_VERIFICATION.md) |
+| Three-engine journeys and cold transfer | `96a16d0` / 37224172033 | 550 Python, 60 browser, five tooling checks; 191389–194127 bytes; [report](E9_BROWSER_COVERAGE_VERIFICATION.md) |
 
-Both runs passed setup, clean migrations/seed, lint/types/contracts/build, security scans and
-container smoke. Native PostgreSQL checks failed before assertions; Docker.app is unavailable.
-Hosted acceptance does not claim that the local Docker installation has recovered.
+Each run also passed clean setup/migrations/seed, lint/types/contracts/build, security scans/audits
+and container smoke. Native database/browser attempts failed before assertions because Docker.app
+is unavailable. Hosted evidence does not claim that native installation has recovered. The first
+recovery run failed on a table-name check; it was fixed and the complete pipeline rerun.
 
 ## Active implementation
 
-- ADR-040 strict rubric candidate validation (`3b74f5b`): 40 new fixture cases, 357 local unit/contract
-  and five tooling checks with lint/types/contracts/security. Hosted CI 37221835579 passed 519 Python, 20 browser and five tooling checks plus all
-  migration/security/container gates. Published to main and its branch removed.
-  [Validation evidence](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md).
-- ADR-041 adds independent fake passes, one global schema repair and bounded request/token/deadline
-  accounting through ModelGateway. Fifteen additional tests pass; 372 local unit/contract and five
-  tooling checks with lint/types/contracts/security. Full CI 37222368566 passed 534 Python, 20 browser and five tooling checks with all
-  migration/security/container gates. Published to main; the orchestration branch was removed.
-  No candidate becomes a learner score.
-  [Rehearsal evidence](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md).
+NFR-OBS-001/FR-OPS-002: correlated API logs/spans now include additive response-start milliseconds
+without URLs or payloads. Six deterministic timing/privacy cases pass; all 394 local unit/contract
+and five tooling checks, lint/types/contracts and security pass. Hosted regression is pending.
+This is server response-start instrumentation, not full network timing or an aggregated p95 gate.
+[Timing evidence](E8_REQUEST_TIMING_VERIFICATION.md).
 
-Finish exact-commit hosted verification and publish verified work. Next: approved rubric/context
-loading and neutral learner fallback/persistence, while preserving the calibration enablement gate.
-Gateway telemetry, injection/domain detectors and live adapter enforcement remain required.
+## Next dependencies and acceptance work
 
-## Other MVP gates
-
-Measure feedback latency under the approved load; functional tests and fake-dispatch samples alone
-do not establish NFR-PERF-002. Continue remaining telemetry/usage controls. Prepare the concrete
-deletion/anonymization transform and tested recovery plan before seeking destructive-execution
-approval. Remaining hold coverage, large-history export and accountability expiry remain gaps.
-
-The [release register](RELEASE_GATES.md) records missing owner evidence: kickoff/capacity, exact
-NCDC mappings, rights and approved inventory, expert benchmark/calibration, privacy/guardian/DPIA,
-Week 8 provider decision, production OTP/MFA, restricted roles, restore/load and pilot sign-offs.
-No synthetic test, elapsed time or implementation ADR substitutes for those approvals.
-
-See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete evidence map.
-
-## Independent recovery preparation
-
-ADR-042 adds `make recovery-drill` and its hosted CI gate. The drill uses only databases it creates,
-original synthetic evidence and local PostgreSQL tooling. Native creation fails while Docker is
-unavailable; real restore verification remains pending. [Recovery evidence](E9_RECOVERY_VERIFICATION.md).
 The [short-text integration assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies the
-remaining rubric/pending-result/mastery boundaries; no candidate is inserted as a learner grade.
+required versioned rubric/criteria, pending/neutral result, idempotent worker, fallback and mastery
+boundaries. Automatic scoring remains disabled. Academic truth and benchmark/calibration approval
+cannot be inferred from fake output agreement.
 
-## Browser engine coverage
+Continue remaining AI/usage/domain telemetry and the agreed latency/load profile. Complete remaining
+hold coverage, large-history exports and accountability expiry. Prepare the concrete anonymization
+transform/recovery proposal before seeking destructive-execution approval. No immutable evidence
+is rewritten by the current slices.
 
-The full journey suite is configured for isolated sequential Chromium, Firefox and WebKit runs.
-Three inventories of 20 cases pass discovery; native runtime setup fails without PostgreSQL.
-Hosted 60-execution acceptance is pending. [Browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md).
-Branded current/previous versions and physical Android/Safari checks remain open.
-
-NFR-BW-001: the assessment journey measures encoded first-question transfer in a fresh context
-with no warm onboarding cache, includes response headers/prefetch and enforces 250,000 bytes.
-Only aggregate numeric metrics are logged. Real runtime measurements remain pending hosted checks.
+The [release register](RELEASE_GATES.md) tracks missing kickoff/capacity, exact NCDC mappings, rights
+and approved inventory, expert benchmarks, privacy/guardian/DPIA, Week 8 provider choice, production
+OTP/MFA/restricted roles, managed PITR/RPO/RTO, branded/mobile/versioned browser and pilot sign-offs.
+The approved 12-week deadline and all acceptance thresholds remain unchanged.

@@ -58,14 +58,14 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-PERF-001 | — | — | Not started |
 | NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
 | NFR-REL-001 | — | — | Not started |
-| NFR-REL-002 | Isolated synthetic logical recovery command (ADR-042) | 16 safety cases; [recovery evidence](E9_RECOVERY_VERIFICATION.md) | Implementation pending real hosted restore; production PITR/RPO/RTO pending |
+| NFR-REL-002 | Isolated synthetic logical recovery command (ADR-042) | 16 safety cases; [recovery evidence](E9_RECOVERY_VERIFICATION.md) | Synthetic logical recovery verified in CI 37223872075; production PITR/RPO/RTO pending |
 | NFR-SCL-001 | — | — | Not started |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
 | NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, assessment, diagnostic, progress/history and flag/triage axe/keyboard checks; remaining journey matrix pending |
-| NFR-BW-001 | Cold-context first-question encoded transfer check, including headers/prefetch and no media exclusions for the synthetic fixture | Existing assessment E2E journey; [browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md) | Measurement implemented; hosted 250,000-byte budget acceptance pending |
-| NFR-COMP-001 | Full journey harness for isolated Chromium/Firefox/WebKit runs | [Browser matrix evidence](E9_BROWSER_COVERAGE_VERIFICATION.md) | Matrix discovery passes; runtime verification and branded/current-previous/mobile acceptance pending |
-| NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs | Unit redaction and real worker propagation tests | Foundation verified; authenticated/domain traces pending |
+| NFR-BW-001 | Cold-context first-question encoded transfer check, including headers/prefetch and no media exclusions for the synthetic fixture | Existing assessment E2E journey; [browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md) | Synthetic cold transfer verified across three engines: 191389–194127 bytes; media/mobile/latency release checks remain |
+| NFR-COMP-001 | Full journey harness for isolated Chromium/Firefox/WebKit runs | [Browser matrix evidence](E9_BROWSER_COVERAGE_VERIFICATION.md) | 60 engine executions verified in CI 37224172033; branded/current-previous/mobile acceptance pending |
+| NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs; additive API response-start timing | Unit redaction and real worker propagation tests | Foundation verified; response-start timing hosted regression pending; aggregation/domain tracing remains partial |
 | NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | Full hosted synthetic regression evidence recorded per slice; release acceptance remains separately gated |
 | NFR-LOC-001 | English shell; UTC storage/wire; progress/history dates in Africa/Kampala | Configuration and browser history checks | Progress/history presentation implemented; wider localization review pending |
 
@@ -168,3 +168,12 @@ ADR-041 fake orchestration is verified for `2ce14c3` by
 [CI 37222368566](https://github.com/Jotham566/kasoma/actions/runs/37222368566): 534 Python,
 20 browser and five tooling checks plus clean migrations/security/container gates. All automatic
 learner scoring remains disabled. This supersedes earlier rehearsal-pending notes.
+
+NFR-OBS-001/FR-OPS-002/NFR-SEC-002: [request timing evidence](E8_REQUEST_TIMING_VERIFICATION.md)
+covers the additive privacy-safe response-start field and six contract cases. Aggregated latency,
+full network timing and load/SLO acceptance remain pending; a log sample is not a percentile gate.
+
+E9 final local acceptance: recovery `42a6e08` passed CI 37223872075 (550 Python/20 browser/five
+tooling checks, 52-table/270-row logical restore). Browser/transfer `96a16d0` passed CI 37224172033
+(550 Python/60 browser/five tooling checks, 191389–194127 response bytes). See the linked reports
+for exact scope and limits; earlier pending entries are historical, not current acceptance status.

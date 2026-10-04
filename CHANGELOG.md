@@ -1,5 +1,17 @@
 # Changelog
 
+## 4 October 2026 — verified recovery, browser engines and cold transfer
+
+- Promote recovery `42a6e08` after CI 37223872075: 550 Python/20 browser/five tooling checks and a verified 52-table, 270-row synthetic restore with clean cleanup.
+- Promote browser/transfer `96a16d0` after CI 37224172033: 550 Python/60 browser/five tooling checks, all security/container gates, and cold transfer of 191389–194127 bytes against 250000.
+- Remove both completed branches. Production PITR/RPO/RTO, branded/mobile/browser-version and real-network gates remain open.
+
+## 4 October 2026 — minimized API response-start timing
+
+- Add monotonic response-start milliseconds to correlated API logs and spans (NFR-OBS-001/FR-OPS-002), including safe error paths.
+- Extend the event schema additively; preserve worker events and omit URLs, query parameters, identities, credentials and payloads.
+- Add six deterministic timing/redaction/compatibility cases. This is instrumentation, not aggregated p95 or load/SLO acceptance. No architectural decision changes.
+
 ## 4 October 2026 — browser engine regression matrix
 
 - Add a cold-context first-question transfer assertion (NFR-BW-001), counting encoded bodies and headers against 250,000 bytes; runtime measurements remain pending.

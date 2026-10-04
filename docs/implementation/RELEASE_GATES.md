@@ -1,6 +1,6 @@
 # MVP release gates — outstanding evidence
 
-Reviewed 3 October 2026. This register records missing release evidence, not exceptions.
+Reviewed 4 October 2026. This register records missing release evidence, not exceptions.
 The [requirements register](REQUIREMENTS_TRACEABILITY.md) remains authoritative for code
 coverage. Synthetic fixtures, automated tests and developer-authored ADRs do not constitute
 academic, legal, safeguarding or production-provider approval.
@@ -37,3 +37,11 @@ Sources: [ADR-017](../decisions/ADR/017-readiness-resolutions.md),
 [security/privacy](../specifications/09_Security_Privacy_and_Safeguarding.md),
 [production decisions](../specifications/16_Production_Pilot_Decisions.md),
 [coding contract](../specifications/12_Coding_LLM_Operating_Contract.md).
+
+## Verified engineering evidence added 4 October
+
+Local synthetic logical restore now passes, including 52 tables, 270 rows, pgvector and selected
+immutable guards; see [recovery verification](E9_RECOVERY_VERIFICATION.md). Three browser engines
+pass 60 journey executions and cold question transfer stays below 250,000 bytes; see
+[browser verification](E9_BROWSER_COVERAGE_VERIFICATION.md). These reduce engineering gaps but
+do not replace production PITR/RPO/RTO, branded/mobile tests, academic approval or owner sign-off.

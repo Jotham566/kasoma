@@ -1,5 +1,7 @@
 from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
+from math import ceil
+from time import perf_counter
 
 from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
@@ -80,6 +82,7 @@ def create_app(
         request: Request,
         call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
+        started = perf_counter()
         request_id = correlation_id(request.headers.get("request_id"))
         request.state.request_id = request_id
         with tracer.start_as_current_span("api.request") as span:
@@ -92,7 +95,16 @@ def create_app(
             response.headers["X-Content-Type-Options"] = "nosniff"
             response.headers["Cache-Control"] = "no-store"
             channel = "WHATSAPP" if request.url.path == "/api/v1/webhooks/whatsapp" else "WEB"
-            emit("api.request", request_id, channel, response.status_code)
+            response_start_ms = max(0, ceil((perf_counter() - started) * 1000))
+            span.set_attribute("http.response.status_code", response.status_code)
+            span.set_attribute("response_start_ms", response_start_ms)
+            emit(
+                "api.request",
+                request_id,
+                channel,
+                response.status_code,
+                response_start_ms=response_start_ms,
+            )
             return response
 
     @app.exception_handler(WebhookRejected)
