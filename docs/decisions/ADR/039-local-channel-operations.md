@@ -1,7 +1,7 @@
 # ADR-039: Minimized local channel operations
 
 Date: 4 October 2026
-Status: Accepted within delegated MVP implementation discretion; implementation in progress
+Status: Accepted within delegated MVP implementation discretion; synthetic implementation verified in CI 37221185319
 Requirements: FR-OPS-002/004, NFR-OBS-001, NFR-PERF-002, NFR-SEC-002
 
 ## Decision

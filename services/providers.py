@@ -1,20 +1,22 @@
 """Provider boundaries for the foundation; no learner grading is enabled."""
 
 import smtplib
+from collections.abc import Sequence
 from email.message import EmailMessage
 from typing import Literal, Protocol
 from urllib.parse import urlsplit
+from uuid import UUID
 
 import httpx
 from minio import Minio
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, JsonValue
 from urllib3 import PoolManager, Timeout
 
 from services.config import Settings, require_local
 
 
 class ModelTask(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
     task: Literal[
         "grade_short_answer",
         "rephrase_explanation",
@@ -23,8 +25,15 @@ class ModelTask(BaseModel):
     ]
     schema_version: Literal[1] = 1
     classification: Literal["synthetic"] = "synthetic"
-    prompt_version: str
-    text: str
+    prompt_version: str = Field(min_length=1, max_length=80)
+    text: str = Field(max_length=2000, repr=False)
+    context_references: list[UUID] = Field(default_factory=list, max_length=20)
+    structured_input: dict[str, JsonValue] = Field(default_factory=dict, repr=False)
+    response_schema: dict[str, JsonValue] = Field(default_factory=dict, repr=False)
+    timeout_ms: int = Field(default=1000, ge=1, le=30000, strict=True)
+    max_input_tokens: int = Field(default=4096, ge=1, le=8192, strict=True)
+    max_output_tokens: int = Field(default=1024, ge=1, le=4096, strict=True)
+    max_cost_usd: Literal[0] = 0
 
 
 class ModelResult(BaseModel):
@@ -34,6 +43,10 @@ class ModelResult(BaseModel):
     model: str
     schema_version: Literal[1] = 1
     adapter_version: Literal["foundation-1"] = "foundation-1"
+    raw_output: str | None = Field(default=None, max_length=16384, repr=False)
+    input_tokens: int = Field(default=0, ge=0, le=8192, strict=True)
+    output_tokens: int = Field(default=0, ge=0, le=4096, strict=True)
+    flagged: bool = Field(default=False, strict=True)
 
 
 class ModelGateway(Protocol):
@@ -41,7 +54,17 @@ class ModelGateway(Protocol):
 
 
 class FakeModelProvider:
+    def __init__(self, fixtures: Sequence[ModelResult | Exception] = ()) -> None:
+        self._fixtures = list(fixtures)
+        self.calls: list[ModelTask] = []
+
     def execute(self, task: ModelTask) -> ModelResult:
+        self.calls.append(task.model_copy(deep=True))
+        if self._fixtures:
+            fixture = self._fixtures.pop(0)
+            if isinstance(fixture, Exception):
+                raise fixture
+            return fixture.model_copy(deep=True)
         return ModelResult(status="LOW_CONFIDENCE", provider="fake", model="fixture-v1")
 
 

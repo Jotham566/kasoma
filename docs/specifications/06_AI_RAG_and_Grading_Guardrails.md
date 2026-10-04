@@ -218,3 +218,7 @@ The initial offline validator is recorded in [ADR-040](../decisions/ADR/040-shor
 and [E4 verification](../implementation/E4_SHORT_TEXT_VALIDATION_VERIFICATION.md). It accepts exact
 response quotes and authored feedback only; a valid candidate does not authorize a learner score.
 All eligibility, gateway, dual-pass, calibration and learner fallback requirements above still apply.
+
+The next fake-only orchestration boundary is [ADR-041](../decisions/ADR/041-synthetic-short-text-rehearsal.md),
+with [verification](../implementation/E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md). It preserves all
+academic enablement gates and does not introduce live inference or learner scores.

@@ -1,6 +1,6 @@
 # E8 local channel operations verification
 
-Status: implementation in progress; application verification pending.
+Status: local/synthetic application verified; release performance and production gates remain.
 Requirements: FR-OPS-002/004, NFR-OBS-001, NFR-SEC-002; contributes instrumentation toward NFR-PERF-002.
 Decision: [ADR-039](../decisions/ADR/039-local-channel-operations.md).
 
@@ -42,3 +42,11 @@ application assertion. These are failed native attempts, not migration or teleme
 A later native probe also found the Docker CLI symlink target under Docker.app absent. The
 repository does not repair or replace that host installation; hosted checks remain the database
 verification path. Existing local database errors are preserved as failed attempts.
+
+## Final hosted acceptance
+
+Commit `34950b0` passed [CI 37221185319](https://github.com/Jotham566/kasoma/actions/runs/37221185319):
+317 unit/contract and 162 integration tests (479 Python total), 20 browser and five tooling checks.
+Setup, clean migrations/seed, lint/types/contracts/build, security audits/source/image scans and
+container smoke all passed. Main now contains the slice and its completed branch was removed.
+This supersedes pre-hosted pending notes but does not erase the failed native setup attempts.

@@ -260,3 +260,9 @@ existing safe alert logging. No learner delivery, load/SLO, cloud or production 
 See [ADR-040](../decisions/ADR/040-short-text-candidate-validation.md). Strict rubric/evidence/context
 validation rejects unsupported candidate output without learner scoring. Independent passes,
 repair, academic calibration and learner fallback remain required integration gates.
+
+### ADR-041 — budgeted synthetic dual-pass rehearsal
+
+See [ADR-041](../decisions/ADR/041-synthetic-short-text-rehearsal.md). The shared gateway gains
+additive structured task/ceiling fields and deterministic fixtures. Independent passes, one global
+schema repair and fail-closed budgets produce internal candidates only; automatic scoring stays off.

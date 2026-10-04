@@ -1,58 +1,46 @@
-# Current Sprint: E7 shared WhatsApp practice
+# Current Sprint: E4 guarded short-text preparation
 
-Updated 4 October 2026. Main is `5063528`; the completed conversation and foundation branches have been removed.
+Updated 4 October 2026. Main is `34950b0`. Completed conversation and channel operations branches
+have been removed. All work remains synthetic/local; no production model or messaging is enabled.
 
-## Latest verified slice
+## Latest verified slices
 
-Internal channel assessment capability and three-format score/mastery parity passed
-[hosted CI 37217857047](https://github.com/Jotham566/kasoma/actions/runs/37217857047):
-437 Python tests, 20 browser tests and five tooling checks. Setup, clean migrations/seed,
-lint/types/contracts/build, security and container smoke all passed. Migration 0019 admits
-immutable WHATSAPP provenance while preserving public WEB-only contracts, existing evidence
-guards and shared grading/mastery. See [transaction evidence](E7_SHARED_TRANSACTIONS_VERIFICATION.md).
+- Five-question signed WhatsApp practice (`5063528`): [CI 37220225176](https://github.com/Jotham566/kasoma/actions/runs/37220225176),
+  469 Python, 20 browser and five tooling checks. Reply binding, shared score/mastery parity,
+  concurrency/replay, STOP/expiry, broker recovery and reviewed channel suitability pass.
+  [Conversation evidence](E7_CONVERSATION_VERIFICATION.md).
+- Minimized ADMIN channel operations (`34950b0`): [CI 37221185319](https://github.com/Jotham566/kasoma/actions/runs/37221185319),
+  479 Python, 20 browser and five tooling checks. Queue/status cohorts, bounded fake-dispatch p95
+  and threshold alerts pass. [Operations evidence](E8_CHANNEL_OPERATIONS_VERIFICATION.md).
 
-Prior verified dependencies include local linking/intake/STOP (`23da19c`), shared transactions
-(`50044d4`) and objective question/reply formatting (`dd1c8d8`). These are synthetic/local gates;
-no production messaging or academic content approval follows from these tests.
+Both runs passed setup, clean migrations/seed, lint/types/contracts/build, security scans and
+container smoke. Native PostgreSQL checks failed before assertions; Docker.app is unavailable.
+Hosted acceptance does not claim that the local Docker installation has recovered.
 
-## Conversation acceptance
+## Active implementation
 
-Commit `5063528` passed full [CI 37220225176](https://github.com/Jotham566/kasoma/actions/runs/37220225176):
-469 Python, 20 browser and five tooling checks, clean migrations and all security/container gates.
-It is on main; the conversation branch has been removed. This verifies signed reply-bound practice,
-shared grading/mastery, STOP/expiry, broker-outage recovery and channel-suitability enforcement.
-Native database checks failed at setup because Docker/PostgreSQL is unavailable; hosted proof is
-separate and does not claim native acceptance. See [conversation evidence](E7_CONVERSATION_VERIFICATION.md).
+- ADR-040 strict rubric candidate validation (`3b74f5b`): 40 new fixture cases, 357 local unit/contract
+  and five tooling checks with lint/types/contracts/security. Hosted verification is running.
+  [Validation evidence](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md).
+- ADR-041 adds independent fake passes, one global schema repair and bounded request/token/deadline
+  accounting through ModelGateway. Fifteen additional tests pass; 372 local unit/contract and five
+  tooling checks with lint/types/contracts/security. No candidate becomes a learner score.
+  [Rehearsal evidence](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md).
 
-## Next implementation and gates
+Finish exact-commit hosted verification and publish verified work. Next: approved rubric/context
+loading and neutral learner fallback/persistence, while preserving the calibration enablement gate.
+Gateway telemetry, injection/domain detectors and live adapter enforcement remain required.
 
-Finish pending channel operations hosted verification. Measure deterministic feedback latency under the normal worker;
-functional tests alone do not establish NFR-PERF-002. Continue remaining telemetry/usage controls and
-guarded short-text preparation within the synthetic profile.
+## Other MVP gates
 
-Prepare the concrete deletion/anonymization transform and tested recovery plan before seeking the
-required destructive-execution approval. Remaining channel/record hold coverage, large-history export
-and six-year accountability expiry remain explicit gaps. Preserve immutable evidence meanwhile.
+Measure feedback latency under the approved load; functional tests and fake-dispatch samples alone
+do not establish NFR-PERF-002. Continue remaining telemetry/usage controls. Prepare the concrete
+deletion/anonymization transform and tested recovery plan before seeking destructive-execution
+approval. Remaining hold coverage, large-history export and accountability expiry remain gaps.
 
-See the [release gate register](RELEASE_GATES.md) for required owner evidence: kickoff/capacity,
-exact NCDC mappings, rights, approved inventory, expert benchmark/calibration, privacy/guardian/DPIA,
-Week 8 provider choice, production OTP/MFA, restricted roles, restore/load and pilot sign-offs.
-No elapsed time or synthetic test pass substitutes for those approvals.
+The [release register](RELEASE_GATES.md) records missing owner evidence: kickoff/capacity, exact
+NCDC mappings, rights and approved inventory, expert benchmark/calibration, privacy/guardian/DPIA,
+Week 8 provider decision, production OTP/MFA, restricted roles, restore/load and pilot sign-offs.
+No synthetic test, elapsed time or implementation ADR substitutes for those approvals.
 
-Prior evidence: [imports](E2_IMPORTS_VERIFICATION.md), [linking](E7_LINKING_READINESS.md),
-[legal holds](E8_LEGAL_HOLDS_VERIFICATION.md), [reassessment](E4_REASSESSMENT_VERIFICATION.md),
-[progress](E6_PROGRESS_VERIFICATION.md), [traceability](REQUIREMENTS_TRACEABILITY.md).
-
-## Independent channel operations follow-up
-
-ADR-039 adds bounded channel queue/status/timing visibility to the existing ADMIN dashboard.
-Migration 0021 contains indexes only. Generated contracts, typed thresholds, alert schemas and
-unit/database/browser regressions accompany the implementation. Verification is pending; local
-fake-dispatch percentiles cannot satisfy the release latency/load gate by themselves.
-
-## Next short-text boundary
-
-ADR-040 adds offline strict candidate validation for FR-GRD-003/004/005. Forty fixture cases pass;
-357 unit/contract and five tooling checks pass with lint/types/contracts. No short-text learner
-route or model execution is enabled. Next: budgeted fake gateway orchestration and dual independent
-passes with bounded repair, retaining academic calibration and learner fallback gates.
+See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete evidence map.

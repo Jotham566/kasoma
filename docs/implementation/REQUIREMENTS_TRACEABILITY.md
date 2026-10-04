@@ -150,3 +150,12 @@ Commit `5063528` passed [CI 37220225176](https://github.com/Jotham566/kasoma/act
 gates. This supersedes the preceding conversation-pending notes for FR-WA-002/003/004/005/006
 and FR-CNT-004. See [final evidence](E7_CONVERSATION_VERIFICATION.md). Production transport,
 academic approval and measured latency/load remain pending.
+
+FR-GRD-003/004/005 and NFR-SEC-002 rehearsal: [E4 evidence](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md)
+covers 15 FakeModelProvider orchestration cases and bounded dual passes/repair. No scoring, model
+inference, academic calibration, full gateway telemetry or learner fallback acceptance is claimed.
+
+ADR-039 local channel operations acceptance is now verified for `34950b0` by
+[CI 37221185319](https://github.com/Jotham566/kasoma/actions/runs/37221185319): 479 Python,
+20 browser and five tooling checks plus clean migrations/security/container gates. This supersedes
+the pending telemetry note above; remaining AI/HTTP/production metrics and release SLOs stay open.

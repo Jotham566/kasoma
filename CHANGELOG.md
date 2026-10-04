@@ -1,5 +1,17 @@
 # Changelog
 
+## 4 October 2026 — verified local channel operations
+
+- Promote `34950b0` to main after full CI 37221185319: 479 Python, 20 browser and five tooling checks plus clean migrations, security scans and container smoke.
+- Verify bounded ADMIN channel queues/status cohorts, sampled fake-feedback dispatch timing and configurable alerts (FR-OPS-002/004, NFR-OBS-001). Remove the completed branch.
+- Synthetic fake acceptance timings do not establish production delivery or performance SLOs.
+
+## 4 October 2026 — budgeted fake short-text rehearsal
+
+- Add independent rubric passes, one global schema repair and bounded request/token/deadline handling through the existing ModelGateway (FR-GRD-003/004/005).
+- Extend FakeModelProvider with deterministic candidate/exception fixtures; failures remain payload-free and agreement never enables learner scoring.
+- Record ADR-041 and 15 new tests; local lint/types/contracts and 372 unit/contract plus five tooling checks pass. Hosted regression and academic/learner integration gates remain pending.
+
 ## 4 October 2026 — verified five-question WhatsApp conversations
 
 - Promote `5063528` to main after full hosted CI 37220225176: 469 Python, 20 browser and five tooling checks plus clean migrations/security/container gates.
