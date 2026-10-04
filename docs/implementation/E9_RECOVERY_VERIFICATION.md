@@ -31,3 +31,11 @@ all existing full application/browser/security gates still follow it.
 
 Follow-up local lint/types/contracts and 388 unit/contract plus five tooling checks pass; the new
 16th safety case rejects non-PostgreSQL schemes before any resource operation.
+
+## First hosted failure and repair
+
+[CI 37223461188](https://github.com/Jotham566/kasoma/actions/runs/37223461188) migrated and populated
+the isolated source, then failed CAPTURE_INVENTORY. The nonempty-evidence check used `consents`
+instead of the actual `consent_records` table. Cleanup succeeded with no databases left behind.
+Use authoritative ORM table names for all five required evidence classes. Repeat real restore
+and full hosted checks before acceptance; this failed run does not prove backup/restore.

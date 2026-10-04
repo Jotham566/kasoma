@@ -4,6 +4,7 @@
 
 - Add `make recovery-drill`, original synthetic assessment fixtures and a hosted CI recovery gate for NFR-REL-002.
 - Restore only into a fresh database created by the drill; compare every table inventory, pgvector and selected immutable guards; never overwrite or copy the developer database.
+- Fix the first hosted inventory check to use ORM table names, including `consent_records`; failed-run temporary database cleanup succeeded.
 - Add ADR-042, 16 profile/cleanup contract cases and a runbook. Native database creation is unavailable; hosted restore acceptance and production PITR/RPO/RTO remain pending.
 
 ## 4 October 2026 — verified local channel operations

@@ -1,6 +1,6 @@
 # Current Sprint: E4 guarded short-text preparation
 
-Updated 4 October 2026. Main is `3b74f5b`. Completed conversation and channel operations branches
+Updated 4 October 2026. Main is `2ce14c3`. Completed conversation and channel operations branches
 have been removed. All work remains synthetic/local; no production model or messaging is enabled.
 
 ## Latest verified slices
@@ -25,7 +25,9 @@ Hosted acceptance does not claim that the local Docker installation has recovere
   [Validation evidence](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md).
 - ADR-041 adds independent fake passes, one global schema repair and bounded request/token/deadline
   accounting through ModelGateway. Fifteen additional tests pass; 372 local unit/contract and five
-  tooling checks with lint/types/contracts/security. No candidate becomes a learner score.
+  tooling checks with lint/types/contracts/security. Full CI 37222368566 passed 534 Python, 20 browser and five tooling checks with all
+  migration/security/container gates. Published to main; the orchestration branch was removed.
+  No candidate becomes a learner score.
   [Rehearsal evidence](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md).
 
 Finish exact-commit hosted verification and publish verified work. Next: approved rubric/context

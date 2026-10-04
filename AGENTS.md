@@ -105,7 +105,8 @@ Internal channel selection and objective grading/mastery parity are verified und
 End-to-end five-question WhatsApp conversations, reply binding, shared grading, STOP/expiry and
 safe fake delivery are verified under ADR-038. Deletion/anonymization, remaining
 hold coverage, large-history fulfillment and accountability-retention processors remain pending.
-Academic calibration and production deployment remain pending. See
+Offline synthetic short-text candidate validation and budgeted fake dual-pass rehearsal are
+verified; learner short-text integration, academic calibration and production deployment remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

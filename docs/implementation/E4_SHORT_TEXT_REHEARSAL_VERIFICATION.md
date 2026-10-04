@@ -23,3 +23,11 @@ no security rule was disabled and no credential was present. Repeat security che
 
 After the rename, the full local formatting/lint/types/contracts, 372 unit/contract and five tooling
 checks pass. `make security` passes Bandit, local secret checks and both dependency audits.
+
+## Hosted acceptance
+
+Commit `2ce14c3` passed [CI 37222368566](https://github.com/Jotham566/kasoma/actions/runs/37222368566):
+372 unit/contract plus 162 integration tests (534 Python), 20 browser and five tooling checks.
+Setup, clean migrations/seed, lint/types/contracts/build, security scans/audits and container smoke
+all passed. Promoted to main; the completed orchestration branch was removed. This supersedes
+pre-hosted pending notes and proves fake orchestration only, not academic or learner scoring gates.
