@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ephemeral identity expiry operational event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event",
+    "correlation_id",
+    "status",
+    "challenges",
+    "rate_buckets",
+    "schema_version"
+  ],
+  "properties": {
+    "event": { "const": "identity.ephemeral_expiry" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "status": { "enum": ["SUCCEEDED", "FAILED"] },
+    "challenges": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "rate_buckets": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "schema_version": { "const": 1 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "FAILED" } } },
+      "then": {
+        "properties": {
+          "challenges": { "const": 0 },
+          "rate_buckets": { "const": 0 }
+        }
+      }
+    }
+  ]
+}

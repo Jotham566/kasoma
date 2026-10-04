@@ -110,7 +110,7 @@ class IdentityService:
     def rate(self, db: Session, key: str, limit: int, seconds: int) -> bool:
         key = self.digest("rate", key)
         self.lock(db, key)
-        bucket = db.get(RateBucket, key)
+        bucket = db.scalar(select(RateBucket).where(RateBucket.key == key).with_for_update())
         now = self.clock()
         if bucket is None:
             bucket = RateBucket(key=key, count=0, expires_at=now + timedelta(seconds=seconds))
@@ -153,8 +153,6 @@ class IdentityService:
             if body.purpose != "LOGIN":
                 owner = self.authenticate(db, token, recent=True).user_id
             now = self.clock()
-            db.execute(delete(Challenge).where(Challenge.expires_at <= now))
-            db.execute(delete(RateBucket).where(RateBucket.expires_at <= now))
             permitted = [
                 self.rate(db, "peer:" + peer, 20, 3600),
                 self.rate(db, "device:" + str(body.device_id), 10, 3600),

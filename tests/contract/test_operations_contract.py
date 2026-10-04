@@ -120,6 +120,7 @@ def test_operational_worker_schedule():
         "kasoma.monitor_operations",
         "kasoma.content_imports",
         "kasoma.expire_exports",
+        "kasoma.expire_identity",
         "kasoma.channel_messages",
     ],
 )

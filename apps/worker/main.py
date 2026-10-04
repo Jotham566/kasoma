@@ -8,6 +8,7 @@ from services.content_imports import process_imports
 from services.data_exports import expire
 from services.database import engine_for
 from services.identity import IdentityService
+from services.identity_expiry import expire_identity
 from services.observability import correlation_id, emit, tracer
 from services.operations import monitor
 from services.providers import FakeMessagingProvider
@@ -37,6 +38,7 @@ def make_worker(settings: Settings) -> Celery:
                 "options": {"queue": "messaging"},
             },
             "monitor-operations": {"task": "kasoma.monitor_operations", "schedule": 60.0},
+            "expire-identity": {"task": "kasoma.expire_identity", "schedule": 60.0},
             "expire-exports": {"task": "kasoma.expire_exports", "schedule": 300.0},
             "content-imports": {
                 "task": "kasoma.content_imports",
@@ -61,6 +63,16 @@ def make_worker(settings: Settings) -> Celery:
         try:
             fake = FakeMessagingProvider()
             return expire(IdentityService(engine, settings, fake, fake), UUID(request_id))
+        finally:
+            engine.dispose()
+
+    @app.task(shared=False, name="kasoma.expire_identity", bind=True)  # type: ignore[untyped-decorator]
+    def identity_expiry(task: Any) -> dict[str, int]:
+        request_id = correlation_id((task.request.headers or {}).get("kasoma_correlation_id"))
+        engine = engine_for(settings)
+        try:
+            fake = FakeMessagingProvider()
+            return expire_identity(IdentityService(engine, settings, fake, fake), UUID(request_id))
         finally:
             engine.dispose()
 

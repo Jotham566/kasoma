@@ -1,5 +1,16 @@
 # Changelog
 
+## 4 October 2026 — verified API timing
+
+- Promote `74a4a8f` after CI 37226011029 passes 556 Python, 60 browser and five tooling checks, clean migration/recovery, security and container gates.
+- Remove the completed request-timing branch; aggregated latency and load acceptance remain pending.
+
+## 4 October 2026 — bounded ephemeral authentication expiry
+
+- Move existing expired OTP/rate-bucket cleanup out of login requests into a bounded worker task every 60 seconds (FR-ID-001, security retention specification, NFR-OBS-001).
+- Lock rate buckets before loading/refreshing them so concurrent cleanup cannot invalidate a request; skip locked rows and retain active windows.
+- Add batch/boundary/concurrency/rollback/redaction tests and a closed count-only event schema. Preserve OTP validity, consent, sessions, learning and accountability evidence. No migration, provider or architectural change.
+
 ## 4 October 2026 — individual learning-record holds
 
 - Extend FR-ID-006/BR-010 preservation to grades, mastery evidence and mastery history under ADR-043; keep independent recent-OTP ADMIN claim, finite exact-record decisions and immutable audit receipts.

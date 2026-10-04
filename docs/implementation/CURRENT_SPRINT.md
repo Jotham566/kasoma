@@ -1,7 +1,7 @@
 # Current Sprint: remaining MVP operational and grading gates
 
-Updated 4 October 2026. Main is `96a16d0`. Completed conversation, channel operations, short-text
-foundation, recovery and browser branches have been removed. Work remains synthetic/local.
+Updated 4 October 2026. Main is `74a4a8f`. Completed conversation, channel operations, short-text
+foundation, recovery, browser and request-timing branches have been removed. Work remains synthetic/local.
 
 ## Verified implementation
 
@@ -12,6 +12,7 @@ foundation, recovery and browser branches have been removed. Work remains synthe
 | Strict synthetic rubric candidate validation | `3b74f5b` / 37221835579 | 519 Python, 20 browser, five tooling checks; [report](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md) |
 | Fake dual-pass/budgeted rehearsal | `2ce14c3` / 37222368566 | 534 Python, 20 browser, five tooling checks; [report](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md) |
 | Isolated logical recovery | `42a6e08` / 37223872075 | 550 Python, 20 browser, five tooling checks; 52 tables/270 rows restored; [report](E9_RECOVERY_VERIFICATION.md) |
+| API response-start timing | `74a4a8f` / 37226011029 | 556 Python, 60 browser, five tooling checks; [report](E8_REQUEST_TIMING_VERIFICATION.md) |
 | Three-engine journeys and cold transfer | `96a16d0` / 37224172033 | 550 Python, 60 browser, five tooling checks; 191389–194127 bytes; [report](E9_BROWSER_COVERAGE_VERIFICATION.md) |
 
 Each run also passed clean setup/migrations/seed, lint/types/contracts/build, security scans/audits
@@ -21,12 +22,6 @@ recovery run failed on a table-name check; it was fixed and the complete pipelin
 
 ## Active implementation
 
-NFR-OBS-001/FR-OPS-002: correlated API logs/spans now include additive response-start milliseconds
-without URLs or payloads. Six deterministic timing/privacy cases pass; all 394 local unit/contract
-and five tooling checks, lint/types/contracts and security pass. Hosted regression is pending.
-This is server response-start instrumentation, not full network timing or an aggregated p95 gate.
-[Timing evidence](E8_REQUEST_TIMING_VERIFICATION.md).
-
 NFR-SEC-002: a temporary restricted database login now exercises objective assessment, idempotency,
 mastery evidence and explicit permission denials. Hosted database execution is pending; the native
 fixture cannot connect. Default application credentials are unchanged.
@@ -35,6 +30,11 @@ fixture cannot connect. Default application credentials are unchanged.
 FR-ID-006/BR-010: ADR-043 adds exact grade/mastery evidence/history hold targets with ownership
 locks and unchanged immutable protections. Local 397 unit/contract checks pass; hosted migration/
 application acceptance is pending. [Learning hold evidence](E8_LEARNING_HOLDS_VERIFICATION.md).
+
+FR-ID-001/NFR-OBS-001: bounded worker expiry replaces request-triggered bulk removal of expired
+OTP/rate records. Row locks protect rate refresh against cleanup. Local 400 unit/contract checks pass; hosted
+acceptance is pending;
+[expiry evidence](E1_EPHEMERAL_EXPIRY_VERIFICATION.md).
 
 ## Next dependencies and acceptance work
 

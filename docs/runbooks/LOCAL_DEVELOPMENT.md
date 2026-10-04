@@ -614,3 +614,16 @@ not its parents, children or an entire account. Never infer deletion clearance f
 Expiry/release does not remove immutable evidence. See
 [verification](../implementation/E8_LEARNING_HOLDS_VERIFICATION.md) and
 [ADR-043](../decisions/ADR/043-learning-record-holds.md).
+
+## Expired authentication material
+
+The operations worker/beat started by `make dev` runs kasoma.expire_identity every 60 seconds.
+Each batch removes at most 100 already-expired OTP challenges and 100 expired rate buckets,
+skipping locked rows. OTP requests no longer perform bulk deletion. Expired codes remain invalid
+regardless of worker availability; active windows and account/consent/learning evidence remain.
+
+Inspect identity.ephemeral_expiry status/count events and the existing worker heartbeat when
+investigating cleanup. FAILED means the transaction rolled back and both committed counts are zero;
+normal scheduled retries can continue. Do not print records, reset rate limits, delete by prefix or
+clear tables to resolve a backlog. See
+[verification](../implementation/E1_EPHEMERAL_EXPIRY_VERIFICATION.md).

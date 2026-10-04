@@ -186,3 +186,12 @@ FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002 learning-record holds:
 [verification](E8_LEARNING_HOLDS_VERIFICATION.md), [ADR-043](../decisions/ADR/043-learning-record-holds.md).
 Grade/mastery evidence/history ownership and guards are implemented with hosted acceptance pending;
 full hold coverage and deletion remain incomplete.
+
+FR-ID-001 and security §6 ephemeral OTP retention, supporting NFR-OBS-001:
+[bounded expiry verification](E1_EPHEMERAL_EXPIRY_VERIFICATION.md). Scheduled cleanup and
+rate-refresh locking are implemented; hosted acceptance is pending. Account/session/audit retention
+and other privacy processors remain separate gaps.
+
+NFR-OBS-001/FR-OPS-002 timing is verified at `74a4a8f` in hosted CI 37226011029: 556 Python,
+60 browser and five tooling checks plus recovery, security and container gates. Main updated and
+the completed branch removed. Aggregated p95/load evidence remains pending.

@@ -1,7 +1,7 @@
 # E8 minimized response-start timing
 
 Requirements: NFR-OBS-001, FR-OPS-002, NFR-SEC-002; instrumentation toward NFR-PERF-001.
-Status: local contract verification; hosted application regression pending.
+Status: verified and pushed to main at `74a4a8f`; completed branch removed.
 
 `apps/api/main.py` measures elapsed monotonic time from outer correlation middleware entry until
 the response headers are ready. Round up to integer milliseconds and emit optional `response_start_ms`
@@ -27,3 +27,9 @@ is restored; hosted full checks are required before promotion.
 Local `make format lint openapi-check test-unit security` passes 394 unit/contract and five tooling
 checks, including all six timing cases, plus types, event formatting, contract comparison, Bandit,
 local secret checks and Python/JavaScript dependency audits. HTTP schemas are unchanged.
+
+[Hosted CI 37226011029](https://github.com/Jotham566/kasoma/actions/runs/37226011029) passes 556 Python
+checks (394 unit/contract, 162 integration), 60 browser journeys and five tooling checks, clean
+setup/migrations/seed, logical recovery (52 tables, 270 rows), all lint/types/contracts/build,
+security scans/audits and container smoke. Native Docker remains unavailable. Aggregated latency
+and agreed-load SLO acceptance remain separate gaps.
