@@ -181,3 +181,7 @@ for exact scope and limits; earlier pending entries are historical, not current 
 NFR-SEC-002 assessment database permission profile: [verification](E9_RUNTIME_ROLE_VERIFICATION.md).
 The focused real-login integration test is implemented; hosted acceptance is pending. Local database
 setup is unavailable. Production role provisioning and complete module grant coverage remain partial.
+
+NFR-SEC-002 restricted-login follow-up: first hosted execution found a missing users-row locking
+grant in the test profile. The narrow display_name update grant now enables the existing trigger;
+identity/status/birth-date denial assertions remain. Acceptance is pending a complete rerun.
