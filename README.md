@@ -6,19 +6,23 @@ Kasoma's planned learning loop is **Diagnose → Recommend → Practice → Expl
 
 ## Repository status
 
-E0 foundation, E1 local identity/consent and E2 synthetic content review are merged.
-E3 synthetic choice assessment is merged (`22773fd`, hosted CI passed).
-E4 numeric grading is merged (`7d2c8ed`); the MinIO setup repair (`ee73741`) passed hosted CI.
-The E5 diagnostic/mastery and recommended-practice slices are on main (`88dd880`, hosted CI passed).
-Reviewed hints (`3c0c3ba`) and unseen reassessment (`73c1fba`) are on main.
-E6 progress/history is on main (`df855ab`), followed by flags/triage (`bd9dae3`).
-Exact-set multiple-choice support (`02f96bc`) and data-request intake (`68146b9`) are on main.
-Owned JSON exports and expiry (`d20c344`) and administrator deletion-impact preview
-(`6f7f210`) are on main. Specific-record legal holds are local for review; see
-[verification](docs/implementation/E8_LEGAL_HOLDS_VERIFICATION.md).
-Production learner features and deployment remain disabled. See the [Phase 0 assessment](docs/implementation/PHASE_0_ASSESSMENT.md)
-and [current sprint](docs/implementation/CURRENT_SPRINT.md) for verified evidence and remaining gates.
-The [verification report](docs/implementation/E0_VERIFICATION.md) includes commands, results and the full change inventory.
+The local synthetic implementation includes identity/consent, independent content review, choice/
+multiple-choice/numeric assessment, diagnostic/mastery, recommended practice, hints/reassessment,
+progress/history, content flags/triage, bounded JSON imports, data-request exports/expiry, deletion
+previews and specific-record legal holds. Linked five-question WhatsApp practice uses the shared
+grading/mastery service with fake transport, signed durable intake and STOP barriers.
+
+ADMIN operations includes channel queue/status and fake-dispatch timing. Offline short-text
+candidate validation and budgeted dual-pass rehearsal are implemented; learner short-text scoring
+is disabled. An isolated synthetic logical restore and 60 Chromium/Firefox/WebKit journey
+executions pass; cold first-question transfer is below 250,000 bytes in those fixtures.
+
+These are engineering results, not academic or production acceptance. Erasure/anonymization,
+remaining holds/retention/large-history work, full short-text learner integration, load/latency,
+academic benchmarks/content approval, privacy/provider decisions and pilot release gates remain.
+Use the [current sprint](docs/implementation/CURRENT_SPRINT.md),
+[requirements evidence](docs/implementation/REQUIREMENTS_TRACEABILITY.md) and
+[release register](docs/implementation/RELEASE_GATES.md) for exact commits, checks and limitations.
 
 ## Local setup
 
@@ -38,9 +42,8 @@ installs locked dependencies and generates ignored local credentials. Existing
 `.env` and database state are preserved. Web: localhost:3000; API: localhost:8000;
 Mailpit: localhost:8025; MinIO console: localhost:9001.
 
-Run `make lint typecheck test openapi-check build`, install the three test browser engines with the
-command in the [local runbook](docs/runbooks/LOCAL_DEVELOPMENT.md), then run
-`make e2e security containers`. Missing dependencies fail clearly. The runbook
+Run `make lint typecheck test openapi-check build`, then `make e2e-install` and
+`make e2e security containers recovery-drill`. Missing dependencies fail clearly. The runbook
 covers native Ollama, safe shutdown, migrations, CI and deferred evaluation gates.
 
 ## Documentation
@@ -106,21 +109,19 @@ See [E1 verification](docs/implementation/E1_VERIFICATION.md) and
 
 ## Staff content workflow
 
-The first content slice is at `/admin/content`: text-only single-choice drafts,
-independent review, corrections, approval and retirement. Synthetic mappings and
+The content workflow at `/admin/content` supports single-choice, multiple-choice and numeric
+drafts, independent review, corrections, approval and retirement. Synthetic mappings and
 workflow approvals do not count as academically approved production content.
 See [E2 verification](docs/implementation/E2_VERIFICATION.md) and the
 [local development runbook](docs/runbooks/LOCAL_DEVELOPMENT.md) for role provisioning.
 
 ### Synthetic topic practice
 
-E2 is on main (`b5cfd75`, hosted CI passed). E3 adds the first assessment path.
 After `make setup services migrate seed`, run `make seed-assessment` explicitly
 to create 30 synthetic workflow fixtures through the author/reviewer service.
 Run `make dev`, complete a synthetic profile and consent at `/onboarding`, then
 open `/revise`. Only five-question topic practice is exposed in the UI; the API
-accepts 5–10 when inventory permits. This is not an academic content release or
-a mastery estimate. See [current sprint](docs/implementation/CURRENT_SPRINT.md).
+accepts 5–10 when inventory permits. Resulting mastery estimates describe synthetic software fixtures, not an academic content release. See [current sprint](docs/implementation/CURRENT_SPRINT.md).
 
 For numeric development fixtures, run `make seed-numeric` after migrations. This
 adds five synthetic numeric items to Physics / Electricity and Magnetism. They
@@ -149,5 +150,5 @@ expire after 24 hours. Deletion processing remains pending. See
 
 For a pending DELETE request, its independent administrator claimant can preview
 linked record counts and retention requirements at `/admin/data-requests`. The preview
-is audited and cannot enable deletion or revoke access. Legal holds, erasure execution
-and anonymization review remain pending. See [ADR-029](docs/decisions/ADR/029-deletion-impact-preview.md).
+is audited and cannot enable deletion or revoke access. Specific-record holds cover consent, attempts, content flags and data requests. Remaining hold
+coverage, erasure execution and anonymization review remain pending. See [ADR-029](docs/decisions/ADR/029-deletion-impact-preview.md).

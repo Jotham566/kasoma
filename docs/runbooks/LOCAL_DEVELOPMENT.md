@@ -592,3 +592,15 @@ is logged. Worker events remain compatible without the optional timing field.
 Use the event only for local investigation; aggregated REQUEST_LATENCY remains unavailable in
 the ADMIN dashboard. Do not infer a latency/load SLO from one sample. See
 [verification](../implementation/E8_REQUEST_TIMING_VERIFICATION.md).
+
+## Restricted assessment database login test
+
+Run `make test-runtime-role` with the local PostgreSQL service available. The integration fixture
+creates an isolated synthetic schema and a random temporary login, exercises grading/mastery through
+that login, checks denied operations and removes its exact grants/login afterward. A local test
+administrator with role creation privilege is required. The generated credential is never printed.
+Do not run this against production or real learner data. This is also included in `make test`.
+
+Default application credentials remain unchanged; this is not a production provisioning command.
+See [permission verification](../implementation/E9_RUNTIME_ROLE_VERIFICATION.md) for grant scope,
+the item-version row-lock constraint and remaining production role/MFA gates.

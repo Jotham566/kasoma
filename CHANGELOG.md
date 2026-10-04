@@ -1,5 +1,12 @@
 # Changelog
 
+## 4 October 2026 — restricted assessment login verification
+
+- Add a real temporary PostgreSQL login test for NFR-SEC-002: synthetic objective assessment and idempotent mastery recording with narrowly enumerated writes.
+- Check schema changes, trigger bypass, evidence rewrites, role escalation and password-catalog reads are denied; remove only the generated role after each test.
+- Add `make test-runtime-role` and update repository status/runbook. Local lint/types/contracts and 394 unit checks pass; native PostgreSQL is unavailable and hosted database acceptance is pending.
+- Default application credentials remain unchanged; this is assessment-path verification, not production role provisioning or complete grant coverage. No architecture change.
+
 ## 4 October 2026 — verified recovery, browser engines and cold transfer
 
 - Promote recovery `42a6e08` after CI 37223872075: 550 Python/20 browser/five tooling checks and a verified 52-table, 270-row synthetic restore with clean cleanup.

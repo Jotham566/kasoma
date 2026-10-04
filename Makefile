@@ -201,3 +201,7 @@ e2e-firefox:
 e2e-webkit:
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=1/2
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=2/2
+
+.PHONY: test-runtime-role
+test-runtime-role:
+	$(UV) pytest tests/integration/test_runtime_role.py --allow-hosts=localhost,127.0.0.1,::1

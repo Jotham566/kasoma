@@ -27,6 +27,11 @@ and five tooling checks, lint/types/contracts and security pass. Hosted regressi
 This is server response-start instrumentation, not full network timing or an aggregated p95 gate.
 [Timing evidence](E8_REQUEST_TIMING_VERIFICATION.md).
 
+NFR-SEC-002: a temporary restricted database login now exercises objective assessment, idempotency,
+mastery evidence and explicit permission denials. Hosted database execution is pending; the native
+fixture cannot connect. Default application credentials are unchanged.
+[Permission evidence](E9_RUNTIME_ROLE_VERIFICATION.md).
+
 ## Next dependencies and acceptance work
 
 The [short-text integration assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies the

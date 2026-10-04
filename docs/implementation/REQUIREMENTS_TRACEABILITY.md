@@ -177,3 +177,7 @@ E9 final local acceptance: recovery `42a6e08` passed CI 37223872075 (550 Python/
 tooling checks, 52-table/270-row logical restore). Browser/transfer `96a16d0` passed CI 37224172033
 (550 Python/60 browser/five tooling checks, 191389–194127 response bytes). See the linked reports
 for exact scope and limits; earlier pending entries are historical, not current acceptance status.
+
+NFR-SEC-002 assessment database permission profile: [verification](E9_RUNTIME_ROLE_VERIFICATION.md).
+The focused real-login integration test is implemented; hosted acceptance is pending. Local database
+setup is unavailable. Production role provisioning and complete module grant coverage remain partial.
