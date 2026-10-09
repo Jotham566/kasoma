@@ -2,6 +2,10 @@
 
 ## Work in progress — learner UI foundation
 
+- Increase shared learner/staff navigation targets to 48px; retain the 44px acceptance minimum across browser bounding-box rounding. All 90 native browser executions pass.
+
+- Correct the native macOS WebKit keyboard test to use Option-Tab for links, preserving skip-link/main-content focus assertions and ordinary Tab on other engines/platforms. All 30 native WebKit application cases pass after the correction.
+
 - Style the content queue/editor and rubric/numeric fields consistently while retaining exact draft and independent-review semantics. Lint/types/build, mobile/axe/exact-save-reload and all 30 Chromium journeys pass; desktop/mobile captures reviewed.
 
 - Apply shared presentation to operations, flags and synthetic imports; preserve unavailable metrics and explicit audited review controls. Lint/types/build and 30 Chromium cases pass; authenticated mobile/desktop captures reviewed.
@@ -27,6 +31,18 @@
 - Introduce shared learner navigation, a keyboard skip link and a responsive home/recommendation presentation using existing authorized data. Preserve synthetic notices, consent and retry semantics; verification is in progress.
 
 ## Work in progress — asynchronous owned export lifecycle
+
+- Verify Firefox corruption through the same pinned browser's ordinary download manager, with real privacy-page actions, native failure, closed reader, unchanged READY state and exact frozen retry. The case remains mandatory; all 90 native browser executions pass; final-head hosted acceptance remains pending.
+
+- Enforce the five-second object-read deadline in the delivery service as well as the adapter. A stalled-adapter regression and all 42 focused export cases pass; Firefox cancellation, bounded cleanup and frozen retry now pass. Corruption acceptance remains open.
+
+- Add a disposable-profile native Firefox download-manager diagnostic and bounded/redacted protocol checks; ordinary HTTP/1.1 corruption is rejected, while raw-server cancellation confirms delayed disconnects.
+
+- Add standalone loopback attachment controls to distinguish browser automation failures from application transport. Chromium passes; Firefox reproduces both failures without Kasoma. No acceptance waiver.
+
+- Add serial native export diagnostics with named failure/closure steps and retained local traces. Firefox cancellation/corruption failures reproduce; acceptance and main promotion remain gated.
+
+- Document channel-preservation dependencies: terminal field clearing, STOP/unlink, relinking ownership and bounded expiry must remain compatible with any future hold mechanism. No retention or hold behavior changes.
 
 - Pass updated-database HIGH/CRITICAL scans for both local API and web images after the bounded download-timeout adjustment.
 

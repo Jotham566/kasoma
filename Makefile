@@ -30,7 +30,7 @@ lint: check-docs
 	$(UV) ruff check .
 	$(UV) ruff format --check .
 	$(UV) mypy
-	$(PNPM) exec eslint apps/web packages tests/e2e scripts/*.mjs *.mjs *.ts --max-warnings=0
+	$(PNPM) exec eslint apps/web packages tests/e2e tests/browser-control scripts/*.mjs *.mjs *.ts --max-warnings=0
 	$(PNPM) format:check
 	$(PNPM) typecheck
 format:
@@ -261,6 +261,19 @@ test-export-worker:
 .PHONY: test-export-gateway
 test-export-gateway:
 	$(PNPM) exec playwright test tests/e2e/export-gateway.spec.ts
+
+.PHONY: test-export-download
+EXPORT_FAULT ?= stall|corrupt
+test-export-download:
+	$(PNPM) exec playwright test tests/e2e/export-download.spec.ts --workers=1 --grep '$(EXPORT_FAULT) mid-transfer' --trace retain-on-failure
+
+.PHONY: test-export-download-control
+test-export-download-control:
+	$(PNPM) exec playwright test --config=playwright.export-control.config.ts
+
+.PHONY: test-firefox-native-download
+test-firefox-native-download:
+	$(UV) python -m scripts.firefox_native_control
 
 .PHONY: worker-exports
 worker-exports:

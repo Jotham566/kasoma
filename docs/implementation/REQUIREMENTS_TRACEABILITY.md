@@ -786,3 +786,47 @@ synthetic JSON copy has an exact-length frozen retry; the smoke session is revok
 Existing services remain running. Evidence: `.local/final-ui-container-smoke.log`.
 The completed UI follow-ups are now queued for one final-head hosted run; the earlier candidate
 run is superseded, not treated as passed. Main/ADR acceptance still requires the final run.
+
+
+FR-ID-006/FR-WA-006/BR-010 readiness: [channel preservation assessment](E8_CHANNEL_HOLD_READINESS.md)
+records concrete ownership, message disposal, STOP/unlink and relinking constraints from existing
+code and database guards. It defines required ADR decisions and acceptance tests, not an accepted
+implementation or legal decision. Current retention and incomplete-hold warnings remain unchanged.
+
+
+FR-ID-006 / NFR-COMP-001 candidate acceptance update (9 October): two native
+Firefox attachment cases fail in both the full first shard and focused serial reproduction.
+Cancellation reader closure and corruption download completion remain unresolved; Chromium evidence
+does not satisfy this gate. See [export verification](E8_ASYNC_EXPORT_VERIFICATION.md).
+
+A plain HTTP native-download control reproduces both failures in pinned Firefox,
+while Chromium passes. This narrows diagnosis; it does not establish Firefox acceptance
+or replace the real-gateway requirement. The standalone diagnostic command starts no
+application/database services.
+
+NFR-ACC-001 / NFR-COMP-001: native WebKit export fault cases pass; its first-shard
+keyboard test required macOS Option-Tab for links. The corrected test retains skip-link
+and main-content focus assertions; all 30 native WebKit application cases pass; Firefox remains open.
+
+FR-ID-006 / NFR-SEC-001 / NFR-COMP-001: delivery enforces a five-second object-read
+bound independently of the storage adapter. The stalled-adapter integration regression
+passes with all 42 focused export cases; Firefox stall/cancel/frozen retry now passes.
+Raw native-manager corruption controls narrow the remaining automation discrepancy
+but do not establish application acceptance. See export verification.
+
+FR-ID-006 / NFR-COMP-001: the mandatory real-application Firefox corruption case
+passes through the pinned browser's ordinary download manager, verifying rejection,
+reader closure, READY state and byte-count/SHA-256-identical native retry. The driver
+changes only that case's automation boundary; no requirement or failure is skipped.
+Full Firefox and hosted final-head acceptance remain required.
+
+NFR-ACC-001 / NFR-COMP-001: shared learner/staff navigation minimum height is now
+48px, leaving margin above the unchanged 44px acceptance threshold after Firefox
+reported fractional bounding-box values at an exactly 44px height. Full matrix pending.
+The complete timeout-fix integration/security run passes 246 integration cases.
+
+Final native follow-up evidence: all 90 browser executions pass (30 Chromium,
+30 Firefox, 30 WebKit), including the mandatory real-gateway export faults and
+48px navigation. All 246 integration cases/security checks and the later 625-case
+unit plus 32-tooling run pass. Rebuilt eight-service smoke and API/web image scans
+pass. Hosted final-head verification and ADR-048 promotion remain pending.

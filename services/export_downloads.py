@@ -18,6 +18,8 @@ from services.export_artifacts import Manifest, decode_chunk, parse_manifest, re
 from services.export_processing import ExportStore
 from services.identity import IdentityError, IdentityService
 
+OBJECT_READ_SECONDS = 5.0
+
 
 @dataclass(frozen=True)
 class Download:
@@ -148,7 +150,10 @@ async def prepare_async(
             deadline = monotonic() + 300
             for chunk in manifest.chunks:
                 with anyio.fail_after(max(0, deadline - monotonic())):
-                    ciphertext = await storage.get(generation_id, chunk.object_id)
+                    # Enforce the storage bound even when an adapter fails to enforce its own.
+                    # Some clients do not disconnect immediately after cancelling a download.
+                    with anyio.fail_after(OBJECT_READ_SECONDS):
+                        ciphertext = await storage.get(generation_id, chunk.object_id)
                     raw = decode_chunk(ciphertext, identity, chunk, target, generation_id)
                     digest.update(raw)
                     if (

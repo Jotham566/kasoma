@@ -224,3 +224,31 @@ The existing native/Compose worker explicitly selects operations/imports/messagi
 synthetic subprocess using this repository recipe verifies hard interruption, replacement,
 lease recovery and an untouched foreign queue. Export scheduler registration and automatic
 startup remain gated; the manual command does not establish full learner delivery acceptance.
+
+The delivery service also enforces the five-second per-object read deadline around
+every adapter invocation, independently of the private MinIO reader's own bound.
+This prevents a stalled adapter or delayed browser disconnect from consuming the
+entire 300-second download budget. Reader close remains bounded to one second.
+Native cancellation observation permits those bounds plus one second of scheduling;
+this is not an extension of either service deadline. Verification remains required.
+
+### Firefox corruption acceptance driver
+
+Pinned Playwright Firefox's download interceptor does not report native failure for
+an interrupted attachment; a plain HTTP/1.1 control reproduces this without Kasoma.
+The same pinned Firefox's ordinary download manager rejects truncation and exposes
+its native error state. Keep the application corruption case mandatory and drive that
+one Firefox case through its built-in Marionette protocol with the ordinary manager.
+Playwright still starts the isolated application/schema and verifies the owner, baseline
+bytes and final job state. No case is skipped, expected-failed or accepted by timeout.
+
+The helper uses the existing pinned Firefox binary on macOS/Linux, a disposable owned
+profile, fixed loopback origins, denied external proxy and no new runtime dependency.
+Synthetic cookies travel only over stdin and are validated; errors expose fixed stages
+and exception classes, never credentials/account contents. Profile ownership is verified
+before privileged manager inspection. The actual privacy-page controls initiate both
+downloads. Require native stopped/error/not-succeeded state, closed storage reader,
+READY job, and a successful retry with independently matching byte count/SHA-256.
+Downloaded paths must resolve inside the disposable profile. Timeouts terminate the
+helper and its owned browser; profile cleanup runs on failure and interruption.
+The proposal remains unaccepted until full native and hosted acceptance passes.

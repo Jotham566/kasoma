@@ -1,10 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
+import { nativeFirefoxExport } from "./native-firefox-export";
 
 for (const fault of ["stall", "corrupt"] as const) {
   test(`FR-ID-006: ${fault} mid-transfer cannot save a successful export; frozen retry works`, async ({
     page,
+    browserName,
   }) => {
     const request = page.request;
     const headers = { Origin: "http://127.0.0.1:13000" };
@@ -68,6 +70,19 @@ for (const fault of ["stall", "corrupt"] as const) {
     });
     await expect(save).toBeVisible();
     expect((await request.post(`${fixture}/fault/${fault}`)).ok()).toBeTruthy();
+    if (browserName === "firefox" && fault === "corrupt") {
+      const result = await nativeFirefoxExport(page.context(), target);
+      expect(result.corrupt_rejected).toBe(true);
+      expect(result.reader_closed).toBe(true);
+      expect(result.size).toBe(original.length);
+      expect(result.sha256).toBe(
+        createHash("sha256").update(original).digest("hex"),
+      );
+      expect(
+        (await (await request.get(path + "/export-job")).json()).status,
+      ).toBe("READY");
+      return;
+    }
     const started = page.waitForEvent("download");
     await save.click();
     const failed = await started;
@@ -80,13 +95,21 @@ for (const fault of ["stall", "corrupt"] as const) {
         .toBeGreaterThanOrEqual(2);
       await failed.cancel();
     }
-    expect(await failed.failure()).toBeTruthy();
-    await expect
-      .poll(
-        async () =>
-          (await (await request.get(`${fixture}/observations`)).json()).closed,
-      )
-      .toBeGreaterThanOrEqual(1);
+    await test.step("browser reports an unsuccessful attachment", async () => {
+      expect(await failed.failure()).toBeTruthy();
+    });
+    await test.step("cancelled or corrupt transfer closes the storage reader", async () => {
+      await expect
+        .poll(
+          async () =>
+            (await (await request.get(`${fixture}/observations`)).json())
+              .closed,
+          // Firefox may delay disconnecting. Allow the service's five-second read
+          // deadline, one-second reader close bound and one second for observation.
+          { timeout: 7000 },
+        )
+        .toBeGreaterThanOrEqual(1);
+    });
     expect(
       (await (await request.get(path + "/export-job")).json()).status,
     ).toBe("READY");

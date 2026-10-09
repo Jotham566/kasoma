@@ -1,10 +1,13 @@
 # Current sprint: export acceptance and learner UI completion
 
-Updated 9 October 2026. Main remains `bb2f4eb`. Export candidate `c08341b` and UI follow-ups
-through `be42dbd` are complete locally on `codex/async-personal-exports`. They are being pushed
-together for final-head hosted CI, superseding candidate run 37979693427 without claiming it
-passed. Native container scanning and the latest full-stack export smoke now pass. All data is
-synthetic; no production, academic or MVP completion is claimed.
+Updated 9 October 2026. Main remains `bb2f4eb`. The pushed candidate `2a3b251`
+failed its original two Firefox export cases. Local follow-ups now pass all 90 browser
+executions, including native Firefox corruption, bounded cancellation and frozen retry.
+The service independently bounds adapter reads; navigation targets are 48px. Full
+246-case integration/security checks, the 625-case unit run, 32 tooling checks and the
+rebuilt eight-service stack smoke/image scans pass. Follow-ups are ready to commit/push
+for final-head hosted verification. ADR-048 remains proposed; no production, academic
+or MVP completion is claimed.
 
 ## Local review stack
 
@@ -17,9 +20,7 @@ worker, PostgreSQL/pgvector, Redis, private MinIO and Mailpit. Keep them running
 - Synthetic choice, numeric, diagnostic, hints, multiple-choice and reassessment fixtures are seeded.
 - `make seed` now passes catalog and private storage initialization.
 
-Earlier MinIO download failures are resolved. The live browser installer completed pinned Chromium
-and its headless shell and is downloading Firefox; WebKit follows. Do not restart a live download
-because output is quiet. See the [local runbook](../runbooks/LOCAL_DEVELOPMENT.md).
+Earlier MinIO download failures are resolved. The browser installer completed pinned Chromium, its headless shell, Firefox and WebKit.  See the [local runbook](../runbooks/LOCAL_DEVELOPMENT.md).
 
 ## Candidate export slice
 
@@ -43,7 +44,9 @@ Current evidence:
   and 245 integration cases, including the previously unavailable real MinIO checks. Two later
   smoke-probe unit cases also pass in the separate 608-case unit run. Dependency/security checks pass.
 - Full pinned Chromium passes 30 cases across both shards, including native cancellation/corruption,
-  frozen retry, privacy review and operational metrics. Firefox/WebKit and hosted regression remain open.
+  frozen retry, privacy review and operational metrics. Firefox/WebKit and hosted regression remain open. Native Firefox now reproduces two
+  attachment failures (cancellation cleanup and corruption download-completion timeout); focused
+  serial reproduction also fails. See export verification; do not promote this candidate.
 - Populated synthetic logical recovery passes again (56 tables/285 rows, 256 ms); object-storage restore
   and production PITR/RPO/RTO are explicitly unverified.
 - `make container-smoke` passes both eight-service health and a real scheduled export through
@@ -101,6 +104,10 @@ See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete h
 
 ## Remaining MVP and release gates
 
+[Channel-hold readiness](E8_CHANNEL_HOLD_READINESS.md) records the inspected mutable-state and
+sensitive-field clearing constraints. A preservation design/ADR is required before implementation;
+no current hold, retention or deletion behavior changes.
+
 Learner short-text integration/fallback and academic calibration, aggregate telemetry, complete
 hold coverage, deletion/anonymization and accountability-retention processors remain incomplete.
 Do not expand into mature whitepaper features or silently reduce these requirements.
@@ -109,3 +116,34 @@ The [release register](RELEASE_GATES.md) retains external gates: kickoff/capacit
 mappings/rights/inventory/benchmark, privacy and safeguarding approval, Week 8 providers, production
 security/operations, PITR/RPO/RTO, supported devices and pilot sign-offs. Synthetic tests are not
 substitutes. No kickoff date or delivery-week acceptance is inferred from engineering progress.
+
+Native export diagnosis: plain loopback HTTP controls reproduce both Firefox behaviors
+without Kasoma; Chromium passes the corrected controls. This narrows investigation to
+the pinned Firefox automation boundary, but does not waive the application gate.
+
+NFR-ACC-001 / NFR-COMP-001: WebKit's first shard passed 14 cases (including both
+export faults) and failed the Tab-to-link assumption. The test now uses the macOS
+WebKit Option-Tab shortcut, with unchanged focus assertions; all 30 native WebKit application cases now pass.
+
+FR-ID-006 transport hardening: a five-second service-side object-read bound now
+protects against stalled adapters independently of browser disconnects. All 42 focused
+export integration cases pass; Firefox's real-gateway stall/cancel/frozen-retry case
+now passes. Native-manager controls reject HTTP/1.1 corruption, but the real-gateway
+Firefox corruption acceptance remains open. CI 37981771037 failed on the prior head.
+
+Updated local stack evidence: rebuilt images and all eight healthy services pass the
+real scheduled export smoke and frozen retry. API/web image scans report no
+HIGH/CRITICAL findings. Lint/types, generated-contract/source-secret checks and
+624 unit/contract plus 32 tooling cases pass. Full integration/security regression
+is active in `.local/export-bound-full-regression.log`; final result pending.
+
+Firefox corruption now passes against the real application using the same pinned
+browser's ordinary download manager. It verifies native rejection, closed reader,
+READY state and exact frozen retry; the case remains mandatory. Full Firefox suite
+is running. Native helper input/protocol checks pass; ADR-048 records the verification
+resolution and remains proposed until complete native/hosted gates pass.
+
+The full service-bound integration/security run passed all 246 integration cases and
+dependency/security checks. Firefox's export shard passes. Two later home-navigation
+checks found fractional rounding below the 44px target minimum; shared learner/staff
+navigation is now 48px, preserving the >=44px assertion. Full three-engine rerun active.

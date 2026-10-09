@@ -9,8 +9,8 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
-    "format": "prettier --write apps/web packages tests/e2e *.json *.yaml .github/workflows *.mjs *.ts scripts/*.mjs",
-    "format:check": "prettier --check apps/web packages tests/e2e *.json *.yaml .github/workflows *.mjs *.ts scripts/*.mjs",
+    "format": "prettier --write apps/web packages tests/e2e tests/browser-control *.json *.yaml .github/workflows *.mjs *.ts scripts/*.mjs",
+    "format:check": "prettier --check apps/web packages tests/e2e tests/browser-control *.json *.yaml .github/workflows *.mjs *.ts scripts/*.mjs",
     "e2e": "playwright test"
   },
   "devDependencies": {

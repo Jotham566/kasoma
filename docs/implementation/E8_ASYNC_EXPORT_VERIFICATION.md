@@ -480,3 +480,160 @@ synthetic JSON copy has an exact-length frozen retry; the smoke session is revok
 Existing services remain running. Evidence: `.local/final-ui-container-smoke.log`.
 The completed UI follow-ups are now queued for one final-head hosted run; the earlier candidate
 run is superseded, not treated as passed. Main/ADR acceptance still requires the final run.
+
+
+## Native Firefox failure investigation — 9 October 2026
+
+FR-ID-006 / NFR-COMP-001: native `make e2e-firefox` failed twice at the same
+attachment scenarios (13 passed, two failed in the first shard; second shard did not
+run). A serial `KASOMA_E2E_BROWSER=firefox make test-export-download` reproduced
+both failures without unrelated browser cases. The stalled transfer reports a browser
+download failure but its fixture reader-close count remains zero at the five-second
+assertion. The corruption scenario times out while awaiting the observation request.
+These are unresolved failures, not accepted retries or proof of safe resource cleanup.
+Named test steps now distinguish browser failure reporting from storage-reader closure;
+a prescribed focused target retains local traces and permits single-scenario isolation.
+No transport requirement, assertion or timeout has been relaxed. Main and ADR-048
+promotion remain gated. All eight developer Compose services were independently
+checked healthy during this investigation.
+
+The isolated corruption-only trace refines that diagnosis: the browser failure-reporting
+step waits from approximately 9.12 s until context teardown at 37.84 s, after the
+30-second test deadline. The later observation error is a teardown consequence, not
+evidence of a blocked fixture endpoint. Both healthy and corrupt response headers
+preserve Content-Length 196789 with no Content-Encoding. Investigate Firefox native
+attachment completion/disconnection next; do not increase timeouts or waive cleanup.
+`make format lint` passes after formatting the new steps, including documentation,
+Python/TypeScript checks and formatting. No application runtime code or ADR changed.
+
+
+### Browser-independent server control
+
+A minimal Node HTTP attachment server reproduces both Firefox failures without Kasoma
+code, storage or gateway: cancellation reports failure with one request and an open
+connection; corrupt transfer closes its single connection but download failure remains
+pending until the 30-second test timeout. The corrected control repeats corruption on
+any retry (the first exploratory version failed to fault a Chromium retry and was fixed).
+Chromium passes both corrected controls. The standalone command
+`KASOMA_E2E_BROWSER=chromium make test-export-download-control` passes two cases in
+1.2 seconds. Firefox evidence is retained in `.local/firefox-native-control-retry.log`;
+application failures remain required and unwaived.
+
+The pinned [Playwright cancellation test](https://github.com/microsoft/playwright/blob/v1.58.2/tests/library/download.spec.ts)
+checks the cancellation result but not server connection closure. Its
+[Firefox interceptor](https://github.com/microsoft/playwright/blob/v1.58.2/browser_patches/firefox/juggler/TargetRegistry.js)
+and [browser patch](https://github.com/microsoft/playwright/blob/v1.58.2/browser_patches/firefox/patches/bootstrap.diff)
+intercept the download handler and bypass ordinary download UI handling. These sources
+and the control narrow the issue to the pinned Firefox/native-automation boundary; they
+do not prove that current branded Firefox passes or authorize skipping acceptance.
+No browser pin, production transport, architectural decision or release gate changed.
+
+
+Native WebKit's first full run passed 14 cases, including both interrupted-attachment
+scenarios, and failed the home keyboard assertion before shard two. Its macOS default
+uses Option-Tab for links. The health test now sends that native key combination on
+macOS WebKit, retaining the exact skip-link and main-content focus assertions; other
+platforms/engines retain Tab. The complete suite is being rerun, not marked accepted.
+See [Apple keyboard documentation](https://support.apple.com/en-gb/guide/safari/cpsh003/mac).
+
+Native WebKit rerun now passes both shards: 15 cases in 19.6 seconds and 15 in
+20.0 seconds, including the original export faults and skip-link focus assertions.
+`make format lint` and `make test-unit` also pass (608 Python unit/contract cases,
+245 integration cases intentionally deselected in this unit command). Full application
+integration evidence above remains unchanged; no runtime or schema changes occurred.
+All eight Compose services were checked healthy after the tests. Firefox remains
+unaccepted; passing WebKit does not substitute for its missing evidence.
+
+
+## Independent storage deadline and native Firefox diagnosis
+
+The service now bounds each adapter read to five seconds, independently of the MinIO
+reader's own timeout. A new integration case stalls the adapter indefinitely without
+a client disconnect and proves read cancellation, reader closure, a closed error and
+an unchanged READY export. All 42 focused export integration cases pass. The Firefox
+application stall/cancel/frozen-retry case now passes. Its cleanup poll permits seven
+seconds: the existing five-second read and one-second close bounds plus observation
+scheduling. Neither production deadline was extended.
+
+A disposable-profile Marionette diagnostic uses the pinned Firefox 1509 browser's
+ordinary Downloads manager, bypassing Playwright's download interceptor. It uses only
+a loopback HTTP server, a denied external proxy, bounded protocol frames, validated
+profile ownership and cleanup of its own child/profile. It is not application acceptance.
+Healthy complete bytes pass. HTTP/1.1 truncation yields stopped=true, succeeded=false,
+error=true and a closed connection in the native manager. Its native error dialog is
+automatically dismissed by the diagnostic session; an interrupted observation is retried
+once. Raw-server stall cancellation still leaves the connection open, explaining why
+Kasoma requires its own service-side bound. The diagnostic command consequently remains
+nonzero for the complete raw-server control matrix. No Firefox application-corruption
+acceptance is claimed from these controls.
+
+Exploratory HTTP/1.0 results are not equivalent to Kasoma's HTTP/1.1 transport and are
+not acceptance evidence. The native diagnostic was corrected to use HTTP/1.1 and
+exact-length pages before the recorded native corruption result.
+
+Hosted CI 37981771037 at 2a3b251 failed on the original two Firefox cases after its
+backend checks passed. It predates this service-bound fix; it is not a green run.
+
+Final local quality checks for these follow-ups pass: `make format lint test-unit
+openapi-check security-source` reports 623 Python unit/contract cases and 32 tooling
+cases, unchanged generated contracts and no source secrets. Images were rebuilt and
+all eight application services restarted healthy. `make container-smoke` passes the
+real worker/private-MinIO/web export and frozen retry (2,191 bytes). Complete native
+`make migrate test security` is running in `.local/export-bound-full-regression.log`;
+its result remains pending. No main promotion or new accepted ADR occurred.
+
+The native diagnostic now also rejects mismatched command IDs before considering
+dialog recovery. `make format lint test-unit` passes 624 unit/contract cases and 32
+tooling cases after that guard regression. Both rebuilt API and web images pass
+`make security-containers` with no HIGH/CRITICAL findings. The longer integration
+run remains active; do not infer completion from these narrower checks.
+
+
+## Real-application native Firefox corruption case
+
+The same mandatory Playwright corruption case now uses the ordinary pinned Firefox
+manager through the bounded native helper for Firefox only. It uses real privacy-page
+controls and the isolated real API/gateway, with the existing synthetic encrypted-object
+fault. Initial response decoding in the diagnostic helper was corrected before acceptance.
+The case now passes in 13.1 seconds: native rejection, at least two object reads, reader
+closure, unchanged READY state and successful native retry matching the original
+196 KiB-class artifact byte count and independent SHA-256. No case is skipped or xfailed.
+Full Firefox regression is running in `.local/native-firefox-full-acceptance.log`.
+
+The helper validates fixed-origin synthetic cookie input, bounded stdin/protocol frames,
+reply sequencing and owned profile/file paths; credentials never enter command arguments
+or diagnostics. Native manager inspection is confined to the disposable browser; a
+failed download error dialog can interrupt one observation, which is retried once after
+automatic dismissal. Input-boundary and protocol tests pass with `make format lint
+test-unit` (625 Python cases, 32 tooling cases). See ADR-048 for the verification
+resolution; no production transport or published API changes accompany the driver.
+
+Full native `make migrate test security` passed for the service timeout fix: 623
+unit/contract cases at that run's collection point, 32 tooling cases and all 246
+integration cases (485.56 seconds), with no known dependency vulnerabilities. The
+later native-helper input case passes separately in the 625-case unit run.
+
+The full Firefox rerun passed all 15 first-shard cases, including native corruption,
+and 13 second-shard cases. Two home-navigation tests exposed Firefox bounding-box
+rounding at a 44px minimum (43.999992/43.999998 reported). Shared learner/staff
+navigation targets are now 48px; the acceptance assertion remains at least 44px.
+The full three-engine matrix is running after this CSS change. No navigation destination
+or authorization behavior changes.
+
+
+### Final native matrix for the timeout/native-manager follow-up
+
+`make format lint build e2e` passes all 90 browser executions: Chromium 15+15
+(17.1/18.1 seconds), Firefox 15+15 (31.2/25.9 seconds), WebKit 15+15
+(20.6/19.9 seconds). This includes real native Firefox corruption/retry, cancellation
+and 320/1280px navigation with unchanged >=44px acceptance. A mobile staff capture
+was visually inspected without clipped controls.
+
+Rebuilt application containers are running. `make container-smoke security-containers`
+passes eight-service health, the real scheduled owned export/frozen retry and both API
+and web vulnerability scans (no HIGH/CRITICAL findings). `make openapi-check
+security-source` passes with unchanged contracts and no source leaks. Earlier full
+246-case integration/security evidence remains applicable to the unchanged delivery
+implementation. Current native-helper unit coverage is included in the 625-case run.
+The next gate is hosted CI for the committed follow-up; ADR-048 is still proposed and
+main is unchanged until that gate passes.

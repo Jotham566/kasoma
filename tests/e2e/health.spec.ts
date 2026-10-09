@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-test("health shell, keyboard retry and accessibility", async ({ page }) => {
+test("health shell, keyboard retry and accessibility", async ({
+  page,
+  browserName,
+}) => {
   await page.route("**/*", (route) => {
     const host = new URL(route.request().url()).hostname;
     return ["127.0.0.1", "localhost"].includes(host)
@@ -15,7 +18,12 @@ test("health shell, keyboard retry and accessibility", async ({ page }) => {
   await expect(
     page.getByRole("status").filter({ hasText: "Services are ready." }),
   ).toHaveText("Services are ready.");
-  await page.keyboard.press("Tab");
+  // macOS WebKit's default link-navigation shortcut is Option-Tab.
+  await page.keyboard.press(
+    browserName === "webkit" && process.platform === "darwin"
+      ? "Alt+Tab"
+      : "Tab",
+  );
   await expect(
     page.getByRole("link", { name: "Skip to content" }),
   ).toBeFocused();

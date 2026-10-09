@@ -845,3 +845,46 @@ initial vulnerability database can download over a slow local connection. Overri
 finite bound with `make security-containers TRIVY_TIMEOUT=45m` when needed. This only
 changes the timeout; HIGH/CRITICAL failure, database updates and both image scans remain
 mandatory. A download timeout is an incomplete scan, never a clean result.
+
+
+For isolated native attachment diagnostics, run `KASOMA_E2E_BROWSER=firefox make
+test-export-download` (or chromium/webkit). It runs the stall/corruption cases serially
+and retains Playwright traces on failure under ignored `test-results/`. Select one
+scenario with `EXPORT_FAULT=stall` or `EXPORT_FAULT=corrupt`. The synthetic fixture still
+uses an isolated database and the real web/API gateway; no external providers run.
+Traces contain synthetic authentication state: keep them local and do not commit them.
+This focused command does not replace the full browser matrix.
+
+
+`KASOMA_E2E_BROWSER=firefox make test-export-download-control` runs two plain
+loopback HTTP attachment controls without starting Kasoma, PostgreSQL or a gateway.
+Use chromium/webkit for comparison. The control tracks connection closure and repeats
+corruption on browser retries; retained traces contain only local synthetic traffic.
+It is a diagnostic command, not a replacement for the application browser suite.
+
+
+`make test-firefox-native-download` diagnoses the pinned macOS Firefox's own download
+manager via its built-in Marionette protocol. It requires `make e2e-install`, uses a
+disposable profile and a loopback-only control server, denies external proxy traffic,
+and removes only its own profile/process. It never uses a personal browser profile.
+The raw stalled-server case currently fails because native cancellation does not close
+the socket immediately; the application independently bounds storage reads. Native
+manager corruption results are diagnostic, not Kasoma application acceptance.
+
+The delivery service enforces its own five-second object-read deadline in addition
+to the private adapter's bound. A client that delays disconnecting after cancellation
+cannot leave a blocked object read active for the entire 300-second download budget.
+Reader close remains bounded to one second; none of these changes extends export
+availability, authentication or job-generation deadlines.
+
+
+The normal Firefox export-corruption E2E case uses a bounded Python helper to drive
+the same pinned browser's ordinary download manager. This avoids its Playwright
+interceptor's independently reproduced missing failure notification. Continue using
+`make e2e-firefox` or `KASOMA_E2E_BROWSER=firefox make test-export-download`; no
+manual cookie copying or extra dependency is required. The helper receives only
+validated synthetic cookies over stdin, requires the isolated fixture on port 18000,
+and uses the actual privacy UI on port 13000. It denies external proxy traffic and
+removes its owned profile/browser after success or failure. Never use personal profiles
+or real data. Closed stage codes diagnose helper failures without exposing account
+contents or credentials. Full application and hosted acceptance remain mandatory.

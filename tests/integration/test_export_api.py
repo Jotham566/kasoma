@@ -3,6 +3,7 @@
 from datetime import timedelta
 from uuid import UUID, uuid4
 
+import anyio
 import pytest
 from sqlalchemy.orm import Session
 
@@ -14,6 +15,41 @@ from tests.integration.test_data_requests import claim, create
 from tests.integration.test_export_jobs import SweepStore, setup_job
 
 pytestmark = pytest.mark.integration
+
+
+def test_delivery_bounds_a_stalled_adapter_without_client_disconnect(content, monkeypatch):
+    import services.export_downloads as downloads
+
+    identity, client, actors, token, target = setup_job(content)
+    store = SweepStore(identity)
+    headers = actors["learner"] | {"Idempotency-Key": str(uuid4())}
+    url = f"/api/v1/me/data-requests/{target}/export-job"
+    assert client.post(url, headers=headers, json={}).status_code == 202
+    assert process_one(identity, store)
+    events = []
+
+    class StalledReader:
+        async def get(self, generation, object_id):
+            try:
+                await anyio.sleep_forever()
+            finally:
+                events.append("read-cancelled")
+
+        async def aclose(self):
+            events.append("reader-closed")
+
+    monkeypatch.setattr(downloads, "OBJECT_READ_SECONDS", 0.01)
+
+    async def exercise():
+        download = await downloads.prepare_async(identity, StalledReader, token, target)
+        # No client disconnect: the service itself must enforce the per-object bound.
+        with anyio.fail_after(1):
+            with pytest.raises(RuntimeError, match="^Private export transfer incomplete$"):
+                await anext(download.chunks)
+        assert events == ["read-cancelled", "reader-closed"]
+
+    anyio.run(exercise)
+    assert client.get(url, headers=actors["learner"]).json()["status"] == "READY"
 
 
 def setup_api(content):
