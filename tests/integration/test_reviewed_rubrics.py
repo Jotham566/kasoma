@@ -55,6 +55,9 @@ def test_rubric_review_versioning_exact_storage_and_staff_inventory(content):
     assert created.status_code == 201, created.text
     draft = created.json()
     assert draft["rubric_version_id"] == draft["id"]
+    assert draft["document"]["rubric"] == original["document"]["rubric"]
+    fetched = client.get(f"/api/v1/admin/item-versions/{draft['id']}", headers=actors["author"])
+    assert fetched.status_code == 200 and fetched.json()["document"] == draft["document"]
     assert mutate(client, "items", actors["author"], original, key=key).json() == draft
     queued = submit(client, actors, draft)
     assert review(client, actors, queued, "author").status_code == 409

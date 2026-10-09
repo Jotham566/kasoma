@@ -3,6 +3,7 @@ PYTHON ?= python3
 export PATH := $(CURDIR)/.local/runtime/node_modules/node/bin:$(CURDIR)/.local/tools/bin:$(PATH)
 export NEXT_TELEMETRY_DISABLED := 1
 export TURBO_TELEMETRY_DISABLED := 1
+export PLAYWRIGHT_BROWSERS_PATH := $(CURDIR)/.local/browsers
 UV := $(CURDIR)/.local/tools/bin/uv run --frozen
 PNPM := corepack pnpm
 
@@ -209,3 +210,7 @@ test-runtime-role:
 .PHONY: test-reviewed-rubrics
 test-reviewed-rubrics:
 	$(UV) pytest tests/integration/test_reviewed_rubrics.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-web-content
+test-web-content:
+	$(PNPM) exec playwright test --config=playwright.ui.config.ts

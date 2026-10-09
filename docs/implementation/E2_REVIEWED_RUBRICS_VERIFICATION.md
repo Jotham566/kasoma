@@ -61,3 +61,10 @@ The rubric SQL guard incorrectly treated the existing item_versions.document JSO
 Normalize a local comparison value to JSONB before equality/existence checks; retain the original
 column, stored documents and hashes. Existing fresh/upgrade and projection tests cover this path;
 complete hosted rerun remains required.
+
+CI 37910416518 verifies the rubric SQL correction: eight focused rubric cases, all 182 integration
+and 427 unit/contract tests pass, as do the restricted login and 54-table/272-row recovery drill.
+The new Chromium rubric journey fails after save/reload. Add exact API round-trip assertions and
+`make test-web-content`, an isolated deterministic HTTP-fixture browser regression, before full CI
+services. It supplements, not replaces, the 63 real-API journeys. Main promotion remains blocked.
+Browser binaries now use the repository-local .local/browsers cache to avoid shared-cache mutation.

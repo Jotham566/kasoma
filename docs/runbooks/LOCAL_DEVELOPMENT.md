@@ -664,3 +664,10 @@ For the October security refresh, the runtime Next.js pin is 16.3.8 with bounded
 overrides. ADR-031's lint-only plugin/patch is unchanged and its five tooling checks pass. Use
 `make deps-lock setup` then `make lint test build security` after dependency edits. See
 [dependency verification](../implementation/E9_DEPENDENCY_REFRESH_2026_10_09.md).
+
+`make build e2e-install test-web-content` runs the isolated staff editor test against deterministic
+synthetic HTTP fixtures without PostgreSQL. Browser downloads use .local/browsers. This is a UI
+state/serialization test, not API authorization or database acceptance; continue to run the full
+`make test e2e` pipeline. The first native browser install lost its shared-cache lock; the isolated
+cache avoids modifying that shared directory. Docker Desktop is now present but cannot start; the
+9 October `make services` retry still fails before database setup.

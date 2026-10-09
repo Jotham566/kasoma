@@ -242,11 +242,30 @@ test("FR-CNT-003/FR-GRD-003: author and independently review a disabled short-te
     expect(
       (await new AxeBuilder({ page: author }).analyze()).violations,
     ).toEqual([]);
+    const savedResponse = author.waitForResponse(
+      (response) =>
+        response.url().includes("/api/v1/admin/items") &&
+        response.request().method() === "POST",
+    );
     await author
       .getByRole("button", { name: "Save draft", exact: true })
       .click();
+    const saved = await (await savedResponse).json();
+    expect(saved.document.response_type).toBe("SHORT_TEXT");
+    expect(saved.document.rubric.criteria[0].acceptable_evidence).toEqual([
+      "Alpha\nwith the original label preserved",
+    ]);
     await expect(author.getByRole("status")).toHaveText("Version 1: DRAFT.");
+    const reloadedResponse = author.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname.endsWith(
+          `/item-versions/${saved.id}`,
+        ) && response.request().method() === "GET",
+    );
     await author.getByRole("button", { name: "Reload selected item" }).click();
+    expect((await (await reloadedResponse).json()).document).toEqual(
+      saved.document,
+    );
     await expect(
       author
         .getByRole("region", { name: "Short-text rubric", exact: true })

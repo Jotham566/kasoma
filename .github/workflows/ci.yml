@@ -24,6 +24,7 @@ jobs:
           python-version-file: .python-version
       - run: npm install --global corepack@0.34.0
       - run: make setup
+      - run: make build e2e-install test-web-content
       - run: make services migrate seed
       - run: make test-reviewed-rubrics
       - run: make recovery-drill

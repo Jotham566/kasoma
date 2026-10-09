@@ -391,3 +391,10 @@ complete hosted rerun remains required.
 with affected Sharp/source-map-js versions resolved to 0.35.5/1.2.2. `make deps-lock setup` and
 post-install lint/types/contracts/build, 427 unit/contract plus five tooling checks, and both audits
 pass with no known vulnerabilities reported. Hosted application/container checks remain pending.
+
+CI 37910416518 verifies the rubric SQL correction: eight focused rubric cases, all 182 integration
+and 427 unit/contract tests pass, as do the restricted login and 54-table/272-row recovery drill.
+The new Chromium rubric journey fails after save/reload. Add exact API round-trip assertions and
+`make test-web-content`, an isolated deterministic HTTP-fixture browser regression, before full CI
+services. It supplements, not replaces, the 63 real-API journeys. Main promotion remains blocked.
+Browser binaries now use the repository-local .local/browsers cache to avoid shared-cache mutation.
