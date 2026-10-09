@@ -223,3 +223,7 @@ test-web-content:
 .PHONY: test-legal-holds
 test-legal-holds:
 	$(UV) pytest tests/integration/test_legal_holds.py tests/integration/test_learning_record_holds.py tests/integration/test_accountability_holds.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-web-mobile
+test-web-mobile:
+	$(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts

@@ -1,5 +1,11 @@
 # Changelog
 
+## In progress — narrow learner journey
+
+- Add NFR-ACC-001/NFR-COMP-001 coverage at 320 CSS pixels with touch enabled: onboarding, five-question practice, durable resume, feedback, progress and history.
+- Check horizontal reflow, actual key touch-target dimensions and axe results; include the journey in all three existing engine runs and add `make test-web-mobile` for focused verification.
+- Static lint/types/test inventory pass; actual browser execution remains pending. This is emulated viewport evidence, not physical Android or branded Safari acceptance.
+
 ## In progress — exact accountability-record holds
 
 - Add FLAG_HISTORY and DATA_REQUEST_REVIEW under ADR-045 (FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002), using immutable parent ownership and exact primary-key references.

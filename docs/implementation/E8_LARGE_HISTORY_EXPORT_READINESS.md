@@ -11,9 +11,10 @@ serialized JSON. Either limit returns EXPORT_LIMIT_REACHED with the request pend
 or partial completion is permitted. Retries return the same encrypted snapshot for 24 hours.
 Completion/receipt/audit/outbox evidence commits atomically and sets six-calendar-year retention.
 
-The current projection materializes sessions, attempts, assignment/version lookup maps, released
-attempt IDs and mastery histories in memory. Merely increasing MAX_RECORDS/MAX_BYTES would retain
-that memory/latency problem and the synchronous browser-proxy timeout. The proxy currently awaits
+The accepted projection refactor batches ORM reads and replaces retained assignment/version maps
+and released-ID lists with owned SQL joins/subqueries. It still builds the complete bounded output
+bundle in memory. Merely increasing MAX_RECORDS/MAX_BYTES would retain that output memory/latency
+problem and the synchronous browser-proxy timeout. The proxy currently awaits
 upstream.text(), so an API streaming response alone would still be buffered by the web tier.
 
 The allowlist includes owned profile/identifier/consent metadata, answers with attempted-question

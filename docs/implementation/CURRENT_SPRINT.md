@@ -70,3 +70,13 @@ FLAG_HISTORY and DATA_REQUEST_REVIEW use exact immutable parent ownership with e
 deletion execution remains disabled. Native migration and 19 focused hold cases pass. Full native
 regression/recovery and hosted browser acceptance remain pending.
 [Evidence](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md).
+
+NFR-ACC-001/NFR-COMP-001 narrow learner regression is being added on `codex/mobile-reflow`.
+It exercises a 320-pixel touch viewport through registration, practice, saved resume and history,
+checking reflow and key 44-pixel targets. Lint/types and inventory pass; runtime acceptance remains
+pending. [Evidence](E9_MOBILE_REFLOW_VERIFICATION.md). Physical mobile and branded browser gates stay open.
+
+Native accountability regression passed 431 unit/contract and 189 integration cases, with the one
+storage/Mailpit case still failing because MinIO is not available. Host-native Ollama connectivity
+now passes after starting the prescribed loopback service with cloud access disabled; no inference,
+model download or Gemini evaluation ran.

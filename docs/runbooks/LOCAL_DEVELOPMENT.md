@@ -51,6 +51,7 @@ make build
 # First browser installation only:
 make e2e-install
 make e2e
+make test-web-mobile # focused 320-pixel synthetic touch journey; also included in e2e
 make security
 make containers
 make security-source
