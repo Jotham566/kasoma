@@ -26,7 +26,7 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Find your starting point", exact: true }),
@@ -44,7 +44,7 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.reload();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Find your starting point", exact: true }),
@@ -100,7 +100,7 @@ test("FR-ID-003: minor remains blocked until distinct guardian consent and assen
     .check();
   await page.getByRole("button", { name: "Record guardian consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Find your starting point", exact: true }),

@@ -50,7 +50,7 @@ test("NFR-ACC-001/NFR-COMP-001: narrow touch journey reflows and retains saved l
     .check();
   await touchTarget(page.getByRole("button", { name: "Record my consent" }));
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await reflows(page);
 

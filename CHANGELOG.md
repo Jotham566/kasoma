@@ -1,5 +1,41 @@
 # Changelog
 
+## Work in progress — request aggregation
+
+- Complete local acceptance: 259 integration cases, 666 unit/contract cases, 32 tooling
+  checks, 90 browser executions, generated contracts, security scans/audits and both
+  live container probes pass. Final-head hosted verification remains pending.
+
+- Build/scan and refresh the local eight-service stack. Verify scheduled exports and
+  real API-to-Redis metrics publication; add the bounded metrics probe to container smoke.
+  Full backend/hosted acceptance remains pending.
+
+- Verify all 90 native browser executions after strengthening consent/error selectors;
+  operations display-state, mobile and accessibility checks pass. Full backend and
+  container acceptance remain in progress.
+
+- Trace and correct a browser-test consent race: the success substring also matched
+  the paused-consent sentence. Anchor all 14 success assertions, preserving the actual
+  consent gate. Scope export errors to main content to exclude Next's route announcer;
+  retain synthetic browser traces only on failure.
+
+- Wire API collection, minimized ADMIN snapshots, conservative sample-gated latency
+  alerts and histogram-range presentation. Add typed thresholds, generated contracts
+  and the alert event schema. Runtime/API/browser verification is in progress.
+
+- Add bounded Redis interval retention and retry deduplication, corruption/freshness
+  handling, and an owned background SDK collector with finite I/O/shutdown. Add
+  local Redis and fake-store lifecycle tests; API/dashboard integration remains pending.
+
+- Start an isolated, attribute-free OpenTelemetry histogram component with disabled
+  exemplars, explicit resource metadata and honest percentile intervals. Add SDK and
+  property tests and ADR-049 proposal. API wiring, Redis retention and dashboard
+  integration remain pending; no runtime behavior changes yet.
+
+- Add bounded canonical interval projection and fail-closed SDK/storage validation.
+  Format/lint/types, 650 unit/contract cases, 32 tooling checks, OpenAPI comparison
+  and source secret scanning pass. Runtime integration remains unverified.
+
 ## Work in progress — learner UI foundation
 
 - Increase shared learner/staff navigation targets to 48px; retain the 44px acceptance minimum across browser bounding-box rounding. All 90 native browser executions pass.

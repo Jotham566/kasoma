@@ -463,6 +463,16 @@ counts and degraded dependency status, never fabricated zeros or raw exception t
 Uninstrumented AI/messaging/grade-failure/latency/mastery/channel metrics are explicit.
 This read-only extension does not change the public health contract or domain records.
 
+ADR-049 candidate adds nullable `request_timing`: observed sample size, p95 exclusive
+lower/inclusive upper bounds, interval count, capping indicator and fixed best-effort
+response-start/300-second retention labels. Empty collections have zero samples and
+null bounds; measured zero has upper bound zero; overflow has no finite upper bound.
+Absent/stale/malformed storage gives null and keeps REQUEST_LATENCY unavailable.
+No source/process/request identifiers are exposed. Percentiles are intervals, not exact
+latency or agreed-load acceptance. REQUEST_RESPONSE_START_SLOW alerts use the proven
+integer lower bound after the configured minimum samples. Existing ADMIN, rate-limit
+and no-store boundaries remain unchanged.
+
 ## Synthetic WhatsApp linking implementation (ADR-034)
 
 - `POST /api/v1/channels/whatsapp/link-code`: recent owner authentication, current-policy

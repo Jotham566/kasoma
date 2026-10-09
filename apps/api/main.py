@@ -27,6 +27,11 @@ from services.health import Health, dependency_health
 from services.identity import IdentityError, IdentityService
 from services.observability import correlation_id, emit, tracer
 from services.providers import FakeMessagingProvider, MailpitEmailProvider
+from services.request_metrics_collector import (
+    RequestMetricCollector,
+    create_collector,
+    record_timing,
+)
 from services.whatsapp_ingress import WebhookRejected
 
 
@@ -38,6 +43,7 @@ def create_app(
     settings: Settings | None = None,
     identity: IdentityService | None = None,
     channel_wakeup: Callable[[Settings, str], None] | None = None,
+    metrics_factory: Callable[[Settings], RequestMetricCollector] | None = None,
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -55,9 +61,13 @@ def create_app(
         app.state.identity = identity or IdentityService(
             engine, config, email, FakeMessagingProvider()
         )
+        collector = (metrics_factory or create_collector)(config)
+        app.state.request_metrics = collector.metrics
         try:
+            collector.start()
             yield
         finally:
+            collector.close()
             engine.dispose()
 
     app = FastAPI(title="Kasoma API", version="0.1.0", lifespan=lifespan)
@@ -98,6 +108,7 @@ def create_app(
             response.headers["Cache-Control"] = "no-store"
             channel = "WHATSAPP" if request.url.path == "/api/v1/webhooks/whatsapp" else "WEB"
             response_start_ms = max(0, ceil((perf_counter() - started) * 1000))
+            record_timing(getattr(request.app.state, "request_metrics", None), response_start_ms)
             span.set_attribute("http.response.status_code", response.status_code)
             span.set_attribute("response_start_ms", response_start_ms)
             emit(

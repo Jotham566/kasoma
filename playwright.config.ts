@@ -24,6 +24,7 @@ export default defineConfig({
   use: {
     baseURL: "http://127.0.0.1:13000",
     browserName,
+    trace: "retain-on-failure",
     ...(chromiumChannel ? { channel: chromiumChannel } : {}),
   },
   webServer: [

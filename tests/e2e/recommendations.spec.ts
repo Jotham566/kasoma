@@ -23,7 +23,7 @@ test("FR-REV-001/006: explained recommendation, lost start acknowledgement and d
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await page.goto("/");
   const card = page.getByRole("region", { name: "Recommended practice" });

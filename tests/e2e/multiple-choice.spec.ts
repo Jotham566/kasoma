@@ -131,9 +131,7 @@ test("FR-GRD-001: reviewed multiple choice, checkbox recovery and exact-set scor
       .check();
     await learner.getByRole("button", { name: "Record my consent" }).click();
     await expect(
-      learner.getByText("Required declarations are recorded.", {
-        exact: false,
-      }),
+      learner.getByText(/^Required declarations are recorded\./),
     ).toBeVisible();
     await learner.goto("/revise");
     await learner

@@ -9,6 +9,8 @@ const messages: Record<
   components["schemas"]["OperationAlert"]["code"],
   string
 > = {
+  REQUEST_RESPONSE_START_SLOW:
+    "Observed API response-start timing exceeded its threshold",
   DATABASE_DOWN: "Database unavailable",
   REDIS_DOWN: "Redis unavailable",
   WORKER_HEARTBEAT_MISSING: "Monitoring worker heartbeat unavailable",
@@ -312,13 +314,65 @@ export default function Operations() {
           <Link className="ui-text-link" href="/admin/flags">
             Review content flags
           </Link>
+          <section
+            className="surface-card operations-section"
+            aria-label="API response-start timing"
+          >
+            <h2 className="text-xl font-semibold">API response-start timing</h2>
+            {view.request_timing ? (
+              <>
+                {view.request_timing.sample_size === 0 ? (
+                  <p>
+                    Collector available. No observed requests in the retained
+                    window.
+                  </p>
+                ) : (
+                  <p>
+                    Observed p95:{" "}
+                    {view.request_timing.p95_lower_exclusive_ms === null
+                      ? "0"
+                      : `greater than ${view.request_timing.p95_lower_exclusive_ms}`}{" "}
+                    ms
+                    {view.request_timing.p95_upper_inclusive_ms === null
+                      ? ", with no finite upper bound"
+                      : `, up to ${view.request_timing.p95_upper_inclusive_ms} ms`}
+                    . {view.request_timing.sample_size} observations across{" "}
+                    {view.request_timing.interval_count} collected intervals.
+                  </p>
+                )}
+                {view.request_timing.capped && (
+                  <p>
+                    Storage capacity was reached; some intervals were removed.
+                  </p>
+                )}
+              </>
+            ) : (
+              <p>
+                Response-start metrics unavailable. Missing values do not mean
+                zero.
+              </p>
+            )}
+            <p>
+              Best-effort measurements from the last five minutes, collected
+              every five seconds. Outages or process exits can lose
+              observations. Timing ends when API response headers are ready; it
+              does not measure complete downloads, network delivery or release
+              SLOs.
+            </p>
+            <p>
+              Alert threshold: {view.thresholds.request_p95_ms} ms with at least{" "}
+              {view.thresholds.request_min_samples} observations. An alert
+              requires the histogram interval to prove the threshold was
+              reached.
+            </p>
+          </section>
           <h2 className="text-xl font-semibold">
             Instrumentation still pending
           </h2>
           <p>
-            AI, SMS and email usage, grading-failure rates, HTTP latency,
-            mastery lag and webhook failures before durable intake remain
-            unmeasured. No external notifications are sent.
+            AI, SMS and email usage, grading-failure rates, complete-response
+            latency, mastery lag and webhook failures before durable intake
+            remain unmeasured. No external notifications are sent.
           </p>
         </>
       )}

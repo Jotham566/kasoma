@@ -24,7 +24,7 @@ test("FR-GRD-009/FR-CNT-006: lost report acknowledgement and independent audited
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await page.goto("/revise");
   await page

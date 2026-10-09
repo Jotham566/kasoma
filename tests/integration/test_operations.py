@@ -23,6 +23,40 @@ assessment = assessment_fixture
 pytestmark = pytest.mark.integration
 
 
+def test_request_histogram_is_admin_only_and_unavailable_on_corruption(content):
+    from uuid import uuid4
+
+    from services.request_metrics import HistogramInterval
+    from services.request_metrics_collector import metric_cache, metric_scope
+    from services.request_metrics_store import RequestMetricStore
+
+    service, client, actors, _ = content
+    with metric_cache(service.settings) as cache:
+        store = RequestMetricStore(cache, metric_scope(service.settings))
+        seconds, micros = cache.time()
+        end = (seconds * 1_000_000 + micros - 10000) * 1000
+        interval = HistogramInterval(end - 1_000_000_000, end, (0,) * 7 + (1000,) + (0,) * 5)
+        source = uuid4()
+        assert store.write(source, interval)
+        response = client.get("/api/v1/admin/operations", headers=actors["admin"])
+        assert response.status_code == 200
+        timing = response.json()["request_timing"]
+        assert timing["sample_size"] >= 1000
+        assert timing["p95_lower_exclusive_ms"] == 500
+        assert timing["p95_upper_inclusive_ms"] == 1000
+        assert timing["best_effort"] is True
+        assert "REQUEST_LATENCY" not in response.json()["unavailable_metrics"]
+        assert "REQUEST_RESPONSE_START_SLOW" in {a["code"] for a in response.json()["alerts"]}
+        assert str(source) not in response.text
+        for role in ["learner", "author", "support"]:
+            assert client.get("/api/v1/admin/operations", headers=actors[role]).status_code == 403
+        cache.set(store.interval_key(source, interval), b"invalid", px=10000)
+        response = client.get("/api/v1/admin/operations", headers=actors["admin"])
+        assert response.status_code == 200
+        assert response.json()["request_timing"] is None
+        assert "REQUEST_LATENCY" in response.json()["unavailable_metrics"]
+
+
 def test_export_operations_follow_durable_queue_failure_and_age_without_identifiers(
     content, monkeypatch
 ):

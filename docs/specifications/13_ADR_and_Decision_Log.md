@@ -307,3 +307,15 @@ See [ADR-047](../decisions/ADR/047-private-export-artifact-format.md). A bounded
 binds encrypted chunks to their request/generation/ordinal, with trusted manifest sizes/digests.
 This is preparation for FR-ID-006 large-history delivery; no route, publication, storage lifecycle,
 retention policy or existing synchronous export limit changes. Delivery remains disabled.
+
+### ADR-048 — asynchronous owned export delivery (proposed)
+
+See [ADR-048](../decisions/ADR/048-asynchronous-owned-export-delivery.md).
+Local lifecycle/transport verification is recorded; final-head hosted acceptance and
+promotion remain pending. This proposal does not authorize deletion or change retention.
+
+### ADR-049 — bounded local request histograms (proposed)
+
+See [ADR-049](../decisions/ADR/049-local-request-histograms.md). Attribute-free OTel
+histograms and bounded local Redis aggregation are in progress. Runtime latency
+aggregation remains unavailable until integration and acceptance pass.

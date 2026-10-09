@@ -888,3 +888,31 @@ and uses the actual privacy UI on port 13000. It denies external proxy traffic a
 removes its owned profile/browser after success or failure. Never use personal profiles
 or real data. Closed stage codes diagnose helper failures without exposing account
 contents or credentials. Full application and hosted acceptance remain mandatory.
+
+## Request timing aggregation candidate (ADR-049)
+
+After `make services`, run `make test-request-metrics` for real SDK, fake-store
+lifecycle and isolated local Redis checks. `make test-operations` covers the ADMIN
+projection and denial paths. No production data or external telemetry destination is used.
+
+The API owns one five-second collector thread; requests record only integer duration
+in fixed OTel buckets. Local Redis holds at most 256 interval bodies, each at most
+1024 bytes, with absolute expiry no later than five minutes from the start (and at
+most five minutes of actual key lifetime within the one-second host/VM clock tolerance).
+Collector freshness expires after 15 seconds. A corrupt or missing unexpired record
+makes the aggregate unavailable. Capacity eviction is visible. Measurements are
+best effort and can be lost during outages/process exits; they do not prove an SLO.
+
+`OPS_REQUEST_P95_MS=500` and `OPS_REQUEST_MIN_SAMPLES=20` configure local alerts.
+The p95 is a bucket interval: a threshold is alerted only when its lower bound proves
+the breach. The ADMIN operations page requires explicit refresh and distinguishes
+empty, unavailable, measured-zero and overflow states. No automatic external alerts
+are sent. Disable collection and let the finite keys expire for rollback; do not flush
+Redis. Native API/browser/backend/container checks pass; hosted acceptance remains pending.
+`make smoke-request-metrics` checks fresh collection from the running API with only
+loopback liveness traffic and scoped Redis reads. It is also part of `make container-smoke`.
+
+Full browser runs retain failure traces in ignored `test-results/`. These contain
+synthetic session data: keep them local, use fictional accounts and do not publish
+raw traces/logs. Consent-success checks use an anchored positive sentence, avoiding
+the otherwise matching paused-consent explanation.

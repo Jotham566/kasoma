@@ -23,7 +23,7 @@ test("FR-GRD-008: unseen reassessment survives retry and preserves original feed
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await page.goto("/revise");
   await page

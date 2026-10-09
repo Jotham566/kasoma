@@ -19,7 +19,7 @@ async function onboard(page: Page, email: string) {
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
 }
 

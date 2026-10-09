@@ -5,9 +5,32 @@ failed its original two Firefox export cases. Local follow-ups now pass all 90 b
 executions, including native Firefox corruption, bounded cancellation and frozen retry.
 The service independently bounds adapter reads; navigation targets are 48px. Full
 246-case integration/security checks, the 625-case unit run, 32 tooling checks and the
-rebuilt eight-service stack smoke/image scans pass. Follow-ups are ready to commit/push
-for final-head hosted verification. ADR-048 remains proposed; no production, academic
+rebuilt eight-service stack smoke/image scans pass. Follow-ups are committed/pushed as
+`ac4e10f`; hosted run 37987018714 is in progress. ADR-048 remains proposed; no production, academic
 or MVP completion is claimed.
+
+## Next slice in progress: request aggregation
+
+FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-MNT-001: candidate OTel/Redis collection,
+API lifecycle, ADMIN snapshot/alerts and dashboard are implemented under
+[ADR-049 proposal](../decisions/ADR/049-local-request-histograms.md). Fixed buckets,
+disabled exemplars, static resources, finite retention and honest percentile intervals
+are covered by component checks. API verification passes 664 unit/contract, 32 tooling,
+51 focused telemetry and 20 operations cases, lint/types and generated contracts.
+Full backend/browser regressions are active. Browser traces exposed test locators
+matching the negative consent sentence and Next's route announcer; those assertions
+are tightened and the full matrix is rerunning. See [verification](E8_REQUEST_AGGREGATION_VERIFICATION.md).
+This work is uncommitted. The updated API/web are now deployed to the review stack.
+Updated 10 October: the corrected full browser matrix passes all 90 executions,
+including new operations states; narrow-screen capture reviewed. Full backend regression
+is still running. Container build/scans pass with no HIGH/CRITICAL findings; all eight
+services are healthy and the scheduled export smoke passes. The new runtime metrics
+probe also passes. Unit coverage is now 666 with two added smoke tests; combined
+container smoke now includes collection and passes. Full backend regression has now
+passed all 259 integration cases (664 unit cases at collection; the subsequent
+666-case unit run includes two added smoke tests). The candidate is ready to commit
+and push on `codex/request-timing`; final-head hosted acceptance remains required.
+The older candidate evidence below is chronological; the header records the latest status.
 
 ## Local review stack
 

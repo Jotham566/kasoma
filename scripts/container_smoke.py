@@ -33,6 +33,9 @@ try:
     with urllib.request.urlopen("http://localhost:3000", timeout=10) as response:
         assert b"Services are ready." in response.read()
     subprocess.run(["uv", "run", "--frozen", "python", "-m", "scripts.export_smoke"], check=True)
+    subprocess.run(
+        ["uv", "run", "--frozen", "python", "-m", "scripts.request_metrics_smoke"], check=True
+    )
     print("Container smoke passed: service health and owned export through worker/storage/web.")
 finally:
     started_here = [

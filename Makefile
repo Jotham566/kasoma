@@ -26,6 +26,12 @@ test: test-unit
 	$(UV) pytest -m integration --allow-hosts=localhost,127.0.0.1,::1
 test-unit: test-tooling
 	$(UV) pytest -m 'not integration'
+.PHONY: test-request-metrics
+test-request-metrics:
+	$(UV) pytest tests/contract/test_request_metrics.py tests/contract/test_request_metrics_collector.py tests/integration/test_request_metrics_store.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: smoke-request-metrics
+smoke-request-metrics:
+	$(UV) python -m scripts.request_metrics_smoke
 lint: check-docs
 	$(UV) ruff check .
 	$(UV) ruff format --check .

@@ -132,9 +132,7 @@ test("FR-GRD-002: author and independently review numeric rules, then grade unit
       .check();
     await learner.getByRole("button", { name: "Record my consent" }).click();
     await expect(
-      learner.getByText("Required declarations are recorded.", {
-        exact: false,
-      }),
+      learner.getByText(/^Required declarations are recorded\./),
     ).toBeVisible();
     await learner.goto("/revise");
     await learner

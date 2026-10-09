@@ -23,7 +23,7 @@ test("FR-GRD-006: reviewed hints survive lost acknowledgement and preserve gradi
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await page.goto("/revise");
   await page

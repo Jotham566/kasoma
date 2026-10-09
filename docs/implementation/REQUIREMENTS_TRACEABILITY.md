@@ -71,6 +71,14 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 
 E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
 
+FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-MNT-001 in progress:
+[request aggregation](E8_REQUEST_AGGREGATION_VERIFICATION.md) adds an isolated OTel
+histogram component and percentile/property tests under proposed ADR-049. Runtime
+components now include bounded Redis expiry/deduplication and a background SDK collector.
+Integration is under verification; REQUEST_LATENCY remains unavailable when collection
+is absent/stale/invalid, and these requirements
+remain partial. No application acceptance is inferred from the component.
+
 E5 diagnostic/mastery evidence: [verification report](E5_VERIFICATION.md).
 
 E5 recommended practice: [verification report](E5_RECOMMENDATIONS_VERIFICATION.md).

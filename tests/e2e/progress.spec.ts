@@ -23,7 +23,7 @@ test("FR-MST-004/005: sparse progress, offline retry and sealed diagnostic histo
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await page.goto("/progress");
   await expect(page.getByRole("status")).toHaveText("Learning record loaded.");

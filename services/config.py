@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     assessment_session_days: int = Field(default=7, ge=1, le=30)
     assessment_repetition_days: int = Field(default=7, ge=1, le=90)
     ops_failed_import_threshold: int = Field(default=1, ge=1, le=10000)
+    ops_request_p95_ms: int = Field(default=500, ge=1, le=60000)
+    ops_request_min_samples: int = Field(default=20, ge=1, le=10000)
     ops_import_age_seconds: int = Field(default=300, ge=60, le=86400)
     ops_flag_backlog_threshold: int = Field(default=20, ge=1, le=10000)
     ops_export_failure_threshold: int = Field(default=1, ge=1, le=10000)

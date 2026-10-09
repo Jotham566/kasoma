@@ -21,6 +21,17 @@ class DispatchTiming(Contract):
     measure: Literal["LOCAL_FAKE_ACCEPTANCE"] = "LOCAL_FAKE_ACCEPTANCE"
 
 
+class RequestTiming(Contract):
+    sample_size: int = Field(ge=0, le=2**53 - 1)
+    p95_lower_exclusive_ms: int | None = Field(ge=0)
+    p95_upper_inclusive_ms: int | None = Field(ge=0)
+    interval_count: int = Field(ge=0, le=256)
+    capped: bool
+    retention_seconds: Literal[300] = 300
+    measure: Literal["API_RESPONSE_START"] = "API_RESPONSE_START"
+    best_effort: Literal[True] = True
+
+
 class ChannelCounts(Contract):
     queued_inbound: Count
     queued_outbound: Count
@@ -51,6 +62,7 @@ class OperationCounts(Contract):
 
 
 AlertCode = Literal[
+    "REQUEST_RESPONSE_START_SLOW",
     "DATABASE_DOWN",
     "REDIS_DOWN",
     "WORKER_HEARTBEAT_MISSING",
@@ -75,6 +87,8 @@ class OperationAlert(Contract):
 
 
 class OperationThresholds(Contract):
+    request_p95_ms: int = Field(default=500, ge=1, le=60000)
+    request_min_samples: int = Field(default=20, ge=1, le=10000)
     failed_imports: int = Field(ge=1, le=10000)
     import_age_seconds: int = Field(ge=60, le=86400)
     unresolved_flags: int = Field(ge=1, le=10000)
@@ -94,6 +108,7 @@ class OperationsView(Contract):
     counts: OperationCounts | None
     thresholds: OperationThresholds
     alerts: list[OperationAlert]
+    request_timing: RequestTiming | None = None
     unavailable_metrics: list[
         Literal[
             "AI_USAGE",

@@ -3027,6 +3027,7 @@
         "properties": {
           "code": {
             "enum": [
+              "REQUEST_RESPONSE_START_SLOW",
               "DATABASE_DOWN",
               "REDIS_DOWN",
               "WORKER_HEARTBEAT_MISSING",
@@ -3180,6 +3181,20 @@
             "title": "Import Age Seconds",
             "type": "integer"
           },
+          "request_min_samples": {
+            "default": 20,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Request Min Samples",
+            "type": "integer"
+          },
+          "request_p95_ms": {
+            "default": 500,
+            "maximum": 60000.0,
+            "minimum": 1.0,
+            "title": "Request P95 Ms",
+            "type": "integer"
+          },
           "unresolved_flags": {
             "maximum": 10000.0,
             "minimum": 1.0,
@@ -3222,6 +3237,16 @@
           },
           "health": {
             "$ref": "#/components/schemas/Health"
+          },
+          "request_timing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RequestTiming"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "schema_version": {
             "const": 1,
@@ -3700,6 +3725,78 @@
           "refresh_token"
         ],
         "title": "Refresh",
+        "type": "object"
+      },
+      "RequestTiming": {
+        "additionalProperties": false,
+        "properties": {
+          "best_effort": {
+            "const": true,
+            "default": true,
+            "title": "Best Effort",
+            "type": "boolean"
+          },
+          "capped": {
+            "title": "Capped",
+            "type": "boolean"
+          },
+          "interval_count": {
+            "maximum": 256.0,
+            "minimum": 0.0,
+            "title": "Interval Count",
+            "type": "integer"
+          },
+          "measure": {
+            "const": "API_RESPONSE_START",
+            "default": "API_RESPONSE_START",
+            "title": "Measure",
+            "type": "string"
+          },
+          "p95_lower_exclusive_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95 Lower Exclusive Ms"
+          },
+          "p95_upper_inclusive_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P95 Upper Inclusive Ms"
+          },
+          "retention_seconds": {
+            "const": 300,
+            "default": 300,
+            "title": "Retention Seconds",
+            "type": "integer"
+          },
+          "sample_size": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Sample Size",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sample_size",
+          "p95_lower_exclusive_ms",
+          "p95_upper_inclusive_ms",
+          "interval_count",
+          "capped"
+        ],
+        "title": "RequestTiming",
         "type": "object"
       },
       "ResponseSpec": {

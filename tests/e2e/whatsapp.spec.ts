@@ -25,7 +25,7 @@ test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unli
     .check();
   await page.getByRole("button", { name: "Record my consent" }).click();
   await expect(
-    page.getByText("Required declarations are recorded.", { exact: false }),
+    page.getByText(/^Required declarations are recorded\./),
   ).toBeVisible();
   await page.goto("/channels/whatsapp");
   await page.getByRole("button", { name: "Refresh channel status" }).click();

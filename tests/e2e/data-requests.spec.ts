@@ -117,7 +117,7 @@ test("FR-ID-006: background command replay, explicit status and native frozen at
   await page
     .getByRole("link", { name: "Save background export", exact: true })
     .click();
-  await expect(page.getByRole("alert")).toHaveText(
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText(
     "Sign in again to verify your identity before downloading your export.",
   );
 });

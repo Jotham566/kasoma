@@ -105,3 +105,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-048 proposal: Asynchronous owned export delivery](048-asynchronous-owned-export-delivery.md)
   records the next lifecycle contract; unresolved cleanup/transfer bounds keep it unaccepted.
+
+- [ADR-049 proposal: Bounded local request histograms](049-local-request-histograms.md)
+  records the in-progress OTel aggregation, privacy and finite local retention design.

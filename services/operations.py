@@ -23,13 +23,18 @@ from services.operations_contracts import (
     OperationCounts,
     OperationsView,
     OperationThresholds,
+    RequestTiming,
 )
+from services.request_metrics_collector import metric_cache, metric_scope
+from services.request_metrics_store import RequestMetricStore
 from services.staff import authorize
 
 
 def thresholds(identity: IdentityService) -> OperationThresholds:
     settings = identity.settings
     return OperationThresholds(
+        request_p95_ms=settings.ops_request_p95_ms,
+        request_min_samples=settings.ops_request_min_samples,
         failed_imports=settings.ops_failed_import_threshold,
         import_age_seconds=settings.ops_import_age_seconds,
         unresolved_flags=settings.ops_flag_backlog_threshold,
@@ -100,8 +105,23 @@ def evaluate(
     worker: Literal["up", "unavailable"],
     values: OperationCounts | None,
     limits: OperationThresholds,
+    request_metric: RequestTiming | None = None,
 ) -> list[OperationAlert]:
     alerts: list[OperationAlert] = []
+    if request_metric is not None and request_metric.sample_size >= limits.request_min_samples:
+        lower = request_metric.p95_lower_exclusive_ms
+        # Integer-ms measurements make lower + 1 a proven inclusive lower bound.
+        # An overlapping upper bound alone never establishes a threshold breach.
+        observed = lower + 1 if lower is not None else 0
+        if observed >= limits.request_p95_ms:
+            alerts.append(
+                OperationAlert(
+                    code="REQUEST_RESPONSE_START_SLOW",
+                    severity="WARNING",
+                    observed=observed,
+                    threshold=limits.request_p95_ms,
+                )
+            )
     if health.database == "down":
         alerts.append(
             OperationAlert(code="DATABASE_DOWN", severity="CRITICAL", observed=1, threshold=1)
@@ -226,14 +246,36 @@ def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> Opera
             health = health.model_copy(update={"database": "down", "status": "degraded"})
     worker = heartbeat(identity, write=worker_sample)
     limits = thresholds(identity)
-    return OperationsView(
+    timing = request_timing(identity)
+    view = OperationsView(
         generated_at=identity.clock(),
         health=health,
         worker=worker,
         counts=values,
         thresholds=limits,
-        alerts=evaluate(health, worker, values, limits),
+        alerts=evaluate(health, worker, values, limits, timing),
+        request_timing=timing,
     )
+    if timing is not None:
+        view.unavailable_metrics = [m for m in view.unavailable_metrics if m != "REQUEST_LATENCY"]
+    return view
+
+
+def request_timing(identity: IdentityService) -> RequestTiming | None:
+    try:
+        with metric_cache(identity.settings) as cache:
+            value = RequestMetricStore(cache, metric_scope(identity.settings)).read()
+        if value is None:
+            return None
+        return RequestTiming(
+            sample_size=value.estimate.sample_size,
+            p95_lower_exclusive_ms=value.estimate.p95_lower_exclusive_ms,
+            p95_upper_inclusive_ms=value.estimate.p95_upper_inclusive_ms,
+            interval_count=value.interval_count,
+            capped=value.capped,
+        )
+    except Exception:
+        return None
 
 
 def read(identity: IdentityService, token: str) -> OperationsView:

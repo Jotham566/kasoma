@@ -2249,7 +2249,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "EXPORT_FAILED" | "EXPORT_STALLED";
+            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "EXPORT_FAILED" | "EXPORT_STALLED";
             /** Observed */
             observed: number;
             /**
@@ -2307,6 +2307,16 @@ export interface components {
             failed_imports: number;
             /** Import Age Seconds */
             import_age_seconds: number;
+            /**
+             * Request Min Samples
+             * @default 20
+             */
+            request_min_samples: number;
+            /**
+             * Request P95 Ms
+             * @default 500
+             */
+            request_p95_ms: number;
             /** Unresolved Flags */
             unresolved_flags: number;
         };
@@ -2321,6 +2331,7 @@ export interface components {
              */
             generated_at: string;
             health: components["schemas"]["Health"];
+            request_timing?: components["schemas"]["RequestTiming"] | null;
             /**
              * Schema Version
              * @default 1
@@ -2516,6 +2527,37 @@ export interface components {
         Refresh: {
             /** Refresh Token */
             refresh_token: string;
+        };
+        /** RequestTiming */
+        RequestTiming: {
+            /**
+             * Best Effort
+             * @default true
+             * @constant
+             */
+            best_effort: true;
+            /** Capped */
+            capped: boolean;
+            /** Interval Count */
+            interval_count: number;
+            /**
+             * Measure
+             * @default API_RESPONSE_START
+             * @constant
+             */
+            measure: "API_RESPONSE_START";
+            /** P95 Lower Exclusive Ms */
+            p95_lower_exclusive_ms: number | null;
+            /** P95 Upper Inclusive Ms */
+            p95_upper_inclusive_ms: number | null;
+            /**
+             * Retention Seconds
+             * @default 300
+             * @constant
+             */
+            retention_seconds: 300;
+            /** Sample Size */
+            sample_size: number;
         };
         /** ResponseSpec */
         ResponseSpec: {

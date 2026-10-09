@@ -16,7 +16,13 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
   await page.getByRole("button", { name: "Verify and continue" }).click();
   await expect(page.getByLabel("Display name", { exact: true })).toBeVisible();
   await page.goto("/admin/operations");
+  const snapshotResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/v1/admin/operations") &&
+      response.status() === 200,
+  );
   await page.getByRole("button", { name: "Refresh operations" }).click();
+  const baseline = await (await snapshotResponse).json();
   await expect(page.getByRole("status")).toHaveText(
     "Operational snapshot refreshed.",
   );
@@ -43,6 +49,12 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
   await expect(exports).toContainText(
     "These local alerts do not measure legal fulfillment deadlines.",
   );
+  const timing = page.getByRole("region", {
+    name: "API response-start timing",
+  });
+  await expect(timing).toBeVisible();
+  await expect(timing).toContainText("Best-effort measurements");
+  await expect(timing).toContainText("does not measure complete downloads");
   await expect(
     page.getByText("No feedback dispatch samples in the last 24 hours.", {
       exact: true,
@@ -63,6 +75,52 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
     fullPage: true,
   });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  // Deterministic presentation states supplement the real authorized snapshot;
+  // backend aggregation/authorization is exercised by local Redis integration tests.
+  for (const state of [
+    {
+      sample_size: 0,
+      p95_lower_exclusive_ms: null,
+      p95_upper_inclusive_ms: null,
+      capped: false,
+      text: "No observed requests in the retained window.",
+    },
+    {
+      sample_size: 20,
+      p95_lower_exclusive_ms: null,
+      p95_upper_inclusive_ms: 0,
+      capped: false,
+      text: "Observed p95: 0 ms, up to 0 ms.",
+    },
+    {
+      sample_size: 20,
+      p95_lower_exclusive_ms: 30000,
+      p95_upper_inclusive_ms: null,
+      capped: true,
+      text: "greater than 30000 ms, with no finite upper bound",
+    },
+  ]) {
+    const { text, ...sample } = state;
+    await page.route("**/api/v1/admin/operations", (route) =>
+      route.fulfill({
+        json: {
+          ...baseline,
+          request_timing: {
+            ...sample,
+            interval_count: sample.sample_size ? 1 : 0,
+            retention_seconds: 300,
+            measure: "API_RESPONSE_START",
+            best_effort: true,
+          },
+        },
+      }),
+    );
+    await page.getByRole("button", { name: "Refresh operations" }).click();
+    await expect(timing).toContainText(text);
+    if (state.capped)
+      await expect(timing).toContainText("some intervals were removed");
+    await page.unroute("**/api/v1/admin/operations");
+  }
   await page.route("**/api/v1/admin/operations", (route) =>
     route.abort("failed"),
   );
