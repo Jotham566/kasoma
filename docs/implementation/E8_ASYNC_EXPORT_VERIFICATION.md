@@ -437,3 +437,10 @@ one isolated content-admin browser case. Object-storage recovery and production 
 remain unverified. Evidence: `.local/async-export-complete-native-regression.log` and
 `.local/async-export-final-recovery-ui.log`. Remaining browser matrix, container vulnerability
 scan and hosted CI still gate promotion; ADR-048 remains proposed.
+
+
+NFR-SEC-001/NFR-MNT-001 scan environment update: the native Trivy database download
+exceeded its default five-minute deadline before scanning either image. The pinned CLI
+confirms a `--timeout` duration option. `make security-containers` now supplies a configurable
+30-minute per-image bound; database freshness, severity and failure rules are unchanged.
+A retry is running. The initial run is recorded as incomplete, not clean.

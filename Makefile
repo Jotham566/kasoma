@@ -1,5 +1,6 @@
 .DEFAULT_GOAL := help
 PYTHON ?= python3
+TRIVY_TIMEOUT ?= 30m
 export PATH := $(CURDIR)/.local/runtime/node_modules/node/bin:$(CURDIR)/.local/tools/bin:$(PATH)
 export NEXT_TELEMETRY_DISABLED := 1
 export TURBO_TELEMETRY_DISABLED := 1
@@ -74,8 +75,8 @@ eval-local eval-gemini-free eval-compare:
 security-source:
 	$(UV) python scripts/scan_source.py
 security-containers:
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --severity HIGH,CRITICAL --exit-code 1 kasoma-api
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --severity HIGH,CRITICAL --exit-code 1 kasoma-web
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --timeout $(TRIVY_TIMEOUT) --severity HIGH,CRITICAL --exit-code 1 kasoma-api
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --timeout $(TRIVY_TIMEOUT) --severity HIGH,CRITICAL --exit-code 1 kasoma-web
 ollama-check:
 	$(UV) python -m scripts.ollama_check
 

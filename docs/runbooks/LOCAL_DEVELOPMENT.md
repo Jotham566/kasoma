@@ -838,3 +838,10 @@ and checks the frozen attachment through the web gateway. It signs out its own s
 Its synthetic account/request are retained; normal copy expiry applies. It never resets a database
 or deletes unrelated mail/storage. `make container-smoke` now includes this probe and preserves
 services that were already running. This is a local synthetic runtime check, not a cloud test.
+
+
+Container scans use `make security-containers` with a 30-minute per-image timeout so the
+initial vulnerability database can download over a slow local connection. Override the
+finite bound with `make security-containers TRIVY_TIMEOUT=45m` when needed. This only
+changes the timeout; HIGH/CRITICAL failure, database updates and both image scans remain
+mandatory. A download timeout is an incomplete scan, never a clean result.

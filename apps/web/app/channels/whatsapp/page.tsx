@@ -126,10 +126,8 @@ export default function WhatsApp() {
     }
   }
   return (
-    <main className="mx-auto max-w-2xl space-y-4 p-6">
-      <Link className="underline" href="/">
-        Home
-      </Link>
+    <main className="account-tools-page">
+      <p className="eyebrow">Connected channels</p>
       <h1 className="text-3xl font-semibold">WhatsApp channel</h1>
       <p>
         Synthetic local testing only. No real WhatsApp number or message
@@ -139,54 +137,67 @@ export default function WhatsApp() {
         Linking requires current consent and a recent sign-in. Linking does not
         create a new account.
       </p>
-      <Link
-        className="inline-flex min-h-11 items-center underline"
-        href="/onboarding"
-      >
+      <Link className="ui-text-link" href="/onboarding">
         Sign in and review consent
       </Link>
-      <button
-        className="block rounded border px-4 py-3"
-        disabled={busy}
-        onClick={() => void refresh()}
+      <section
+        className="surface-card channel-controls"
+        aria-label="Channel controls"
       >
-        Refresh channel status
-      </button>
-      <p role="status">{status}</p>
-      {view && (
-        <>
-          <p>
-            Channel state: <strong>{view.status}</strong>
-          </p>
-          <p>
-            {view.outbound_enabled
-              ? "Local fake replies enabled."
-              : "Local fake replies disabled."}
-          </p>
-          <button
-            className="rounded border px-4 py-3"
-            disabled={busy || !!unlink}
-            onClick={() => void issue()}
-          >
-            {issueKey ? "Retry code request" : "Get a link code"}
-          </button>
-          <button
-            className="ml-2 rounded border px-4 py-3"
-            disabled={busy}
-            onClick={() => void disconnect()}
-          >
-            {unlink ? "Retry unlink" : "Unlink and cancel codes"}
-          </button>
-        </>
-      )}
+        <button
+          className="ui-button ui-button-secondary"
+          disabled={busy}
+          onClick={() => void refresh()}
+        >
+          Refresh channel status
+        </button>
+        <p role="status">{status}</p>
+        {view && (
+          <>
+            <p>
+              Channel state: <strong>{view.status}</strong>
+            </p>
+            <p>
+              {view.outbound_enabled
+                ? "Local fake replies enabled."
+                : "Local fake replies disabled."}
+            </p>
+            <button
+              className="ui-button ui-button-primary"
+              disabled={busy || !!unlink}
+              onClick={() => void issue()}
+            >
+              {issueKey ? "Retry code request" : "Get a link code"}
+            </button>
+            <button
+              className="ui-button ui-button-secondary"
+              disabled={busy}
+              onClick={() => void disconnect()}
+            >
+              {unlink ? "Retry unlink" : "Unlink and cancel codes"}
+            </button>
+          </>
+        )}
+      </section>
       {code && (
-        <section aria-label="One-time link code" className="rounded border p-4">
+        <section
+          aria-label="One-time link code"
+          className="surface-card channel-code"
+        >
           <p>
             For the local simulator, use <code>LINK {code.code}</code>.
           </p>
           <p>
-            Expires at {new Date(code.expires_at).toLocaleTimeString()}. Keep
-            this code private.
+            Expires at{" "}
+            <time dateTime={code.expires_at}>
+              {new Date(code.expires_at).toLocaleTimeString("en-UG", {
+                timeZone: "Africa/Kampala",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })}
+            </time>{" "}
+            (Kampala). Keep this code private.
           </p>
         </section>
       )}

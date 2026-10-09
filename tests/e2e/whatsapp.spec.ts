@@ -30,6 +30,16 @@ test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unli
   await page.goto("/channels/whatsapp");
   await page.getByRole("button", { name: "Refresh channel status" }).click();
   await expect(page.getByText("NOT_LINKED", { exact: true })).toBeVisible();
+  await page.setViewportSize({ width: 320, height: 740 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: ".local/ui-review/channel-mobile.png",
+    fullPage: true,
+  });
   let lostCode = false;
   await page.route("**/api/v1/channels/whatsapp/link-code", async (route) => {
     if (!lostCode) {
@@ -45,6 +55,22 @@ test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unli
   await page.getByRole("button", { name: "Retry code request" }).click();
   const instruction = await page.locator("code").innerText();
   expect(instruction).toMatch(/^LINK [0-9A-F]{12}$/);
+  const expiry = page.getByRole("region", { name: "One-time link code" });
+  await expect(expiry).toContainText("(Kampala). Keep this code private.");
+  const timestamp = await expiry.locator("time").getAttribute("datetime");
+  expect(timestamp).toBeTruthy();
+  const expected = new Intl.DateTimeFormat("en-UG", {
+    timeZone: "Africa/Kampala",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(new Date(timestamp!));
+  await expect(expiry.locator("time")).toHaveText(expected);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   async function send(body: string) {
     const raw = JSON.stringify({

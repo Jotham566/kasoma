@@ -33,6 +33,23 @@ test("FR-MST-004/005: sparse progress, offline retry and sealed diagnostic histo
   ).toBeVisible();
   await expect(page.getByText(/Estimated mastery:/)).toHaveCount(0);
   await expect(overview.getByText("Evidence confidence: 0%.")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Progress", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await page.screenshot({
+    path: ".local/ui-review/progress-desktop.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 320, height: 740 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: ".local/ui-review/progress-mobile.png",
+    fullPage: true,
+  });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.route(
     "**/api/v1/me/progress?*",
@@ -85,6 +102,21 @@ test("FR-MST-004/005: sparse progress, offline retry and sealed diagnostic histo
   await page.getByRole("button", { name: "Load older sessions" }).focus();
   await page.keyboard.press("Enter");
   await expect(history.getByRole("article")).toHaveCount(11);
+  await expect(
+    page.getByRole("link", { name: "History", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  const review = history.getByRole("link", { name: "Review session" }).first();
+  const target = await review.boundingBox();
+  expect(target?.height).toBeGreaterThanOrEqual(44);
+  await page.screenshot({
+    path: ".local/ui-review/history-mobile.png",
+    fullPage: true,
+  });
   await expect(
     page.getByRole("button", { name: "Load older sessions" }),
   ).toHaveCount(0);

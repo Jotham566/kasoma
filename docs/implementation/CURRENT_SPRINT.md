@@ -1,7 +1,8 @@
 # Current sprint: export acceptance and learner UI completion
 
-Updated 9 October 2026. Main remains `bb2f4eb`; current work is uncommitted on
-`codex/async-personal-exports`. All development data is synthetic. No production acceptance,
+Updated 9 October 2026. Main remains `bb2f4eb`; export/UI candidate `c08341b` is pushed on
+`codex/async-personal-exports`, with hosted CI 37979693427 running. Subsequent progress/history
+UI work is uncommitted. All development data is synthetic. No production acceptance,
 academic approval or MVP completion is claimed.
 
 ## Local review stack
@@ -49,7 +50,8 @@ Current evidence:
 - Source secret scanning and generated OpenAPI/client checks pass.
 
 Full chronology and evidence boundaries: [export verification](E8_ASYNC_EXPORT_VERIFICATION.md).
-The isolated content-admin browser check also passes. Container vulnerability scanning is running.
+The isolated content-admin browser check also passes. Container vulnerability scanning timed out during its initial database download; a retry with
+a configurable 30-minute per-image timeout is running. No vulnerability result is claimed.
 Before promotion: finish the remaining browser matrix, container security and hosted CI; resolve any failures, then record ADR status and promotion evidence.
 
 ## Learner UI work
@@ -69,7 +71,12 @@ Desktop/mobile captures were inspected and retained under `.local/ui-review`. Th
 is deployed locally; source-only rebuilds reuse the frozen dependency layer. This is not physical-
 device, screen-reader, approved-brand or pilot acceptance.
 
-Next UI work: finish progress/history and account/privacy/channel presentation, then staff screens;
+Progress/history presentation passes lint/types/build and all 30 Chromium cases, including
+320-pixel reflow, touch targets, owned paging and sealed diagnostic resume. Screenshots were
+inspected without clipping; its rebuilt local web is healthy.
+Privacy/channel presentation passes lint/types/build and all 30 Chromium cases, including mobile
+privacy axe/reflow, frozen export retry, channel STOP/unlink and Kampala expiry. Captures reviewed.
+Next UI work: staff screens and final learner action hierarchy;
 review action hierarchy and supported-device usability. Keep API state authoritative, sparse-evidence
 wording accurate and the 250,000-byte cold-question transfer gate unchanged.
 [Plan and evidence](E6_LEARNER_UI_READINESS.md).

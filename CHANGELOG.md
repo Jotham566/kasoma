@@ -2,6 +2,10 @@
 
 ## Work in progress — learner UI foundation
 
+- Restyle privacy requests and WhatsApp linking for mobile, preserving explicit consent/re-authentication and retry controls; display link-code expiry explicitly in Kampala time. Lint/types/build and all 30 Chromium cases pass; mobile captures reviewed.
+
+- Restyle confidence-aware progress and session history with responsive cards, explicit empty/auth recovery actions and consistent touch controls. Preserve server-derived estimates, diagnostic sealing and pagination; lint/types/build and 30 Chromium cases pass, with desktop/mobile screenshot review.
+
 - Verify practice/diagnostic presentation with 30 Chromium cases and desktop/mobile screenshot review; verify the web dependency layer is cached after a source edit. Native MinIO and private storage initialization now work; all 59 storage checks pass, with full regression running.
 
 - Separate web dependency installation from application source in the Docker build so UI-only changes can reuse the frozen dependency layer (NFR-MNT-001).
@@ -17,6 +21,8 @@
 - Introduce shared learner navigation, a keyboard skip link and a responsive home/recommendation presentation using existing authorized data. Preserve synthetic notices, consent and retry semantics; verification is in progress.
 
 ## Work in progress — asynchronous owned export lifecycle
+
+- Allow a finite configurable 30-minute container scan timeout after the default five-minute vulnerability database download timed out. Keep current database updates and HIGH/CRITICAL failure gates unchanged.
 
 - Complete the native 245-case integration regression with real MinIO, dependency/security checks, populated logical recovery and isolated content-admin UI verification. Correct obsolete candidate registration comments; remaining browser/container/hosted gates still block promotion.
 

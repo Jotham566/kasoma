@@ -32,6 +32,17 @@ test("FR-ID-006: background command replay, explicit status and native frozen at
   await expect(
     page.getByRole("heading", { name: "Export request", exact: true }),
   ).toBeVisible();
+  await page.setViewportSize({ width: 320, height: 740 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: ".local/ui-review/privacy-mobile.png",
+    fullPage: true,
+  });
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   let dropped = false;
   const keys: string[] = [];
   await page.route("**/api/v1/me/data-requests/*/export-job", async (route) => {

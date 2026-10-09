@@ -480,3 +480,139 @@ body {
 .learning-page > a {
   margin-right: 1rem;
 }
+
+.learning-record-page {
+  max-width: 960px;
+  margin: auto;
+  padding: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+.learning-record-intro {
+  display: grid;
+  gap: 0.75rem;
+}
+.learning-record-intro > p:last-child {
+  color: var(--kasoma-muted);
+  max-width: 660px;
+}
+.record-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+}
+.record-controls [role="status"] {
+  flex-basis: 100%;
+}
+.record-subject {
+  flex: 1 1 240px;
+  font-weight: 600;
+}
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.progress-summary {
+  display: grid;
+  gap: 0.65rem;
+  align-content: start;
+}
+.progress-summary p {
+  font-size: 0.9rem;
+}
+.progress-summary .evidence-label {
+  justify-self: start;
+  padding: 0.3rem 0.6rem;
+  background: #edf2ed;
+  border-radius: 0.4rem;
+  font-weight: 600;
+  color: var(--kasoma-green);
+}
+.progress-summary .mastery-estimate {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.history-entry,
+.record-empty {
+  display: grid;
+  gap: 0.75rem;
+}
+.history-entry .ui-button,
+.record-empty .ui-button {
+  justify-self: start;
+}
+@media (max-width: 640px) {
+  .learning-record-page {
+    padding: 1.25rem 1rem;
+  }
+  .progress-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .record-controls .ui-button,
+  .record-subject {
+    width: 100%;
+  }
+}
+
+.account-tools-page {
+  max-width: 760px;
+  margin: auto;
+  padding: 2rem;
+  display: grid;
+  gap: 1.25rem;
+}
+.privacy-request-form,
+.privacy-request-card,
+.channel-controls,
+.channel-code {
+  display: grid;
+  gap: 1rem;
+}
+.request-choice {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 0.75rem;
+  padding: 0.65rem;
+  border: 1px solid var(--kasoma-line);
+  border-radius: 0.6rem;
+}
+.request-choice:has(input:checked) {
+  background: #edf2ed;
+  border-color: var(--kasoma-green);
+}
+.request-choice input {
+  flex-shrink: 0;
+}
+.request-reference {
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+  color: var(--kasoma-muted);
+}
+.background-export-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--kasoma-line);
+}
+.background-export-controls p {
+  flex-basis: 100%;
+}
+.channel-code {
+  border-left: 4px solid var(--kasoma-green);
+}
+.channel-code code {
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .account-tools-page {
+    padding: 1.25rem 1rem;
+  }
+  .background-export-controls .ui-button {
+    width: 100%;
+  }
+}

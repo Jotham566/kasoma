@@ -161,3 +161,45 @@ acknowledgements, including lost-response recovery; keyboard/axe/320-pixel journ
 Desktop practice/diagnostic and mobile practice screenshots were inspected. The rebuilt web
 image now reuses the frozen dependency-install layer (`CACHED`) after a source-only change;
 its latest container is healthy. No grading, consent or diagnostic disclosure rules changed.
+
+
+### Progress and history presentation candidate — 9 October 2026
+
+FR-MST-004/005, NFR-ACC-001/COMP-001/LOC-001/MNT-001: progress now uses responsive
+subject/topic/competency cards with explicit evidence labels and the existing confidence-gated
+mastery display. History uses consistent session cards and touch controls; empty history links
+to the existing diagnostic. Authentication/consent blocks offer profile recovery. Private session
+links disable prefetch. Server selection, paging, diagnostic sealing, confidence thresholds and
+Kampala timestamps are unchanged. Browser checks now include 320-pixel progress/history reflow,
+active navigation, history touch targets and screenshots. Lint/build/browser verification is
+running; this entry is not acceptance. No API/migration change or new ADR is needed.
+
+
+Progress/history verification: `make format lint build e2e-chromium-full` passes all 30
+Chromium cases (15 per shard), including sparse-evidence suppression, offline recovery,
+owned pagination, diagnostic sealing/resume, 320-pixel reflow and 44-pixel history controls.
+Desktop progress and mobile progress/history captures were inspected with no clipping.
+Evidence: `.local/progress-history-ui-checks.log` and `.local/ui-review/`. The web image
+build passed and the restarted local web is healthy. No API, migration or ADR change. Remaining
+engines, physical-device/screen-reader and pilot acceptance are still open.
+
+
+### Privacy and channel presentation candidate — 9 October 2026
+
+FR-ID-006, FR-WA-001/006 and NFR-ACC-001/COMP-001/LOC-001/MNT-001: apply the existing
+card/control styles to privacy requests and channel linking, wrap long request references,
+keep export actions usable at 320 pixels and remove duplicate learner Home links. Preserve
+owner/re-authentication, ambiguous-command retries, explicit status checks, deletion-pending
+wording and fake-only delivery. Link-code expiry now explicitly uses Africa/Kampala and a
+semantic time element instead of the browser's local timezone. Browser checks include
+320-pixel privacy/channel layout, privacy axe and the displayed expiry timestamp.
+Verification is running. No API, migration, provider or architectural decision changes.
+
+
+Privacy/channel result: `make format lint build e2e-chromium-full` passes all 30 Chromium
+cases (15 per shard), including mobile privacy axe, 320-pixel request-reference/control
+reflow, background frozen export, lost command recovery and channel STOP/unlink. Link-code
+time is checked against the server expiry in Africa/Kampala. Privacy/channel mobile captures
+were inspected without clipping. Source/contract/doc checks pass. Evidence:
+`.local/privacy-channel-ui-checks.log` and `.local/privacy-channel-contract-checks.log`.
+Other browser engines and real-device/pilot acceptance remain open.

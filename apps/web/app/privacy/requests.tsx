@@ -10,8 +10,7 @@ import { DeletionImpact } from "./deletion-impact";
 
 type Schema = components["schemas"];
 const api = () => apiClient("", crypto.randomUUID());
-const button =
-  "min-h-11 rounded border border-slate-500 px-4 py-2 disabled:opacity-50";
+const button = "ui-button ui-button-secondary";
 function check<T>(result: { data?: T; error?: Schema["ErrorEnvelope"] }): T {
   if (!result.data) throw new Error(result.error?.error.code ?? "UNAVAILABLE");
   return result.data;
@@ -235,10 +234,15 @@ export function Requests({
     });
   }
   return (
-    <main className="mx-auto max-w-2xl p-6 space-y-5">
-      <Link className="inline-flex min-h-11 items-center underline" href="/">
-        Home
-      </Link>
+    <main className="account-tools-page">
+      {staff && (
+        <Link className="ui-text-link" href="/">
+          Home
+        </Link>
+      )}
+      <p className="eyebrow">
+        {staff ? "Staff workspace" : "Privacy and control"}
+      </p>
       <h1 className="text-3xl font-semibold">
         {staff ? "Data request review" : "Your data requests"}
       </h1>
@@ -255,10 +259,7 @@ export function Requests({
       </p>
       {!staff && (
         <>
-          <Link
-            className="inline-flex min-h-11 items-center underline"
-            href="/onboarding"
-          >
+          <Link className="ui-text-link" href="/onboarding">
             Sign in or manage consent
           </Link>
           <p>
@@ -266,7 +267,7 @@ export function Requests({
             withdraw learning consent on the profile page.
           </p>
           <form
-            className="space-y-4"
+            className="surface-card privacy-request-form"
             onSubmit={(event) => {
               event.preventDefault();
               void send();
@@ -278,7 +279,7 @@ export function Requests({
             >
               <legend>Request type</legend>
               {(["EXPORT", "DELETE"] as const).map((value) => (
-                <label className="flex min-h-11 items-center gap-3" key={value}>
+                <label className="request-choice" key={value}>
                   <input
                     type="radio"
                     name="kind"
@@ -294,7 +295,7 @@ export function Requests({
                     : "Request deletion of my data"}
                 </label>
               ))}
-              <label className="flex min-h-11 items-center gap-3">
+              <label className="request-choice">
                 <input
                   type="checkbox"
                   checked={affirmative}
@@ -304,7 +305,7 @@ export function Requests({
               </label>
             </fieldset>
             <button
-              className={button}
+              className="ui-button ui-button-primary"
               disabled={
                 busy ||
                 !!downloadPending ||
@@ -364,14 +365,11 @@ export function Requests({
       )}
       <ul className="space-y-4">
         {rows.map((row) => (
-          <li
-            className="rounded border border-slate-400 p-4 space-y-2"
-            key={row.id}
-          >
+          <li className="surface-card privacy-request-card" key={row.id}>
             <h2 className="font-semibold">
               {row.kind === "EXPORT" ? "Export request" : "Deletion request"}
             </h2>
-            <p>Reference: {row.id}</p>
+            <p className="request-reference">Reference: {row.id}</p>
             <p>
               {row.status === "COMPLETED"
                 ? "Export made available"
@@ -396,7 +394,10 @@ export function Requests({
               </p>
             )}
             {!staff && row.kind === "EXPORT" && (
-              <section aria-label="Background export" className="space-y-2">
+              <section
+                aria-label="Background export"
+                className="background-export-controls"
+              >
                 <p>
                   For larger histories, prepare a background copy and check its
                   status. Keep this page open to retry an unconfirmed command.
@@ -440,7 +441,7 @@ export function Requests({
                 {jobs[row.id]?.status === "READY" && !busy && (
                   <>
                     <a
-                      className="inline-flex min-h-11 items-center underline"
+                      className="ui-text-link"
                       href={`/api/v1/me/data-requests/${row.id}/export-file`}
                     >
                       Save background export
