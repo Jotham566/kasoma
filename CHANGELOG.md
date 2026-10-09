@@ -1,5 +1,22 @@
 # Changelog
 
+## 9 October 2026 — verified rubric, telemetry and dependency release
+
+Hosted CI [37914864557](https://github.com/Jotham566/kasoma/actions/runs/37914864557)
+passed at `ed7d7d5`: 427 unit/contract and 182 integration tests (609 Python total), five tooling
+tests, 63 real-API browser journeys across Chromium/Firefox/WebKit and one isolated editor UI test.
+Clean setup/migrations/seed, eight focused rubric cases, restricted-login verification,
+lint/format/types/contracts/build, dependency/source/image security checks and container smoke all
+passed. The isolated logical recovery restored 54 tables/272 synthetic rows in 455 ms and verified
+pgvector/immutable guards; this is not production PITR/RPO/RTO evidence. Cold question transfers
+were 191529/194251/193635 bytes, each below 250000. Commit `ed7d7d5` is on main; both completed
+rubric/telemetry branches were deleted locally and remotely.
+
+- Correct legacy JSON/JSONB rubric comparisons and remounted textarea label associations, with exact save/reload regressions.
+- Patch runtime Next.js to 16.3.8 and affected Sharp/source-map-js to 0.35.5/1.2.2; retain ADR-031 lint tooling.
+- Document the macOS Docker CLI PATH fix after daemon availability returned; native image builds/checks are still pending.
+- Record FR-ID-006 large-history export readiness and the next bounded projection slice. No new architectural decision or learner-scoring enablement.
+
 ## 9 October 2026 — synthetic model-call telemetry
 
 - Instrument the existing fake short-text rehearsal with correlated, closed per-call and outcome events (NFR-OBS-001, FR-OPS-002; AI gateway specification).
@@ -11,7 +28,7 @@
 - Add version-pinned rubric/criterion persistence and independent short-text content review (FR-CNT-001–004, FR-GRD-003/004, NFR-SEC-002; ADR-044).
 - Preserve legacy document hashes and request retries; require complete matching criteria before review and freeze normalized material with its item version.
 - Add staff author/reviewer forms, generated contracts, SQL assignment exclusion and synthetic regression cases. Learner short-text delivery and model scoring remain disabled.
-- Local lint/types/contracts/build/security and 416 unit/contract plus five tooling checks pass. Native database/browser setup remains unavailable; hosted acceptance is pending.
+- Complete hosted acceptance is recorded below; learner scoring remains a separate gate.
 
 ## 9 October 2026 — verified holds, expiry and rubric context
 
@@ -376,30 +393,3 @@ Record meaningful repository and product changes here. A documentation baseline 
 
 - Fix the NFR-SEC-002 test grant profile after CI 37227070209 exposed the attempt-hint guard's users-row lock requirement.
 - Permit only the existing mutable display_name field; add explicit denied identity/status/birth-date writes and exact column-grant cleanup. Production credentials remain unchanged; rerun required.
-
-Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/seed but failed
-synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
-focused database diagnostics; the complete recovery and regression gates remain required. No
-rubric acceptance or main promotion is claimed from this failed run.
-
-The rubric SQL guard incorrectly treated the existing item_versions.document JSON column as JSONB.
-Normalize a local comparison value to JSONB before equality/existence checks; retain the original
-column, stored documents and hashes. Existing fresh/upgrade and projection tests cover this path;
-complete hosted rerun remains required.
-
-9 October dependency remediation (NFR-MNT-001/security gate): runtime Next.js is pinned to 16.3.8,
-with affected Sharp/source-map-js versions resolved to 0.35.5/1.2.2. `make deps-lock setup` and
-post-install lint/types/contracts/build, 427 unit/contract plus five tooling checks, and both audits
-pass with no known vulnerabilities reported. Hosted application/container checks remain pending.
-
-CI 37910416518 verifies the rubric SQL correction: eight focused rubric cases, all 182 integration
-and 427 unit/contract tests pass, as do the restricted login and 54-table/272-row recovery drill.
-The new Chromium rubric journey fails after save/reload. Add exact API round-trip assertions and
-`make test-web-content`, an isolated deterministic HTTP-fixture browser regression, before full CI
-services. It supplements, not replaces, the 63 real-API journeys. Main promotion remains blocked.
-Browser binaries now use the repository-local .local/browsers cache to avoid shared-cache mutation.
-
-The isolated UI run 37914386755 reproduced the rubric lookup failure immediately after save.
-Nested labels included the remounted textarea's initial text in exact label matching. Use unique
-React IDs with explicit label associations for criterion/evidence textareas; retain exact label,
-multiline value and API round-trip assertions. Local lint/types/build pass; browser rerun required.

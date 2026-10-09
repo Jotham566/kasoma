@@ -1,7 +1,7 @@
 # E8 synthetic model telemetry verification
 
 Requirements: NFR-OBS-001, FR-OPS-002; supports FR-OPS-004 and AI specification §3.
-Status: implemented; 427 unit/contract and five tooling checks pass; hosted regression is pending.
+Status: synthetic regression and security gates verified at `ed7d7d5` in CI 37914864557.
 
 The existing short-text rehearsal now emits a closed model.call event per actual gateway dispatch
 and a model.rehearsal outcome, sharing a caller-supplied UUID or fresh correlation UUID. The same
@@ -44,3 +44,19 @@ sharp and source-map-js advisories. Dependency remediation and fresh regression 
 
 The dependency refresh resolves the reported audit failures; full post-install lint/types/contracts,
 427 unit/contract plus five tooling checks, build and security pass. Hosted regression remains pending.
+
+## Final hosted acceptance
+
+Hosted CI [37914864557](https://github.com/Jotham566/kasoma/actions/runs/37914864557)
+passed at `ed7d7d5`: 427 unit/contract and 182 integration tests (609 Python total), five tooling
+tests, 63 real-API browser journeys across Chromium/Firefox/WebKit and one isolated editor UI test.
+Clean setup/migrations/seed, eight focused rubric cases, restricted-login verification,
+lint/format/types/contracts/build, dependency/source/image security checks and container smoke all
+passed. The isolated logical recovery restored 54 tables/272 synthetic rows in 455 ms and verified
+pgvector/immutable guards; this is not production PITR/RPO/RTO evidence. Cold question transfers
+were 191529/194251/193635 bytes, each below 250000. Commit `ed7d7d5` is on main; both completed
+rubric/telemetry branches were deleted locally and remotely.
+
+This successful run supersedes the pending/failure observations above. Native service setup is
+separate: Docker now responds and approved image builds are running; native application checks
+are not yet accepted.

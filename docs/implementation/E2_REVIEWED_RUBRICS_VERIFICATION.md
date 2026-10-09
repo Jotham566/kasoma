@@ -1,7 +1,7 @@
 # E2 reviewed rubric verification
 
 Updated 9 October 2026. Requirements: FR-CNT-001/002/003/004, FR-GRD-003/004, NFR-SEC-002.
-Status: implemented; local checks pass; hosted database/browser acceptance pending.
+Status: synthetic authoring/review acceptance verified; learner short-text delivery remains disabled.
 
 [ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md) adds synthetic SHORT_TEXT authoring
 and independent review to existing content workflows. Migration 0023 creates version-pinned rubrics
@@ -30,16 +30,19 @@ are not broadened. No model, messaging, email or cloud runtime call is made.
 
 ## Commands and current results
 
-`make openapi format lint openapi-check test-unit build e2e-list security` passed: 416 unit/contract
-and five tooling tests, Python/TypeScript lint/types, generated contracts, production build, all
-three browser inventories, Bandit, secret-boundary checks and Python/JavaScript dependency audits.
-No new dependency was introduced.
+Hosted CI [37914864557](https://github.com/Jotham566/kasoma/actions/runs/37914864557)
+passed at `ed7d7d5`: 427 unit/contract and 182 integration tests (609 Python total), five tooling
+tests, 63 real-API browser journeys across Chromium/Firefox/WebKit and one isolated editor UI test.
+Clean setup/migrations/seed, eight focused rubric cases, restricted-login verification,
+lint/format/types/contracts/build, dependency/source/image security checks and container smoke all
+passed. The isolated logical recovery restored 54 tables/272 synthetic rows in 455 ms and verified
+pgvector/immutable guards; this is not production PITR/RPO/RTO evidence. Cold question transfers
+were 191529/194251/193635 bytes, each below 250000. Commit `ed7d7d5` is on main; both completed
+rubric/telemetry branches were deleted locally and remotely.
 
-Native `make migrate`, focused `PYTEST_ADDOPTS='-k reviewed_rubrics' make test` and `make e2e`
-failed during PostgreSQL connection/setup on localhost:55432. The eight database fixtures and
-browser application assertions were not executed successfully. Docker.app remains unavailable.
-Hosted CI must pass clean setup/migrations/seed, the full database suite, recovery, browser matrix,
-security scans and container smoke before this slice is promoted to main.
+Native Docker now responds (29.8.2). Initial service retries failed because its installed CLI was
+absent from PATH; the documented macOS PATH adjustment starts the approved service image builds.
+Native database/browser acceptance remains pending those downloads/builds and subsequent checks.
 
 ## Limits and recovery
 
@@ -52,24 +55,12 @@ After storing SHORT_TEXT documents, do not roll back to a pre-rubric binary. Use
 forward fix to disable new authoring while preserving schema, reviewed evidence and assignment
 guards. Migration downgrade intentionally refuses destructive removal.
 
-Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/seed but failed
-synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
-focused database diagnostics; the complete recovery and regression gates remain required. No
-rubric acceptance or main promotion is claimed from this failed run.
+## Failures corrected before acceptance
 
-The rubric SQL guard incorrectly treated the existing item_versions.document JSON column as JSONB.
-Normalize a local comparison value to JSONB before equality/existence checks; retain the original
-column, stored documents and hashes. Existing fresh/upgrade and projection tests cover this path;
-complete hosted rerun remains required.
-
-CI 37910416518 verifies the rubric SQL correction: eight focused rubric cases, all 182 integration
-and 427 unit/contract tests pass, as do the restricted login and 54-table/272-row recovery drill.
-The new Chromium rubric journey fails after save/reload. Add exact API round-trip assertions and
-`make test-web-content`, an isolated deterministic HTTP-fixture browser regression, before full CI
-services. It supplements, not replaces, the 63 real-API journeys. Main promotion remains blocked.
-Browser binaries now use the repository-local .local/browsers cache to avoid shared-cache mutation.
-
-The isolated UI run 37914386755 reproduced the rubric lookup failure immediately after save.
-Nested labels included the remounted textarea's initial text in exact label matching. Use unique
-React IDs with explicit label associations for criterion/evidence textareas; retain exact label,
-multiline value and API round-trip assertions. Local lint/types/build pass; browser rerun required.
+CI 37909280438 exposed JSONB operations against the legacy JSON document column. Migration 0023
+now casts a local comparison value, preserving existing stored documents and hashes. CI 37910416518
+then passed all database tests but failed the new browser lookup. Isolated UI run 37914386755
+reproduced a label association problem after textarea remount. Explicit unique React IDs and
+label associations fix the lookup without weakening multiline value or API round-trip assertions.
+The complete successful run above supersedes those failures. Browser binaries use .local/browsers
+to avoid the shared-cache lock failure seen during the first native install.

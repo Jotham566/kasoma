@@ -1,7 +1,7 @@
 # E9 dependency refresh — 9 October 2026
 
 Requirements: NFR-MNT-001 and the security/release dependency-audit gate.
-Status: local checks pass; hosted application/container regression pending.
+Status: synthetic regression and security gates verified at `ed7d7d5` in CI 37914864557.
 
 Today's JavaScript audit failed on three high-severity advisories introduced into the registry since
 prior acceptance. Update the runtime Next.js pin from 16.3.6 to 16.3.8; resolve affected Sharp
@@ -27,3 +27,19 @@ installation temporarily could not resolve Next's parser; the full post-install 
 Native Docker service availability remains a separate issue; successful dependency setup is not
 successful database/browser acceptance. The complete hosted pipeline and scanner results remain
 required before promotion. No external model, messaging, email or cloud runtime call was made.
+
+## Final hosted acceptance
+
+Hosted CI [37914864557](https://github.com/Jotham566/kasoma/actions/runs/37914864557)
+passed at `ed7d7d5`: 427 unit/contract and 182 integration tests (609 Python total), five tooling
+tests, 63 real-API browser journeys across Chromium/Firefox/WebKit and one isolated editor UI test.
+Clean setup/migrations/seed, eight focused rubric cases, restricted-login verification,
+lint/format/types/contracts/build, dependency/source/image security checks and container smoke all
+passed. The isolated logical recovery restored 54 tables/272 synthetic rows in 455 ms and verified
+pgvector/immutable guards; this is not production PITR/RPO/RTO evidence. Cold question transfers
+were 191529/194251/193635 bytes, each below 250000. Commit `ed7d7d5` is on main; both completed
+rubric/telemetry branches were deleted locally and remotely.
+
+This successful run supersedes the pending/failure observations above. Native service setup is
+separate: Docker now responds and approved image builds are running; native application checks
+are not yet accepted.

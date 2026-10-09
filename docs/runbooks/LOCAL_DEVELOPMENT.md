@@ -6,6 +6,17 @@ Docker Desktop/Compose. `make setup` installs repository-local uv 0.12.18, Pytho
 Install Corepack 0.34.0 if it is missing. Initial downloads require internet;
 runtime/test execution uses local services and fakes. No cloud account is required.
 
+On macOS, if Docker Desktop is running but `make services` reports `docker: No such
+file or directory`, add its installed CLI directory to this shell before running
+the same repository commands:
+
+```sh
+export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+docker info --format '{{.ServerVersion}}'
+```
+
+This changes only command discovery; it does not reset Docker or replace its context.
+
 ```sh
 make setup
 make services
@@ -669,5 +680,7 @@ overrides. ADR-031's lint-only plugin/patch is unchanged and its five tooling ch
 synthetic HTTP fixtures without PostgreSQL. Browser downloads use .local/browsers. This is a UI
 state/serialization test, not API authorization or database acceptance; continue to run the full
 `make test e2e` pipeline. The first native browser install lost its shared-cache lock; the isolated
-cache avoids modifying that shared directory. Docker Desktop is now present but cannot start; the
-9 October `make services` retry still fails before database setup.
+cache avoids modifying that shared directory. On 9 October, Docker Desktop became available
+(server 29.8.2). Its CLI was absent from the shell PATH; using the installed CLI directory above
+allowed `make services` to start image downloads/builds. Database/browser acceptance still requires
+successful migrations, seed and application assertions; daemon availability alone is insufficient.

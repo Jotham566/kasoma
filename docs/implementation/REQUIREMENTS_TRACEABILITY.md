@@ -206,52 +206,39 @@ boundary/privacy cases pass locally; fake prompt versions are v2. See
 [validation evidence](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md). Persistence, academic approval,
 calibrated enablement and the learner fallback path remain incomplete.
 
-## 9 October 2026 acceptance and reviewed-rubric slice
+## 9 October 2026 verified rubric, telemetry and dependency slices
 
-NFR-SEC-002 restricted-login checks, FR-ID-006/BR-010 learning-record holds and FR-ID-001 bounded
-authentication expiry passed CI 37228338121. Commit `64394ac` additionally passed full CI
-37228984415: 587 Python, 60 browser and five tooling checks plus clean migration/recovery/security/
-container gates. It is on main and the four completed branches are removed. This supersedes earlier
-pending entries for these slices and explicit rubric material (FR-GRD-003/004).
+Hosted CI [37914864557](https://github.com/Jotham566/kasoma/actions/runs/37914864557)
+passed at `ed7d7d5`: 427 unit/contract and 182 integration tests (609 Python total), five tooling
+tests, 63 real-API browser journeys across Chromium/Firefox/WebKit and one isolated editor UI test.
+Clean setup/migrations/seed, eight focused rubric cases, restricted-login verification,
+lint/format/types/contracts/build, dependency/source/image security checks and container smoke all
+passed. The isolated logical recovery restored 54 tables/272 synthetic rows in 455 ms and verified
+pgvector/immutable guards; this is not production PITR/RPO/RTO evidence. Cold question transfers
+were 191529/194251/193635 bytes, each below 250000. Commit `ed7d7d5` is on main; both completed
+rubric/telemetry branches were deleted locally and remotely.
 
-FR-CNT-001/002/003/004, FR-GRD-003/004 and NFR-SEC-002 reviewed rubric authoring:
-[ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md),
-[verification](E2_REVIEWED_RUBRICS_VERIFICATION.md). Migration 0023, content/rubric contracts and
-service, staff UI, generated API schemas, learner selection/SQL exclusion, staff deletion inventory,
-three contract cases, eight database cases and a three-engine browser journey are implemented.
-Local 416 unit/contract plus five tooling checks pass; hosted migration/application acceptance is
-pending. No learner scoring, calibrated eligibility, new model call or academic approval is implied.
+This supersedes earlier pending entries for restricted-login checks (NFR-SEC-002), bounded identity
+expiry (FR-ID-001), learning-record holds (FR-ID-006/BR-010) and rubric context (FR-GRD-003/004).
 
-NFR-OBS-001/FR-OPS-002 and AI gateway §3 instrumentation:
-[synthetic telemetry evidence](E8_MODEL_TELEMETRY_VERIFICATION.md). services/model_telemetry.py,
-short_text_orchestration.py and the closed model-telemetry.schema.json record actual call attempts
-and rehearsal outcomes with minimized metadata and ephemeral keyed fingerprints. Eleven additional
-contract cases exercise privacy, unknown usage, repairs, timing and schema closure. 427 unit/contract checks pass; JavaScript audit remediation and
-hosted regression remain pending. Durable aggregation/alerts and live-provider usage remain gaps.
+FR-CNT-001/002/003/004, FR-GRD-003/004 and NFR-SEC-002:
+[ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md) and
+[rubric verification](E2_REVIEWED_RUBRICS_VERIFICATION.md). Migration 0023, shared contracts, content
+service, staff editor/reviewer, generated API schemas, learner selection/SQL exclusion and staff
+inventory are verified. Three contract cases, eight database cases and the new three-engine journey
+cover the boundary; one isolated UI regression verifies save/reload. No academic or learner-scoring
+acceptance is implied.
 
-Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/seed but failed
-synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
-focused database diagnostics; the complete recovery and regression gates remain required. No
-rubric acceptance or main promotion is claimed from this failed run.
+NFR-OBS-001/FR-OPS-002: [synthetic telemetry](E8_MODEL_TELEMETRY_VERIFICATION.md) connects
+services/model_telemetry.py, short_text_orchestration.py and model-telemetry.schema.json to eleven
+additional contract cases. Closed call/outcome events and disposable fingerprints are verified.
+Durable aggregation, threshold alerts, production usage/cost and retention remain gaps.
 
-The rubric SQL guard incorrectly treated the existing item_versions.document JSON column as JSONB.
-Normalize a local comparison value to JSONB before equality/existence checks; retain the original
-column, stored documents and hashes. Existing fresh/upgrade and projection tests cover this path;
-complete hosted rerun remains required.
+NFR-MNT-001/security gate: [dependency verification](E9_DEPENDENCY_REFRESH_2026_10_09.md) records
+patched runtime dependencies and complete source/container acceptance. Earlier JSON/JSONB and
+textarea-label failures are corrected and retained in the rubric verification report.
 
-9 October dependency remediation (NFR-MNT-001/security gate): runtime Next.js is pinned to 16.3.8,
-with affected Sharp/source-map-js versions resolved to 0.35.5/1.2.2. `make deps-lock setup` and
-post-install lint/types/contracts/build, 427 unit/contract plus five tooling checks, and both audits
-pass with no known vulnerabilities reported. Hosted application/container checks remain pending.
-
-CI 37910416518 verifies the rubric SQL correction: eight focused rubric cases, all 182 integration
-and 427 unit/contract tests pass, as do the restricted login and 54-table/272-row recovery drill.
-The new Chromium rubric journey fails after save/reload. Add exact API round-trip assertions and
-`make test-web-content`, an isolated deterministic HTTP-fixture browser regression, before full CI
-services. It supplements, not replaces, the 63 real-API journeys. Main promotion remains blocked.
-Browser binaries now use the repository-local .local/browsers cache to avoid shared-cache mutation.
-
-The isolated UI run 37914386755 reproduced the rubric lookup failure immediately after save.
-Nested labels included the remounted textarea's initial text in exact label matching. Use unique
-React IDs with explicit label associations for criterion/evidence textareas; retain exact label,
-multiline value and API round-trip assertions. Local lint/types/build pass; browser rerun required.
+FR-ID-006 next: [large-history export readiness](E8_LARGE_HISTORY_EXPORT_READINESS.md) maps the
+existing bounded synchronous implementation to projection, async delivery and privacy/expiry gates.
+This is assessment only; large-history fulfillment remains incomplete. Native Docker now responds,
+but local migration/seed/application assertions await the approved image builds/browser downloads.
