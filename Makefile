@@ -219,3 +219,7 @@ test-reviewed-rubrics:
 .PHONY: test-web-content
 test-web-content:
 	$(PNPM) exec playwright test --config=playwright.ui.config.ts
+
+.PHONY: test-legal-holds
+test-legal-holds:
+	$(UV) pytest tests/integration/test_legal_holds.py tests/integration/test_learning_record_holds.py tests/integration/test_accountability_holds.py --allow-hosts=localhost,127.0.0.1,::1

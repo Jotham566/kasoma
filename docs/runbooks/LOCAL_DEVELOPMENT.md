@@ -707,3 +707,9 @@ checks remain mandatory. Retry with `make services migrate seed` when the networ
 `make test` for the storage/Mailpit gate. No Docker volume reset is needed. See
 [download recovery](../implementation/E0_MINIO_DOWNLOAD_RECOVERY.md). Cache reuse does not replace
 verification and does not imply that a previously failed native service build has passed.
+
+ADR-045 adds FLAG_HISTORY and DATA_REQUEST_REVIEW to exact-record hold registration. Use the
+history row's own reference, or the reviewed request reference (there is no separate review UUID).
+Ownership follows the flag reporter/request owner, not the staff actor. Normal parent triage can
+continue; holds do not freeze entire accounts or permit later deletion. Use `make migrate test-legal-holds` for all existing/new exact-record regressions and the full CI gates for acceptance.
+See [accountability evidence](../implementation/E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md).

@@ -1,5 +1,11 @@
 # Changelog
 
+## In progress — exact accountability-record holds
+
+- Add FLAG_HISTORY and DATA_REQUEST_REVIEW under ADR-045 (FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002), using immutable parent ownership and exact primary-key references.
+- Add migration 0024, strict generated contracts, administrator options and SQL DELETE protection; preserve normal triage, immutable evidence, finite decisions and disabled deletion.
+- Native migration and 19 focused hold cases pass. Expand ownership, upgrade, lifecycle and browser regressions; full acceptance remains pending.
+
 ## In progress — verified MinIO download recovery
 
 - Add at most three dependency-download attempts and terminal Go module verification after native network EOFs (NFR-MNT-001).

@@ -393,3 +393,11 @@ mutable only in DRAFT. SHORT_TEXT session assignment is rejected in SQL until le
 is approved. Existing objective documents/hashes are unchanged. See
 [ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md) and
 [verification](../implementation/E2_REVIEWED_RUBRICS_VERIFICATION.md).
+
+## Exact accountability hold keys (ADR-045)
+
+FLAG_HISTORY targets content_flag_history.id and follows content_flags.reporter_id.
+DATA_REQUEST_REVIEW targets data_request_reviews.request_id and follows data_subject_requests.user_id.
+Neither uses the staff actor as the requester ownership link. Migration 0024 extends the existing
+registry/SQL ownership validation and adds DELETE guards; existing immutable rows/updates remain
+protected. A hold does not cascade to the parent/siblings or clear erasure/retention gates.

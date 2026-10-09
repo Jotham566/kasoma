@@ -91,3 +91,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-044: Version-pinned reviewed rubrics](044-reviewed-rubric-persistence.md)
   records normalized immutable rubric material and disabled short-text learner assignment.
+
+- [ADR-045: Individual accountability-record holds](045-accountability-record-holds.md)
+  adds exact immutable flag-history and data-request-review preservation targets.

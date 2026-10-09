@@ -408,7 +408,7 @@ ADMIN claimant with recent OTP authentication, including retries. Responses are 
 | `POST /admin/data-requests/{target}/holds/{hold}/release` | HoldRelease plus Idempotency-Key UUID; 200 HoldView |
 
 HoldInput has record_type (CONSENT, ATTEMPT, CONTENT_FLAG, DATA_REQUEST, GRADE,
-MASTERY_EVIDENCE, MASTERY_HISTORY), owned record_id
+MASTERY_EVIDENCE, MASTERY_HISTORY, FLAG_HISTORY, DATA_REQUEST_REVIEW), owned record_id
 UUID, opaque decision_reference UUID, reason (LEGAL_OBLIGATION or SECURITY_INVESTIGATION),
 a timezone-aware finite future expires_at and affirmative=true. Reject extras, narratives,
 unsupported record types and indefinite dates. HoldRelease has only decision_reference
@@ -544,7 +544,7 @@ For GRADE, record_id is the grade's attempt_id; for the other two it is the reco
 Ownership is checked through immutable parent relationships; absent or foreign targets return 404.
 No parent/child cascade of hold scope is implied. All recent-auth, independent claimant, rate,
 idempotency, expiry, release and audit controls remain unchanged. Generated enums and administrator
-labels reflect seven supported targets; deletion and complete hold coverage remain unavailable.
+labels were extended to seven targets by ADR-043 and to nine by ADR-045 below; deletion and complete hold coverage remain unavailable.
 See [ADR-043](../decisions/ADR/043-learning-record-holds.md).
 
 ## Reviewed rubric authoring (ADR-044)
@@ -562,3 +562,13 @@ idempotency/hash semantics. See generated OpenAPI for exact strict schemas.
 No learner submission format is added. Selectors and a database guard exclude short-text items;
 content approval alone does not authorize model grading. Rubric bodies remain staff-only.
 [Verification](../implementation/E2_REVIEWED_RUBRICS_VERIFICATION.md).
+
+## Accountability-record hold references (ADR-045)
+
+The same hold routes accept FLAG_HISTORY (content_flag_history.id, owned through the flag reporter)
+and DATA_REQUEST_REVIEW (data_request_reviews.request_id, owned through the reviewed request).
+The review key is its request reference, not a separate review UUID. API and SQL check/lock the
+named row and parent. Missing/foreign targets return 404; no record or staff payload is exposed.
+A history hold permits ordinary parent triage to append new history; it preserves only the named
+immutable row. All existing claimant, recent-auth, retry, finite expiry/release and audit controls
+remain. See [ADR-045](../decisions/ADR/045-accountability-record-holds.md).

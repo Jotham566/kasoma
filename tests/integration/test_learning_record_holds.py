@@ -9,13 +9,14 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 
 from services.domain.data_requests import LegalHold, LegalHoldReceipt
+from services.domain.flags import FlagHistory
 from services.domain.mastery import MasteryEvidence, MasteryHistory
 from services.legal_holds import active
 from tests.integration.test_assessment import assessment as assessment_fixture
 from tests.integration.test_data_exports import export
 from tests.integration.test_data_requests import claim, create
 from tests.integration.test_deletion_preview import get as preview
-from tests.integration.test_flags import saved
+from tests.integration.test_flags import report, saved
 from tests.integration.test_legal_holds import hold, prepare, release
 
 assessment = assessment_fixture
@@ -24,11 +25,25 @@ KINDS = [
     ("GRADE", "grades", "attempt_id"),
     ("MASTERY_EVIDENCE", "mastery_evidence", "id"),
     ("MASTERY_HISTORY", "mastery_estimate_history", "id"),
+    ("FLAG_HISTORY", "content_flag_history", "id"),
+    ("DATA_REQUEST_REVIEW", "data_request_reviews", "request_id"),
 ]
 
 
 def record_for(assessment, kind):
+    identity, client, actors, *_ = assessment
+    if kind == "DATA_REQUEST_REVIEW":
+        target = create(client, actors["learner"]).json()["id"]
+        assert claim(client, actors["admin"], target).status_code == 200
+        return UUID(target)
     attempt = UUID(saved(assessment)["attempt_id"])
+    if kind == "FLAG_HISTORY":
+        flag = report(client, actors["learner"], attempt)
+        assert flag.status_code == 201, flag.text
+        with Session(identity.engine) as db:
+            return db.scalar(
+                select(FlagHistory.id).where(FlagHistory.flag_id == UUID(flag.json()["id"]))
+            )
     with Session(assessment[0].engine) as db:
         evidence = db.scalar(select(MasteryEvidence).where(MasteryEvidence.attempt_id == attempt))
         history = db.scalar(
@@ -66,8 +81,12 @@ def test_learning_hold_lifecycle_preserves_exact_evidence(assessment, kind, tabl
         assert response.status_code == 200, response.text
     with Session(identity.engine) as db:
         assert not active(db, kind, record, identity.clock())
-    with identity.engine.begin() as db, pytest.raises(DBAPIError, match="append-only"):
-        db.execute(text(f"DELETE FROM {table} WHERE {column}=:id"), {"id": record})
+    for statement in [
+        f"DELETE FROM {table} WHERE {column}=:id",
+        f"UPDATE {table} SET {column}={column} WHERE {column}=:id",
+    ]:
+        with identity.engine.begin() as db, pytest.raises(DBAPIError, match="append-only"):
+            db.execute(text(statement), {"id": record})
     at = identity.clock()
     expiring = hold(
         client, headers, target, body | {"expires_at": (at + timedelta(seconds=1)).isoformat()}

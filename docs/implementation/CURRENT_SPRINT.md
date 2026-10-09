@@ -63,3 +63,10 @@ NFR-MNT-001 build resilience is implemented on `codex/minio-download-recovery`: 
 attempts, terminal module verification and locked build caches for the unchanged MinIO source.
 Four deterministic helper regressions pass (431 total unit/contract tests); native final-image and
 hosted acceptance are pending. [Evidence](E0_MINIO_DOWNLOAD_RECOVERY.md).
+
+While storage dependencies download, FR-ID-006/BR-010 accountability preservation is implemented
+under ADR-045 on `codex/accountability-holds`, based on the pending MinIO resilience commit.
+FLAG_HISTORY and DATA_REQUEST_REVIEW use exact immutable parent ownership with existing controls;
+deletion execution remains disabled. Native migration and 19 focused hold cases pass. Full native
+regression/recovery and hosted browser acceptance remain pending.
+[Evidence](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md).

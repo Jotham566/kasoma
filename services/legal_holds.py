@@ -14,7 +14,7 @@ from services.domain.data_requests import (
     LegalHold,
     LegalHoldReceipt,
 )
-from services.domain.flags import ContentFlag
+from services.domain.flags import ContentFlag, FlagHistory
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence, MasteryHistory
 from services.identity import IdentityError, IdentityService
@@ -144,6 +144,17 @@ class LegalHoldService:
                 ),
                 "CONTENT_FLAG": select(ContentFlag.id).where(
                     ContentFlag.id == body.record_id, ContentFlag.reporter_id == request.user_id
+                ),
+                "FLAG_HISTORY": select(FlagHistory.id)
+                .join(ContentFlag, ContentFlag.id == FlagHistory.flag_id)
+                .where(
+                    FlagHistory.id == body.record_id, ContentFlag.reporter_id == request.user_id
+                ),
+                "DATA_REQUEST_REVIEW": select(DataRequestReview.request_id)
+                .join(DataRequest, DataRequest.id == DataRequestReview.request_id)
+                .where(
+                    DataRequestReview.request_id == body.record_id,
+                    DataRequest.user_id == request.user_id,
                 ),
                 "DATA_REQUEST": select(DataRequest.id).where(
                     DataRequest.id == body.record_id, DataRequest.user_id == request.user_id

@@ -2018,7 +2018,9 @@
               "DATA_REQUEST",
               "GRADE",
               "MASTERY_EVIDENCE",
-              "MASTERY_HISTORY"
+              "MASTERY_HISTORY",
+              "FLAG_HISTORY",
+              "DATA_REQUEST_REVIEW"
             ],
             "title": "Record Type",
             "type": "string"
@@ -2130,7 +2132,9 @@
               "DATA_REQUEST",
               "GRADE",
               "MASTERY_EVIDENCE",
-              "MASTERY_HISTORY"
+              "MASTERY_HISTORY",
+              "FLAG_HISTORY",
+              "DATA_REQUEST_REVIEW"
             ],
             "title": "Record Type",
             "type": "string"

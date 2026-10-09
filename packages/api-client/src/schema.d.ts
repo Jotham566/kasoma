@@ -1797,7 +1797,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW";
         };
         /** HoldPage */
         HoldPage: {
@@ -1855,7 +1855,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW";
             /** Release Reference */
             release_reference: string | null;
             /** Released At */

@@ -243,6 +243,8 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       "Grade (attempt reference)",
       "Mastery evidence",
       "Mastery history",
+      "Flag history",
+      "Data request review (request reference)",
     ]);
     await expect(
       holds.getByText(/For a grade, use its attempt reference/),
@@ -284,6 +286,7 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       "Hold decision recorded. Deletion remains disabled.",
     );
     await expect(holds.getByRole("listitem")).toHaveCount(1);
+    await holds.getByLabel("Record type").selectOption("DATA_REQUEST_REVIEW");
     await expect(
       holds.getByRole("checkbox", {
         name: "I confirm an authorized preservation decision for this record and period.",
@@ -321,6 +324,9 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     ).json();
     expect(holdNext.data).toHaveLength(1);
     expect(holdNext.data[0].id).not.toBe(holdPage.data[0].id);
+    expect(
+      [holdPage.data[0].record_type, holdNext.data[0].record_type].sort(),
+    ).toEqual(["DATA_REQUEST", "DATA_REQUEST_REVIEW"]);
     await holds
       .getByRole("button", { name: /^Release hold / })
       .first()

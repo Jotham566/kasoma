@@ -279,3 +279,11 @@ bounded download retries and mandatory integrity verification to four determinis
 cases. [Verification](E0_MINIO_DOWNLOAD_RECOVERY.md): local lint/types/contracts and 431 unit/contract
 checks pass; real service rebuild/storage and full hosted acceptance remain pending. ADR-019 pins
 and runtime behavior are unchanged; browser download recovery is a separate environment issue.
+
+FR-ID-006/BR-010/FR-OPS-003/NFR-SEC-002 accountability hold coverage:
+[ADR-045](../decisions/ADR/045-accountability-record-holds.md), migration 0024,
+services/legal_holds.py and legal_hold_contracts.py, the administrator selector, generated API
+contracts, expanded exact-record integration cases and the administrator browser journey.
+[Verification](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md): 19 focused native cases and local
+static/unit checks pass; full regression/browser acceptance pending. FLAG_HISTORY and
+DATA_REQUEST_REVIEW add preservation only; incomplete coverage and disabled deletion remain.

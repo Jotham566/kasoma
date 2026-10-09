@@ -285,3 +285,10 @@ See [ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md). Synthetic SH
 reuses independent content review. Rubric IDs equal immutable item-version IDs; normalized criteria
 must match the reviewed document and cannot change outside DRAFT. Learner assignment stays disabled;
 academic calibration and pending/fallback integration are separate gates.
+
+### ADR-045 — individual accountability-record holds
+
+See [ADR-045](../decisions/ADR/045-accountability-record-holds.md). FLAG_HISTORY and
+DATA_REQUEST_REVIEW extend exact preservation to existing immutable rows owned through their
+parent flag/request. Review targets use request_id. Normal parent workflows, independent authorized
+claimant controls, privacy and immutable evidence remain; deletion stays disabled.
