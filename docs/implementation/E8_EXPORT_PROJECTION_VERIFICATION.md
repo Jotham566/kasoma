@@ -58,3 +58,8 @@ known vulnerabilities reported. This is not a full native acceptance pass.
 The MinIO source download passed its checksum, but `go mod download` later failed with unexpected
 EOFs in four module downloads. Native Playwright installed Chromium/FFmpeg; the headless-shell
 transfer encountered timeout/connection resets and is retrying. No data or volumes were reset.
+
+
+Follow-on [incremental encoding](E8_EXPORT_ENCODING_VERIFICATION.md) enforces the existing byte
+limit during projection, before full-history collection. Successful synchronous output remains
+bounded and decoded for delivery; this does not enable large-history fulfillment.

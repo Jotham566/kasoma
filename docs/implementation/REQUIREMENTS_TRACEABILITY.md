@@ -55,7 +55,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-OPS-002 | ADMIN snapshot/dashboard, bounded import/flag/channel cohorts, fake-dispatch p95, monitoring heartbeat and configurable local alerts | [Operations verification](E8_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs, Redis/worker and browser tests | Partial: local visibility verified and merged; AI/SMS/email/grade-failure/HTTP-latency/mastery/pre-intake telemetry and production alerting pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
 | FR-OPS-004 | Typed channel attempt/outbound limits, bounded failures and feature flag | [E7 evidence](E7_LINKING_READINESS.md); configuration/rate/failure tests | Local channel limits verified; AI limits and production usage telemetry pending |
-| NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); full hosted regression and representative deployment/history/provider acceptance pending |
+| NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); hosted regression passes; representative deployment/history/provider acceptance pending |
 | NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
 | NFR-REL-001 | — | — | Not started |
 | NFR-REL-002 | Isolated synthetic logical recovery command (ADR-042) | 16 safety cases; [recovery evidence](E9_RECOVERY_VERIFICATION.md) | Synthetic logical recovery verified in CI 37223872075; production PITR/RPO/RTO pending |
@@ -289,3 +289,16 @@ contracts, expanded exact-record integration cases and the administrator browser
 37924489562 pass (621 Python, 63 browser, one isolated UI, five tooling plus full security/container
 gates). Promoted `ce9d9f3` to main and removed its branch. FLAG_HISTORY and
 DATA_REQUEST_REVIEW add preservation only; incomplete coverage and disabled deletion remain.
+
+
+FR-ID-006/NFR-SEC-001/002/NFR-MNT-001 incremental encoding: `services/data_export_encoding.py`,
+`services/data_export_projection.py` and `services/data_exports.py` apply the existing full-envelope
+byte cap before collecting the projected history. Codec and database cases cover exact byte counts,
+Unicode/escaping, empty sections, early hydration stop, cancellation/cursor closure, all-or-nothing
+completion and pre-existing frozen retry copies. [Verification](E8_EXPORT_ENCODING_VERIFICATION.md).
+This does not enable asynchronous fulfillment or raise either synchronous limit.
+
+ADR-046 objective load regression: hosted CI 37933227560 passed at `f2dbf8a` (646 Python,
+66 real-API browser, five tooling, one isolated UI, full service/recovery/security/container checks).
+Promoted to main and removed the branch. Representative deployment/history/provider acceptance
+remains open; see the [load evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md).

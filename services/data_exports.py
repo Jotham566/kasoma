@@ -4,13 +4,14 @@ import calendar
 import hashlib
 import json
 import logging
+from contextlib import closing
 from datetime import datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from services.data_export_projection import project
+from services.data_export_projection import encoded_project
 from services.data_request_contracts import DataExportBundle
 from services.data_requests import DataRequestService
 from services.domain.data_requests import DataExport, DataRequest
@@ -51,15 +52,11 @@ def download(
             if bundle.request_id != target:
                 raise RuntimeError("Export binding check failed")
         else:
-            bundle = project(identity, db, actor, target)
-            raw = json.dumps(
-                bundle.model_dump(mode="json"),
-                sort_keys=True,
-                separators=(",", ":"),
-                allow_nan=False,
-            )
-            if len(raw.encode()) > MAX_BYTES:
-                raise IdentityError("EXPORT_LIMIT_REACHED", 409)
+            with closing(
+                encoded_project(identity, db, actor, target, max_bytes=MAX_BYTES)
+            ) as chunks:
+                raw = b"".join(chunks).decode("utf-8")
+            bundle = DataExportBundle.model_validate_json(raw)
             at = bundle.generated_at
             digest = hashlib.sha256(raw.encode()).hexdigest()
             db.add(

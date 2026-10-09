@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 
 from services.data_exports import download, expire
 from services.domain.data_requests import DataExport, DataRequest
+from services.identity import IdentityError
 from services.identity_contracts import OTPRequest, OTPVerify
 from tests.integration.test_assessment import answer, next_item, start
 from tests.integration.test_assessment import assessment as assessment_fixture
@@ -370,3 +371,134 @@ def test_projection_preserves_related_row_limit_and_closes_cursors(assessment, m
             projection.project(identity, db, actor, target)
         # A partial projection never leaves server-side cursors attached to a pooled connection.
         assert results and all(result.closed for result in results)
+
+
+def test_encoded_projection_preserves_v1_values_and_byte_count_and_closes_on_cancel(
+    content, monkeypatch
+):
+    import json
+    from contextlib import closing
+
+    import services.data_export_projection as projection
+
+    identity, _, actors, _ = content
+    token = actors["learner"]["Authorization"][7:]
+    with identity.transaction() as db:
+        actor = identity.authenticate(db, token).user_id
+        for _ in range(80):
+            identity.event(db, actor, "synthetic.stream", str(uuid4()))
+    with Session(identity.engine) as db:
+        target = uuid4()
+        expected = projection.project(identity, db, actor, target)
+        canonical = json.dumps(
+            expected.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
+        )
+        monkeypatch.setattr(projection, "CHUNK_BYTES", 64)
+        parts = list(
+            projection.encoded_project(
+                identity, db, actor, target, max_bytes=len(canonical.encode())
+            )
+        )
+        assert all(0 < len(part) <= 64 for part in parts)
+        assert len(b"".join(parts)) == len(canonical.encode())
+        assert json.loads(b"".join(parts)) == json.loads(canonical)
+        with pytest.raises(IdentityError, match="EXPORT_LIMIT_REACHED"):
+            b"".join(
+                projection.encoded_project(
+                    identity, db, actor, target, max_bytes=len(canonical.encode()) - 1
+                )
+            )
+        results = []
+        execute = db.execute
+
+        def track(*args, **kwargs):
+            result = execute(*args, **kwargs)
+            results.append(result)
+            return result
+
+        monkeypatch.setattr(db, "execute", track)
+        with closing(
+            projection.encoded_project(identity, db, actor, target, max_bytes=None)
+        ) as chunks:
+            for _ in range(20):
+                next(chunks)
+        assert results and all(result.closed for result in results)
+
+
+def test_http_byte_limit_stops_large_history_before_full_hydration(content, monkeypatch):
+    from sqlalchemy import event
+
+    import services.data_export_projection as projection
+    import services.data_exports as exports
+    from services.domain.identity import IdentityEvent
+
+    identity, client, actors, _ = content
+    headers = actors["learner"]
+    token = headers["Authorization"][7:]
+    with identity.transaction() as db:
+        actor = identity.authenticate(db, token).user_id
+        for _ in range(350):
+            identity.event(db, actor, "synthetic.stream." + "x" * 200, str(uuid4()))
+    target = create(client, headers).json()["id"]
+    monkeypatch.setattr(projection, "BATCH_SIZE", 7)
+    monkeypatch.setattr(exports, "MAX_BYTES", 8000)
+    loaded = []
+
+    def observe(session, instance):
+        if isinstance(instance, IdentityEvent):
+            loaded.append(instance.id)
+
+    event.listen(Session, "loaded_as_persistent", observe)
+    try:
+        response = export(client, headers, target)
+    finally:
+        event.remove(Session, "loaded_as_persistent", observe)
+    assert (
+        response.status_code == 409 and response.json()["error"]["code"] == "EXPORT_LIMIT_REACHED"
+    )
+    assert 0 < len(loaded) < 350
+    with Session(identity.engine) as db:
+        assert db.get(DataExport, UUID(target)) is None
+        assert db.get(DataRequest, UUID(target)).completed_at is None
+
+
+def test_existing_canonical_retry_copy_is_read_without_reencoding(content, monkeypatch):
+    import hashlib
+    import json
+
+    import services.data_exports as exports
+    from services.data_export_projection import project
+
+    identity, client, actors, _ = content
+    headers = actors["learner"]
+    target = create(client, headers).json()["id"]
+
+    def legacy(identity, db, actor, target, *, max_bytes):
+        raw = json.dumps(
+            project(identity, db, actor, target).model_dump(mode="json"),
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode()
+        assert len(raw) <= max_bytes
+        yield raw
+
+    with monkeypatch.context() as patch:
+        patch.setattr(exports, "encoded_project", legacy)
+        original = export(client, headers, target)
+    assert original.status_code == 200
+    with Session(identity.engine) as db:
+        artifact = db.get(DataExport, UUID(target))
+        ciphertext = artifact.encrypted_payload
+        raw = identity.decrypt(ciphertext)
+        assert raw == json.dumps(json.loads(raw), sort_keys=True, separators=(",", ":"))
+        assert hashlib.sha256(raw.encode()).hexdigest() == artifact.digest
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("A frozen artifact must not be projected again")
+
+    monkeypatch.setattr(exports, "encoded_project", forbidden)
+    replay = export(client, headers, target)
+    assert replay.status_code == 200 and replay.json() == original.json()
+    with Session(identity.engine) as db:
+        assert db.get(DataExport, UUID(target)).encrypted_payload == ciphertext

@@ -1,6 +1,6 @@
 # Current Sprint: remaining MVP operational and grading gates
 
-Updated 9 October 2026. Main implementation is `83c6102`. Work remains synthetic/local.
+Updated 9 October 2026. Main implementation is `f2dbf8a`. Work remains synthetic/local.
 
 ## Verified and promoted
 
@@ -21,9 +21,9 @@ Evidence: [holds](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md),
 [rubrics](E2_REVIEWED_RUBRICS_VERIFICATION.md), [telemetry](E8_MODEL_TELEMETRY_VERIFICATION.md),
 [dependency refresh](E9_DEPENDENCY_REFRESH_2026_10_09.md).
 
-## Active slice: objective load and assessment concurrency
+## Verified objective load and assessment concurrency
 
-NFR-PERF-001/002 and NFR-SCL-001 are being addressed on `codex/objective-load-profile`.
+NFR-PERF-001/002 and NFR-SCL-001 have a verified local engineering baseline under ADR-046.
 The isolated real-HTTP baseline creates 2,000 synthetic registrations, 500 active learners and
 288 original reviewed fixtures. Fifty concurrent journeys submit objective answers at a 20/s target.
 No application limits, thresholds or providers are changed.
@@ -44,14 +44,23 @@ Nineteen deterministic harness cases and six PostgreSQL lock/filter cases pass. 
 parity, rubric exclusion and restricted-role checks; only storage/Mailpit failed because MinIO
 is unavailable. Contract/build/security checks pass with no known dependency vulnerabilities.
 Migration/recovery passes (54 tables/272 rows, 238 ms, pgvector/immutable guards, no cleanup failure).
-Hosted full-stack regression is required before promotion.
+Hosted CI 37933227560 passed all 646 Python, 66 browser, five tooling and one isolated UI case,
+plus full service/recovery/security/container checks. Promoted `f2dbf8a` and removed its branch.
+
+## Active slice: incremental personal-export encoding
+
+FR-ID-006 and NFR-SEC-001/002/MNT-001: apply the existing full-envelope 2 MiB cap while projecting
+rows, with bounded collected chunks and deterministic cursor cleanup. Preserve all disclosure,
+row accounting, retry, authorization and retention rules. Native focused tests pass; final full
+regression/hosted acceptance is pending. [Evidence](E8_EXPORT_ENCODING_VERIFICATION.md).
+This internal ADR-028 refactor does not enable large-history fulfillment or need a new ADR.
 
 ## Native environment
 
 Docker 29.8.2 and PostgreSQL/Redis work using the documented Docker CLI PATH. The pinned MinIO
 source checksum passed, but module downloads encountered EOFs; the final cache/retry build is
-still running. Native Playwright has Chromium/FFmpeg; headless-shell download continues after
-network timeouts/resets. Native storage/browser acceptance remains incomplete. No volumes or
+exhausted all three attempts with module EOFs. Native Playwright has Chromium/FFmpeg; the
+headless-shell retry also exhausted its downloads after connection resets. Native storage/browser acceptance remains incomplete. No volumes or
 developer data were reset. Host-native Ollama connectivity passes with cloud disabled; no inference,
 model download or Gemini evaluation ran.
 

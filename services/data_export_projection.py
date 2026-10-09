@@ -1,7 +1,7 @@
 """Read-only, allowlisted self-service export; never serialize ORM rows wholesale."""
 
-from collections.abc import Iterator
-from contextlib import ExitStack
+from collections.abc import Generator, Iterator
+from contextlib import ExitStack, closing
 from datetime import date, datetime
 from typing import Any
 from uuid import UUID
@@ -12,6 +12,7 @@ from sqlalchemy.orm import InstrumentedAttribute, Session
 
 from services.assessment_contracts import GradeView
 from services.content_contracts import DraftDocument
+from services.data_export_encoding import ExportRecord, encode_records
 from services.data_request_contracts import DataExportBundle
 from services.domain.assessment import (
     AssessmentSession,
@@ -45,9 +46,8 @@ EXCLUSIONS = [
     "Content-owned feedback, operational audit internals and third-party records "
     "need separate review.",
 ]
-
-
 BATCH_SIZE = 100
+CHUNK_BYTES = 16_384
 
 
 class ProjectionReader:
@@ -73,13 +73,40 @@ class ProjectionReader:
 
 
 def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -> DataExportBundle:
+    # Compatibility for existing internal readers; HTTP generation supplies its byte cap.
+    with closing(encoded_project(identity, db, actor, target, max_bytes=None)) as chunks:
+        return DataExportBundle.model_validate_json(b"".join(chunks))
+
+
+def encoded_project(
+    identity: IdentityService, db: Session, actor: UUID, target: UUID, *, max_bytes: int | None
+) -> Generator[bytes, None, None]:
+    def metadata() -> dict[str, Any]:
+        # Preserve generation/completion time at the end of the read, as in ADR-028.
+        return DataExportBundle(
+            request_id=target, generated_at=identity.clock(), exclusions=EXCLUSIONS, records={}
+        ).model_dump(mode="json", exclude={"records"})
+
     with ExitStack() as stack:
-        return _project(identity, db, actor, target, ProjectionReader(db, stack))
+        source = _records(identity, db, actor, ProjectionReader(db, stack))
+        with closing(encode_records(source, metadata, max_bytes=max_bytes)) as chunks:
+            pending = bytearray()
+            for chunk in chunks:
+                view = memoryview(chunk)
+                while view:
+                    room = CHUNK_BYTES - len(pending)
+                    pending.extend(view[:room])
+                    view = view[room:]
+                    if len(pending) == CHUNK_BYTES:
+                        yield bytes(pending)
+                        pending.clear()
+            if pending:
+                yield bytes(pending)
 
 
-def _project(
-    identity: IdentityService, db: Session, actor: UUID, target: UUID, reader: ProjectionReader
-) -> DataExportBundle:
+def _records(
+    identity: IdentityService, db: Session, actor: UUID, reader: ProjectionReader
+) -> Iterator[ExportRecord]:
     rows = reader.rows
     owned_attempts = select(Attempt.id).where(Attempt.learner_id == actor)
     released = or_(AssessmentSession.kind != "DIAGNOSTIC", AssessmentSession.status == "COMPLETED")
@@ -100,46 +127,51 @@ def _project(
             result[name] = (
                 value.isoformat()
                 if isinstance(value, (date, datetime))
-                else (str(value) if isinstance(value, UUID) else value)
+                else str(value)
+                if isinstance(value, UUID)
+                else value
             )
         return result
 
-    records: dict[str, list[dict[str, Any]]] = {}
     user = db.get(User, actor)
     if user is None:
         raise IdentityError("RESOURCE_NOT_FOUND", 404)
-    records["profile"] = [
+    yield ("profile", None)
+    yield (
+        "profile",
         fields(user, "id status birth_date created_at")
-        | {"display_name": identity.decrypt(user.display_name) if user.display_name else None}
-    ]
-    records["identifiers"] = [
-        fields(r, "type verified_at") | {"value": identity.decrypt(r.normalized_value_encrypted)}
-        for r in rows(select(Identifier).where(Identifier.user_id == actor).order_by(Identifier.id))
-    ]
-    records["subjects"] = [
-        fields(r, "id name")
-        for r in rows(
-            select(Subject)
-            .join(LearnerSubject, LearnerSubject.subject_id == Subject.id)
-            .where(LearnerSubject.user_id == actor)
-            .order_by(Subject.id)
+        | {"display_name": identity.decrypt(user.display_name) if user.display_name else None},
+    )
+    yield ("identifiers", None)
+    for r in rows(select(Identifier).where(Identifier.user_id == actor).order_by(Identifier.id)):
+        yield (
+            "identifiers",
+            fields(r, "type verified_at")
+            | {"value": identity.decrypt(r.normalized_value_encrypted)},
         )
-    ]
-    records["consents"] = [
-        fields(r, "id consent_type basis policy_version granted_at revoked_at")
-        for r in rows(select(Consent).where(Consent.user_id == actor).order_by(Consent.id))
-    ]
+    yield ("subjects", None)
+    for r in rows(
+        select(Subject)
+        .join(LearnerSubject, LearnerSubject.subject_id == Subject.id)
+        .where(LearnerSubject.user_id == actor)
+        .order_by(Subject.id)
+    ):
+        yield ("subjects", fields(r, "id name"))
+    yield ("consents", None)
+    for r in rows(select(Consent).where(Consent.user_id == actor).order_by(Consent.id)):
+        yield ("consents", fields(r, "id consent_type basis policy_version granted_at revoked_at"))
     sessions = select(AssessmentSession).where(AssessmentSession.learner_id == actor)
-    records["sessions"] = [
-        fields(
-            r,
-            "id subject_id topic_id kind status item_count reason plan_version "
-            "started_at expires_at completed_at",
+    yield ("sessions", None)
+    for r in rows(sessions.order_by(AssessmentSession.id)):
+        yield (
+            "sessions",
+            fields(
+                r,
+                "id subject_id topic_id kind status item_count reason plan_version "
+                "started_at expires_at completed_at",
+            ),
         )
-        for r in rows(sessions.order_by(AssessmentSession.id))
-    ]
-    # Preserve ADR-028 accounting for distinct assignment/version lookup rows without
-    # loading full content documents or building history-sized Python ID collections.
+    # Preserve ADR-028 accounting for distinct lookup rows without retaining ID maps.
     lookup_columns: list[tuple[InstrumentedAttribute[UUID], InstrumentedAttribute[UUID]]] = [
         (SessionItem.id, Attempt.session_item_id),
         (ItemVersion.id, Attempt.item_version_id),
@@ -156,10 +188,11 @@ def _project(
         .where(Attempt.learner_id == actor, AssessmentSession.learner_id == actor)
         .order_by(Attempt.id)
     )
-    records["answers"] = []
+    yield ("answers", None)
     for a, session_id, document, grade_released in rows(answers, scalar=False):
         doc = DraftDocument.model_validate(document)
-        records["answers"].append(
+        yield (
+            "answers",
             fields(a, "id item_version_id submitted_at hint_count highest_hint_level channel")
             | {
                 "session_id": str(session_id),
@@ -171,28 +204,26 @@ def _project(
                     "choices": [c.model_dump() for c in doc.choices],
                 },
                 "grade_released": grade_released,
-            }
+            },
         )
-    records["grades"] = []
+    yield ("grades", None)
     for g in rows(select(Grade).where(Grade.attempt_id.in_(visible)).order_by(Grade.attempt_id)):
         result = GradeView.model_validate(g.result)
-        records["grades"].append(
+        yield (
+            "grades",
             fields(
                 result,
                 "attempt_id item_version_id status score points_awarded points_possible "
                 "confidence method grader_version",
-            )
+            ),
         )
-    records["hints"] = [
-        fields(r, "session_item_id level phase created_at")
-        for r in rows(select(HintUse).where(HintUse.learner_id == actor).order_by(HintUse.id))
-    ]
-    records["mastery_evidence"] = [
-        Evidence.model_validate(r.snapshot).model_dump(mode="json")
-        for r in rows(evidence_query.order_by(MasteryEvidence.id))
-    ]
-    # Validate every snapshot even when sealed; count withheld rows under the original cap.
-    # SQL tests all referenced attempts without a global released-ID set or expanding IN list.
+    yield ("hints", None)
+    for r in rows(select(HintUse).where(HintUse.learner_id == actor).order_by(HintUse.id)):
+        yield ("hints", fields(r, "session_item_id level phase created_at"))
+    yield ("mastery_evidence", None)
+    for r in rows(evidence_query.order_by(MasteryEvidence.id)):
+        yield ("mastery_evidence", Evidence.model_validate(r.snapshot).model_dump(mode="json"))
+    # Validate sealed snapshots and count them, but never disclose derived hidden grades.
     visible_text = visible.with_only_columns(cast(Attempt.id, Text))
     projections: list[tuple[str, InstrumentedAttribute[dict[str, Any]], Select[Any]]] = [
         (
@@ -217,102 +248,87 @@ def _project(
             cast(snapshot, JSONB)["input_attempt_ids"]
         ).table_valued("value")
         withheld = exists(select(1).select_from(inputs).where(inputs.c.value.not_in(visible_text)))
-        records[section] = []
+        yield (section, None)
         for row, sealed in rows(query.add_columns(withheld), scalar=False):
             estimate = Estimate.model_validate(row.snapshot)
             if not sealed:
-                records[section].append(estimate.model_dump(mode="json"))
-    records["reports"] = [
-        fields(r, "id attempt_id item_version_id category created_at")
-        | {"comment": identity.decrypt(r.comment_encrypted)}
-        for r in rows(
-            select(ContentFlag).where(ContentFlag.reporter_id == actor).order_by(ContentFlag.id)
+                yield (section, estimate.model_dump(mode="json"))
+    yield ("reports", None)
+    for r in rows(
+        select(ContentFlag).where(ContentFlag.reporter_id == actor).order_by(ContentFlag.id)
+    ):
+        yield (
+            "reports",
+            fields(r, "id attempt_id item_version_id category created_at")
+            | {"comment": identity.decrypt(r.comment_encrypted)},
         )
-    ]
-    records["reassessments"] = [
-        fields(r, "original_attempt_id session_id basis elapsed_seconds")
-        for r in rows(
-            select(Reassessment)
-            .where(Reassessment.original_attempt_id.in_(owned_attempts))
-            .order_by(Reassessment.original_attempt_id)
+    yield ("reassessments", None)
+    for r in rows(
+        select(Reassessment)
+        .where(Reassessment.original_attempt_id.in_(owned_attempts))
+        .order_by(Reassessment.original_attempt_id)
+    ):
+        yield ("reassessments", fields(r, "original_attempt_id session_id basis elapsed_seconds"))
+    yield ("data_requests", None)
+    for r in rows(select(DataRequest).where(DataRequest.user_id == actor).order_by(DataRequest.id)):
+        yield ("data_requests", fields(r, "id kind created_at completed_at retention_due_at"))
+    yield ("channel_links", None)
+    for r in rows(select(ChannelLink).where(ChannelLink.user_id == actor).order_by(ChannelLink.id)):
+        yield (
+            "channel_links",
+            fields(r, "id status revision linked_at opted_out_at")
+            | {
+                "identifier": identity.decrypt(r.external_identifier_encrypted)
+                if r.external_identifier_encrypted
+                else None
+            },
         )
-    ]
-    records["data_requests"] = [
-        fields(r, "id kind created_at completed_at retention_due_at")
-        for r in rows(
-            select(DataRequest).where(DataRequest.user_id == actor).order_by(DataRequest.id)
+    yield ("channel_conversations", None)
+    for r in rows(
+        select(ConversationState)
+        .where(ConversationState.actor_id == actor)
+        .order_by(ConversationState.link_id)
+    ):
+        yield ("channel_conversations", fields(r, "link_id session_id updated_at expires_at"))
+    yield ("channel_inbound", None)
+    for r in rows(
+        select(InboundMessage).where(InboundMessage.actor_id == actor).order_by(InboundMessage.id)
+    ):
+        yield ("channel_inbound", fields(r, "id command status received_at processed_at"))
+    yield ("channel_outbound", None)
+    for r in rows(
+        select(OutboundMessage)
+        .where(OutboundMessage.actor_id == actor)
+        .order_by(OutboundMessage.id)
+    ):
+        yield ("channel_outbound", fields(r, "id template status created_at sent_at"))
+    yield ("account_events", None)
+    for r in rows(
+        select(IdentityEvent)
+        .where(
+            IdentityEvent.user_id == actor,
+            IdentityEvent.type.not_in(["legal_hold.created", "legal_hold.released"]),
         )
-    ]
-    records["channel_links"] = [
-        fields(r, "id status revision linked_at opted_out_at")
-        | {
-            "identifier": identity.decrypt(r.external_identifier_encrypted)
-            if r.external_identifier_encrypted
-            else None
-        }
-        for r in rows(
-            select(ChannelLink).where(ChannelLink.user_id == actor).order_by(ChannelLink.id)
-        )
-    ]
-    records["channel_conversations"] = [
-        fields(r, "link_id session_id updated_at expires_at")
-        for r in rows(
-            select(ConversationState)
-            .where(ConversationState.actor_id == actor)
-            .order_by(ConversationState.link_id)
-        )
-    ]
-    records["channel_inbound"] = [
-        fields(r, "id command status received_at processed_at")
-        for r in rows(
-            select(InboundMessage)
-            .where(InboundMessage.actor_id == actor)
-            .order_by(InboundMessage.id)
-        )
-    ]
-    records["channel_outbound"] = [
-        fields(r, "id template status created_at sent_at")
-        for r in rows(
-            select(OutboundMessage)
-            .where(OutboundMessage.actor_id == actor)
-            .order_by(OutboundMessage.id)
-        )
-    ]
-    records["account_events"] = [
-        fields(r, "type created_at")
-        for r in rows(
-            select(IdentityEvent)
-            .where(
-                IdentityEvent.user_id == actor,
-                IdentityEvent.type.not_in(["legal_hold.created", "legal_hold.released"]),
-            )
-            .order_by(IdentityEvent.id)
-        )
-    ]
-    # Only taxonomy names referenced by this account, never content keys or future assignments.
+        .order_by(IdentityEvent.id)
+    ):
+        yield ("account_events", fields(r, "type created_at"))
+    # Only referenced taxonomy names; never content keys or future assignments.
     concepts = select(Concept).where(
         Concept.id.in_(evidence_query.with_only_columns(MasteryEvidence.concept_id))
     )
-    records["concepts"] = [
-        fields(r, "id topic_id name") for r in rows(concepts.order_by(Concept.id))
-    ]
+    yield ("concepts", None)
+    for r in rows(concepts.order_by(Concept.id)):
+        yield ("concepts", fields(r, "id topic_id name"))
     topic_ids = sessions.with_only_columns(AssessmentSession.topic_id).union(
         concepts.with_only_columns(Concept.topic_id)
     )
-    records["topics"] = [
-        fields(r, "id subject_id name")
-        for r in rows(select(Topic).where(Topic.id.in_(topic_ids)).order_by(Topic.id))
-    ]
-    records["competencies"] = [
-        fields(r, "id name")
-        for r in rows(
-            select(Competency)
-            .where(
-                Competency.id.in_(evidence_query.with_only_columns(MasteryEvidence.competency_id))
-            )
-            .order_by(Competency.id)
-        )
-    ]
-    return DataExportBundle(
-        request_id=target, generated_at=identity.clock(), exclusions=EXCLUSIONS, records=records
-    )
+    yield ("topics", None)
+    for r in rows(select(Topic).where(Topic.id.in_(topic_ids)).order_by(Topic.id)):
+        yield ("topics", fields(r, "id subject_id name"))
+    yield ("competencies", None)
+    for r in rows(
+        select(Competency)
+        .where(Competency.id.in_(evidence_query.with_only_columns(MasteryEvidence.competency_id)))
+        .order_by(Competency.id)
+    ):
+        yield ("competencies", fields(r, "id name"))

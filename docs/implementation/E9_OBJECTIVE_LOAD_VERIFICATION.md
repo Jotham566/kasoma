@@ -1,7 +1,7 @@
 # E9 isolated objective HTTP load profile
 
 Requirements: NFR-PERF-001, NFR-PERF-002, NFR-SCL-001. Local objective baseline passes;
-full hosted regression and broader performance acceptance remain pending.
+full hosted regression passes; broader performance acceptance remains pending.
 
 `make load-objective` creates a fresh randomly named local database, applies the repository
 migrations and seeds original synthetic content. Only the standard development PostgreSQL profile
@@ -55,9 +55,7 @@ evidence: the per-operation gate now rejects that result. No threshold was relax
 ADR-046 replaces exclusive immutable-content read locks with FOR SHARE (still conflicting with
 non-key retirement updates), and manual topic practice queries only its selected topic. The
 content eligibility and final locked refresh remain authoritative. `make format lint test-load-profile
-test-assessment-locks` passed 18 harness cases and four PostgreSQL lock/filter regressions. A fresh
-full-size run is underway against these changes and the revised pacing/route gates. Full application,
-browser, role and security regression is also required before promotion.
+test-assessment-locks` passed 18 harness cases and four PostgreSQL lock/filter regressions. The final full-size run and hosted regression results are recorded below.
 
 ## Final native objective baseline — 9 October 2026
 
@@ -92,12 +90,23 @@ resources were not measured. [Machine-readable aggregate report](evidence/E9_OBJ
 
 The startup p99 remains about one second despite passing p95; retain it as a tuning/risk signal.
 This finite local result does not close the representative-history, numeric/provider, soak, resource
-and production release gates described above. Full application/browser/security CI is pending.
+and production release gates described above.
 
 `make format lint test` passed 450 unit/contract and 195 integration cases, including the new
 concurrency checks, reviewed-rubric batch exclusion and restricted assessment-role regression.
 Only `test_local_storage_and_mailpit` failed because the native MinIO service remains unavailable.
 `make openapi-check build security` passed, with no known Python/JavaScript vulnerabilities.
 `make migrate recovery-drill` passed (54 tables/272 rows, 238 ms restore, pgvector/immutable guards,
-no cleanup failures). Documentation links/whitespace pass. Hosted service/browser/container
-acceptance is still required; the native environment failure is not treated as a full pass.
+no cleanup failures). Documentation links/whitespace pass. The native environment failure is not treated as a full native pass.
+
+
+## Hosted regression and promotion
+
+Hosted CI [37933227560](https://github.com/Jotham566/kasoma/actions/runs/37933227560)
+passed at `f2dbf8a`: 450 unit/contract and 196 integration cases (646 Python), five tooling,
+66 real-API browser executions and one isolated UI case. Setup, migrations, seed, lint/format/types,
+contracts, build, role/security/source/image checks and container smoke passed. Isolated recovery
+restored 54 tables/272 rows in 452 ms with pgvector and immutable guards and no cleanup failures.
+Cold question transfers were 191532/194232/193633 bytes, below 250000 in every engine.
+The commit is on main; its branch was removed locally/remotely. This CI verifies regression,
+not a production rerun of the native load measurements above.

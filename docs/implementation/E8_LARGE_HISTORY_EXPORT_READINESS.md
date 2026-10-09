@@ -12,9 +12,9 @@ or partial completion is permitted. Retries return the same encrypted snapshot f
 Completion/receipt/audit/outbox evidence commits atomically and sets six-calendar-year retention.
 
 The accepted projection refactor batches ORM reads and replaces retained assignment/version maps
-and released-ID lists with owned SQL joins/subqueries. It still builds the complete bounded output
-bundle in memory. Merely increasing MAX_RECORDS/MAX_BYTES would retain that output memory/latency
-problem and the synchronous browser-proxy timeout. The proxy currently awaits
+and released-ID lists with owned SQL joins/subqueries. The incremental encoding slice now stops projection at the existing byte limit and collects
+16 KiB chunks. The successful bounded bundle is still decoded for the synchronous response.
+Merely increasing MAX_RECORDS/MAX_BYTES would retain that output memory/latency problem and the synchronous browser-proxy timeout. The proxy currently awaits
 upstream.text(), so an API streaming response alone would still be buffered by the web tier.
 
 The allowlist includes owned profile/identifier/consent metadata, answers with attempted-question
@@ -151,3 +151,8 @@ revocation checks, bounded streaming time, cancellation and Content-Length/incom
 behavior. A test must show that a revoked or corrupted mid-stream download is reported as failed.
 The existing buffered synchronous route remains compatible until a separately tested replacement
 is enabled. Choosing chunk/artifact/job limits and API routes remains part of the future ADR.
+
+
+The [incremental encoder](E8_EXPORT_ENCODING_VERIFICATION.md) is an internal prerequisite, not an
+accepted asynchronous delivery design. It preserves ADR-028's existing isolation and disclosure
+policy; it does not establish the stronger concurrent snapshot protocol proposed above.

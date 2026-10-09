@@ -1,12 +1,18 @@
 # Changelog
 
-## In progress — isolated objective HTTP load baseline
+## In progress — incremental bounded export encoding
+
+- Enforce the existing 2 MiB complete-envelope cap during allowlisted projection (FR-ID-006, NFR-SEC-001/002, NFR-MNT-001), stopping reads before an oversized history is fully hydrated.
+- Bound collected encoding chunks to 16 KiB; retain exact row accounting, diagnostic sealing, atomic completion, encrypted retry compatibility and existing expiry. JSON member order may differ in new stored artifacts; v1 values/schema and old retry bytes remain unchanged.
+- Add codec, exact-cap, cancellation, early-hydration and legacy retry tests. No new ADR, API, migration, provider or asynchronous large-history delivery. Acceptance is recorded in the export encoding report.
+
+## 9 October 2026 — verified objective HTTP load baseline
 
 - Add a local-only temporary-database profile for NFR-PERF-001/002 and NFR-SCL-001: 2,000 synthetic registrations, 500 active learners, 50 concurrent journeys, 288 original fixtures and paced objective answers.
 - Report real HTTP percentiles, errors, completion, pacing and scoped resource evidence; preserve all application limits and strict latency gates.
 - Add cleanup/isolation/metrics tests and strict typing. Runtime acceptance and broader history/provider/deployment scenarios remain pending.
 - The initial run exposed 653 ms session-start p95 despite a 30 ms mixed p95. Require operation-specific latency gates and implement ADR-046 shared immutable-content locks plus focused topic selection; database concurrency/recheck tests pass, fresh load/full regression pending.
-- Batch final plan eligibility/locking and bound manual candidate work. Final native baseline passes: 7,000 requests, zero errors, 500 sessions/2,500 grades, START p95 441 ms and answer p95 27 ms at 19.996 answer dispatches/s. Full regression/security/hosted acceptance remains pending.
+- Batch final plan eligibility/locking and bound manual candidate work. Final native baseline passes: 7,000 requests, zero errors, 500 sessions/2,500 grades, START p95 441 ms and answer p95 27 ms at 19.996 answer dispatches/s. Hosted CI 37933227560 passed 646 Python, 66 browser, five tooling and one isolated UI case plus full recovery/security/container gates; promoted `f2dbf8a` and removed its branch.
 
 ## 9 October 2026 — verified narrow learner journey
 

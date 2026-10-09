@@ -115,7 +115,7 @@ verified with learner delivery disabled. Learner short-text integration, academi
 production PITR/RPO/RTO and branded/mobile browser acceptance remain pending.
 Narrow 320-pixel touch journeys are verified across the three test engines; physical-device and
 branded-browser acceptance remain separate. The ADR-046 objective load baseline passes locally
-with shared content locks and batched plan validation; hosted regression remains pending. See
+with shared content locks and batched plan validation; full hosted regression is verified. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in
