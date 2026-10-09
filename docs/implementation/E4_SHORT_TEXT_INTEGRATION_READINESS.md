@@ -120,3 +120,17 @@ unsupported scores, confidence, hidden rubric/model/error fields and false maste
 claims; verify bounded exact-text preservation, a bound relative polling URL and a
 required typed fallback. Log: `.local/short-text-contracts-checks.log`. Database, worker,
 HTTP and browser acceptance remain pending; these contracts are not a deployed feature.
+
+Answer-protection preparation uses the existing authenticated encryption interface and
+an explicit five-ID envelope binding. The planned attempt response representation must
+be coordinated with migration 0013's bounded-structure guard and the existing owned export
+projection. Migration 0023's assignment exclusion remains unchanged. Format tests do not
+prove persistence, export or legal-hold acceptance. Verification is in progress.
+
+Answer-format verification now passes `make format lint test-unit openapi-check
+security-source`: 730 unit/contract cases, including 31 new answer-protection cases,
+and 35 tooling cases. Logs: `.local/short-text-answer-protection-final.log`. No HTTP
+schema, database migration, provider call or running service changed in this preparation.
+Next integrate durable grading and eligibility atomically with encrypted attempts,
+owned export decryption and the full privacy inventory; do not relax assignment guards
+until that path has complete acceptance evidence.

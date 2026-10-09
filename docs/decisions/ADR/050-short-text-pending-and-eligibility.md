@@ -77,3 +77,25 @@ Sources: [readiness assessment](../../implementation/E4_SHORT_TEXT_INTEGRATION_R
 [API](../../specifications/04_API_and_Integration_Contract.md),
 [AI guardrails](../../specifications/06_AI_RAG_and_Grading_Guardrails.md),
 [production-pilot rules](../../specifications/16_Production_Pilot_Decisions.md).
+
+## Answer-protection format under implementation
+
+The internal envelope uses the existing IdentityService authenticated encryption
+interface. Its encrypted, versioned body binds learner, attempt, session-item,
+item-version and rubric-version IDs to the exact response. ADR-044 requires the rubric
+ID to equal its owning item-version ID. Validate that binding before releasing text;
+reject unknown/noncanonical formats, duplicate fields, malformed input, ciphertext
+corruption and cross-record replay with closed errors. Bound plaintext envelopes at
+16 KiB and ASCII ciphertext at 24 KiB, accommodating the 2,000-character input limit
+including four-byte Unicode and JSON escapes. These are format limits, not retention
+or academic policies. The caller must still enforce authorization before decryption.
+
+The proposed database representation is an encrypted response within the existing
+immutable attempt, preserving its exact-record ATTEMPT hold and ownership. Migration
+0013 currently rejects that response format; migration 0023 prevents its assignment.
+Both remain unchanged during format verification. Update structured-response checks,
+attempt guards and export decryption together with durable job/receipt integration;
+never allow the current generic export projection to disclose ciphertext or raw rubric
+material as a learner response. New grading jobs and audit evidence still require
+separate inventory/hold/retention treatment. No new table or persisted answer is added
+by the format component alone.

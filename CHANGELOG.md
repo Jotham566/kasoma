@@ -2,6 +2,12 @@
 
 ## Work in progress — short-text learner integration
 
+- Add a bounded authenticated answer envelope using the existing encryption interface,
+  binding learner/attempt/assignment/item/rubric IDs and preserving exact answer text.
+  Ciphertext replay, malformed data and provider diagnostics fail closed. Persistence
+  and learner delivery remain disabled pending coordinated integration. All 730
+  unit/contract and 35 tooling cases pass, with lint/types, contracts and secret scans.
+
 - Reconcile readiness against existing assessment/mastery contracts and the mandatory
   beta expert-audit and automatic band-disablement rules. Scoring and learner selection
   remain disabled; this assessment provides no academic acceptance.

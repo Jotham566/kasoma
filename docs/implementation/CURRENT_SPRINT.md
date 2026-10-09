@@ -192,3 +192,11 @@ answer input and distinct pending/neutral outcomes, rejecting scores and hidden/
 material. ADR-050 remains proposed; runtime routes, worker and privacy integration are
 not implemented by these contracts. Verification passes: 699 unit/contract tests (33 new outcome/input cases), 35 tooling
 checks, format/lint/types and generated-contract comparison. No HTTP schema changed.
+
+NFR-SEC-002 / FR-GRD-003 / FR-ID-006: `services/short_text_answers.py` implements the
+bounded authenticated answer format proposed by ADR-050. Synthetic real-crypto tests
+cover exact Unicode/escape preservation, cross-record replay, tampering, wrong keys,
+bounds and closed errors. Verification passes: 730 unit/contract cases (31 new
+answer-protection cases), 35 tooling checks, formatting/lint/types, generated-contract
+comparison and source secret scanning. No database/API path is enabled;
+exports and new workflow-record hold/retention coverage remain required before integration.

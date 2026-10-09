@@ -858,3 +858,11 @@ checks, format/lint/types and generated-contract comparison. No HTTP schema chan
 NFR-MNT-001: CI cache configuration passed remotely in run 37993094065, but PostgreSQL
 pull throttling persisted. Optional read-only registry authentication is prepared; hosted
 acceptance remains open. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).
+
+NFR-SEC-002 / FR-GRD-003 / FR-ID-006: `services/short_text_answers.py` implements the
+bounded authenticated answer format proposed by ADR-050. Synthetic real-crypto tests
+cover exact Unicode/escape preservation, cross-record replay, tampering, wrong keys,
+bounds and closed errors. Verification passes: 730 unit/contract cases (31 new
+answer-protection cases), 35 tooling checks, formatting/lint/types, generated-contract
+comparison and source secret scanning. No database/API path is enabled;
+exports and new workflow-record hold/retention coverage remain required before integration.
