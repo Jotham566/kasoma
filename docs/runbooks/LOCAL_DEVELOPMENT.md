@@ -700,3 +700,10 @@ Docker running. The 9 October source checksum passed, but four Go module downloa
 unexpected EOFs. Browser downloads also encountered timeout/connection resets. Preserve checksums,
 pins and existing volumes when retrying; daemon/database availability does not establish complete
 local service or browser acceptance.
+
+MinIO builds now retain locked project-specific Go module/build caches and try interrupted module
+downloads at most three times. Verification failure is terminal; source/compiler pins and checksum
+checks remain mandatory. Retry with `make services migrate seed` when the network recovers, then
+`make test` for the storage/Mailpit gate. No Docker volume reset is needed. See
+[download recovery](../implementation/E0_MINIO_DOWNLOAD_RECOVERY.md). Cache reuse does not replace
+verification and does not imply that a previously failed native service build has passed.

@@ -58,3 +58,8 @@ The [release register](RELEASE_GATES.md) tracks required kickoff/capacity, acade
 approved inventory and benchmark, privacy/guardian/DPIA, Week 8 provider, production OTP/MFA/roles,
 PITR/RPO/RTO, branded/mobile browser and pilot approvals. The 12-week deadline and all acceptance
 thresholds remain unchanged; the MVP is not complete.
+
+NFR-MNT-001 build resilience is implemented on `codex/minio-download-recovery`: three download
+attempts, terminal module verification and locked build caches for the unchanged MinIO source.
+Four deterministic helper regressions pass (431 total unit/contract tests); native final-image and
+hosted acceptance are pending. [Evidence](E0_MINIO_DOWNLOAD_RECOVERY.md).

@@ -1,5 +1,11 @@
 # Changelog
 
+## In progress — verified MinIO download recovery
+
+- Add at most three dependency-download attempts and terminal Go module verification after native network EOFs (NFR-MNT-001).
+- Reuse locked module/build caches for the unchanged ADR-019 source/compiler/base pins; verify and compile within one build step.
+- Add four deterministic helper regressions. Local lint/types/contracts and 431 unit/contract checks pass; actual service rebuild and hosted acceptance remain pending.
+
 ## 9 October 2026 — verified bounded export projection
 
 Hosted CI [37918757085](https://github.com/Jotham566/kasoma/actions/runs/37918757085)

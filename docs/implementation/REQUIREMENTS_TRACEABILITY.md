@@ -272,3 +272,10 @@ transfer encountered timeout/connection resets and is retrying. No data or volum
 This supersedes earlier pending projection/native-database entries. Large-history delivery remains
 incomplete; the readiness document is a proposal, not accepted asynchronous behavior. NFR-MNT-001
 next covers bounded verified dependency-download recovery without replacing the MinIO source pin.
+
+NFR-MNT-001 native setup resilience: infra/containers/minio.Dockerfile,
+infra/containers/download-go-modules.sh and tests/contract/test_minio_download_recovery.py connect
+bounded download retries and mandatory integrity verification to four deterministic subprocess
+cases. [Verification](E0_MINIO_DOWNLOAD_RECOVERY.md): local lint/types/contracts and 431 unit/contract
+checks pass; real service rebuild/storage and full hosted acceptance remain pending. ADR-019 pins
+and runtime behavior are unchanged; browser download recovery is a separate environment issue.
