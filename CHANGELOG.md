@@ -2,6 +2,8 @@
 
 ## Work in progress — learner UI foundation
 
+- Apply shared presentation to operations, flags and synthetic imports; preserve unavailable metrics and explicit audited review controls. Lint/types/build and 30 Chromium cases pass; authenticated mobile/desktop captures reviewed.
+
 - Add consistent staff workspace navigation for existing routes with active state, narrow-screen touch controls and unchanged server authorization. Lint/types/build, 30 Chromium journeys and the isolated editor check pass; desktop/mobile captures reviewed.
 
 - Restyle privacy requests and WhatsApp linking for mobile, preserving explicit consent/re-authentication and retry controls; display link-code expiry explicitly in Kampala time. Lint/types/build and all 30 Chromium cases pass; mobile captures reviewed.
@@ -23,6 +25,8 @@
 - Introduce shared learner navigation, a keyboard skip link and a responsive home/recommendation presentation using existing authorized data. Preserve synthetic notices, consent and retry semantics; verification is in progress.
 
 ## Work in progress — asynchronous owned export lifecycle
+
+- Audit export acceptance against concrete security, cleanup, large-history and interruption assertions; retain explicit browser/container/hosted promotion gates.
 
 - Allow a finite configurable 30-minute container scan timeout after the default five-minute vulnerability database download timed out. Keep current database updates and HIGH/CRITICAL failure gates unchanged.
 

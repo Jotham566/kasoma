@@ -94,8 +94,8 @@ export default function Operations() {
       ] as const)
     : [];
   return (
-    <main className="mx-auto max-w-3xl p-6 space-y-4">
-      <Link className="underline" href="/admin/content">
+    <main className="staff-page operations-page">
+      <Link className="ui-text-link" href="/admin/content">
         Content workspace
       </Link>
       <h1 className="text-3xl font-semibold">Operations health</h1>
@@ -104,7 +104,7 @@ export default function Operations() {
         page does not refresh automatically.
       </p>
       <button
-        className="rounded border px-4 py-3 disabled:opacity-50"
+        className="ui-button ui-button-primary"
         disabled={busy}
         onClick={() => void refresh()}
       >
@@ -122,66 +122,86 @@ export default function Operations() {
             }).format(new Date(view.generated_at))}{" "}
             (Africa/Kampala).
           </p>
-          <h2 className="text-xl font-semibold">Service health</h2>
-          <ul>
-            <li>Database: {view.health.database}</li>
-            <li>Redis: {view.health.redis}</li>
-            <li>Monitoring worker: {view.worker}</li>
-          </ul>
-          <h2 className="text-xl font-semibold">Active alerts</h2>
-          {view.alerts.length === 0 ? (
-            <p>No configured thresholds breached in this snapshot.</p>
-          ) : (
+          <section
+            className="surface-card operations-section"
+            aria-label="Service health"
+          >
+            <h2 className="text-xl font-semibold">Service health</h2>
             <ul>
-              {view.alerts.map((alert) => (
-                <li key={alert.code}>
-                  {alert.severity}: {messages[alert.code]} (observed{" "}
-                  {alert.observed}, threshold {alert.threshold}).
-                </li>
-              ))}
+              <li>Database: {view.health.database}</li>
+              <li>Redis: {view.health.redis}</li>
+              <li>Monitoring worker: {view.worker}</li>
             </ul>
-          )}
-          <h2 className="text-xl font-semibold">Queue and content workload</h2>
-          {view.counts ? (
-            <>
-              <table className="w-full text-left">
-                <thead>
-                  <tr>
-                    <th scope="col">Metric</th>
-                    <th scope="col">Count</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {counters.map(([label, count]) => (
-                    <tr key={label}>
-                      <th className="py-2 font-normal" scope="row">
-                        {label}
-                      </th>
-                      <td>
-                        {count.at_least ? "At least " : ""}
-                        {count.value}
-                      </td>
+          </section>
+          <section
+            className="surface-card operations-section"
+            aria-label="Active alerts"
+          >
+            <h2 className="text-xl font-semibold">Active alerts</h2>
+            {view.alerts.length === 0 ? (
+              <p>No configured thresholds breached in this snapshot.</p>
+            ) : (
+              <ul>
+                {view.alerts.map((alert) => (
+                  <li key={alert.code}>
+                    {alert.severity}: {messages[alert.code]} (observed{" "}
+                    {alert.observed}, threshold {alert.threshold}).
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+          <section
+            className="surface-card operations-section"
+            aria-label="Queue and content workload"
+          >
+            <h2 className="text-xl font-semibold">
+              Queue and content workload
+            </h2>
+            {view.counts ? (
+              <>
+                <table className="w-full text-left">
+                  <thead>
+                    <tr>
+                      <th scope="col">Metric</th>
+                      <th scope="col">Count</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {counters.map(([label, count]) => (
+                      <tr key={label}>
+                        <th className="py-2 font-normal" scope="row">
+                          {label}
+                        </th>
+                        <td>
+                          {count.at_least ? "At least " : ""}
+                          {count.value}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p>
+                  Oldest queued import: {view.counts.oldest_import_seconds}{" "}
+                  seconds. Alert threshold: {view.thresholds.import_age_seconds}{" "}
+                  seconds.
+                </p>
+                <p>
+                  Failed-import threshold: {view.thresholds.failed_imports}.
+                  Flag backlog threshold: {view.thresholds.unresolved_flags}.
+                </p>
+              </>
+            ) : (
               <p>
-                Oldest queued import: {view.counts.oldest_import_seconds}{" "}
-                seconds. Alert threshold: {view.thresholds.import_age_seconds}{" "}
-                seconds.
+                Workload counts unavailable. Do not interpret missing values as
+                zero.
               </p>
-              <p>
-                Failed-import threshold: {view.thresholds.failed_imports}. Flag
-                backlog threshold: {view.thresholds.unresolved_flags}.
-              </p>
-            </>
-          ) : (
-            <p>
-              Workload counts unavailable. Do not interpret missing values as
-              zero.
-            </p>
-          )}
-          <section aria-label="Local channel operations" className="space-y-3">
+            )}
+          </section>
+          <section
+            aria-label="Local channel operations"
+            className="surface-card operations-section"
+          >
             <h2 className="text-xl font-semibold">Local channel delivery</h2>
             {channel ? (
               <>
@@ -246,7 +266,7 @@ export default function Operations() {
           </section>
           <section
             aria-label="Personal export operations"
-            className="space-y-3"
+            className="surface-card operations-section"
           >
             <h2 className="text-xl font-semibold">Personal exports</h2>
             {exports ? (
@@ -289,7 +309,7 @@ export default function Operations() {
               </p>
             )}
           </section>
-          <Link className="underline" href="/admin/flags">
+          <Link className="ui-text-link" href="/admin/flags">
             Review content flags
           </Link>
           <h2 className="text-xl font-semibold">

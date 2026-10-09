@@ -444,3 +444,23 @@ exceeded its default five-minute deadline before scanning either image. The pinn
 confirms a `--timeout` duration option. `make security-containers` now supplies a configurable
 30-minute per-image bound; database freshness, severity and failure rules are unchanged.
 A retry is running. The initial run is recorded as incomplete, not clean.
+
+
+## Promotion coverage audit — 9 October 2026
+
+This review inspected assertions, not only test counts. Local native regression evidence above
+remains valid; the hosted candidate and container scan are still running.
+
+| ADR-048 boundary | Concrete coverage | Remaining scope |
+| --- | --- | --- |
+| Revocation during generation | `test_revocation_after_snapshot_prevents_publication` revokes the session after snapshot creation and asserts both request completion and generation publication remain unset | Production identity configuration remains a release gate |
+| Larger histories | `test_large_history_exceeds_both_synchronous_caps_and_publishes_complete_snapshot` creates 12,000 synthetic events, independently counts owned events, checks encoded size above the legacy cap and excludes grants/manifests | Representative production load is not inferred |
+| Late object cleanup | `test_unpublished_cleanup_and_late_orphan_scan_preserve_live_generation` inserts an object after registry deletion, advances its bounded grace and verifies removal without deleting a live generation | Object-store backup/namespace rotation remains unverified |
+| Cleanup failure | `test_cleanup_storage_failure_keeps_metadata_for_retry` refuses storage removal, checks retained metadata, then verifies successful retry | Production alert handling still requires rehearsal |
+| Read-time authority/integrity | `test_async_download_shares_integrity_and_authority_and_closes_store` rejects cross-owner access before allocating storage, tests mid-read revocation/corruption/cancellation and asserts closure | Remaining browser engines must pass |
+| Consent withdrawal | `test_async_privacy_access_remains_available_after_learning_consent_withdrawal` withdraws learning consent, prepares an owned copy and checks the withdrawal record is included | Approved real-user privacy wording remains external |
+| Process interruption | The real prefork worker test verifies a noncooperative task is killed, replaced and recovered through the finite lease; worker queue isolation is asserted | Hosted execution remains in progress |
+| Browser transport | Native Chromium corruption/cancellation/frozen-retry tests use the real API and web gateway with isolated fake object faults | Firefox/WebKit and latest-head hosted checks remain required |
+
+This audit does not accept ADR-048 or authorize main promotion. No acceptance threshold,
+retention policy, provider choice or legal/academic approval changes.

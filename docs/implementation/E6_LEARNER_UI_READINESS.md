@@ -223,3 +223,23 @@ operations denial pass. Source secret, generated contract and documentation chec
 The rebuilt web image is ready for local review. Evidence: `.local/staff-navigation-checks.log`,
 `.local/staff-navigation-source-checks.log` and `.local/ui-review/staff-*.png`. No new ADR
 or API/migration change. Full browser/pilot acceptance and remaining staff page design are open.
+
+
+### Staff operational screens candidate — 9 October 2026
+
+FR-OPS-002, FR-CNT-001/006 and NFR-ACC-001/COMP-001/MNT-001: apply shared control
+and card presentation to operations, flag triage and synthetic imports. Group service health,
+alerts and workloads into named regions; keep metric tables bounded at narrow widths.
+No metrics are invented and missing data remains explicitly unavailable. Explicit refresh,
+review/claim/retry, role checks and draft-only import behavior are unchanged. Operations
+checks now include authenticated desktop/mobile captures, 320-pixel reflow and axe.
+Verification is running; no new API, migration or ADR.
+
+
+Staff operations result: `make format lint build e2e-chromium-full` passes 30 Chromium
+journeys, including independent flag triage, bounded draft import and authenticated operations
+at 320 pixels. Desktop/mobile operations captures were inspected without clipping; missing
+heartbeat and unmeasured instrumentation remain explicit. Source, contract and documentation
+checks pass. Web image rebuilt. Evidence: `.local/staff-operations-ui-checks.log`,
+`.local/staff-operations-source-checks.log` and `.local/ui-review/operations-*.png`.
+No API, migration or architecture changes; other engines/pilot gates remain open.

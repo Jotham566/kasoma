@@ -7,7 +7,7 @@ import { apiClient, type components } from "@kasoma/api-client";
 type Job = components["schemas"]["ImportView"];
 type Input = components["schemas"]["ImportInput"];
 const api = () => apiClient("", crypto.randomUUID());
-const button = "rounded border px-4 py-3 my-2 disabled:opacity-50";
+const button = "ui-button ui-button-secondary";
 
 export default function Imports() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -88,8 +88,8 @@ export default function Imports() {
     });
   }
   return (
-    <main className="mx-auto max-w-3xl p-6 space-y-4">
-      <Link className="underline" href="/admin/content">
+    <main className="staff-page">
+      <Link className="ui-text-link" href="/admin/content">
         Back to content workspace
       </Link>
       <h1 className="text-3xl font-semibold">Import synthetic draft items</h1>
@@ -130,7 +130,7 @@ export default function Imports() {
       </button>
       <ul className="space-y-4">
         {jobs.map((job) => (
-          <li key={job.id} className="rounded border p-4">
+          <li key={job.id} className="surface-card staff-record">
             <p>
               Import {job.id}: {job.status}
             </p>
@@ -147,7 +147,7 @@ export default function Imports() {
               {job.results.map((row) => (
                 <li key={row.position}>
                   <Link
-                    className="underline"
+                    className="ui-text-link"
                     href={`/admin/content?version=${row.version_id}`}
                   >
                     Record {row.position}:{" "}

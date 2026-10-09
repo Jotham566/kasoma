@@ -6,9 +6,8 @@ import { apiClient, type components } from "@kasoma/api-client";
 
 type Schema = components["schemas"];
 const api = () => apiClient("", crypto.randomUUID());
-const button =
-  "min-h-11 rounded border border-slate-500 px-4 py-2 disabled:opacity-50";
-const field = "block w-full min-h-11 rounded border border-slate-500 p-2";
+const button = "ui-button ui-button-secondary";
+const field = "ui-select";
 export default function Flags() {
   const [rows, setRows] = useState<Schema["FlagSummary"][]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -134,8 +133,8 @@ export default function Flags() {
     setStatus("Triage decision saved and audited. Grades are unchanged.");
   }
   return (
-    <main className="mx-auto max-w-4xl space-y-4 p-6">
-      <nav className="flex gap-4" aria-label="Staff navigation">
+    <main className="staff-page">
+      <nav className="flex flex-wrap gap-4" aria-label="Staff navigation">
         <Link className={button} href="/admin/content">
           Content review
         </Link>
@@ -193,7 +192,7 @@ export default function Flags() {
           <p>No flags in this view.</p>
         )}
         {rows.map((row) => (
-          <article key={row.id} className="rounded border border-slate-300 p-3">
+          <article key={row.id} className="surface-card staff-record">
             <p>
               {row.category} · {row.priority} · {row.status}
             </p>
@@ -220,7 +219,7 @@ export default function Flags() {
       {selected && (
         <section
           aria-label="Selected flag"
-          className="space-y-3 rounded border border-slate-400 p-4"
+          className="surface-card staff-record"
         >
           <h2 className="text-xl font-semibold">Report details</h2>
           <p>

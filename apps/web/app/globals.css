@@ -650,3 +650,48 @@ body {
     flex: 1 1 auto;
   }
 }
+
+.staff-page {
+  max-width: 960px;
+  margin: auto;
+  padding: 2rem;
+  display: grid;
+  gap: 1.25rem;
+}
+.operations-section,
+.staff-record {
+  display: grid;
+  gap: 0.8rem;
+}
+.operations-section table {
+  width: 100%;
+  table-layout: fixed;
+}
+.operations-section th:first-child {
+  width: 75%;
+}
+.operations-section th,
+.operations-section td {
+  overflow-wrap: anywhere;
+  padding: 0.65rem 0.25rem;
+  vertical-align: top;
+  border-bottom: 1px solid var(--kasoma-line);
+}
+.operations-section thead {
+  color: var(--kasoma-muted);
+  font-size: 0.85rem;
+}
+.operations-section dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--kasoma-line);
+}
+.staff-record {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .staff-page {
+    padding: 1.25rem 1rem;
+  }
+}

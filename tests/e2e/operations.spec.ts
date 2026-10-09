@@ -48,6 +48,20 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
       exact: true,
     }),
   ).toBeVisible();
+  await page.screenshot({
+    path: ".local/ui-review/operations-desktop.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 320, height: 740 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: ".local/ui-review/operations-mobile.png",
+    fullPage: true,
+  });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.route("**/api/v1/admin/operations", (route) =>
     route.abort("failed"),
