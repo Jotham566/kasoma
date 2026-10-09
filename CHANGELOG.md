@@ -2,6 +2,10 @@
 
 ## Work in progress — short-text learner integration
 
+- Define one-claim grading transitions with bounded queue/lease expiry and exact
+  terminal replay. Interrupted claims fall back without resetting model-call budgets;
+  late workers cannot publish. Durable persistence/worker wiring remains pending.
+
 - Add a bounded authenticated answer envelope using the existing encryption interface,
   binding learner/attempt/assignment/item/rubric IDs and preserving exact answer text.
   Ciphertext replay, malformed data and provider diagnostics fail closed. Persistence

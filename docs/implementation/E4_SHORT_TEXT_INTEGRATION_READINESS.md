@@ -134,3 +134,11 @@ schema, database migration, provider call or running service changed in this pre
 Next integrate durable grading and eligibility atomically with encrypted attempts,
 owned export decryption and the full privacy inventory; do not relax assignment guards
 until that path has complete acceptance evidence.
+
+FR-GRD-003/004/005 and NFR-SEC-002: `services/short_text_workflow.py` adds the proposed
+one-claim transition policy, inclusive queue/lease expiry, clock/state validation and
+immutable terminal replay. A crashed claim cannot reset the global model-call budget.
+Verification passes: `make format lint test-unit openapi-check security-source`,
+including 747 unit/contract cases (17 new transitions) and 35 tooling checks. Log:
+`.local/short-text-workflow-checks.log`. This is a transition component only; durable SQL locking,
+worker wiring, eligibility, grade/mastery publication and privacy coverage are unimplemented.

@@ -99,3 +99,27 @@ never allow the current generic export projection to disclose ciphertext or raw 
 material as a learner response. New grading jobs and audit evidence still require
 separate inventory/hold/retention treatment. No new table or persisted answer is added
 by the format component alone.
+
+## Durable-work transition policy
+
+A grading command gets at most one model-execution claim. Redelivered broker tasks
+may claim only QUEUED work; they must not renew a RUNNING lease or restart the
+three-request/one-repair budget. A crash after dispatch may leave model usage unknown.
+Conservatively expire that claim to neutral fallback instead of assuming no calls
+occurred and dispatching again. The learner can follow the reviewed equivalent or
+independent review path; resubmitting the same idempotency key remains the same attempt.
+
+The internal transition component bounds queue age at five minutes and a claim at
+30 seconds, further capped by the absolute queue deadline. These are local failure
+recovery ceilings, not a change to model-call budgets or latency SLOs. The worker's
+hard execution limit must expire before the lease. At the deadline, stale workers
+cannot publish. Terminal replays preserve the original timestamp and outcome; a
+conflicting outcome is rejected. Persist each transition atomically under the attempt/
+command lock and preserve immutable transition evidence with privacy/hold coverage.
+
+The transition function's GRADED outcome is not academic or ownership authorization.
+The publication transaction must independently recheck consent, content, calibrated
+band, validation and audit-disablement state and store grade/mastery atomically. The
+current component has no database adapter, broker registration or learner delivery.
+Those remain the next integration work; transition tests do not establish durable
+queue, concurrency, model execution or application acceptance.
