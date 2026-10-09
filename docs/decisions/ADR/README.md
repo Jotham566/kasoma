@@ -101,3 +101,7 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-047: Bounded private export artifact format](047-private-export-artifact-format.md)
   binds private encrypted chunks to their request/generation and keeps delivery disabled.
+
+
+- [ADR-048 proposal: Asynchronous owned export delivery](048-asynchronous-owned-export-delivery.md)
+  records the next lifecycle contract; unresolved cleanup/transfer bounds keep it unaccepted.

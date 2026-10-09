@@ -1,6 +1,6 @@
 # Current Sprint: remaining MVP operational and grading gates
 
-Updated 9 October 2026. Main implementation is `f2dbf8a`. Work remains synthetic/local.
+Updated 9 October 2026. Main implementation is `8c08890`. Work remains synthetic/local.
 
 ## Verified and promoted
 
@@ -47,22 +47,32 @@ Migration/recovery passes (54 tables/272 rows, 238 ms, pgvector/immutable guards
 Hosted CI 37933227560 passed all 646 Python, 66 browser, five tooling and one isolated UI case,
 plus full service/recovery/security/container checks. Promoted `f2dbf8a` and removed its branch.
 
-## Active slice: incremental personal-export encoding
+## Verified incremental personal-export encoding
 
 FR-ID-006 and NFR-SEC-001/002/MNT-001: apply the existing full-envelope 2 MiB cap while projecting
 rows, with bounded collected chunks and deterministic cursor cleanup. Preserve all disclosure,
 row accounting, retry, authorization and retention rules. Native focused tests pass. Full native regression passed 458 unit/contract and 198 integration
-cases; unavailable MinIO caused its only failure. CI 37949902270 is running at `a485bb6`. [Evidence](E8_EXPORT_ENCODING_VERIFICATION.md).
+cases; unavailable MinIO caused its only failure. Hosted CI 37949902270 passed at `a485bb6` (657 Python/66 browser plus full gates); promoted
+to main and removed its branch. [Evidence](E8_EXPORT_ENCODING_VERIFICATION.md).
 This internal ADR-028 refactor does not enable large-history fulfillment or need a new ADR.
 
-## Next slice in implementation: private export artifact format
+## Verified private export artifact format
 
 ADR-047 defines a bounded internal encrypted chunk/manifest format for FR-ID-006 and
 NFR-SEC-001/002/MNT-001. Tests verify binding, integrity, limits, failure/cancellation and round-trip
 use of the owned projection. [Verification](E8_PRIVATE_EXPORT_ARTIFACT_VERIFICATION.md).
 496 unit/contract, five tooling and 15 focused PostgreSQL export cases pass, along with lint/types,
-contracts and security. Full hosted regression remains pending. No application route/worker/storage
-publication is enabled. The durable lifecycle is next.
+contracts and security. Hosted CI 37950849215 passed at `8c08890` (696 Python/66 browser plus full gates); promoted
+to main and removed its branch. No application route/worker/storage publication is enabled.
+
+## Active slice: bounded private export storage
+
+The ADR-047 MinIO adapter bounds reads before allocation, closes responses on every path and
+uses only exact UUID references under the owned prefix. 520 unit/contract plus five tooling and
+24 focused fake-provider cases pass. The real MinIO case cannot run successfully without the
+native service; hosted acceptance is required. [Evidence](E8_PRIVATE_EXPORT_STORAGE_VERIFICATION.md).
+[ADR-048](../decisions/ADR/048-asynchronous-owned-export-delivery.md) is a proposal, not an accepted
+lifecycle. Queue/publication/cleanup/streaming work remains next and is not enabled.
 
 ## Native environment
 

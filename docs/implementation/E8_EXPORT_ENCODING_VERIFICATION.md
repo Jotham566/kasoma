@@ -54,3 +54,14 @@ Lint/format/Python and TypeScript checks pass. Full native regression passed 458
 was the unavailable MinIO storage/Mailpit check. Hosted CI 37949902270 is running at `a485bb6`
 and is required before promotion. Native MinIO and browser
 installation remain blocked by exhausted dependency-download retries, not by stopped Docker.
+
+
+## Hosted acceptance and promotion
+
+CI [37949902270](https://github.com/Jotham566/kasoma/actions/runs/37949902270) passed at `a485bb6`:
+458 unit/contract and 199 integration cases (657 Python), five tooling, 66 real-API browser and one
+isolated UI case. Full setup/migration/seed, lint/types/contracts/build, role/security/source/image
+checks and container smoke passed. Recovery restored 54 tables/272 rows in 472 ms with pgvector/
+immutable guards and no cleanup failures. Cold transfers: 192789/194243/193626 bytes, all below
+250000. Promoted to main and removed the completed branch locally/remotely. Earlier pending
+observations are superseded by this hosted result; native unavailable-storage failure remains.

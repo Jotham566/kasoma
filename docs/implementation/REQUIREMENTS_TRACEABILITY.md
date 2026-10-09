@@ -309,3 +309,15 @@ FR-ID-006/NFR-SEC-001/002/NFR-MNT-001 private artifact preparation: ADR-047,
 round-trip integration case. [Verification](E8_PRIVATE_EXPORT_ARTIFACT_VERIFICATION.md).
 Delivery remains disabled pending the atomic job/storage/expiry/download lifecycle; existing
 synchronous limits, authorization and retention remain unchanged.
+
+
+FR-ID-006/NFR-SEC-001/002/NFR-MNT-001 private MinIO adapter: `services/export_storage.py`,
+24 fake-provider cases and a real local-only owned-object integration case. Bounds apply before
+reads and connections close on all paths. [Verification](E8_PRIVATE_EXPORT_STORAGE_VERIFICATION.md).
+Native storage is unavailable; hosted actual-service acceptance is pending. No runtime delivery
+path or new retention decision is enabled; ADR-048 remains proposed.
+
+Incremental encoding and private format hosted regression passed at `a485bb6` (CI 37949902270,
+657 Python) and `8c08890` (CI 37950849215, 696 Python), each with 66 browser, five tooling, one
+isolated UI and full service/recovery/security/container checks. Both are on main; completed
+branches removed. This verifies their internal boundaries, not full asynchronous fulfillment.

@@ -716,3 +716,16 @@ history row's own reference, or the reviewed request reference (there is no sepa
 Ownership follows the flag reporter/request owner, not the staff actor. Normal parent triage can
 continue; holds do not freeze entire accounts or permit later deletion. Use `make migrate test-legal-holds` for all existing/new exact-record regressions and the full CI gates for acceptance.
 See [accountability evidence](../implementation/E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md).
+
+
+### Private export storage verification (delivery disabled)
+
+After `make services migrate seed`, run `make test-export-storage` to verify ADR-047's format
+through the local private MinIO boundary. The test writes only original synthetic bytes under
+fresh random generation/object UUIDs, checks anonymous denial and removes only those exact
+objects. It does not clear the bucket or use external storage. Missing MinIO is a failed
+prerequisite, not a skipped test. See the [storage report](../implementation/E8_PRIVATE_EXPORT_STORAGE_VERIFICATION.md).
+
+This adapter is not yet connected to a learner route or worker. Never invoke its exact-object
+removal as a substitute for reviewed lease/expiry/orphan policy. ADR-048 remains a proposal;
+large-history fulfillment and cleanup/download acceptance remain pending.

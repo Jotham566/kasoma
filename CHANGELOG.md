@@ -1,12 +1,19 @@
 # Changelog
 
-## In progress — private export artifact boundary
+## In progress — bounded private MinIO export adapter
+
+- Reuse the approved local storage boundary for exact UUID-keyed encrypted chunks (FR-ID-006, NFR-SEC-001/002, NFR-MNT-001). Bound reads before allocation; verify lengths and always release responses.
+- Add 24 fake-provider cases, an owned synthetic MinIO round trip/private-access test and `make test-export-storage`. Native real-storage verification remains blocked by unavailable MinIO; full hosted acceptance is required.
+- Record ADR-048 as an unaccepted lifecycle proposal. No learner route, worker publication, new retention rule or cleanup policy is enabled.
+- Record successful promotion of encoder `a485bb6` (657 Python/66 browser cases, CI 37949902270) and artifact format `8c08890` (696 Python/66 browser cases, CI 37950849215), with full recovery/security/container gates and branch cleanup.
+
+## 9 October 2026 — verified private export artifact boundary
 
 - Add ADR-047 and an internal authenticated chunk/manifest format for FR-ID-006 and NFR-SEC-001/002/MNT-001. Bind request, generation and ordinal; verify per-chunk and whole-file integrity before the final bytes.
 - Bound plaintext chunks, ciphertext, total size and manifests; sanitize callback/cipher errors and close cancelled sources. Add fake-storage corruption, boundary, cancellation and projection round-trip tests.
 - No learner route, worker publication, new provider or retention change. Existing synchronous caps remain unchanged; the artifact lifecycle is still pending.
 
-## In progress — incremental bounded export encoding
+## 9 October 2026 — verified incremental bounded export encoding
 
 - Enforce the existing 2 MiB complete-envelope cap during allowlisted projection (FR-ID-006, NFR-SEC-001/002, NFR-MNT-001), stopping reads before an oversized history is fully hydrated.
 - Bound collected encoding chunks to 16 KiB; retain exact row accounting, diagnostic sealing, atomic completion, encrypted retry compatibility and existing expiry. JSON member order may differ in new stored artifacts; v1 values/schema and old retry bytes remain unchanged.

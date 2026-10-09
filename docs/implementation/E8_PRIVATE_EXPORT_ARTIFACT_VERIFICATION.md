@@ -2,7 +2,7 @@
 
 Requirements: FR-ID-006, NFR-SEC-001/002, NFR-MNT-001.
 Decision: [ADR-047](../decisions/ADR/047-private-export-artifact-format.md).
-Status: native format/projection checks pass; hosted regression pending; delivery disabled.
+Status: native and hosted format/projection regression verified; delivery disabled.
 
 `services/export_artifacts.py` accepts the allowlisted projection's bounded byte stream through
 an existing identity-cipher protocol and storage callbacks. The writer uploads only encrypted
@@ -58,3 +58,14 @@ constructor failures were fixed before this final run; no failing tests were dis
 The preceding projection refactor's full native run passed 458 unit/contract and 198 integration
 cases with one unavailable-MinIO failure. The artifact codec adds no registered runtime path;
 full hosted regression, including actual services and browsers, remains required before promotion.
+
+
+## Hosted acceptance and promotion
+
+CI [37950849215](https://github.com/Jotham566/kasoma/actions/runs/37950849215) passed at `8c08890`:
+496 unit/contract and 200 integration cases (696 Python), five tooling, 66 real-API browser and one
+isolated UI case, plus all setup/migration/seed, lint/types/contracts/build, role/security/source/
+image checks and container smoke. Recovery restored 54 tables/272 rows in 353 ms with pgvector,
+immutable guards and no cleanup failure. Cold transfers: 192790/194249/193589 bytes, all below
+250000. Promoted to main; the completed branch is removed locally/remotely. This supersedes the
+pending hosted observations above; it does not enable asynchronous fulfillment.

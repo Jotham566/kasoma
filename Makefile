@@ -237,3 +237,7 @@ test-load-profile:
 .PHONY: test-assessment-locks
 test-assessment-locks:
 	$(UV) pytest tests/integration/test_assessment_content_locks.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-export-storage
+test-export-storage:
+	$(UV) pytest tests/contract/test_export_storage.py tests/integration/test_private_minio_exports.py --allow-hosts=localhost,127.0.0.1,::1
