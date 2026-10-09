@@ -656,3 +656,6 @@ be compared across rehearsals. Never add prompts, answers, context IDs, provider
 model labels to these events. See [verification](../implementation/E8_MODEL_TELEMETRY_VERIFICATION.md).
 Use `make test-unit lint security` for synthetic checks; do not run local or Gemini inference as
 part of this workflow. Dashboard AI_USAGE remains unavailable pending durable aggregation.
+
+Use `make test-reviewed-rubrics` for focused real-database rubric checks before the recovery drill;
+CI runs the same focused check without replacing full regression or recovery.

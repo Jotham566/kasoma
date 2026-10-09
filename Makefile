@@ -205,3 +205,7 @@ e2e-webkit:
 .PHONY: test-runtime-role
 test-runtime-role:
 	$(UV) pytest tests/integration/test_runtime_role.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-reviewed-rubrics
+test-reviewed-rubrics:
+	$(UV) pytest tests/integration/test_reviewed_rubrics.py --allow-hosts=localhost,127.0.0.1,::1

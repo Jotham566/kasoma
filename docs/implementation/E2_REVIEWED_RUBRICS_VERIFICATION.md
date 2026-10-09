@@ -51,3 +51,8 @@ incomplete. Existing objective behavior must continue to pass regression.
 After storing SHORT_TEXT documents, do not roll back to a pre-rubric binary. Use a compatible
 forward fix to disable new authoring while preserving schema, reviewed evidence and assignment
 guards. Migration downgrade intentionally refuses destructive removal.
+
+Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/seed but failed
+synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
+focused database diagnostics; the complete recovery and regression gates remain required. No
+rubric acceptance or main promotion is claimed from this failed run.

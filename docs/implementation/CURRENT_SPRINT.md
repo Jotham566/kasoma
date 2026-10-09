@@ -57,3 +57,8 @@ NFR-OBS-001/FR-OPS-002: model.call and model.rehearsal events now record minimiz
 registered labels, reported usage and safe per-rehearsal fingerprints. 427 unit/contract checks pass; newly reported JavaScript dependency advisories block
 promotion, and hosted regression is pending. [Evidence](E8_MODEL_TELEMETRY_VERIFICATION.md). Dashboard aggregation, production log
 retention and provider accuracy/cost remain open; no inference adapter is enabled.
+
+Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/seed but failed
+synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
+focused database diagnostics; the complete recovery and regression gates remain required. No
+rubric acceptance or main promotion is claimed from this failed run.

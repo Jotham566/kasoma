@@ -228,3 +228,8 @@ short_text_orchestration.py and the closed model-telemetry.schema.json record ac
 and rehearsal outcomes with minimized metadata and ephemeral keyed fingerprints. Eleven additional
 contract cases exercise privacy, unknown usage, repairs, timing and schema closure. 427 unit/contract checks pass; JavaScript audit remediation and
 hosted regression remain pending. Durable aggregation/alerts and live-provider usage remain gaps.
+
+Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/seed but failed
+synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
+focused database diagnostics; the complete recovery and regression gates remain required. No
+rubric acceptance or main promotion is claimed from this failed run.

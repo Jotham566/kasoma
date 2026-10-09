@@ -376,3 +376,8 @@ Record meaningful repository and product changes here. A documentation baseline 
 
 - Fix the NFR-SEC-002 test grant profile after CI 37227070209 exposed the attempt-hint guard's users-row lock requirement.
 - Permit only the existing mutable display_name field; add explicit denied identity/status/birth-date writes and exact column-grant cleanup. Production credentials remain unchanged; rerun required.
+
+Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/seed but failed
+synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
+focused database diagnostics; the complete recovery and regression gates remain required. No
+rubric acceptance or main promotion is claimed from this failed run.
