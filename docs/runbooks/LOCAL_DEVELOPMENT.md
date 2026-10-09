@@ -684,3 +684,9 @@ cache avoids modifying that shared directory. On 9 October, Docker Desktop becam
 (server 29.8.2). Its CLI was absent from the shell PATH; using the installed CLI directory above
 allowed `make services` to start image downloads/builds. Database/browser acceptance still requires
 successful migrations, seed and application assertions; daemon availability alone is insufficient.
+
+For focused export/database work, `make services-db migrate test-data-exports` starts PostgreSQL
+and Redis without waiting for the MinIO source build. It uses the same approved images, volumes
+and loopback ports as `make services`. It does not replace `make services seed` or verify object
+storage. The export reader batches ORM hydration while retaining ADR-028 synchronous limits and
+privacy filters; see [projection verification](../implementation/E8_EXPORT_PROJECTION_VERIFICATION.md).

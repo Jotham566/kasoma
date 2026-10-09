@@ -14,6 +14,11 @@ setup:
 	$(PYTHON) scripts/setup.py
 services:
 	docker compose up -d --wait postgres redis minio mailpit
+.PHONY: services-db test-data-exports
+services-db:
+	docker compose up -d --wait postgres redis
+test-data-exports:
+	$(UV) pytest tests/integration/test_data_exports.py --allow-hosts=localhost,127.0.0.1,::1
 dev: services migrate
 	$(UV) python scripts/dev.py
 test: test-unit

@@ -1,11 +1,14 @@
 """Read-only, allowlisted self-service export; never serialize ORM rows wholesale."""
 
+from collections.abc import Iterator
+from contextlib import ExitStack
 from datetime import date, datetime
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import Select, select
-from sqlalchemy.orm import Session
+from sqlalchemy import Select, Text, cast, exists, func, or_, select
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import InstrumentedAttribute, Session
 
 from services.assessment_contracts import GradeView
 from services.content_contracts import DraftDocument
@@ -44,16 +47,51 @@ EXCLUSIONS = [
 ]
 
 
-def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -> DataExportBundle:
-    remaining = MAX_RECORDS
+BATCH_SIZE = 100
 
-    def rows(query: Select[Any]) -> list[Any]:
-        nonlocal remaining
-        result = list(db.scalars(query.limit(remaining + 1)))
-        remaining -= len(result)
-        if remaining < 0:
-            raise IdentityError("EXPORT_LIMIT_REACHED", 409)
-        return result
+
+class ProjectionReader:
+    """Bound ORM hydration and close every cursor, including projection failures."""
+
+    def __init__(self, db: Session, stack: ExitStack) -> None:
+        self.db, self.stack = db, stack
+        self.remaining = MAX_RECORDS
+
+    def rows(self, query: Select[Any], *, scalar: bool = True) -> Iterator[Any]:
+        result = self.db.execute(
+            query.limit(self.remaining + 1).execution_options(yield_per=BATCH_SIZE)
+        )
+        self.stack.callback(result.close)
+        try:
+            for row in result:
+                self.remaining -= 1
+                if self.remaining < 0:
+                    raise IdentityError("EXPORT_LIMIT_REACHED", 409)
+                yield row[0] if scalar else row
+        finally:
+            result.close()
+
+
+def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -> DataExportBundle:
+    with ExitStack() as stack:
+        return _project(identity, db, actor, target, ProjectionReader(db, stack))
+
+
+def _project(
+    identity: IdentityService, db: Session, actor: UUID, target: UUID, reader: ProjectionReader
+) -> DataExportBundle:
+    rows = reader.rows
+    owned_attempts = select(Attempt.id).where(Attempt.learner_id == actor)
+    released = or_(AssessmentSession.kind != "DIAGNOSTIC", AssessmentSession.status == "COMPLETED")
+    visible = (
+        select(Attempt.id)
+        .join(SessionItem, SessionItem.id == Attempt.session_item_id)
+        .join(AssessmentSession, AssessmentSession.id == SessionItem.session_id)
+        .where(Attempt.learner_id == actor, AssessmentSession.learner_id == actor, released)
+    )
+    evidence_query = select(MasteryEvidence).where(
+        MasteryEvidence.learner_id == actor, MasteryEvidence.attempt_id.in_(visible)
+    )
 
     def fields(row: Any, names: str) -> dict[str, Any]:
         result = {}
@@ -91,53 +129,40 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
         fields(r, "id consent_type basis policy_version granted_at revoked_at")
         for r in rows(select(Consent).where(Consent.user_id == actor).order_by(Consent.id))
     ]
-    sessions = rows(
-        select(AssessmentSession)
-        .where(AssessmentSession.learner_id == actor)
-        .order_by(AssessmentSession.id)
-    )
-    by_session = {r.id: r for r in sessions}
+    sessions = select(AssessmentSession).where(AssessmentSession.learner_id == actor)
     records["sessions"] = [
         fields(
             r,
             "id subject_id topic_id kind status item_count reason plan_version "
             "started_at expires_at completed_at",
         )
-        for r in sessions
+        for r in rows(sessions.order_by(AssessmentSession.id))
     ]
-    attempts = rows(select(Attempt).where(Attempt.learner_id == actor).order_by(Attempt.id))
-    attempt_ids = {r.id for r in attempts}
-    assignments = {
-        r.id: r
-        for r in rows(
-            select(SessionItem)
-            .where(SessionItem.id.in_([a.session_item_id for a in attempts]))
-            .order_by(SessionItem.id)
-        )
-    }
-    versions = {
-        r.id: r
-        for r in rows(
-            select(ItemVersion)
-            .where(ItemVersion.id.in_([a.item_version_id for a in attempts]))
-            .order_by(ItemVersion.id)
-        )
-    }
-    visible = {
-        a.id
-        for a in attempts
-        if (
-            by_session[assignments[a.session_item_id].session_id].kind != "DIAGNOSTIC"
-            or by_session[assignments[a.session_item_id].session_id].status == "COMPLETED"
-        )
-    }
+    # Preserve ADR-028 accounting for distinct assignment/version lookup rows without
+    # loading full content documents or building history-sized Python ID collections.
+    lookup_columns: list[tuple[InstrumentedAttribute[UUID], InstrumentedAttribute[UUID]]] = [
+        (SessionItem.id, Attempt.session_item_id),
+        (ItemVersion.id, Attempt.item_version_id),
+    ]
+    for key, reference in lookup_columns:
+        lookup = select(reference).where(Attempt.learner_id == actor)
+        for _ in rows(select(key).where(key.in_(lookup)).order_by(key)):
+            pass
+    answers = (
+        select(Attempt, SessionItem.session_id, ItemVersion.document, released)
+        .join(SessionItem, SessionItem.id == Attempt.session_item_id)
+        .join(ItemVersion, ItemVersion.id == Attempt.item_version_id)
+        .join(AssessmentSession, AssessmentSession.id == SessionItem.session_id)
+        .where(Attempt.learner_id == actor, AssessmentSession.learner_id == actor)
+        .order_by(Attempt.id)
+    )
     records["answers"] = []
-    for a in attempts:
-        doc = DraftDocument.model_validate(versions[a.item_version_id].document)
+    for a, session_id, document, grade_released in rows(answers, scalar=False):
+        doc = DraftDocument.model_validate(document)
         records["answers"].append(
             fields(a, "id item_version_id submitted_at hint_count highest_hint_level channel")
             | {
-                "session_id": str(assignments[a.session_item_id].session_id),
+                "session_id": str(session_id),
                 "response": a.response
                 if a.response is not None
                 else {"type": "SINGLE_CHOICE", "choice_id": a.choice_id},
@@ -145,7 +170,7 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
                     "prompt": doc.prompt,
                     "choices": [c.model_dump() for c in doc.choices],
                 },
-                "grade_released": a.id in visible,
+                "grade_released": grade_released,
             }
         )
     records["grades"] = []
@@ -162,28 +187,40 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
         fields(r, "session_item_id level phase created_at")
         for r in rows(select(HintUse).where(HintUse.learner_id == actor).order_by(HintUse.id))
     ]
-    evidence = rows(
-        select(MasteryEvidence)
-        .where(MasteryEvidence.learner_id == actor, MasteryEvidence.attempt_id.in_(visible))
-        .order_by(MasteryEvidence.id)
-    )
     records["mastery_evidence"] = [
-        Evidence.model_validate(r.snapshot).model_dump(mode="json") for r in evidence
+        Evidence.model_validate(r.snapshot).model_dump(mode="json")
+        for r in rows(evidence_query.order_by(MasteryEvidence.id))
     ]
-    # Materialized histories may combine sealed and released evidence. Never leak that mixture.
-    records["mastery_estimates"] = []
-    records["mastery_history"] = []
-    projections: list[tuple[str, Select[Any]]] = [
-        ("mastery_estimates", select(MasteryEstimate).where(MasteryEstimate.learner_id == actor)),
+    # Validate every snapshot even when sealed; count withheld rows under the original cap.
+    # SQL tests all referenced attempts without a global released-ID set or expanding IN list.
+    visible_text = visible.with_only_columns(cast(Attempt.id, Text))
+    projections: list[tuple[str, InstrumentedAttribute[dict[str, Any]], Select[Any]]] = [
+        (
+            "mastery_estimates",
+            MasteryEstimate.snapshot,
+            select(MasteryEstimate)
+            .where(MasteryEstimate.learner_id == actor)
+            .order_by(MasteryEstimate.concept_id, MasteryEstimate.competency_id),
+        ),
         (
             "mastery_history",
-            select(MasteryHistory).where(MasteryHistory.evidence_id.in_([e.id for e in evidence])),
+            MasteryHistory.snapshot,
+            select(MasteryHistory)
+            .where(
+                MasteryHistory.evidence_id.in_(evidence_query.with_only_columns(MasteryEvidence.id))
+            )
+            .order_by(MasteryHistory.id),
         ),
     ]
-    for section, query in projections:
-        for row in rows(query):
+    for section, snapshot, query in projections:
+        inputs = func.jsonb_array_elements_text(
+            cast(snapshot, JSONB)["input_attempt_ids"]
+        ).table_valued("value")
+        withheld = exists(select(1).select_from(inputs).where(inputs.c.value.not_in(visible_text)))
+        records[section] = []
+        for row, sealed in rows(query.add_columns(withheld), scalar=False):
             estimate = Estimate.model_validate(row.snapshot)
-            if set(estimate.input_attempt_ids) <= visible:
+            if not sealed:
                 records[section].append(estimate.model_dump(mode="json"))
     records["reports"] = [
         fields(r, "id attempt_id item_version_id category created_at")
@@ -196,7 +233,7 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
         fields(r, "original_attempt_id session_id basis elapsed_seconds")
         for r in rows(
             select(Reassessment)
-            .where(Reassessment.original_attempt_id.in_(attempt_ids))
+            .where(Reassessment.original_attempt_id.in_(owned_attempts))
             .order_by(Reassessment.original_attempt_id)
         )
     ]
@@ -253,12 +290,15 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
         )
     ]
     # Only taxonomy names referenced by this account, never content keys or future assignments.
-    topic_ids = {r.topic_id for r in sessions if r.topic_id}
-    concepts = rows(
-        select(Concept).where(Concept.id.in_({e.concept_id for e in evidence})).order_by(Concept.id)
+    concepts = select(Concept).where(
+        Concept.id.in_(evidence_query.with_only_columns(MasteryEvidence.concept_id))
     )
-    topic_ids.update(c.topic_id for c in concepts)
-    records["concepts"] = [fields(r, "id topic_id name") for r in concepts]
+    records["concepts"] = [
+        fields(r, "id topic_id name") for r in rows(concepts.order_by(Concept.id))
+    ]
+    topic_ids = sessions.with_only_columns(AssessmentSession.topic_id).union(
+        concepts.with_only_columns(Concept.topic_id)
+    )
     records["topics"] = [
         fields(r, "id subject_id name")
         for r in rows(select(Topic).where(Topic.id.in_(topic_ids)).order_by(Topic.id))
@@ -267,7 +307,9 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
         fields(r, "id name")
         for r in rows(
             select(Competency)
-            .where(Competency.id.in_({e.competency_id for e in evidence}))
+            .where(
+                Competency.id.in_(evidence_query.with_only_columns(MasteryEvidence.competency_id))
+            )
             .order_by(Competency.id)
         )
     ]

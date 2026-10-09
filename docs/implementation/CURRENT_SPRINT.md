@@ -71,3 +71,12 @@ The [release register](RELEASE_GATES.md) tracks missing kickoff/capacity, exact 
 and approved inventory, expert benchmarks, privacy/guardian/DPIA, Week 8 provider choice, production
 OTP/MFA/restricted roles, managed PITR/RPO/RTO, branded/mobile/versioned browser and pilot sign-offs.
 The approved 12-week deadline and acceptance thresholds remain unchanged. The MVP is not complete.
+
+FR-ID-006 projection work is now implemented on `codex/export-projection`: batched ORM reads,
+owned joins/subqueries and SQL diagnostic sealing preserve the existing bounded v1 delivery.
+Local lint/types/contracts and 427 unit/contract tests pass; focused native database and full hosted
+acceptance remain pending. [Projection verification](E8_EXPORT_PROJECTION_VERIFICATION.md).
+
+Native follow-up: `make services-db migrate test-reviewed-rubrics test-data-exports` now passes
+(eight rubric and eleven export cases). PostgreSQL/Redis and migrations are verified on this Mac.
+The full native suite/recovery/security is running; MinIO build and browser downloads remain pending.

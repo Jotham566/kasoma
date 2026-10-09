@@ -1,5 +1,11 @@
 # Changelog
 
+## In progress — bounded personal-export reads
+
+- Replace retained ORM lookup collections with batched reads and owner-filtered SQL joins/subqueries (FR-ID-006, NFR-SEC-001/002, NFR-MNT-001).
+- Preserve diagnostic sealing, exact related-row accounting, all-or-nothing synchronous limits and existing authorization/retention. No API, migration or architecture change.
+- Add synthetic memory/batch, exact-cap and cursor-cleanup regressions plus focused database commands. Eight rubric and eleven focused export cases now pass natively; full regression remains pending. Async large-history delivery is separate.
+
 ## 9 October 2026 — verified rubric, telemetry and dependency release
 
 Hosted CI [37914864557](https://github.com/Jotham566/kasoma/actions/runs/37914864557)

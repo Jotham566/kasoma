@@ -242,3 +242,14 @@ FR-ID-006 next: [large-history export readiness](E8_LARGE_HISTORY_EXPORT_READINE
 existing bounded synchronous implementation to projection, async delivery and privacy/expiry gates.
 This is assessment only; large-history fulfillment remains incomplete. Native Docker now responds,
 but local migration/seed/application assertions await the approved image builds/browser downloads.
+
+FR-ID-006/NFR-SEC-001/002/NFR-MNT-001 projection refactor: services/data_export_projection.py and
+tests/integration/test_data_exports.py add bounded ORM hydration, SQL-owned reference/sealing
+queries, exact cap accounting and cursor cleanup. `make services-db` and `make test-data-exports`
+provide focused local verification while full object-storage setup remains separate.
+[Evidence](E8_EXPORT_PROJECTION_VERIFICATION.md): local static/unit checks pass; database/full
+regression pending. This does not satisfy the remaining large-history fulfillment gate.
+
+Native follow-up: `make services-db migrate test-reviewed-rubrics test-data-exports` now passes
+(eight rubric and eleven export cases). PostgreSQL/Redis and migrations are verified on this Mac.
+The full native suite/recovery/security is running; MinIO build and browser downloads remain pending.

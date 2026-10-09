@@ -305,3 +305,68 @@ def test_database_blocks_early_copy_removal_and_orphan_completion(content):
         assert worker.tasks["kasoma.expire_exports"].run() == 0
     finally:
         worker.close()
+
+
+def test_projection_batches_history_without_retaining_orm_rows(content, monkeypatch):
+    from sqlalchemy import event
+
+    import services.data_export_projection as projection
+    from services.domain.identity import IdentityEvent
+
+    identity, client, actors, _ = content
+    token = actors["learner"]["Authorization"][7:]
+    with identity.transaction() as db:
+        actor = identity.authenticate(db, token).user_id
+        for _ in range(350):
+            identity.event(db, actor, "synthetic.export_batch", str(uuid4()))
+    # Small batches exercise multiple cursor fetches without a large test database.
+    monkeypatch.setattr(projection, "BATCH_SIZE", 17)
+    with Session(identity.engine) as db:
+        peak = 0
+
+        def loaded(session, instance):
+            nonlocal peak
+            peak = max(peak, len(session.identity_map))
+
+        event.listen(db, "loaded_as_persistent", loaded)
+        bundle = projection.project(identity, db, actor, uuid4())
+        event.remove(db, "loaded_as_persistent", loaded)
+        events = bundle.records["account_events"]
+        assert sum(r["type"] == "synthetic.export_batch" for r in events) == 350
+        assert peak <= 2 * projection.BATCH_SIZE + 10
+        assert db.scalar(
+            select(func.count()).select_from(IdentityEvent).where(IdentityEvent.user_id == actor)
+        ) == len(events)
+
+
+def test_projection_preserves_related_row_limit_and_closes_cursors(assessment, monkeypatch):
+    import services.data_export_projection as projection
+    from services.identity import IdentityError
+
+    identity, client, actors, _, _, plan = assessment
+    headers = actors["learner"]
+    session = start(client, headers, plan).json()["id"]
+    assert answer(client, headers, session, next_item(client, headers, session)).status_code == 200
+    with identity.transaction() as db:
+        actor = identity.authenticate(db, headers["Authorization"][7:]).user_id
+        target = uuid4()
+        bundle = projection.project(identity, db, actor, target)
+        # One attempted assignment and one distinct version are queried but not separate sections;
+        # the profile is outside the ADR-028 related-record cap.
+        expected = sum(len(section) for section in bundle.records.values()) - 1 + 2
+        monkeypatch.setattr(projection, "MAX_RECORDS", expected)
+        assert projection.project(identity, db, actor, target) == bundle
+        monkeypatch.setattr(projection, "MAX_RECORDS", expected - 1)
+        results = []
+        execute = db.execute
+
+        def track(*args, **kwargs):
+            result = execute(*args, **kwargs)
+            results.append(result)
+            return result
+
+        monkeypatch.setattr(db, "execute", track)
+        with pytest.raises(IdentityError, match="EXPORT_LIMIT_REACHED"):
+            projection.project(identity, db, actor, target)
+        # A partial projection never leaves server-side cursors attached to a pooled connection.
+        assert results and all(result.closed for result in results)
