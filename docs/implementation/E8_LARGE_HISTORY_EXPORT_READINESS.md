@@ -156,3 +156,9 @@ is enabled. Choosing chunk/artifact/job limits and API routes remains part of th
 The [incremental encoder](E8_EXPORT_ENCODING_VERIFICATION.md) is an internal prerequisite, not an
 accepted asynchronous delivery design. It preserves ADR-028's existing isolation and disclosure
 policy; it does not establish the stronger concurrent snapshot protocol proposed above.
+
+
+[ADR-047](../decisions/ADR/047-private-export-artifact-format.md) now decides only the bounded
+private chunk/envelope/manifest format. [Its verification](E8_PRIVATE_EXPORT_ARTIFACT_VERIFICATION.md)
+uses fake storage and the existing projection, with delivery disabled. The remainder of the async
+lifecycle above is still a proposal and must be decided/tested before any route or worker enables it.

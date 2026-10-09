@@ -50,6 +50,7 @@ streaming through the web proxy and orphan/expiry cleanup remain in the
 Native final focused run: `make format test-data-exports` passed all 14 PostgreSQL cases.
 `make test-unit openapi-check security` passed 458 unit/contract plus five tooling cases,
 unchanged generated contracts, Bandit and dependency/secret checks (no known vulnerabilities).
-Lint/format/Python and TypeScript checks pass. Full native regression is running; full hosted
-service/browser/container regression is required before promotion. Native MinIO and browser
+Lint/format/Python and TypeScript checks pass. Full native regression passed 458 unit/contract and 198 integration cases; its sole failure
+was the unavailable MinIO storage/Mailpit check. Hosted CI 37949902270 is running at `a485bb6`
+and is required before promotion. Native MinIO and browser
 installation remain blocked by exhausted dependency-download retries, not by stopped Docker.

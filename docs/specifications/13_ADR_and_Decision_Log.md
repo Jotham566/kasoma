@@ -299,3 +299,11 @@ See [ADR-046](../decisions/ADR/046-shared-assessment-content-locks.md). Assessme
 use shared row locks that still exclude retirement/writes; manual topic selection avoids unrelated
 topic enumeration. Existing content eligibility, grading, transaction and channel boundaries remain.
 The objective load baseline checks operation-specific latency rather than hiding slow routes in an aggregate.
+
+
+### ADR-047 — bounded private export artifact format
+
+See [ADR-047](../decisions/ADR/047-private-export-artifact-format.md). A bounded internal format
+binds encrypted chunks to their request/generation/ordinal, with trusted manifest sizes/digests.
+This is preparation for FR-ID-006 large-history delivery; no route, publication, storage lifecycle,
+retention policy or existing synchronous export limit changes. Delivery remains disabled.

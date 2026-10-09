@@ -97,3 +97,7 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-046: Shared assessment content locks](046-shared-assessment-content-locks.md)
   permits concurrent immutable readers while excluding content writes and preserving eligibility.
+
+
+- [ADR-047: Bounded private export artifact format](047-private-export-artifact-format.md)
+  binds private encrypted chunks to their request/generation and keeps delivery disabled.

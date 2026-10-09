@@ -1,5 +1,11 @@
 # Changelog
 
+## In progress — private export artifact boundary
+
+- Add ADR-047 and an internal authenticated chunk/manifest format for FR-ID-006 and NFR-SEC-001/002/MNT-001. Bind request, generation and ordinal; verify per-chunk and whole-file integrity before the final bytes.
+- Bound plaintext chunks, ciphertext, total size and manifests; sanitize callback/cipher errors and close cancelled sources. Add fake-storage corruption, boundary, cancellation and projection round-trip tests.
+- No learner route, worker publication, new provider or retention change. Existing synchronous caps remain unchanged; the artifact lifecycle is still pending.
+
 ## In progress — incremental bounded export encoding
 
 - Enforce the existing 2 MiB complete-envelope cap during allowlisted projection (FR-ID-006, NFR-SEC-001/002, NFR-MNT-001), stopping reads before an oversized history is fully hydrated.

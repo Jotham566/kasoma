@@ -302,3 +302,10 @@ ADR-046 objective load regression: hosted CI 37933227560 passed at `f2dbf8a` (64
 66 real-API browser, five tooling, one isolated UI, full service/recovery/security/container checks).
 Promoted to main and removed the branch. Representative deployment/history/provider acceptance
 remains open; see the [load evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md).
+
+
+FR-ID-006/NFR-SEC-001/002/NFR-MNT-001 private artifact preparation: ADR-047,
+`services/export_artifacts.py`, synthetic fake-storage contract cases and the owned projection
+round-trip integration case. [Verification](E8_PRIVATE_EXPORT_ARTIFACT_VERIFICATION.md).
+Delivery remains disabled pending the atomic job/storage/expiry/download lifecycle; existing
+synchronous limits, authorization and retention remain unchanged.

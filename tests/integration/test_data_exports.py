@@ -502,3 +502,37 @@ def test_existing_canonical_retry_copy_is_read_without_reencoding(content, monke
     assert replay.status_code == 200 and replay.json() == original.json()
     with Session(identity.engine) as db:
         assert db.get(DataExport, UUID(target)).encrypted_payload == ciphertext
+
+
+def test_private_artifact_round_trip_uses_existing_owned_projection(content):
+    import json
+
+    from services.data_export_projection import encoded_project, project
+    from services.data_exports import MAX_BYTES
+    from services.export_artifacts import parse_manifest, read_artifact, write_artifact
+
+    identity, _, actors, _ = content
+    token = actors["learner"]["Authorization"][7:]
+    objects = {}
+    with identity.transaction() as db:
+        actor = identity.authenticate(db, token).user_id
+        for _ in range(350):
+            identity.event(db, actor, "synthetic.artifact." + "x" * 150, str(uuid4()))
+    with Session(identity.engine) as db:
+        target, generation = uuid4(), uuid4()
+        expected = project(identity, db, actor, target).model_dump(mode="json")
+        source = encoded_project(identity, db, actor, target, max_bytes=MAX_BYTES)
+        manifest = write_artifact(
+            source, identity, objects.__setitem__, request_id=target, generation_id=generation
+        )
+        parsed = parse_manifest(manifest, target, generation)
+        assert len(parsed.chunks) > 1
+        decoded = b"".join(
+            read_artifact(
+                manifest, identity, objects.__getitem__, request_id=target, generation_id=generation
+            )
+        )
+        assert json.loads(decoded) == expected
+        # Format preparation must not publish or complete a data request.
+        assert db.get(DataExport, target) is None and db.get(DataRequest, target) is None
+        assert all(b"learner@example.invalid" not in value for value in objects.values())

@@ -51,9 +51,18 @@ plus full service/recovery/security/container checks. Promoted `f2dbf8a` and rem
 
 FR-ID-006 and NFR-SEC-001/002/MNT-001: apply the existing full-envelope 2 MiB cap while projecting
 rows, with bounded collected chunks and deterministic cursor cleanup. Preserve all disclosure,
-row accounting, retry, authorization and retention rules. Native focused tests pass; final full
-regression/hosted acceptance is pending. [Evidence](E8_EXPORT_ENCODING_VERIFICATION.md).
+row accounting, retry, authorization and retention rules. Native focused tests pass. Full native regression passed 458 unit/contract and 198 integration
+cases; unavailable MinIO caused its only failure. CI 37949902270 is running at `a485bb6`. [Evidence](E8_EXPORT_ENCODING_VERIFICATION.md).
 This internal ADR-028 refactor does not enable large-history fulfillment or need a new ADR.
+
+## Next slice in implementation: private export artifact format
+
+ADR-047 defines a bounded internal encrypted chunk/manifest format for FR-ID-006 and
+NFR-SEC-001/002/MNT-001. Tests verify binding, integrity, limits, failure/cancellation and round-trip
+use of the owned projection. [Verification](E8_PRIVATE_EXPORT_ARTIFACT_VERIFICATION.md).
+496 unit/contract, five tooling and 15 focused PostgreSQL export cases pass, along with lint/types,
+contracts and security. Full hosted regression remains pending. No application route/worker/storage
+publication is enabled. The durable lifecycle is next.
 
 ## Native environment
 
