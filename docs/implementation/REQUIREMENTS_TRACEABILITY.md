@@ -71,6 +71,10 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 
 E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
 
+NFR-MNT-001: [CI runtime/mirror remediation](E9_CI_RUNTIME_VERIFICATION.md) addresses
+an observed whole-job timeout and registry throttling. It does not waive any test
+or constitute main/release acceptance; new exact-head hosted verification is required.
+
 FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-MNT-001 in progress:
 [request aggregation](E8_REQUEST_AGGREGATION_VERIFICATION.md) adds an isolated OTel
 histogram component and percentile/property tests under proposed ADR-049. Runtime

@@ -15,6 +15,9 @@ setup:
 	$(PYTHON) scripts/setup.py
 services:
 	docker compose up -d --wait postgres redis minio mailpit
+.PHONY: check-ci-profile
+check-ci-profile:
+	docker compose -f docker-compose.yml -f docker-compose.ci.yaml config --quiet
 .PHONY: services-db test-data-exports
 services-db:
 	docker compose up -d --wait postgres redis

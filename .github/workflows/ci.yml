@@ -8,10 +8,11 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 90
     env:
       ALLOW_EXTERNAL_API_CALLS: "false"
       MODEL_PROVIDER: fake
+      COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yaml
       NEXT_TELEMETRY_DISABLED: "1"
       TURBO_TELEMETRY_DISABLED: "1"
     steps:
@@ -24,6 +25,11 @@ jobs:
           python-version-file: .python-version
       - run: npm install --global corepack@0.34.0
       - run: make setup
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .local/browsers
+          key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
+      - run: make check-ci-profile
       - run: make build e2e-install test-web-content
       - run: make services migrate seed
       - run: make test-reviewed-rubrics

@@ -916,3 +916,13 @@ Full browser runs retain failure traces in ignored `test-results/`. These contai
 synthetic session data: keep them local, use fictional accounts and do not publish
 raw traces/logs. Consent-success checks use an anchored positive sentence, avoiding
 the otherwise matching paused-consent explanation.
+
+## Hosted verification profile
+
+CI sets `COMPOSE_FILE=docker-compose.yml:docker-compose.ci.yaml` to use the official,
+digest-pinned Mailpit mirror. Run `make check-ci-profile` to validate that merge quietly
+without changing any running service. Native Compose remains on its existing image.
+The workflow has a 90-minute whole-job limit and a lock-keyed browser-binary cache;
+all setup, migration, test, recovery, browser, security and container steps still run.
+See [CI verification](../implementation/E9_CI_RUNTIME_VERIFICATION.md) for the observed
+failures, artifact equality evidence and pending hosted gate.

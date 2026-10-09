@@ -1,5 +1,11 @@
 # Changelog
 
+## Work in progress — hosted verification recovery
+
+- Address the observed 40-minute hosted timeout with a bounded 90-minute job and
+  lock-keyed browser cache. Use the byte-identical official Mailpit mirror only in CI
+  after Docker Hub throttled the runner. Every application/security check remains required.
+
 ## Work in progress — request aggregation
 
 - Complete local acceptance: 259 integration cases, 666 unit/contract cases, 32 tooling

@@ -1,0 +1,5 @@
+# Official mirror; identical OCI index to axllent/mailpit:v1.29.2 on Docker Hub.
+# CI only: preserve the running developer Mailpit container and captured inbox.
+services:
+  mailpit:
+    image: ghcr.io/axllent/mailpit:v1.29.2@sha256:030f06031ce5c60913ac9363da1ab0d4be6fd2a78147dd0e1ca0fcac665d6b34
