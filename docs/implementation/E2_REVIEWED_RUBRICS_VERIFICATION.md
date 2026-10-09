@@ -68,3 +68,8 @@ The new Chromium rubric journey fails after save/reload. Add exact API round-tri
 `make test-web-content`, an isolated deterministic HTTP-fixture browser regression, before full CI
 services. It supplements, not replaces, the 63 real-API journeys. Main promotion remains blocked.
 Browser binaries now use the repository-local .local/browsers cache to avoid shared-cache mutation.
+
+The isolated UI run 37914386755 reproduced the rubric lookup failure immediately after save.
+Nested labels included the remounted textarea's initial text in exact label matching. Use unique
+React IDs with explicit label associations for criterion/evidence textareas; retain exact label,
+multiline value and API round-trip assertions. Local lint/types/build pass; browser rerun required.

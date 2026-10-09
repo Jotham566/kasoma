@@ -36,6 +36,10 @@ test("FR-CNT-003: controlled rubric survives save and explicit reload", async ({
     if (path.endsWith("/items") && request.method() === "POST") {
       const body =
         request.postDataJSON() as components["schemas"]["CreateDraft"];
+      expect(body.document.response_type).toBe("SHORT_TEXT");
+      expect(body.document.rubric?.criteria[0].acceptable_evidence).toEqual([
+        "Alpha\non its own line",
+      ]);
       stored = {
         id: id(6),
         item_id: id(7),

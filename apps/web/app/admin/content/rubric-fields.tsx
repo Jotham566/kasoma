@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import type { components } from "@kasoma/api-client";
 
 type Rubric = components["schemas"]["RubricDraft"];
@@ -23,6 +24,7 @@ export function RubricFields({
   value: Rubric | null;
   onChange: (value: Rubric | null) => void;
 }) {
+  const fieldId = useId();
   const rows = value?.criteria ?? [];
   function change(index: number, patch: Partial<Criterion>) {
     onChange({
@@ -68,18 +70,17 @@ export function RubricFields({
               }
             />
           </label>
-          <label>
-            Criterion text
-            <textarea
-              className={input}
-              value={row.criterion_text}
-              maxLength={2000}
-              required
-              onChange={(event) =>
-                change(index, { criterion_text: event.target.value })
-              }
-            />
-          </label>
+          <label htmlFor={`${fieldId}-${index}-text`}>Criterion text</label>
+          <textarea
+            id={`${fieldId}-${index}-text`}
+            className={input}
+            value={row.criterion_text}
+            maxLength={2000}
+            required
+            onChange={(event) =>
+              change(index, { criterion_text: event.target.value })
+            }
+          />
           <label>
             Criterion points
             <input
@@ -105,22 +106,23 @@ export function RubricFields({
               </legend>
               {row[field].map((entry, position) => (
                 <div key={position}>
-                  <label>
+                  <label htmlFor={`${fieldId}-${index}-${field}-${position}`}>
                     {label} {position + 1}
-                    <textarea
-                      className={input}
-                      value={entry}
-                      maxLength={2000}
-                      required
-                      onChange={(event) =>
-                        change(index, {
-                          [field]: row[field].map((text, i) =>
-                            i === position ? event.target.value : text,
-                          ),
-                        })
-                      }
-                    />
                   </label>
+                  <textarea
+                    id={`${fieldId}-${index}-${field}-${position}`}
+                    className={input}
+                    value={entry}
+                    maxLength={2000}
+                    required
+                    onChange={(event) =>
+                      change(index, {
+                        [field]: row[field].map((text, i) =>
+                          i === position ? event.target.value : text,
+                        ),
+                      })
+                    }
+                  />
                   <button
                     className={button}
                     type="button"
