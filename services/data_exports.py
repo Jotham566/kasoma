@@ -15,6 +15,7 @@ from services.data_export_projection import encoded_project
 from services.data_request_contracts import DataExportBundle
 from services.data_requests import DataRequestService
 from services.domain.data_requests import DataExport, DataRequest
+from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.identity import IdentityError, IdentityService
 from services.observability import emit
 
@@ -43,6 +44,18 @@ def download(
         replay = service.replay(db, actor, key, fingerprint)
         artifact = db.get(DataExport, target)
         if row.completed_at:
+            if artifact is None and db.scalar(
+                select(ExportGeneration.id)
+                .join(ExportJob, ExportJob.generation_id == ExportGeneration.id)
+                .where(
+                    ExportJob.request_id == target,
+                    ExportJob.status == "READY",
+                    ExportGeneration.published_at == row.completed_at,
+                    ExportGeneration.digest == row.export_digest,
+                    ExportGeneration.expires_at > identity.clock(),
+                )
+            ):
+                raise IdentityError("EXPORT_FILE_REQUIRED", 409)
             if artifact is None or artifact.expires_at <= identity.clock():
                 raise IdentityError("EXPORT_EXPIRED", 410)
             raw = identity.decrypt(artifact.encrypted_payload)

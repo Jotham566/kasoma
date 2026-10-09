@@ -16,7 +16,12 @@ test("health shell, keyboard retry and accessibility", async ({ page }) => {
     page.getByRole("status").filter({ hasText: "Services are ready." }),
   ).toHaveText("Services are ready.");
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Check again" })).toBeFocused();
+  await expect(
+    page.getByRole("link", { name: "Skip to content" }),
+  ).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#main-content")).toBeFocused();
+  await page.getByRole("link", { name: "Check again" }).focus();
   await page.keyboard.press("Enter");
   await expect(
     page.getByRole("status").filter({ hasText: "Services are ready." }),

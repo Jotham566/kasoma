@@ -19,8 +19,11 @@ from scripts.recovery_fixture import populate
 from services.config import Settings
 from services.domain.assessment import Attempt, Grade
 from services.domain.content import ItemVersion
+from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence
+from services.identity import IdentityService
+from services.providers import FakeMessagingProvider
 
 
 def validate_name(name: str) -> str:
@@ -63,6 +66,8 @@ def check_guards(engine: Engine) -> None:
         "UPDATE attempts SET channel = 'WHATSAPP'",
         "UPDATE grades SET answer_specification_hash = 'synthetic-tampering'",
         "UPDATE item_versions SET document = '{}'::jsonb WHERE status = 'APPROVED'",
+        "UPDATE personal_export_generations SET digest = repeat('0', 64)",
+        "UPDATE personal_export_jobs SET status = 'QUEUED' WHERE status = 'READY'",
     ):
         rejected = False
         with engine.connect() as db:
@@ -109,14 +114,22 @@ def drill(settings: Settings) -> dict[str, object]:
             }
         )
         stage = "POPULATE_SYNTHETIC_SOURCE"
-        populate(synthetic)
+        export = populate(synthetic)
         source_engine, restored_engine = (
             create_engine(value, hide_parameters=True) for value in (source_url, destination_url)
         )
         engines.extend([source_engine, restored_engine])
         stage = "CAPTURE_INVENTORY"
         before = inventory(source_engine)
-        for model in (Attempt, Grade, MasteryEvidence, Consent, ItemVersion):
+        for model in (
+            Attempt,
+            Grade,
+            MasteryEvidence,
+            Consent,
+            ItemVersion,
+            ExportJob,
+            ExportGeneration,
+        ):
             if before.get(model.__tablename__, (0, ""))[0] == 0:
                 raise RuntimeError("Synthetic evidence fixture is incomplete")
         Path(".local").mkdir(exist_ok=True)
@@ -180,6 +193,14 @@ def drill(settings: Settings) -> dict[str, object]:
             if not source_vector or restored.scalar(extension) != source_vector:
                 raise RuntimeError("Restored pgvector extension mismatch")
         check_guards(restored_engine)
+        stage = "VERIFY_RESTORED_EXPORT"
+        fake = FakeMessagingProvider()
+        restored_settings = synthetic.model_copy(
+            update={
+                "database_url": SecretStr(destination_url.render_as_string(hide_password=False))
+            }
+        )
+        export.verify(IdentityService(restored_engine, restored_settings, fake, fake))
         if inventory(restored_engine) != before or inventory(source_engine) != before:
             raise RuntimeError("Recovery verification changed evidence")
         result.update(
@@ -189,6 +210,8 @@ def drill(settings: Settings) -> dict[str, object]:
             rows=sum(count for count, _ in before.values()),
             immutable_guards_verified=True,
             pgvector_verified=True,
+            populated_export_verified=True,
+            object_storage_recovery_verified=False,
             production_rpo_rto_verified=False,
         )
     except Exception:

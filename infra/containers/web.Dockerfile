@@ -4,9 +4,12 @@ ENV COREPACK_HOME=/opt/corepack COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN npm install --global corepack@0.34.0 && corepack prepare pnpm@10.30.2 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY patches patches
+COPY packages/api-client/package.json packages/api-client/package.json
+COPY packages/ui/package.json packages/ui/package.json
+COPY apps/web/package.json apps/web/package.json
+RUN corepack pnpm install --frozen-lockfile
 COPY packages packages
 COPY apps/web apps/web
-RUN corepack pnpm install --frozen-lockfile
 ENV NEXT_TELEMETRY_DISABLED=1 TURBO_TELEMETRY_DISABLED=1
 RUN corepack pnpm --filter @kasoma/web build
 FROM node:24.21.0-alpine3.24 AS runtime

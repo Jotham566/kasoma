@@ -2,6 +2,7 @@ name: kasoma
 services:
   postgres:
     image: pgvector/pgvector:0.8.2-pg16
+    shm_size: 512mb
     environment:
       POSTGRES_USER: kasoma
       POSTGRES_DB: kasoma
@@ -75,11 +76,27 @@ services:
       dockerfile: infra/containers/python.Dockerfile
     env_file: .env
     environment: *application-environment
-    command: uv run --frozen celery -A apps.worker.entrypoint:app worker --loglevel=INFO --concurrency=1 --beat --schedule=/tmp/kasoma-celerybeat
+    command: uv run --frozen celery -A apps.worker.entrypoint:app worker --loglevel=INFO --concurrency=1 --queues=operations,imports,messaging --hostname=worker@%h --beat --schedule=/tmp/kasoma-celerybeat
     depends_on:
       api: {condition: service_healthy}
     healthcheck:
-      test: ["CMD", "uv", "run", "--frozen", "celery", "-A", "apps.worker.entrypoint:app", "inspect", "ping", "--timeout=3"]
+      test: ["CMD", "uv", "run", "--frozen", "python", "-c", "import socket; from apps.worker.entrypoint import app; node = 'worker@' + socket.gethostname(); reply = app.control.inspect(destination=[node], timeout=3).ping(); raise SystemExit(0 if reply and reply.get(node) == {'ok': 'pong'} else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  export-worker:
+    profiles: ["application"]
+    build:
+      context: .
+      dockerfile: infra/containers/python.Dockerfile
+    env_file: .env
+    environment: *application-environment
+    command: uv run --frozen celery -A apps.worker.entrypoint:app worker --include=apps.worker.export_tasks --loglevel=INFO --pool=prefork --concurrency=1 --prefetch-multiplier=1 --queues=exports --hostname=exports@%h
+    depends_on:
+      api: {condition: service_healthy}
+      minio: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "uv", "run", "--frozen", "python", "-c", "import socket; from apps.worker.entrypoint import app; node = 'exports@' + socket.gethostname(); reply = app.control.inspect(destination=[node], timeout=3).ping(); raise SystemExit(0 if reply and reply.get(node) == {'ok': 'pong'} else 1)"]
       interval: 30s
       timeout: 10s
       retries: 3

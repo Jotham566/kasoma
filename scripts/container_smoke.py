@@ -23,6 +23,7 @@ try:
             "90",
             "api",
             "worker",
+            "export-worker",
             "web",
         ],
         check=True,
@@ -31,9 +32,12 @@ try:
         assert json.load(response)["status"] == "ok"
     with urllib.request.urlopen("http://localhost:3000", timeout=10) as response:
         assert b"Services are ready." in response.read()
-    print("Container smoke passed: API/database/Redis, worker health and web client.")
+    subprocess.run(["uv", "run", "--frozen", "python", "-m", "scripts.export_smoke"], check=True)
+    print("Container smoke passed: service health and owned export through worker/storage/web.")
 finally:
-    started_here = [name for name in ["web", "worker", "api"] if name not in already_running]
+    started_here = [
+        name for name in ["web", "export-worker", "worker", "api"] if name not in already_running
+    ]
     if started_here:
         subprocess.run(
             ["docker", "compose", "--profile", "application", "stop", *started_here], check=True

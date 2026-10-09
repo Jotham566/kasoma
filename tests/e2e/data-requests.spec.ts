@@ -12,6 +12,105 @@ async function login(page: Page, email: string) {
   await expect(page.getByLabel("Display name", { exact: true })).toBeVisible();
 }
 
+test("FR-ID-006: background command replay, explicit status and native frozen attachment", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    URL.createObjectURL = () => {
+      throw new Error("Background exports must not use a browser Blob");
+    };
+  });
+  await login(page, `background-export-${randomUUID()}@example.invalid`);
+  await page.goto("/privacy");
+  await expect(page.getByRole("status")).toHaveText("Requests loaded.");
+  await page
+    .getByRole("checkbox", { name: "I confirm this request for my account." })
+    .check();
+  await page
+    .getByRole("button", { name: "Submit request", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Export request", exact: true }),
+  ).toBeVisible();
+  let dropped = false;
+  const keys: string[] = [];
+  await page.route("**/api/v1/me/data-requests/*/export-job", async (route) => {
+    if (route.request().method() === "POST") {
+      keys.push(route.request().headers()["idempotency-key"]);
+      if (!dropped) {
+        dropped = true;
+        expect((await route.fetch()).status()).toBe(202);
+        await route.abort();
+        return;
+      }
+    }
+    await route.continue();
+  });
+  await page
+    .getByRole("button", { name: "Prepare background export", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toContainText(
+    "Could not confirm the operation",
+  );
+  await page
+    .getByRole("button", { name: "Retry background command", exact: true })
+    .click();
+  await expect(page.getByRole("status")).toContainText(
+    "Background command confirmed",
+  );
+  expect(keys).toHaveLength(2);
+  expect(keys[0]).toBe(keys[1]);
+  await expect
+    .poll(
+      async () => {
+        await page
+          .getByRole("button", { name: "Check background status", exact: true })
+          .click();
+        await expect(page.getByRole("status")).toHaveText(
+          "Background export status refreshed.",
+        );
+        return await page
+          .getByRole("link", { name: "Save background export", exact: true })
+          .count();
+      },
+      { intervals: [500], timeout: 10000 },
+    )
+    .toBe(1);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  const save = async () => {
+    const event = page.waitForEvent("download");
+    await page
+      .getByRole("link", { name: "Save background export", exact: true })
+      .click();
+    const download = await event;
+    expect(await download.failure()).toBeNull();
+    expect(download.suggestedFilename()).toMatch(
+      /^kasoma-export-[0-9a-f-]+\.json$/,
+    );
+    return readFile((await download.path())!);
+  };
+  const original = await save();
+  expect(JSON.parse(original.toString()).format_version).toBe(
+    "kasoma-personal-export-v1",
+  );
+  await page.reload();
+  await expect(page.getByRole("status")).toHaveText("Requests loaded.");
+  await page
+    .getByRole("button", { name: "Check background status", exact: true })
+    .click();
+  await expect(
+    page.getByRole("link", { name: "Save background export", exact: true }),
+  ).toBeVisible();
+  expect(await save()).toEqual(original);
+  await page.context().clearCookies();
+  await page
+    .getByRole("link", { name: "Save background export", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toHaveText(
+    "Sign in again to verify your identity before downloading your export.",
+  );
+});
+
 test("FR-ID-006: request without learning consent, recover receipt and independently claim review", async ({
   browser,
 }) => {
@@ -77,6 +176,9 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     ).json();
     expect(secondPage.data).toHaveLength(1);
     expect(secondPage.data[0].id).not.toBe(firstPage.data[0].id);
+    const owned = [firstPage.data[0], secondPage.data[0]];
+    const exportReference = owned.find((row) => row.kind === "EXPORT").id;
+    const deletionReference = owned.find((row) => row.kind === "DELETE").id;
     await learner.goto("/admin/data-requests");
     await expect(learner.getByRole("status")).toHaveText(
       "Administrator access is required.",
@@ -107,10 +209,7 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       },
     );
     const entry = admin.getByRole("listitem").filter({
-      has: admin.getByRole("heading", {
-        name: "Export request",
-        exact: true,
-      }),
+      has: admin.getByText(`Reference: ${exportReference}`, { exact: true }),
     });
     await entry.getByRole("button", { name: "Claim for review" }).click();
     await expect(admin.getByRole("status")).toContainText(
@@ -176,10 +275,7 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       admin.getByRole("button", { name: "Download export" }),
     ).toHaveCount(0);
     const deletion = admin.getByRole("listitem").filter({
-      has: admin.getByRole("heading", {
-        name: "Deletion request",
-        exact: true,
-      }),
+      has: admin.getByText(`Reference: ${deletionReference}`, { exact: true }),
     });
     await expect(
       deletion.getByRole("button", { name: "Preview deletion impact" }),

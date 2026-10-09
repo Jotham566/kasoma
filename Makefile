@@ -144,7 +144,7 @@ expire-exports:
 deps-lock:
 	$(PNPM) install --lockfile-only
 test-tooling:
-	node --test scripts/tooling.test.mjs
+	node --test scripts/tooling.test.mjs scripts/export-stream.test.mjs
 
 .PHONY: process-imports
 process-imports:
@@ -201,6 +201,9 @@ e2e-list:
 e2e-chromium:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=1/2
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=2/2
+.PHONY: e2e-chromium-full
+e2e-chromium-full:
+	KASOMA_E2E_CHROMIUM_CHANNEL=chromium $(MAKE) e2e-chromium
 e2e-firefox:
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=1/2
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=2/2
@@ -240,4 +243,28 @@ test-assessment-locks:
 
 .PHONY: test-export-storage
 test-export-storage:
-	$(UV) pytest tests/contract/test_export_storage.py tests/integration/test_private_minio_exports.py --allow-hosts=localhost,127.0.0.1,::1
+	$(UV) pytest tests/contract/test_export_storage.py tests/contract/test_export_reader.py tests/integration/test_export_reader_transport.py tests/integration/test_private_minio_exports.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-export-reader
+test-export-reader:
+	$(UV) pytest tests/contract/test_export_reader.py tests/integration/test_export_reader_transport.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-export-jobs
+test-export-jobs:
+	$(UV) pytest tests/integration/test_export_jobs.py tests/integration/test_export_download_lifecycle.py tests/integration/test_export_cursor_redis.py tests/integration/test_export_upgrade.py tests/integration/test_export_api.py tests/integration/test_export_recovery.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-export-worker
+test-export-worker:
+	$(UV) pytest tests/contract/test_export_worker.py tests/integration/test_export_worker_limits.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-export-gateway
+test-export-gateway:
+	$(PNPM) exec playwright test tests/e2e/export-gateway.spec.ts
+
+.PHONY: worker-exports
+worker-exports:
+	$(UV) celery -A apps.worker.entrypoint:app worker --include=apps.worker.export_tasks --loglevel=INFO --pool=prefork --concurrency=1 --prefetch-multiplier=1 --queues=exports --hostname=exports@%h
+
+.PHONY: smoke-export
+smoke-export:
+	$(UV) python -m scripts.export_smoke

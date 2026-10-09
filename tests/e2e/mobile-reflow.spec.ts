@@ -62,6 +62,11 @@ test("NFR-ACC-001/NFR-COMP-001: narrow touch journey reflows and retains saved l
     await expect(
       page.getByRole("heading", { name: `Question ${index} of 5` }),
     ).toBeVisible();
+    if (index === 1)
+      await page.screenshot({
+        path: ".local/ui-review/practice-mobile.png",
+        fullPage: true,
+      });
     await reflows(page);
     await touchTarget(
       page.locator("label").filter({
@@ -75,6 +80,9 @@ test("NFR-ACC-001/NFR-COMP-001: narrow touch journey reflows and retains saved l
     await expect(
       page.getByText(`${index} of 5 answers saved`, { exact: true }),
     ).toBeVisible();
+    await expect(
+      page.getByRole("progressbar", { name: "Saved answers" }),
+    ).toHaveAttribute("value", String(index));
     await reflows(page);
     if (index === 1) {
       await touchTarget(

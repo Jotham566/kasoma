@@ -4,13 +4,12 @@ import Link from "next/link";
 import { FlagForm } from "../flag-form";
 import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
-import { Status } from "@kasoma/ui";
+import { SavedProgress, Status } from "@kasoma/ui";
 import { Hints } from "./hints";
 
 type Schema = components["schemas"];
-const button =
-  "min-h-11 rounded-lg border border-slate-500 px-4 py-2 disabled:opacity-50";
-const input = "block min-h-11 w-full rounded border border-slate-500 p-2";
+const button = "ui-button ui-button-secondary";
+const input = "ui-input";
 function client() {
   return apiClient("", crypto.randomUUID());
 }
@@ -186,10 +185,8 @@ export default function Revise() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-2xl space-y-6 p-6">
-      <Link className="inline-flex min-h-11 items-center underline" href="/">
-        Kasoma home
-      </Link>
+    <main className="learning-page">
+      <p className="eyebrow">Your learning · One question at a time</p>
       <h1 className="text-3xl font-semibold">
         {session?.kind === "REASSESSMENT"
           ? "Check your understanding"
@@ -200,23 +197,6 @@ export default function Revise() {
         mastery estimate, not a certified grade.
       </p>
       <Status>{status}</Status>
-      <nav
-        aria-label="Learning history and progress"
-        className="flex flex-wrap gap-4"
-      >
-        <Link
-          className="inline-flex min-h-11 items-center underline"
-          href="/progress"
-        >
-          Progress
-        </Link>
-        <Link
-          className="inline-flex min-h-11 items-center underline"
-          href="/history"
-        >
-          History
-        </Link>
-      </nav>
       <Link
         className="inline-flex min-h-11 items-center underline"
         href="/onboarding"
@@ -304,7 +284,10 @@ export default function Revise() {
               Five questions from your selected topic. Feedback uses the
               approved answer for each question.
             </p>
-            <button className={button} disabled={busy || !topic}>
+            <button
+              className="ui-button ui-button-primary"
+              disabled={busy || !topic}
+            >
               Start five-question practice
             </button>
           </form>
@@ -330,9 +313,10 @@ export default function Revise() {
               Return to original practice
             </button>
           )}
-          <p>
-            {session.answered_count} of {session.item_count} answers saved
-          </p>
+          <SavedProgress
+            answered={session.answered_count}
+            total={session.item_count}
+          />
           {session.status === "COMPLETED" && (
             <h2 className="text-xl font-semibold">Practice complete</h2>
           )}
@@ -468,10 +452,7 @@ export default function Revise() {
                       </p>
                     )}
                     {item.response_spec.choices.map((c) => (
-                      <label
-                        className="flex min-h-11 items-center gap-3"
-                        key={c.id}
-                      >
+                      <label className="answer-choice" key={c.id}>
                         <input
                           type={
                             item.response_spec.type === "MULTIPLE_CHOICE"
@@ -502,7 +483,7 @@ export default function Revise() {
                 </>
               )}
               <button
-                className={button}
+                className="ui-button ui-button-primary"
                 disabled={
                   busy ||
                   (item.response_spec.type === "NUMERIC"

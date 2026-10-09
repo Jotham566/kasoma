@@ -711,6 +711,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/data-requests/{target}/export-file": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Download */
+        get: operations["download_api_v1_me_data_requests__target__export_file_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/data-requests/{target}/export-job": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Status */
+        get: operations["get_status_api_v1_me_data_requests__target__export_job_get"];
+        put?: never;
+        /** Enqueue */
+        post: operations["enqueue_api_v1_me_data_requests__target__export_job_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/progress": {
         parameters: {
             query?: never;
@@ -1455,6 +1490,44 @@ export interface components {
         ErrorEnvelope: {
             error: components["schemas"]["APIError"];
         };
+        /** ExportCounts */
+        ExportCounts: {
+            failed_finished_24h: components["schemas"]["Count"];
+            /** Oldest Pending Seconds */
+            oldest_pending_seconds: number;
+            queued: components["schemas"]["Count"];
+            running: components["schemas"]["Count"];
+        };
+        /** ExportJobCommand */
+        ExportJobCommand: Record<string, never>;
+        /** ExportJobView */
+        ExportJobView: {
+            /** Attempts */
+            attempts: number;
+            /** Expires At */
+            expires_at: string | null;
+            /** Failure */
+            failure: ("AUTH_REQUIRED" | "LIMIT_REACHED" | "PROCESSING_FAILED" | "REQUEST_COMPLETED") | null;
+            /** Finished At */
+            finished_at: string | null;
+            /**
+             * Queued At
+             * Format: date-time
+             */
+            queued_at: string;
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /** Size Bytes */
+            size_bytes: number | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "QUEUED" | "RUNNING" | "FAILED" | "READY" | "EXPIRED";
+        };
         /** Feedback */
         Feedback: {
             /** Correct Elements */
@@ -2176,7 +2249,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW";
+            code: "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "EXPORT_FAILED" | "EXPORT_STALLED";
             /** Observed */
             observed: number;
             /**
@@ -2190,6 +2263,7 @@ export interface components {
         /** OperationCounts */
         OperationCounts: {
             channel?: components["schemas"]["ChannelCounts"] | null;
+            exports?: components["schemas"]["ExportCounts"] | null;
             failed_imports_24h: components["schemas"]["Count"];
             high_priority_flags: components["schemas"]["Count"];
             /** Oldest Import Seconds */
@@ -2219,6 +2293,16 @@ export interface components {
              * @default 60
              */
             channel_queue_age_seconds: number;
+            /**
+             * Export Age Seconds
+             * @default 300
+             */
+            export_age_seconds: number;
+            /**
+             * Export Failures
+             * @default 1
+             */
+            export_failures: number;
             /** Failed Imports */
             failed_imports: number;
             /** Import Age Seconds */
@@ -6544,6 +6628,294 @@ export interface operations {
             };
             /** @description Too Many Requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    download_api_v1_me_data_requests__target__export_file_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Private JSON attachment; exact length, no-store, 24-hour availability. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    get_status_api_v1_me_data_requests__target__export_job_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportJobView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    enqueue_api_v1_me_data_requests__target__export_job_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExportJobCommand"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportJobView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

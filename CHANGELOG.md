@@ -1,9 +1,72 @@
 # Changelog
 
-## In progress — bounded private MinIO export adapter
+## Work in progress — learner UI foundation
+
+- Verify practice/diagnostic presentation with 30 Chromium cases and desktop/mobile screenshot review; verify the web dependency layer is cached after a source edit. Native MinIO and private storage initialization now work; all 59 storage checks pass, with full regression running.
+
+- Separate web dependency installation from application source in the Docker build so UI-only changes can reuse the frozen dependency layer (NFR-MNT-001).
+
+- Restyle practice/diagnostic questions and selected answers; share an accessible saved-answer progress indicator driven by server counts. Preserve scoring, hints, sealing and retry behavior; verification is in progress.
+
+- Verify onboarding presentation and consent-gated diagnostic links in the 30-case Chromium suite; inspect desktop/mobile screenshots and refresh the running web container. Seed synthetic local learning fixtures while recording the still-unavailable storage initializer.
+
+- Restyle onboarding fields/cards/actions, correct obsolete learning-availability copy and offer a diagnostic next step only when the server grants learning access. Guardian/consent/session semantics remain unchanged.
+
+- Verify 30 full-Chromium cases with the new UI, 320/1280-pixel screenshot review, 200% text reflow, keyboard/axe checks and 175,609-byte cold question transfer. Web image rebuilt; remaining browser/pilot acceptance stays open.
+
+- Introduce shared learner navigation, a keyboard skip link and a responsive home/recommendation presentation using existing authorized data. Preserve synthetic notices, consent and retry semantics; verification is in progress.
+
+## Work in progress — asynchronous owned export lifecycle
+
+- Complete the native 245-case integration regression with real MinIO, dependency/security checks, populated logical recovery and isolated content-admin UI verification. Correct obsolete candidate registration comments; remaining browser/container/hosted gates still block promotion.
+
+- Verify a complete owned export through the actual Docker scheduler, export worker, private MinIO and web gateway. Add the bounded fictional-account probe to container smoke; preserve running review services and hide private diagnostics.
+
+- Record the next learner UI slice and its accessibility, responsive-layout, privacy and cold-transfer acceptance gates from the actual screens; implementation and visual acceptance remain pending.
+
+- Verify both full pinned Chromium shards: 28 tests pass, including native export failure/cancellation/frozen retry, privacy review and operations metrics. Secret scanning and generated contracts pass; Firefox/WebKit/storage/container acceptance remains open.
+
+- Scope administrator privacy-review browser assertions to the learner's exact request references so concurrent exports cannot make the test ambiguous. Native Chromium export cancellation/corruption journeys pass; full matrix verification continues.
+
+- Add a documented full-Chromium headless test command using the pinned installed browser; retain the normal three-engine CI matrix and all assertions (NFR-COMP-001, NFR-MNT-001).
+
+- Add isolated fake-store corruption/cancellation fixtures and frozen-retry acceptance journeys (FR-ID-006). Reject fixture installation outside random E2E schemas; native browser execution remains pending.
+
+- Tighten the registered export gateway regression to require exact unauthenticated denial; 15 worker checks and three real gateway HTTP cases pass, along with lint, formatting and types.
+
+- Target each Compose worker health probe to its own explicit node and require its pong, preventing another healthy consumer from masking failure (FR-OPS-002, NFR-MNT-001).
+- Record the latest full regression: 594 unit/contract, 32 tooling and 243 integration passes; two unavailable-MinIO failures remain open. Candidate wiring is local and unaccepted. Earlier disabled-stage entries below are historical.
+
+- Wire candidate owner routes, generated client, background prepare/status/retry/save controls, dedicated native/Compose worker and scheduler for local synthetic acceptance. Full promotion and browser/storage gates remain open.
+
+- Add the dedicated `make worker-exports` launch policy and restrict ordinary workers to operations/imports/messaging. Verify the actual launch flags through synthetic hard-stop, process replacement and queue-isolation tests; automatic export scheduling remains disabled.
+
+- Add capped export queue/failure/age metrics and configurable local warnings to the ADMIN operations view, with generated contracts and threshold/lifecycle tests (FR-OPS-002).
+
+- Return failed attachment navigations to a fixed privacy-page alert using only closed error codes; preserve JSON errors for programmatic requests and abort incomplete transfers. Add actual Next/API HTTP checks.
+
+- Verify a diagnostic completed during asynchronous generation cannot unseal an earlier snapshot; a later explicit request includes released grades. All 41 focused export integration cases pass.
+
+- Populate the isolated logical recovery drill with a published synthetic export and verify restored guards, encrypted manifest and frozen bytes (FR-ID-006, NFR-REL-002). Object-storage recovery remains a separate gate.
+- Connect the web gateway to exact-length streamed attachments with separate initial/transfer deadlines, closed errors and disconnect cancellation; 31 tooling cases pass. API registration and learner controls remain pending.
+
+- Set local PostgreSQL shared memory to 512 MiB after the 64 MiB Docker default caused a full-regression outage (NFR-MNT-001). Preserve the existing volume and SQL timeouts; serial regression passes 238 integration cases with zero setup errors, while two unavailable-MinIO failures remain.
+
+- Verify real CLI hard-stop/replacement and durable lease recovery with isolated synthetic fixtures. Use importable shared tasks and child initialization for the M4 macOS spawn path; preserve native process safety and ordinary worker limits.
+
+- Add cancellable signed local object reads with total deadlines, shared chunk integrity checks and async attachment closure tests (FR-ID-006, NFR-SEC-001/002). Real loopback dribbling TCP cancellation passes.
+- Test isolated owner queue/status/attachment routes, frozen retry, expiry and old synchronous `EXPORT_FILE_REQUIRED` compatibility. Define separate export tasks with hard-limit envelopes and minimized correlation logging; application activation remains gated.
+- Include owned job/copy counts in advisory deletion inventory without exposing grants or enabling deletion.
+
+- Prepare an exact-length attachment response with cancellation/closure tests; add consent-withdrawn privacy access, recent-auth expiry, transfer deadline and real Redis TTL tests. All routes remain disabled pending complete lifecycle acceptance.
+- Add bounded database-scoped cleanup progress with a one-hour Redis TTL, safe restart on lost/malformed state and closed failure counts (FR-ID-006, FR-OPS-002, NFR-SEC-002). Thirteen deterministic cursor cases pass; scheduler/transport acceptance remains pending.
+
+- Resolve the ADR-048 implementation contract and begin additive job/generation constraints and closed status types for FR-ID-006. No route or worker is enabled; the lifecycle remains unaccepted until the consuming implementation and acceptance tests pass.
+
+## 9 October 2026 — verified private MinIO export adapter
 
 - Reuse the approved local storage boundary for exact UUID-keyed encrypted chunks (FR-ID-006, NFR-SEC-001/002, NFR-MNT-001). Bound reads before allocation; verify lengths and always release responses.
-- Add 24 fake-provider cases, an owned synthetic MinIO round trip/private-access test and `make test-export-storage`. Native real-storage verification remains blocked by unavailable MinIO; full hosted acceptance is required.
+- Add 24 fake-provider cases, an owned synthetic MinIO round trip/private-access test and `make test-export-storage`. Native MinIO remains unavailable; hosted CI 37962081120 passed 721 Python and 66 browser cases plus full recovery/security/container gates. Promoted `bb2f4eb` to main and removed its completed branch.
 - Record ADR-048 as an unaccepted lifecycle proposal. No learner route, worker publication, new retention rule or cleanup policy is enabled.
 - Record successful promotion of encoder `a485bb6` (657 Python/66 browser cases, CI 37949902270) and artifact format `8c08890` (696 Python/66 browser cases, CI 37950849215), with full recovery/security/container gates and branch cleanup.
 

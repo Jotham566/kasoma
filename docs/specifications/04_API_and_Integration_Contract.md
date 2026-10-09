@@ -572,3 +572,43 @@ named row and parent. Missing/foreign targets return 404; no record or staff pay
 A history hold permits ordinary parent triage to append new history; it preserves only the named
 immutable row. All existing claimant, recent-auth, retry, finite expiry/release and audit controls
 remain. See [ADR-045](../decisions/ADR/045-accountability-record-holds.md).
+
+
+## Proposed asynchronous owned exports (ADR-048; not activated)
+
+The isolated test router defines `POST /me/data-requests/{target}/export-job` (empty closed body,
+Idempotency-Key, 202 current job status), `GET /me/data-requests/{target}/export-job` (bounded owner
+status) and `GET /me/data-requests/{target}/export-file` (private JSON attachment). Every operation
+requires the active owner and recent OTP; administrator status grants no cross-owner access.
+Status excludes session-family grants, generation/object references and manifests. Download
+returns exact Content-Length, no-store, nosniff and a server-generated filename; it rechecks
+authority during streaming and aborts incomplete transfers. No public/presigned URL is returned.
+
+The original synchronous export endpoint returns `EXPORT_FILE_REQUIRED` (409) for a live async
+copy and `EXPORT_EXPIRED` (410) after expiry. It does not regenerate a completed request.
+These routes remain unregistered in the application until the lifecycle/worker/web acceptance
+gates in [ADR-048](../decisions/ADR/048-asynchronous-owned-export-delivery.md) pass; generated
+application OpenAPI changes travel with that activation.
+
+
+ADR-048 gateway preparation (API still unregistered): GET export-file rejects cross-site/same-site
+fetch metadata, forwards only server-held cookie authorization and requests identity encoding.
+It never follows upstream redirects or forwards error-body diagnostics. Initial response deadline
+is eight seconds; exact-length attachment streaming has a separate 300-second deadline and propagates
+disconnect cancellation. Owner queue/status routes retain ordinary gateway method/CSRF controls.
+
+For an attachment navigation failure before response start, the web gateway returns a no-store
+303 to `/privacy?export_error=<closed-code>`; it accepts no return destination and includes no
+record ID/token/provider text. The privacy page maps known codes to fixed alerts. Programmatic
+requests retain the closed JSON/status error. Errors after response start abort the transfer.
+
+The ADMIN operations snapshot now includes optional `counts.exports`: bounded `queued`, `running`,
+`failed_finished_24h`, and `oldest_pending_seconds`. Failure counts describe current terminal state
+with finish times in the inclusive previous 24 hours; retries can remove that observation. Additive
+thresholds `export_failures`/`export_age_seconds` drive closed `EXPORT_FAILED`/`EXPORT_STALLED`
+warnings. No record IDs, grants or object references are disclosed. Null/missing metrics mean
+unavailable, not zero. Owner async routes remain unregistered pending ADR-048 acceptance.
+
+Current candidate: owner export-job/export-file routes are now registered and included in the
+generated client for local synthetic acceptance. Earlier unregistered-stage notes are historical.
+The transport/authorization contract above applies; full ADR-048 promotion remains gated.

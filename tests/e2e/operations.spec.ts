@@ -30,6 +30,19 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
   await expect(
     page.getByRole("heading", { name: "Local channel delivery" }),
   ).toBeVisible();
+  const exports = page.getByRole("region", {
+    name: "Personal export operations",
+  });
+  await expect(
+    exports.getByText("Queued exports", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    exports.getByText("Running exports", { exact: true }),
+  ).toBeVisible();
+  await expect(exports).toContainText("Oldest pending export: 0 seconds.");
+  await expect(exports).toContainText(
+    "These local alerts do not measure legal fulfillment deadlines.",
+  );
   await expect(
     page.getByText("No feedback dispatch samples in the last 24 hours.", {
       exact: true,

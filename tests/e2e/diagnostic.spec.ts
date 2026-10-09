@@ -32,6 +32,13 @@ test("FR-DIAG: saved answers survive lost acknowledgement and resume; results in
   await expect(
     page.getByRole("group", { name: "Question 1", exact: true }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("progressbar", { name: "Saved answers" }),
+  ).toHaveAttribute("max", "15");
+  await page.screenshot({
+    path: ".local/ui-review/diagnostic-desktop.png",
+    fullPage: true,
+  });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.route(
     "**/api/v1/sessions/*/attempts",
@@ -52,6 +59,9 @@ test("FR-DIAG: saved answers survive lost acknowledgement and resume; results in
   await expect(
     page.getByText("1 of 15 answers saved", { exact: true }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("progressbar", { name: "Saved answers" }),
+  ).toHaveAttribute("value", "1");
   await page.reload();
   await expect(
     page.getByRole("group", { name: "Question 2", exact: true }),

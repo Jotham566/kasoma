@@ -27,7 +27,12 @@ make dev
 
 Open localhost port 3000. API readiness is `/api/v1/health` on port 8000;
 `/api/v1/live` checks only the process. Mailpit is port 8025; MinIO console is 9001.
-PostgreSQL uses host port 55432 to avoid an existing host database.
+PostgreSQL uses host port 55432 to avoid an existing host database. Compose gives it a
+512 MiB shared-memory ceiling; this is not an eager 512 MiB allocation. The Docker default
+64 MiB was exhausted during local regression, causing shared-memory errors and a recovery
+interval. Apply the configuration with `make services-db`; it recreates the container while
+preserving the named database volume. Do not remove schemas/volumes or relax SQL timeouts to
+hide resource failures. Run broad database suites serially on the 16 GB development host.
 All published service ports bind to loopback. Do not expose these local services.
 `make setup` creates a mode-0600 ignored `.env` with random local secrets and never
 overwrites it. Existing credentials and data are preserved. No secret defaults
@@ -569,6 +574,11 @@ Run `make recovery-drill` after `make setup services`. It creates fresh randomly
 destination databases on the standard local Compose PostgreSQL service, migrates and seeds original
 synthetic evidence, performs pg_dump/pg_restore, verifies row parity/pgvector/immutable guards, and
 cleans up only those databases. It never copies or overwrites your configured development database.
+The fixture also publishes one synthetic asynchronous export, retains encrypted objects only in
+memory, and verifies the restored manifest/keys reproduce the exact frozen bytes without modifying
+restored rows. Nonempty job/generation records and their publication guards are checked. This does
+not restore MinIO objects or authorize remapping a retired object namespace; the report explicitly
+keeps `object_storage_recovery_verified` false.
 The report contains no raw records, tokens, credentials or subprocess diagnostics.
 
 A failed command reports a fixed stage and any exact temporary database names it could not remove.
@@ -729,3 +739,102 @@ prerequisite, not a skipped test. See the [storage report](../implementation/E8_
 This adapter is not yet connected to a learner route or worker. Never invoke its exact-object
 removal as a substitute for reviewed lease/expiry/orphan policy. ADR-048 remains a proposal;
 large-history fulfillment and cleanup/download acceptance remain pending.
+
+
+## Asynchronous attachment gateway preparation (ADR-048)
+
+The web gateway recognizes owner export-job and export-file paths, but the corresponding API
+router and worker scheduler are still disabled pending the complete slice. Do not treat a gateway
+route or passing helper test as learner acceptance. `make test-tooling` exercises streamed lengths,
+metadata, closed upstream errors, redirects and both initial/disconnect deadlines without external
+services. The initial upstream budget is eight seconds; a successful attachment gets a separate
+300-second whole-transfer budget. Cookie authorization stays server-side, with no token in the
+attachment URL. `make test-export-jobs` exercises isolated API/database routes with fake storage.
+
+`make test-export-gateway` starts the built Next application and isolated synthetic API to verify
+attachment failure redirects, privacy alerts, programmatic errors, method restrictions and
+cross-origin denial over real HTTP. Run `make build` first. It uses Playwright's HTTP client and
+does not need browser binaries; complete attachment browser acceptance remains in the E2E gate.
+
+Export operations use bounded durable job counts through the existing ADMIN snapshot. Configure
+`OPS_EXPORT_FAILURE_THRESHOLD` (default 1) and `OPS_EXPORT_AGE_SECONDS` (default 300) for local
+warnings; a snapshot at or above either threshold emits its closed warning. Pending age includes
+automatic backoff and running work. Current terminal failures are counted by finish time in the
+last 24 hours; explicit retry removes the job from that count. Investigate missing consumers,
+storage availability and closed worker events without printing grants/manifests/object keys.
+These alerts do not establish legal fulfillment deadlines. `make test-operations` tests SQL truth,
+threshold boundaries/recovery, authorization and safe output; native browser checks remain in E2E.
+
+
+### Dedicated export consumer preparation
+
+`make worker-exports` defines the ADR-048 dedicated consumer: native prefork, concurrency 1,
+prefetch 1, queue exports and hostname exports@host. It has no embedded scheduler. Do not use
+`--pool=solo` for export generation because it does not enforce the required process hard stop.
+The ordinary `make dev`/Compose worker selects operations/imports/messaging explicitly.
+The manual export consumer is not automatically started yet, and the application does not yet
+schedule export ticks or expose owner commands. Enable the complete topology only with the rest
+of ADR-048 acceptance; preserve exactly one scheduler. `make test-export-worker` runs the same
+launch recipe against its own synthetic app/schema/Redis namespace with accelerated timeouts,
+verifies an unrelated queue stays untouched, and stops/cleans only the resources it created.
+
+
+### Current candidate runtime (supersedes disabled-stage notes above)
+
+The working branch now wires owner background-export controls and API routes. `make dev` starts
+the normal worker with the only Beat scheduler and a separate `make worker-exports` consumer.
+`docker compose --profile application up -d --build` starts API, ordinary/export workers, web and
+local dependencies. The export worker health check targets only its own node. Do not run native
+and Compose workers/schedulers together. The user has requested leaving the Docker application
+running for visual review. Keep application services running between tests; `make container-smoke`
+preserves their prior state. Rebuild affected images after code changes to refresh that UI.
+Candidate wiring is for local synthetic review; ADR-048 acceptance and production release remain
+unclaimed. Mailpit captures development email locally; use only synthetic identities.
+
+
+FR-OPS-002/NFR-MNT-001: each Compose worker now checks its explicit node identity and requires
+that node's pong. A healthy export consumer cannot mask an unavailable ordinary worker (or vice
+versa). Deterministic checks exercise both actual Compose probes with own, foreign, missing and
+invalid replies. This corrects health reporting; queue separation and the sole scheduler remain
+unchanged. Runtime container verification remains pending image completion.
+
+
+### Pinned full Chromium verification
+
+`make e2e-chromium-full` runs both existing Chromium shards using Playwright's bundled
+full Chromium in its supported new headless mode (`channel=chromium`). This is useful when
+full Chromium is installed while its separate headless-shell download is still pending. It
+runs the same tests, isolated API/database, fake providers and acceptance assertions. It does
+not use an unpinned system browser or replace the required Firefox/WebKit matrix. Normal
+`make e2e` and CI remain unchanged. The optional KASOMA_E2E_CHROMIUM_CHANNEL accepts only
+`chromium` and only for the Chromium engine; invalid combinations fail configuration.
+
+
+The learner UI now has shared navigation and a responsive home/recommendation layout. Review
+at http://localhost:3000 after rebuilding the web image. Local visual evidence is retained in
+`.local/ui-review`; synthetic notices remain visible. A healthy web container alone does not
+establish API, worker or object-store availability.
+
+
+Run the base `make seed` before assessment fixture commands: they require the synthetic
+catalog. If MinIO is unavailable, catalog seeding may succeed while storage initialization fails;
+record that failure and rerun `make seed` once storage is healthy. The plain assessment and hints
+fixtures share synthetic staff contacts, so back-to-back first-time seeds may hit the normal
+60-second OTP cooldown. Wait for that existing cooldown and retry the failed fixture command;
+do not relax rate limits or reset developer data. Successful fixture commands are idempotent.
+
+
+NFR-MNT-001 container build refinement: copy workspace manifests and dependency patches
+before installing the frozen web lockfile, then copy application/package source. This preserves
+pinned dependencies and runtime image behavior while allowing ordinary UI edits to reuse the
+install layer. The previous Dockerfile copied all source before installation, causing repeated
+network downloads on every local visual update. Build/cache evidence remains pending.
+
+
+`make smoke-export` requires the running application Compose profile, healthy MinIO, initialized
+private storage, fake model/messaging providers and local Mailpit. It creates one fictional
+account/request, verifies its Mailpit OTP without displaying it, waits for real worker publication
+and checks the frozen attachment through the web gateway. It signs out its own session afterward.
+Its synthetic account/request are retained; normal copy expiry applies. It never resets a database
+or deletes unrelated mail/storage. `make container-smoke` now includes this probe and preserves
+services that were already running. This is a local synthetic runtime check, not a cloud test.

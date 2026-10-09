@@ -4,6 +4,7 @@ from datetime import date
 from uuid import uuid4
 
 from scripts.assessment_fixtures import seed_assessment
+from scripts.recovery_exports import RecoveryExport, populate_export
 from services.assessment import AssessmentService
 from services.assessment_contracts import ChoiceResponse, StartRevision, SubmitAnswer
 from services.config import Settings
@@ -14,7 +15,7 @@ from services.providers import FakeMessagingProvider
 from services.seed import seed
 
 
-def populate(settings: Settings) -> None:
+def populate(settings: Settings) -> RecoveryExport:
     seed(settings)
     engine = engine_for(settings)
     fake = FakeMessagingProvider()
@@ -67,5 +68,6 @@ def populate(settings: Settings) -> None:
             uuid4(),
             uuid4(),
         )
+        return populate_export(identity, token)
     finally:
         engine.dispose()

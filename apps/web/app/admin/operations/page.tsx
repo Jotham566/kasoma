@@ -22,6 +22,8 @@ const messages: Record<
   CHANNEL_STALLED: "Pending channel messages exceeded the age threshold",
   CHANNEL_DISPATCH_SLOW:
     "Local feedback dispatch exceeded its timing threshold",
+  EXPORT_FAILED: "Failed personal exports need investigation",
+  EXPORT_STALLED: "Pending personal exports exceeded the age threshold",
 };
 
 export default function Operations() {
@@ -64,6 +66,7 @@ export default function Operations() {
       ] as const)
     : [];
   const channel = view?.counts?.channel;
+  const exports = view?.counts?.exports;
   const channelCounters = channel
     ? ([
         ["Queued incoming messages", channel.queued_inbound],
@@ -238,6 +241,51 @@ export default function Operations() {
             ) : (
               <p>
                 Channel metrics unavailable. Missing values do not mean zero.
+              </p>
+            )}
+          </section>
+          <section
+            aria-label="Personal export operations"
+            className="space-y-3"
+          >
+            <h2 className="text-xl font-semibold">Personal exports</h2>
+            {exports ? (
+              <>
+                <dl>
+                  {(
+                    [
+                      ["Queued exports", exports.queued],
+                      ["Running exports", exports.running],
+                      [
+                        "Failed exports finished in the last 24 hours",
+                        exports.failed_finished_24h,
+                      ],
+                    ] as const
+                  ).map(([label, count]) => (
+                    <div key={label} className="py-2">
+                      <dt>{label}</dt>
+                      <dd>
+                        {count.at_least ? "At least " : ""}
+                        {count.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <p>
+                  Oldest pending export: {exports.oldest_pending_seconds}{" "}
+                  seconds. Alert threshold: {view.thresholds.export_age_seconds}{" "}
+                  seconds. Failure threshold: {view.thresholds.export_failures}.
+                </p>
+                <p>
+                  Counts show current job status. Explicit retry removes a job
+                  from the failed count. Pending age runs from the latest owner
+                  command, including automatic retries. These local alerts do
+                  not measure legal fulfillment deadlines.
+                </p>
+              </>
+            ) : (
+              <p>
+                Export metrics unavailable. Missing values do not mean zero.
               </p>
             )}
           </section>

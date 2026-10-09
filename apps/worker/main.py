@@ -105,6 +105,9 @@ def make_worker(settings: Settings) -> Celery:
         finally:
             engine.dispose()
 
+    from apps.worker.exports import register
+
+    register(app, settings)
     return app
 
 

@@ -39,7 +39,9 @@
         "CHANNEL_INBOUND_FAILED",
         "CHANNEL_OUTBOUND_FAILED",
         "CHANNEL_STALLED",
-        "CHANNEL_DISPATCH_SLOW"
+        "CHANNEL_DISPATCH_SLOW",
+        "EXPORT_FAILED",
+        "EXPORT_STALLED"
       ]
     },
     "severity": {

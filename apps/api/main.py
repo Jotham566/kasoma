@@ -13,6 +13,7 @@ from starlette.responses import JSONResponse
 from apps.api.assessment import router as assessment_router
 from apps.api.content import router as content_router
 from apps.api.data_requests import router as data_requests_router
+from apps.api.export_jobs import router as export_jobs_router
 from apps.api.flags import router as flags_router
 from apps.api.identity import router
 from apps.api.import_limit import ImportBodyLimit
@@ -65,6 +66,7 @@ def create_app(
     app.include_router(assessment_router)
     app.include_router(flags_router)
     app.include_router(data_requests_router)
+    app.include_router(export_jobs_router)
     app.include_router(operations_router)
     app.include_router(whatsapp_router)
     app.include_router(webhook_router)

@@ -51,3 +51,18 @@ failures. Source/destination inventories matched before and after guard probes.
 Promoted to main and the completed recovery branch removed. This supersedes earlier pending notes
 while preserving the initial failed native/hosted attempts above. Logical fixture restore timing
 is not production RTO, PITR, encryption or data-loss/RPO evidence.
+
+
+## ADR-048 populated export extension (uncommitted)
+
+The current fixture includes one published async export and requires nonempty job/generation
+records before backup. The restored database rejects publication-digest mutation and a READY to
+QUEUED transition. Restored encrypted manifests reconstruct the exact frozen JSON against the
+fixture's in-memory encrypted objects; verification does not mutate either database inventory.
+`make format lint recovery-drill` passes locally: 56 tables, 285 rows, 262 ms and no cleanup failures.
+This extends ADR-042's synthetic logical evidence; it does not prove storage object recovery,
+namespace migration, production PITR or RPO/RTO. ADR-048 remains proposed pending full delivery.
+
+Recovery follow-up regression: `make format lint test-export-jobs test-unit` passes 40 focused
+PostgreSQL cases, 590 unit/contract and 21 tooling cases. Three new cases prove read-only export
+verification rejects corrupt ciphertext, missing objects and mismatched expected bytes.

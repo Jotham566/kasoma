@@ -11,12 +11,14 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 
 from services.domain.content import ContentImport
+from services.domain.export_jobs import ExportJob
 from services.domain.flags import ContentFlag
 from services.health import Health, dependency_health
 from services.identity import IdentityError, IdentityService
 from services.observability import logger
 from services.operations_contracts import (
     Count,
+    ExportCounts,
     OperationAlert,
     OperationCounts,
     OperationsView,
@@ -35,6 +37,8 @@ def thresholds(identity: IdentityService) -> OperationThresholds:
         channel_queue_age_seconds=settings.ops_channel_queue_age_seconds,
         channel_dispatch_p95_ms=settings.ops_channel_dispatch_p95_ms,
         channel_dispatch_min_samples=settings.ops_channel_dispatch_min_samples,
+        export_failures=settings.ops_export_failure_threshold,
+        export_age_seconds=settings.ops_export_age_seconds,
     )
 
 
@@ -67,6 +71,27 @@ def counts(db: Session, now: datetime) -> OperationCounts:
         unresolved_flags=bounded_count(db, flags),
         high_priority_flags=bounded_count(db, flags.where(ContentFlag.priority == "HIGH")),
         channel=channel_counts(db, now),
+        exports=export_counts(db, now),
+    )
+
+
+def export_counts(db: Session, now: datetime) -> ExportCounts:
+    jobs = select(1).select_from(ExportJob)
+    oldest = db.scalar(
+        select(func.min(ExportJob.queued_at)).where(ExportJob.status.in_(["QUEUED", "RUNNING"]))
+    )
+    return ExportCounts(
+        queued=bounded_count(db, jobs.where(ExportJob.status == "QUEUED")),
+        running=bounded_count(db, jobs.where(ExportJob.status == "RUNNING")),
+        failed_finished_24h=bounded_count(
+            db,
+            jobs.where(
+                ExportJob.status == "FAILED",
+                ExportJob.finished_at >= now - timedelta(hours=24),
+                ExportJob.finished_at <= now,
+            ),
+        ),
+        oldest_pending_seconds=max(0, int((now - oldest).total_seconds())) if oldest else 0,
     )
 
 
@@ -130,6 +155,22 @@ def evaluate(
                 ("CHANNEL_DISPATCH_SLOW", timing.p95_ms, limits.channel_dispatch_p95_ms)
             )
         for code, observed, threshold in observations:
+            if observed >= threshold:
+                alerts.append(
+                    OperationAlert.model_validate(
+                        {
+                            "code": code,
+                            "severity": "WARNING",
+                            "observed": observed,
+                            "threshold": threshold,
+                        }
+                    )
+                )
+    if values and values.exports:
+        for code, observed, threshold in [
+            ("EXPORT_FAILED", values.exports.failed_finished_24h.value, limits.export_failures),
+            ("EXPORT_STALLED", values.exports.oldest_pending_seconds, limits.export_age_seconds),
+        ]:
             if observed >= threshold:
                 alerts.append(
                     OperationAlert.model_validate(

@@ -16,7 +16,13 @@ function check<T>(result: { data?: T; error?: Schema["ErrorEnvelope"] }): T {
   if (!result.data) throw new Error(result.error?.error.code ?? "UNAVAILABLE");
   return result.data;
 }
-export function Requests({ staff = false }: { staff?: boolean }) {
+export function Requests({
+  staff = false,
+  exportNotice,
+}: {
+  staff?: boolean;
+  exportNotice?: string;
+}) {
   const [preview, setPreview] = useState<Schema["DeletionPreview"] | null>(
     null,
   );
@@ -31,6 +37,11 @@ export function Requests({ staff = false }: { staff?: boolean }) {
     target?: string;
   } | null>(null);
   const [downloadPending, setDownloadPending] = useState<{
+    key: string;
+    target: string;
+  } | null>(null);
+  const [jobs, setJobs] = useState<Record<string, Schema["ExportJobView"]>>({});
+  const [jobPending, setJobPending] = useState<{
     key: string;
     target: string;
   } | null>(null);
@@ -62,6 +73,8 @@ export function Requests({ staff = false }: { staff?: boolean }) {
         setCursor(null);
         setPending(null);
         setDownloadPending(null);
+        setJobPending(null);
+        setJobs({});
       }
       if (
         [
@@ -69,9 +82,12 @@ export function Requests({ staff = false }: { staff?: boolean }) {
           "EXPORT_LIMIT_REACHED",
           "RESOURCE_NOT_FOUND",
           "IDEMPOTENCY_CONFLICT",
+          "EXPORT_FILE_REQUIRED",
+          "REQUEST_COMPLETED",
         ].includes(code)
       ) {
         setDownloadPending(null);
+        setJobPending(null);
       }
       setStatus(
         code === "AUTH_REQUIRED" || code === "REAUTH_REQUIRED"
@@ -86,11 +102,14 @@ export function Requests({ staff = false }: { staff?: boolean }) {
                   ? "Another administrator is reviewing this request. Reload the list."
                   : code === "EXPORT_EXPIRED"
                     ? "This copy has expired. Submit a new export request."
-                    : code === "EXPORT_LIMIT_REACHED"
-                      ? "This account exceeds the self-service export limit. Your request remains pending for review."
-                      : code === "RATE_LIMITED"
-                        ? "Too many requests. Wait before trying again; saved requests are retained."
-                        : "Could not confirm the operation. Retry the same request or reload the list.",
+                    : code === "EXPORT_FILE_REQUIRED" ||
+                        code === "REQUEST_COMPLETED"
+                      ? "This request is already completed. Check background export status or download its existing copy."
+                      : code === "EXPORT_LIMIT_REACHED"
+                        ? "This account exceeds the self-service export limit. Your request remains pending for review."
+                        : code === "RATE_LIMITED"
+                          ? "Too many requests. Wait before trying again; saved requests are retained."
+                          : "Could not confirm the operation. Retry the same request or reload the list.",
       );
     } finally {
       if (mounted.current) setBusy(false);
@@ -174,6 +193,47 @@ export function Requests({ staff = false }: { staff?: boolean }) {
       );
     });
   }
+  async function prepareBackground(target: string) {
+    const operation = jobPending ?? { key: crypto.randomUUID(), target };
+    setJobPending(operation);
+    await run(async () => {
+      const job = check(
+        await api().POST("/api/v1/me/data-requests/{target}/export-job", {
+          params: {
+            path: { target: operation.target },
+            header: { "Idempotency-Key": operation.key },
+          },
+          body: {},
+        }),
+      );
+      setJobs((old) => ({ ...old, [operation.target]: job }));
+      setJobPending(null);
+      await load();
+      setStatus(
+        "Background command confirmed. Check its status for progress; a queued job is not a completed export.",
+      );
+    });
+  }
+  async function checkBackground(target: string) {
+    await run(async () => {
+      const result = await api().GET(
+        "/api/v1/me/data-requests/{target}/export-job",
+        {
+          params: { path: { target } },
+        },
+      );
+      if (result.error?.error.code === "RESOURCE_NOT_FOUND") {
+        setStatus(
+          "No background export found for this request. Prepare one or use the standard download.",
+        );
+        return;
+      }
+      const job = check(result);
+      setJobs((old) => ({ ...old, [target]: job }));
+      await load();
+      setStatus("Background export status refreshed.");
+    });
+  }
   return (
     <main className="mx-auto max-w-2xl p-6 space-y-5">
       <Link className="inline-flex min-h-11 items-center underline" href="/">
@@ -182,6 +242,7 @@ export function Requests({ staff = false }: { staff?: boolean }) {
       <h1 className="text-3xl font-semibold">
         {staff ? "Data request review" : "Your data requests"}
       </h1>
+      {!staff && exportNotice && <p role="alert">{exportNotice}</p>}
       <p>
         {staff
           ? "Administrators can claim requests for review. Only the account owner can download an export. Deletion processing remains pending."
@@ -212,7 +273,7 @@ export function Requests({ staff = false }: { staff?: boolean }) {
             }}
           >
             <fieldset
-              disabled={busy || !!pending || !!downloadPending}
+              disabled={busy || !!pending || !!downloadPending || !!jobPending}
               className="space-y-3"
             >
               <legend>Request type</legend>
@@ -244,7 +305,12 @@ export function Requests({ staff = false }: { staff?: boolean }) {
             </fieldset>
             <button
               className={button}
-              disabled={busy || !!downloadPending || (!pending && !affirmative)}
+              disabled={
+                busy ||
+                !!downloadPending ||
+                !!jobPending ||
+                (!pending && !affirmative)
+              }
             >
               {pending ? "Retry request" : "Submit request"}
             </button>
@@ -276,6 +342,15 @@ export function Requests({ staff = false }: { staff?: boolean }) {
           onClick={() => void download(downloadPending.target)}
         >
           Retry download
+        </button>
+      )}
+      {!staff && jobPending && (
+        <button
+          className={button}
+          disabled={busy}
+          onClick={() => void prepareBackground(jobPending.target)}
+        >
+          Retry background command
         </button>
       )}
       {staff && pending?.target && (
@@ -321,9 +396,70 @@ export function Requests({ staff = false }: { staff?: boolean }) {
               </p>
             )}
             {!staff && row.kind === "EXPORT" && (
+              <section aria-label="Background export" className="space-y-2">
+                <p>
+                  For larger histories, prepare a background copy and check its
+                  status. Keep this page open to retry an unconfirmed command.
+                </p>
+                {jobs[row.id] && (
+                  <p>
+                    Background status: {jobs[row.id].status}.
+                    {jobs[row.id].failure === "AUTH_REQUIRED"
+                      ? " Sign in again before retrying preparation."
+                      : jobs[row.id].failure === "LIMIT_REACHED"
+                        ? " This history exceeds the preparation limit; the request remains available for review."
+                        : jobs[row.id].failure === "PROCESSING_FAILED"
+                          ? " Preparation failed. You can explicitly retry."
+                          : ""}
+                    {jobs[row.id].status === "EXPIRED"
+                      ? " This copy expired. Submit a new export request."
+                      : ""}
+                  </p>
+                )}
+                {row.status !== "COMPLETED" &&
+                  (!jobs[row.id] || jobs[row.id].status === "FAILED") && (
+                    <button
+                      className={button}
+                      disabled={
+                        busy || !!pending || !!downloadPending || !!jobPending
+                      }
+                      onClick={() => void prepareBackground(row.id)}
+                    >
+                      {jobs[row.id]?.status === "FAILED"
+                        ? "Retry background preparation"
+                        : "Prepare background export"}
+                    </button>
+                  )}
+                <button
+                  className={button}
+                  disabled={busy || !!jobPending}
+                  onClick={() => void checkBackground(row.id)}
+                >
+                  Check background status
+                </button>
+                {jobs[row.id]?.status === "READY" && !busy && (
+                  <>
+                    <a
+                      className="inline-flex min-h-11 items-center underline"
+                      href={`/api/v1/me/data-requests/${row.id}/export-file`}
+                    >
+                      Save background export
+                    </a>
+                    <p>
+                      The browser saves this JSON attachment directly. If the
+                      download fails or is interrupted, retry the same copy
+                      before its 24-hour expiry.
+                    </p>
+                  </>
+                )}
+              </section>
+            )}
+            {!staff && row.kind === "EXPORT" && (
               <button
                 className={button}
-                disabled={busy || !!pending || !!downloadPending}
+                disabled={
+                  busy || !!pending || !!downloadPending || !!jobPending
+                }
                 onClick={() => void download(row.id)}
               >
                 Download export
@@ -357,7 +493,9 @@ export function Requests({ staff = false }: { staff?: boolean }) {
             {staff && row.status === "QUEUED" && (
               <button
                 className={button}
-                disabled={busy || !!pending || !!downloadPending}
+                disabled={
+                  busy || !!pending || !!downloadPending || !!jobPending
+                }
                 onClick={() => void send(row.id)}
               >
                 Claim for review

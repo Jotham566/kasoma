@@ -3,7 +3,7 @@
 Requirements: FR-ID-006, NFR-SEC-001/002, NFR-MNT-001.
 Architecture: approved local MinIO adapter plus
 [ADR-047](../decisions/ADR/047-private-export-artifact-format.md).
-Status: fake-adapter checks pass; actual local-service acceptance pending.
+Status: preparatory adapter verified in hosted local-service CI and promoted to main.
 
 `services/export_storage.py` binds operations to a fixed private export prefix and UUID generation/
 object references. It reuses the approved local settings, private container and bounded provider
@@ -44,3 +44,17 @@ Final `make format lint test-unit` passed all 520 unit/contract and five tooling
 `make openapi-check security` passed unchanged generated contracts, Bandit, secret-boundary
 checks and both dependency audits, with no known vulnerabilities. The actual MinIO test remains
 an explicit native failure; no application acceptance is claimed from these static/fake checks.
+
+
+## Hosted acceptance and promotion — 9 October 2026
+
+CI 37962081120 passed at `bb2f4eb2598b62dcefe2b1859eb8d7f635e07951`: 520 unit/contract
+and 201 integration cases, five tooling, 66 real-API browser journeys and one isolated UI case.
+The actual MinIO private round trip passed. Setup, migrations, seed, lint/types, generated
+contracts, build, restricted role, dependency/source/container security and container smoke passed.
+Synthetic recovery restored 54 tables/272 rows in 507 ms. Cold question transfer was
+191518/194249/193634 bytes across Chromium/Firefox/WebKit, below 250000.
+
+Promoted the exact verified commit to main and removed its completed branch locally/remotely.
+Native MinIO unavailability remains separate. This evidence covers the preparatory adapter,
+not the subsequent ADR-048 namespace/listing/cleanup or full async fulfillment work.

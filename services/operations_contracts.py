@@ -33,6 +33,13 @@ class ChannelCounts(Contract):
     feedback_dispatch: DispatchTiming
 
 
+class ExportCounts(Contract):
+    queued: Count
+    running: Count
+    failed_finished_24h: Count
+    oldest_pending_seconds: int = Field(ge=0)
+
+
 class OperationCounts(Contract):
     queued_imports: Count
     oldest_import_seconds: int = Field(ge=0)
@@ -40,6 +47,7 @@ class OperationCounts(Contract):
     unresolved_flags: Count
     high_priority_flags: Count
     channel: ChannelCounts | None = None
+    exports: ExportCounts | None = None
 
 
 AlertCode = Literal[
@@ -54,6 +62,8 @@ AlertCode = Literal[
     "CHANNEL_OUTBOUND_FAILED",
     "CHANNEL_STALLED",
     "CHANNEL_DISPATCH_SLOW",
+    "EXPORT_FAILED",
+    "EXPORT_STALLED",
 ]
 
 
@@ -72,6 +82,8 @@ class OperationThresholds(Contract):
     channel_queue_age_seconds: int = Field(default=60, ge=1, le=86400)
     channel_dispatch_p95_ms: int = Field(default=1500, ge=1, le=60000)
     channel_dispatch_min_samples: int = Field(default=20, ge=1, le=1000)
+    export_failures: int = Field(default=1, ge=1, le=10000)
+    export_age_seconds: int = Field(default=300, ge=60, le=86400)
 
 
 class OperationsView(Contract):

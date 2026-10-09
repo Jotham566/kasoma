@@ -4,12 +4,11 @@ import Link from "next/link";
 import { FlagForm } from "../flag-form";
 import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
-import { Status } from "@kasoma/ui";
+import { SavedProgress, Status } from "@kasoma/ui";
 
 type Schema = components["schemas"];
-const button =
-  "min-h-11 rounded border border-slate-500 px-4 py-2 disabled:opacity-50";
-const field = "block w-full min-h-11 rounded border border-slate-500 p-2";
+const button = "ui-button ui-button-secondary";
+const field = "ui-input";
 function client() {
   return apiClient("", crypto.randomUUID());
 }
@@ -137,10 +136,8 @@ export default function Diagnostic() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <main className="mx-auto max-w-2xl space-y-6 p-6">
-      <Link href="/" className="inline-flex min-h-11 items-center underline">
-        Kasoma home
-      </Link>
+    <main className="learning-page">
+      <p className="eyebrow">Your learning · One question at a time</p>
       <h1 className="text-3xl font-semibold">Subject diagnostic</h1>
       <p>
         Synthetic development questions only. Gather initial evidence across
@@ -151,23 +148,6 @@ export default function Diagnostic() {
         feedback during the diagnostic.
       </p>
       <Status>{status}</Status>
-      <nav
-        aria-label="Learning history and progress"
-        className="flex flex-wrap gap-4"
-      >
-        <Link
-          className="inline-flex min-h-11 items-center underline"
-          href="/progress"
-        >
-          Progress
-        </Link>
-        <Link
-          className="inline-flex min-h-11 items-center underline"
-          href="/history"
-        >
-          History
-        </Link>
-      </nav>
       <Link
         href="/onboarding"
         className="inline-flex min-h-11 items-center underline"
@@ -215,15 +195,19 @@ export default function Diagnostic() {
               ))}
             </select>
           </label>
-          <button className={button} disabled={busy || !subject}>
+          <button
+            className="ui-button ui-button-primary"
+            disabled={busy || !subject}
+          >
             Start or resume diagnostic
           </button>
         </form>
       )}
       {session && (
-        <p>
-          {session.answered_count} of {session.item_count} answers saved
-        </p>
+        <SavedProgress
+          answered={session.answered_count}
+          total={session.item_count}
+        />
       )}
       {item && session && (
         <form
@@ -266,10 +250,7 @@ export default function Diagnostic() {
             )}
             {item.response_spec.type !== "NUMERIC" ? (
               item.response_spec.choices.map((option) => (
-                <label
-                  key={option.id}
-                  className="flex min-h-11 items-center gap-3"
-                >
+                <label key={option.id} className="answer-choice">
                   <input
                     type={
                       item.response_spec.type === "MULTIPLE_CHOICE"
@@ -333,7 +314,7 @@ export default function Diagnostic() {
               </>
             )}
             <button
-              className={button}
+              className="ui-button ui-button-primary"
               disabled={
                 item.response_spec.type === "MULTIPLE_CHOICE" &&
                 selectedIds.length === 0

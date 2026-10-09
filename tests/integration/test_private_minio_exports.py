@@ -2,12 +2,14 @@
 
 from uuid import uuid4
 
+import anyio
 import httpx
 import pytest
 from cryptography.fernet import Fernet
 
 from services.config import Settings
 from services.export_artifacts import ArtifactError, parse_manifest, read_artifact, write_artifact
+from services.export_reader import PrivateExportReader
 from services.export_storage import PrivateExportStorage, object_key
 
 pytestmark = pytest.mark.integration
@@ -39,8 +41,22 @@ def test_private_minio_artifact_round_trip_and_owned_cleanup():
         manifest = write_artifact(
             iter(parts), cipher, put, request_id=request, generation_id=generation
         )
+        entries = adapter.page(generation=generation)
+        assert {entry.object_id for entry in entries} == set(owned)
+        assert all(entry.scope == adapter.scope for entry in entries)
         parsed = parse_manifest(manifest, request, generation)
         assert parsed.size == sum(map(len, parts))
+        expected_ciphertext = [adapter.get(generation, target) for target in owned]
+
+        async def private_reads():
+            reader = PrivateExportReader(settings)
+            try:
+                for target, expected in zip(owned, expected_ciphertext, strict=True):
+                    assert await reader.get(generation, target) == expected
+            finally:
+                await reader.aclose()
+
+        anyio.run(private_reads)
         assert (
             list(
                 read_artifact(
@@ -54,7 +70,7 @@ def test_private_minio_artifact_round_trip_and_owned_cleanup():
             == parts
         )
         with httpx.Client(trust_env=False, timeout=5) as client:
-            key = object_key(generation, owned[0])
+            key = object_key(generation, owned[0], scope=adapter.scope)
             endpoint = settings.object_storage_endpoint.rstrip("/")
             result = client.get(f"{endpoint}/{settings.object_storage_container}/{key}")
             assert result.status_code == 403

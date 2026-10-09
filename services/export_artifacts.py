@@ -139,6 +139,31 @@ def write_artifact(
                 raise ArtifactError("EXPORT_ARTIFACT_WRITE_FAILED") from None
 
 
+def decode_chunk(
+    ciphertext: bytes, cipher: Cipher, chunk: Chunk, request_id: UUID, generation_id: UUID
+) -> bytes:
+    """Shared authenticated decoding for synchronous workers and cancellable downloads."""
+    try:
+        if type(ciphertext) is not bytes or not 0 < len(ciphertext) <= MAX_CIPHERTEXT_BYTES:
+            raise ValueError("Ciphertext size")
+        plaintext = cipher.decrypt(ciphertext.decode("ascii"))
+        if len(plaintext) > MAX_CIPHERTEXT_BYTES:
+            raise ValueError("Envelope size")
+        envelope = Envelope.model_validate_json(plaintext)
+        if (envelope.request_id, envelope.generation_id, envelope.ordinal) != (
+            request_id,
+            generation_id,
+            chunk.ordinal,
+        ):
+            raise ValueError("Chunk binding")
+        raw = base64.b64decode(envelope.payload, validate=True)
+        if len(raw) != chunk.size or hashlib.sha256(raw).hexdigest() != chunk.digest:
+            raise ValueError("Chunk integrity")
+        return raw
+    except Exception:
+        raise ArtifactError("EXPORT_ARTIFACT_READ_FAILED") from None
+
+
 def read_artifact(
     raw_manifest: bytes,
     cipher: Cipher,
@@ -153,22 +178,7 @@ def read_artifact(
     for chunk in manifest.chunks:
         try:
             ciphertext = read(chunk.object_id)
-            if type(ciphertext) is not bytes or not 0 < len(ciphertext) <= MAX_CIPHERTEXT_BYTES:
-                raise ValueError("Ciphertext size")
-            plaintext = cipher.decrypt(ciphertext.decode("ascii"))
-            # Bound malicious/misconfigured cipher implementations as well as storage input.
-            if len(plaintext) > MAX_CIPHERTEXT_BYTES:
-                raise ValueError("Envelope size")
-            envelope = Envelope.model_validate_json(plaintext)
-            if (envelope.request_id, envelope.generation_id, envelope.ordinal) != (
-                request_id,
-                generation_id,
-                chunk.ordinal,
-            ):
-                raise ValueError("Chunk binding")
-            raw = base64.b64decode(envelope.payload, validate=True)
-            if len(raw) != chunk.size or hashlib.sha256(raw).hexdigest() != chunk.digest:
-                raise ValueError("Chunk integrity")
+            raw = decode_chunk(ciphertext, cipher, chunk, request_id, generation_id)
             digest.update(raw)
             if chunk.ordinal == len(manifest.chunks) - 1 and digest.hexdigest() != manifest.digest:
                 raise ValueError("Artifact integrity")

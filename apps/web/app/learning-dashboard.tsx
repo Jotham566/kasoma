@@ -196,23 +196,6 @@ export function LearningDashboard({ mode }: { mode: "progress" | "history" }) {
         : `/?subject=${subject}#recommendations`;
   return (
     <main className="mx-auto max-w-3xl space-y-5 p-6">
-      <nav aria-label="Learner navigation" className="flex flex-wrap gap-4">
-        <Link className={button} href="/">
-          Home
-        </Link>
-        <Link className={button} href="/revise">
-          Revise
-        </Link>
-        <Link className={button} href="/progress">
-          Progress
-        </Link>
-        <Link className={button} href="/history">
-          History
-        </Link>
-        <Link className={button} href="/onboarding">
-          Profile and sign in
-        </Link>
-      </nav>
       <h1 className="text-3xl font-semibold">
         {mode === "progress" ? "Your progress" : "Your session history"}
       </h1>

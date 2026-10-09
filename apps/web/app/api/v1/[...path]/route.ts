@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import type { components } from "@kasoma/api-client";
 import { apiUrl } from "../../../config";
+import { ExportUnavailable, fetchExport } from "../../export-stream";
+import { exportFailureLocation } from "../../../privacy/export-notice";
 
 type Credentials = components["schemas"]["Credentials"];
 const allowed: Record<string, string[]> = {
@@ -70,12 +72,18 @@ async function gateway(
   const flagReport = new RegExp(`^attempts/${uuid}/flag$`).test(path);
   const flagTriage = new RegExp(`^admin/content-flags/${uuid}$`).test(path);
   const dataExport = new RegExp(`^me/data-requests/${uuid}/export$`).test(path);
+  const exportJob = new RegExp(`^me/data-requests/${uuid}/export-job$`).test(
+    path,
+  );
+  const exportFile = new RegExp(
+    `^me/data-requests/(${uuid})/export-file$`,
+  ).exec(path);
   const holdList = new RegExp(`^admin/data-requests/${uuid}/holds$`).test(path);
   const holdRelease = new RegExp(
     `^admin/data-requests/${uuid}/holds/${uuid}/release$`,
   ).test(path);
   const importRead = new RegExp(`^admin/content-imports/${uuid}$`).test(path);
-  const methods = importRead
+  let methods = importRead
     ? ["GET"]
     : holdList
       ? ["GET", "POST"]
@@ -112,8 +120,17 @@ async function gateway(
                               ? ["POST"]
                               : ["GET", "PATCH"]
                           : allowed[path];
+  if (exportJob) methods = ["GET", "POST"];
+  if (exportFile) methods = ["GET"];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
+  if (
+    exportFile &&
+    ["cross-site", "same-site"].includes(
+      request.headers.get("sec-fetch-site") ?? "",
+    )
+  )
+    return fail(403, "FORBIDDEN");
   if (
     request.method !== "GET" &&
     (request.headers.get("origin") !==
@@ -158,6 +175,15 @@ async function gateway(
       request_id: requestId,
     };
     if (access) headers.Authorization = `Bearer ${access}`;
+    if (exportFile) {
+      return await fetchExport({
+        url: `${apiUrl()}/api/v1/${path}`,
+        headers,
+        target: exportFile[1],
+        requestId,
+        requestSignal: request.signal,
+      });
+    }
     const idempotency = request.headers.get("idempotency-key");
     if (idempotency) headers["Idempotency-Key"] = idempotency;
     const query = new URLSearchParams();
@@ -240,7 +266,21 @@ async function gateway(
     response.headers.set("Cache-Control", "no-store");
     response.headers.set("request_id", requestId);
     return response;
-  } catch {
+  } catch (error) {
+    if (error instanceof ExportUnavailable) {
+      if (request.headers.get("sec-fetch-mode") === "navigate") {
+        return new Response(null, {
+          status: 303,
+          headers: {
+            Location: exportFailureLocation(error.code),
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+            request_id: requestId,
+          },
+        });
+      }
+      return fail(error.status, error.code);
+    }
     return fail(503, "SERVICE_UNAVAILABLE");
   }
 }

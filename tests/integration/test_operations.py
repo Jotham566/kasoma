@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from apps.worker.main import make_worker
 from services.content_imports import process_one
 from services.health import Health
-from services.operations import bounded_count, heartbeat, heartbeat_key, snapshot
+from services.operations import bounded_count, export_counts, heartbeat, heartbeat_key, snapshot
 from services.staff import provision
 from tests.integration.test_content_imports import enqueue
 from tests.integration.test_flags import assessment as assessment_fixture
@@ -21,6 +21,67 @@ from tests.integration.test_flags import report, saved, triage
 assessment = assessment_fixture
 
 pytestmark = pytest.mark.integration
+
+
+def test_export_operations_follow_durable_queue_failure_and_age_without_identifiers(
+    content, monkeypatch
+):
+    from uuid import UUID, uuid4
+
+    from services.export_jobs import claim_next, fail_claim, queue
+    from tests.integration.test_data_requests import create
+
+    service, client, actors, _ = content
+    now = [service.clock()]
+    service.clock = lambda: now[0]
+    monkeypatch.setattr(
+        "services.operations.dependency_health",
+        lambda _: Health(status="ok", database="up", redis="up"),
+    )
+    target = UUID(create(client, actors["learner"]).json()["id"])
+    queue(service, actors["learner"]["Authorization"][7:], target, uuid4(), uuid4())
+
+    def current():
+        response = client.get("/api/v1/admin/operations", headers=actors["admin"])
+        assert response.status_code == 200
+        result = response.json()
+        for forbidden in [str(target), "grant_family", "encrypted_manifest", "generation_id", "@"]:
+            assert forbidden not in response.text
+        return result["counts"]["exports"], {
+            a["code"] for a in result["alerts"] if a["code"].startswith("EXPORT_")
+        }
+
+    first, alerts = current()
+    assert first == {
+        "queued": {"value": 1, "at_least": False},
+        "running": {"value": 0, "at_least": False},
+        "failed_finished_24h": {"value": 0, "at_least": False},
+        "oldest_pending_seconds": 0,
+    }
+    assert not alerts
+    now[0] += timedelta(seconds=300)
+    assert current()[1] == {"EXPORT_STALLED"}
+    claim = claim_next(service)
+    running, alerts = current()
+    assert running["queued"]["value"] == 0 and running["running"]["value"] == 1
+    assert alerts == {"EXPORT_STALLED"}
+    fail_claim(service, claim, "LIMIT_REACHED")
+    failed, alerts = current()
+    assert failed["oldest_pending_seconds"] == 0
+    assert failed["running"]["value"] == 0 and failed["failed_finished_24h"]["value"] == 1
+    assert alerts == {"EXPORT_FAILED"}
+    with Session(service.engine) as db:
+        assert export_counts(db, now[0] + timedelta(hours=24)).failed_finished_24h.value == 1
+        assert (
+            export_counts(db, now[0] + timedelta(hours=24, seconds=1)).failed_finished_24h.value
+            == 0
+        )
+        assert export_counts(db, now[0] - timedelta(seconds=1)).failed_finished_24h.value == 0
+
+    queue(service, actors["learner"]["Authorization"][7:], target, uuid4(), uuid4())
+    retried, alerts = current()
+    assert retried["queued"]["value"] == 1 and retried["failed_finished_24h"]["value"] == 0
+    assert retried["oldest_pending_seconds"] == 0 and not alerts
 
 
 def test_operations_authorization_and_failed_stalled_queue(content, identity, monkeypatch):

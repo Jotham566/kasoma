@@ -28,6 +28,9 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
   await expect(
     page.getByText("Required declarations are recorded.", { exact: false }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Find your starting point", exact: true }),
+  ).toBeVisible();
   const cookies = await context.cookies();
   expect(
     cookies
@@ -43,12 +46,18 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
   await expect(
     page.getByText("Required declarations are recorded.", { exact: false }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Find your starting point", exact: true }),
+  ).toBeVisible();
   await page
     .getByRole("button", { name: "Withdraw consent and assent" })
     .click();
   await expect(page.getByRole("status")).toHaveText(
     "Consent withdrawn. Learning access is paused.",
   );
+  await expect(
+    page.getByRole("link", { name: "Find your starting point", exact: true }),
+  ).toHaveCount(0);
   await page.getByRole("button", { name: "Sign out all devices" }).click();
   await expect(page.getByRole("status")).toHaveText("Signed out.");
 });
@@ -74,6 +83,9 @@ test("FR-ID-003: minor remains blocked until distinct guardian consent and assen
   await expect(
     page.getByText("Learning access is paused until", { exact: false }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Find your starting point", exact: true }),
+  ).toHaveCount(0);
   await page
     .getByLabel("Guardian email or mobile number")
     .fill("e2e-guardian@example.invalid");
@@ -89,6 +101,9 @@ test("FR-ID-003: minor remains blocked until distinct guardian consent and assen
   await page.getByRole("button", { name: "Record guardian consent" }).click();
   await expect(
     page.getByText("Required declarations are recorded.", { exact: false }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Find your starting point", exact: true }),
   ).toBeVisible();
 });
 

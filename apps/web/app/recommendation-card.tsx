@@ -6,8 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 
 type Schema = components["schemas"];
-const button =
-  "min-h-11 rounded-lg border border-slate-500 px-4 py-2 disabled:opacity-50";
+const button = "ui-button ui-button-secondary";
 
 export function RecommendationCard() {
   const router = useRouter();
@@ -98,9 +97,10 @@ export function RecommendationCard() {
     <section
       aria-label="Recommended practice"
       id="recommendations"
-      className="mt-8 space-y-4 rounded-xl border border-slate-300 p-5"
+      className="recommendation-card surface-card"
     >
-      <h2 className="text-xl font-semibold">Your next activity</h2>
+      <p className="eyebrow">One useful next step</p>
+      <h2>Your next activity</h2>
       <p role="status" aria-live="polite">
         {status}
       </p>
@@ -108,7 +108,7 @@ export function RecommendationCard() {
         <label className="block">
           Recommendation subject
           <select
-            className="block min-h-11 w-full rounded border border-slate-500 p-2"
+            className="ui-select"
             value={subject}
             disabled={busy}
             onChange={(e) => void load(e.target.value)}
@@ -124,7 +124,7 @@ export function RecommendationCard() {
       {recommendation && (
         <>
           {recommendation.topic && (
-            <h3 className="font-semibold">{recommendation.topic}</h3>
+            <h3 className="recommendation-topic">{recommendation.topic}</h3>
           )}
           <p>{recommendation.learner_text}</p>
           {recommendation.topic_id && (
@@ -134,7 +134,7 @@ export function RecommendationCard() {
                 {recommendation.estimated_minutes} minutes
               </p>
               <button
-                className={button}
+                className="ui-button ui-button-primary"
                 disabled={busy}
                 onClick={() => {
                   setBusy(true);
@@ -172,8 +172,9 @@ export function RecommendationCard() {
           {recommendation.diagnostic_suggested && (
             <p>
               <Link
-                className="inline-flex min-h-11 items-center underline"
+                className="ui-text-link"
                 href="/diagnostic"
+                prefetch={false}
               >
                 Gather broader evidence with a diagnostic
               </Link>
@@ -189,10 +190,7 @@ export function RecommendationCard() {
         Refresh recommendation
       </button>
       <p>
-        <Link
-          className="inline-flex min-h-11 items-center underline"
-          href="/onboarding"
-        >
+        <Link className="ui-text-link" href="/onboarding" prefetch={false}>
           Profile and sign in
         </Link>
       </p>

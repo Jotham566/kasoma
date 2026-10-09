@@ -1,4 +1,11 @@
 import { Requests } from "./requests";
-export default function Privacy() {
-  return <Requests />;
+import { exportNotice } from "./export-notice";
+
+export default async function Privacy({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const query = await searchParams;
+  return <Requests exportNotice={exportNotice(query.export_error)} />;
 }

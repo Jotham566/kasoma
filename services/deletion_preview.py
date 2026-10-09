@@ -39,6 +39,7 @@ from services.domain.data_requests import (
     LegalHold,
     LegalHoldReceipt,
 )
+from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag, FlagHistory, FlagMutationReceipt
 from services.domain.identity import (
     AuthSession,
@@ -164,6 +165,9 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     add(LegalHold, LegalHold.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
     add(LegalHoldReceipt, LegalHoldReceipt.hold_id.in_(holds), "SIX_YEARS_AFTER_COMPLETION")
     add(DataExport, DataExport.request_id.in_(requests), "EXPIRES_AFTER_24_HOURS")
+    add(ExportJob, ExportJob.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
+    # Includes unclaimed/failed leases as well as published 24-hour copies.
+    add(ExportGeneration, ExportGeneration.request_id.in_(requests), "TRANSIENT_EXPIRY")
     add(ContentFlag, ContentFlag.reporter_id == user, "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION")
     add(FlagHistory, FlagHistory.flag_id.in_(flags), "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION")
     add(

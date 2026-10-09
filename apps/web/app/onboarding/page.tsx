@@ -9,9 +9,8 @@ type Profile = components["schemas"]["ProfileView"];
 type Subject = components["schemas"]["SubjectView"];
 type Consent = components["schemas"]["ConsentInput"];
 const client = () => apiClient("", crypto.randomUUID());
-const inputClass = "block w-full rounded border border-slate-500 p-3 mt-1 mb-4";
-const buttonClass =
-  "rounded bg-slate-900 text-white px-5 py-3 my-2 disabled:opacity-50";
+const inputClass = "ui-input";
+const buttonClass = "ui-button ui-button-primary my-2";
 
 export default function Onboarding() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -186,20 +185,18 @@ export default function Onboarding() {
     );
   }
   return (
-    <main className="mx-auto max-w-2xl p-6">
-      <Link className="underline" href="/">
-        Kasoma home
-      </Link>
-      <h1 className="text-3xl font-semibold my-6">Your Kasoma profile</h1>
-      <p className="mb-4">
+    <main className="profile-page">
+      <p className="eyebrow">Your account · Your learning</p>
+      <h1>Your Kasoma profile</h1>
+      <p className="development-banner">
         Synthetic development only. Use fictional details and local email
-        capture. No learning sessions are available yet.
+        capture. Academic and privacy approvals remain pending.
       </p>
-      <p role="status" aria-live="polite" className="rounded border p-4 my-4">
+      <p role="status" aria-live="polite" className="profile-status">
         {status}
       </p>
       <button
-        className={buttonClass}
+        className="ui-button ui-button-secondary"
         disabled={busy}
         onClick={() => {
           setProfile(null);
@@ -213,6 +210,7 @@ export default function Onboarding() {
       </button>
       {!profile ? (
         <section aria-label="Sign in">
+          <h2>Start with your contact</h2>
           <p>
             Verify your contact to keep your profile connected across devices.
           </p>
@@ -239,6 +237,7 @@ export default function Onboarding() {
       ) : (
         <>
           <section aria-labelledby="profile-heading">
+            <p className="eyebrow">About you</p>
             <h2 id="profile-heading" className="text-xl font-semibold my-4">
               Senior 4 profile
             </h2>
@@ -310,6 +309,7 @@ export default function Onboarding() {
           </section>
           {profile.birth_date && (
             <section aria-labelledby="consent-heading">
+              <p className="eyebrow">Your choices</p>
               <h2 id="consent-heading" className="text-xl font-semibold my-4">
                 Consent and assent
               </h2>
@@ -321,9 +321,18 @@ export default function Onboarding() {
               </p>
               <p className="my-4">
                 {profile.learning_allowed
-                  ? "Required declarations are recorded. Diagnostics are not implemented yet."
+                  ? "Required declarations are recorded. You can continue to synthetic learning activities."
                   : "Learning access is paused until all required declarations are recorded."}
               </p>
+              {profile.learning_allowed && (
+                <Link
+                  className="ui-button ui-button-primary"
+                  href="/diagnostic"
+                  prefetch={false}
+                >
+                  Find your starting point
+                </Link>
+              )}
               {(["SELF", "ASSENT"] as const)
                 .filter((kind) => profile.consent_required.includes(kind))
                 .map((kind) => (

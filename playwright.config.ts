@@ -1,6 +1,15 @@
 import { defineConfig } from "@playwright/test";
 
 const browserName = process.env.KASOMA_E2E_BROWSER ?? "chromium";
+const chromiumChannel = process.env.KASOMA_E2E_CHROMIUM_CHANNEL;
+if (
+  chromiumChannel !== undefined &&
+  (chromiumChannel !== "chromium" || browserName !== "chromium")
+) {
+  throw new Error(
+    "KASOMA_E2E_CHROMIUM_CHANNEL supports only chromium with the chromium engine",
+  );
+}
 if (
   browserName !== "chromium" &&
   browserName !== "firefox" &&
@@ -12,7 +21,11 @@ if (
 export default defineConfig({
   testDir: "./tests/e2e",
   testIgnore: "**/*.ui.spec.ts",
-  use: { baseURL: "http://127.0.0.1:13000", browserName },
+  use: {
+    baseURL: "http://127.0.0.1:13000",
+    browserName,
+    ...(chromiumChannel ? { channel: chromiumChannel } : {}),
+  },
   webServer: [
     {
       command: "uv run --frozen python -m scripts.e2e_api",

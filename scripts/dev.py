@@ -29,9 +29,11 @@ commands = [
         "--loglevel=INFO",
         "--pool=solo",
         "--concurrency=1",
+        "--queues=operations,imports,messaging",
         "--beat",
         "--schedule=.local/celerybeat",
     ],
+    ["make", "worker-exports"],
     ["corepack", "pnpm", "--filter", "@kasoma/web", "dev"],
 ]
 processes = []

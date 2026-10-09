@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 
 type Schema = components["schemas"];
-const button =
-  "min-h-11 rounded-lg border border-slate-500 px-4 py-2 disabled:opacity-50";
+const button = "ui-button ui-button-secondary";
 
 export function Hints({
   sessionId,

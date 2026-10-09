@@ -1,6 +1,6 @@
 """Read-only, allowlisted self-service export; never serialize ORM rows wholesale."""
 
-from collections.abc import Generator, Iterator
+from collections.abc import Callable, Generator, Iterator
 from contextlib import ExitStack, closing
 from datetime import date, datetime
 from typing import Any
@@ -25,6 +25,7 @@ from services.domain.assessment import (
 from services.domain.content import ItemVersion
 from services.domain.curriculum import Competency, Concept, Subject, Topic
 from services.domain.data_requests import DataRequest
+from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag
 from services.domain.identity import Consent, Identifier, IdentityEvent, LearnerSubject, User
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
@@ -53,17 +54,29 @@ CHUNK_BYTES = 16_384
 class ProjectionReader:
     """Bound ORM hydration and close every cursor, including projection failures."""
 
-    def __init__(self, db: Session, stack: ExitStack) -> None:
+    def __init__(
+        self,
+        db: Session,
+        stack: ExitStack,
+        *,
+        record_limit: int | None = None,
+        checkpoint: Callable[[], None] | None = None,
+    ) -> None:
+        if record_limit is not None and not 1 <= record_limit <= 100_000:
+            raise ValueError("Invalid projection record limit")
         self.db, self.stack = db, stack
-        self.remaining = MAX_RECORDS
+        self.remaining = MAX_RECORDS if record_limit is None else record_limit
+        self.checkpoint = checkpoint or (lambda: None)
 
     def rows(self, query: Select[Any], *, scalar: bool = True) -> Iterator[Any]:
+        self.checkpoint()
         result = self.db.execute(
             query.limit(self.remaining + 1).execution_options(yield_per=BATCH_SIZE)
         )
         self.stack.callback(result.close)
         try:
             for row in result:
+                self.checkpoint()
                 self.remaining -= 1
                 if self.remaining < 0:
                     raise IdentityError("EXPORT_LIMIT_REACHED", 409)
@@ -79,8 +92,20 @@ def project(identity: IdentityService, db: Session, actor: UUID, target: UUID) -
 
 
 def encoded_project(
-    identity: IdentityService, db: Session, actor: UUID, target: UUID, *, max_bytes: int | None
+    identity: IdentityService,
+    db: Session,
+    actor: UUID,
+    target: UUID,
+    *,
+    max_bytes: int | None,
+    record_limit: int | None = None,
+    chunk_bytes: int | None = None,
+    checkpoint: Callable[[], None] | None = None,
 ) -> Generator[bytes, None, None]:
+    size = CHUNK_BYTES if chunk_bytes is None else chunk_bytes
+    if not 1 <= size <= 65_536:
+        raise ValueError("Invalid projection chunk size")
+
     def metadata() -> dict[str, Any]:
         # Preserve generation/completion time at the end of the read, as in ADR-028.
         return DataExportBundle(
@@ -88,16 +113,21 @@ def encoded_project(
         ).model_dump(mode="json", exclude={"records"})
 
     with ExitStack() as stack:
-        source = _records(identity, db, actor, ProjectionReader(db, stack))
+        source = _records(
+            identity,
+            db,
+            actor,
+            ProjectionReader(db, stack, record_limit=record_limit, checkpoint=checkpoint),
+        )
         with closing(encode_records(source, metadata, max_bytes=max_bytes)) as chunks:
             pending = bytearray()
             for chunk in chunks:
                 view = memoryview(chunk)
                 while view:
-                    room = CHUNK_BYTES - len(pending)
+                    room = size - len(pending)
                     pending.extend(view[:room])
                     view = view[room:]
-                    if len(pending) == CHUNK_BYTES:
+                    if len(pending) == size:
                         yield bytes(pending)
                         pending.clear()
             if pending:
@@ -272,6 +302,26 @@ def _records(
     yield ("data_requests", None)
     for r in rows(select(DataRequest).where(DataRequest.user_id == actor).order_by(DataRequest.id)):
         yield ("data_requests", fields(r, "id kind created_at completed_at retention_due_at"))
+    yield ("export_jobs", None)
+    job_fields = "request_id status created_at queued_at updated_at finished_at attempts failure"
+    for r in rows(
+        select(*(getattr(ExportJob, name) for name in job_fields.split()))
+        .join(DataRequest, DataRequest.id == ExportJob.request_id)
+        .where(DataRequest.user_id == actor)
+        .order_by(ExportJob.request_id),
+        scalar=False,
+    ):
+        yield ("export_jobs", fields(r, job_fields))
+    yield ("export_copies", None)
+    copy_fields = "request_id created_at published_at expires_at size"
+    for r in rows(
+        select(*(getattr(ExportGeneration, name) for name in copy_fields.split()))
+        .join(DataRequest, DataRequest.id == ExportGeneration.request_id)
+        .where(DataRequest.user_id == actor)
+        .order_by(ExportGeneration.id),
+        scalar=False,
+    ):
+        yield ("export_copies", fields(r, copy_fields))
     yield ("channel_links", None)
     for r in rows(select(ChannelLink).where(ChannelLink.user_id == actor).order_by(ChannelLink.id)):
         yield (

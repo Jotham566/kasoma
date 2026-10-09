@@ -13,9 +13,11 @@ from sqlalchemy.engine import make_url
 
 from apps.api.main import create_app
 from scripts.assessment_fixtures import seed_assessment
+from scripts.e2e_exports import install as install_exports
 from services.config import Settings
 from services.content_imports import process_imports
 from services.database import engine_for
+from services.export_processing import process_one as process_export
 from services.identity import IdentityService
 from services.identity_contracts import OTPRequest, OTPVerify
 from services.providers import FakeMessagingProvider
@@ -76,16 +78,19 @@ def main() -> None:
     config.whatsapp_app_secret = SecretStr("synthetic-e2e-channel-signing-000000000")
     config.whatsapp_outbound_enabled = True
     stop = Event()
+    app = create_app(config, service)
+    exports = install_exports(app, service)
 
     def drain_imports() -> None:
         while not stop.wait(0.2):
             process_imports(service)
             process_messages(service)
+            process_export(service, exports)
 
     worker = Thread(target=drain_imports, daemon=True)
     worker.start()
     try:
-        uvicorn.run(create_app(config, service), host="127.0.0.1", port=18000, access_log=False)
+        uvicorn.run(app, host="127.0.0.1", port=18000, access_log=False)
     finally:
         stop.set()
         worker.join(timeout=5)

@@ -314,10 +314,344 @@ synchronous limits, authorization and retention remain unchanged.
 FR-ID-006/NFR-SEC-001/002/NFR-MNT-001 private MinIO adapter: `services/export_storage.py`,
 24 fake-provider cases and a real local-only owned-object integration case. Bounds apply before
 reads and connections close on all paths. [Verification](E8_PRIVATE_EXPORT_STORAGE_VERIFICATION.md).
-Native storage is unavailable; hosted actual-service acceptance is pending. No runtime delivery
+Native storage is unavailable; hosted actual-service CI 37962081120 passed at `bb2f4eb`, now on main. No runtime delivery
 path or new retention decision is enabled; ADR-048 remains proposed.
 
 Incremental encoding and private format hosted regression passed at `a485bb6` (CI 37949902270,
 657 Python) and `8c08890` (CI 37950849215, 696 Python), each with 66 browser, five tooling, one
 isolated UI and full service/recovery/security/container checks. Both are on main; completed
 branches removed. This verifies their internal boundaries, not full asynchronous fulfillment.
+
+
+FR-ID-006 async lifecycle work in progress: ADR-048 proposal, internal export job/status types
+and additive migration 0025 are under implementation. No route/worker registration or completed
+requirement is claimed. Queue/snapshot/publication/cleanup/download and acceptance tests must
+travel together before this slice is committed or promoted.
+
+Async export progress: [in-progress evidence](E8_ASYNC_EXPORT_VERIFICATION.md) records 23 isolated
+PostgreSQL queue/claim/snapshot/publication/cleanup/download/failure cases and complete fake-storage
+delivery of a 12,000-event synthetic history beyond both original caps. Fifteen existing export
+regressions pass. Authenticated API/browser/worker integration remains incomplete; no requirement
+is marked complete from these internal results.
+
+FR-ID-006/FR-OPS-002/NFR-SEC-002 in-progress cleanup cursor: `services/export_cleanup_cursor.py`
+and 13 deterministic contract cases enforce scoped keys, bounded reads, finite one-hour retention,
+phase alternation and safe restart after invalid state/cache outages. Eight attachment transport
+cases cover exact lengths, failure/cancellation and resource closure. The current 554 unit/contract
+and five tooling checks pass. No scheduled worker or HTTP route is enabled by these helpers.
+
+
+Migration 0025 clean-schema coverage and synthetic logical recovery pass (56 tables/272 rows,
+280 ms); restricted-role regression and source/dependency security checks pass. Job/generation
+recovery fixtures, absolute provider-read cancellation, enabled worker/API/proxy/UI acceptance
+and actual scoped MinIO lifecycle verification remain outstanding under ADR-048.
+
+
+FR-ID-006/NFR-SEC-001/002/NFR-OBS-001/NFR-MNT-001 async transport progress: the signed local
+reader passes 22 deterministic plus one real TCP dribble/cancellation case; isolated API routes
+and shared authenticated decoding pass ownership, frozen transfer, corruption/revocation and
+expiry checks. 590 unit/contract, 35 focused lifecycle/API and 15 existing export cases pass.
+Worker tasks have dedicated-queue envelopes and closed observability, but runtime registration,
+hard-kill recovery, web proxy/UI, operations and complete acceptance are outstanding.
+See [current evidence](E8_ASYNC_EXPORT_VERIFICATION.md); ADR-048 remains proposed.
+
+
+FR-ID-006/FR-OPS-002/NFR-MNT-001 worker evidence: `make test-export-worker` passes five policy/
+closed-error cases and an isolated real CLI hard-kill/replacement/lease-recovery case on macOS.
+The test exposed and verified the fix for spawned task registration. No ordinary worker timeout,
+provider, data or deletion permission changes. Actual application activation remains gated.
+
+
+NFR-MNT-001 local resource correction: a broad native run passed 151 integration cases but had
+86 fixture errors after PostgreSQL exhausted Docker's default 64 MiB `/dev/shm` and entered
+recovery, plus the two known unavailable-MinIO failures. Compose now sets `shm_size: 512mb`.
+`make services-db` recreated only the PostgreSQL container with its existing named volume intact;
+inspection confirms a healthy service and 536870912-byte shared-memory ceiling. SQL timeouts,
+acceptance thresholds and developer schemas remain unchanged. The serial rerun passes 590 unit/contract and 238 integration cases with zero setup errors;
+its only two failures are the unavailable-MinIO cases. Actual storage acceptance remains open.
+
+The real Uvicorn/API/middleware client-disconnect test passes: closing a partial attachment cancels
+the in-flight async reader and closes its resources. Current focused lifecycle/API count is 37.
+
+
+FR-ID-006/NFR-REL-002 recovery follow-up: the isolated logical drill now publishes a synthetic
+async export before backup, requires nonempty job/generation records, verifies restored publication
+guards and decrypts the restored manifest against in-memory synthetic encrypted objects. Frozen
+bytes match; source/destination inventories remain unchanged. Native `make recovery-drill` passes
+56 tables/285 rows in 262 ms with no cleanup failure. This is database/key compatibility evidence,
+not object-storage backup, namespace remapping, production PITR or RPO/RTO acceptance.
+
+The unwired web attachment helper passes exact-length, metadata, cancellation and deadline checks.
+`make format lint test-tooling openapi-check` passes, including 21 tooling cases; application
+contracts remain unchanged. ADR-048 and the complete async delivery slice remain unaccepted.
+
+Recovery follow-up regression: `make format lint test-export-jobs test-unit` passes 40 focused
+PostgreSQL cases, 590 unit/contract and 21 tooling cases. Three new cases prove read-only export
+verification rejects corrupt ciphertext, missing objects and mismatched expected bytes.
+
+
+FR-ID-006/NFR-SEC-001/002 web gateway integration: owner export-job paths accept GET/POST;
+export-file accepts GET only and rejects cross-site/same-site attachment requests. The attachment
+uses the private cookie-derived Authorization header, requests identity encoding, rejects redirects
+and keeps credentials out of URLs. Initial headers retain the eight-second deadline; successful
+attachments move to the separate 300-second streaming deadline. Closed error mapping cancels the
+unread upstream error body. Disconnects abort either phase. `make format lint test-tooling` passes
+31 tooling cases, including ten new private-fetch/error/deadline cases. This supersedes the earlier
+unwired-helper note; API registration and learner controls remain pending.
+
+
+Snapshot sealing regression passes: after the export's repeatable-read snapshot is established,
+the independent API commits the final diagnostic answer before export sections are read. The
+result still contains the original 14 unreleased answers and no grades/mastery disclosure; retry
+is byte-identical. A new request includes all 15 released results. `make format lint test-export-jobs
+build` passes 41 focused PostgreSQL cases and the production web build. Final formatting/lint/types/
+documentation/OpenAPI checks pass; generated application contracts remain unchanged.
+
+
+Attachment navigation failure handling (FR-ID-006, NFR-SEC-001/002): before a successful
+attachment response starts, a closed upstream failure on an explicit navigation returns a
+no-store 303 to the fixed local privacy page. Its query contains only an allowlisted error code,
+never credentials, record identifiers, diagnostics or a return URL. The privacy page resolves
+that code to a fixed accessible alert. Programmatic requests retain JSON/status errors;
+cross-site/same-site rejection does not redirect. Mid-stream errors still abort the transfer and
+cannot be converted into a successful file or a late redirect. Native attachment links must rely
+on server Content-Disposition, without a `download` attribute that might save a redirected page.
+`make format lint test-tooling build` passes 32 tooling cases and the production web build.
+Real Next/API HTTP checks are running through `make test-export-gateway`; these do not require or
+claim a browser-engine download journey. Learner queue/status controls and API activation remain
+pending under ADR-048.
+
+`make format lint test-export-gateway` passes both real Next/API HTTP cases in 6.8 seconds.
+Navigation gets a fixed local redirect and rendered alert; programmatic errors stay JSON;
+unsupported methods and same-site/cross-site requests are denied. These HTTP-client checks do
+not assert native browser save/cancellation behavior or successful MinIO attachment delivery.
+
+
+FR-OPS-002/003 export monitoring: the existing ADMIN-only operations endpoint now includes
+bounded queued/running/current terminal-failure counts and oldest pending age from durable SQL.
+Failure observations include only currently FAILED jobs with finished_at in the inclusive last
+24 hours; future finishes are excluded. Explicit retry removes the failed observation and resets
+pending age; automatic retry retains the original command age. No identifiers, grant fields,
+manifest/object references or source data are returned. Counts reuse the 10,000 cap/at-least flag.
+The generated contract and operations page include the metrics and unavailable-state wording.
+Configurable local warning defaults are OPS_EXPORT_FAILURE_THRESHOLD=1 and
+OPS_EXPORT_AGE_SECONDS=300 (bounded 1–10,000 and 60–86,400 respectively). These engineering
+thresholds are not legal fulfillment deadlines or proof of delivery. ADR-048 remains proposed;
+export API/worker activation and learner controls remain pending.
+
+Operations evidence: `make test-operations` passes 19 contract/PostgreSQL cases, including real
+queue-to-running-to-terminal-failure/retry transitions, inclusive 24-hour bounds, exclusion of
+future finishes, exact alert thresholds/recovery and minimized output. The first broad unit run
+caught omitted EXPORT_FAILED/EXPORT_STALLED values in the analytics alert schema; the schema was
+updated without weakening its exact-match guard. Final `make format lint test-unit build
+openapi-check` passes 593 unit/contract and 32 tooling cases plus generated contracts and production
+web build. Browser assertions for the metrics were added but remain unexecuted pending engines.
+
+
+FR-ID-006/FR-OPS-002/NFR-MNT-001 launch policy: `make worker-exports` now defines the dedicated
+single-concurrency prefork consumer, prefetch multiplier 1, explicit exports queue and importable
+shared tasks. It starts no Beat scheduler. Native and Compose ordinary workers explicitly consume
+only operations/imports/messaging. The normal development launcher still starts only the existing
+ordinary worker/scheduler; export Beat registration, automatic startup and owner routes remain
+disabled pending the complete slice. The manual consumer command is not feature acceptance.
+
+`make format lint test-export-worker` passes seven cases. The real subprocess test derives its
+launch flags from `make -n worker-exports`, substituting only the isolated synthetic application,
+queue/node identity and diagnostic verbosity. A non-cooperative provider is hard-killed, a new PID
+runs, the database lease recovers, and a message on another generated queue remains unconsumed.
+The test removes only its own Redis namespace after stopping its subprocess group. Production
+110/120-second limits remain unchanged; the test fixture accelerates them to 0.5/1.5 seconds.
+
+Launch follow-up `make format lint test-unit openapi-check` passes 594 unit/contract and
+32 tooling cases; generated contracts match. The separate seven-case worker run includes real
+hard-stop and foreign-queue isolation evidence. Automatic launch/scheduler, owner UI and full
+storage/browser acceptance remain pending; no commit or promotion is claimed.
+
+
+Candidate wiring for local synthetic acceptance (not promotion): the application now registers
+owned export commands/status/attachments and the two scheduled tasks. `make dev` starts the
+dedicated consumer alongside the existing sole scheduler; the application Compose profile includes
+an export-worker with its own targeted health check. Ordinary workers retain exclusive selection
+of operations/imports/messaging. Container smoke includes and preserves the prior running state
+of the new worker. Generated contracts include the actual registered owner endpoints.
+
+Learner controls use the generated client for explicit prepare/status/retry, retain ambiguous
+command keys in memory, and save READY copies via a plain attachment link without a Blob. A
+separate synthetic E2E fixture uses in-memory encrypted objects; no live storage/model/messaging
+provider participates in those tests. The real Next/API HTTP journey now passes command/replay,
+READY polling, exact-length frozen attachment and pre-response failure navigation (three cases).
+The registered API's 41 focused PostgreSQL cases and seven worker cases pass. Browser journeys
+were added but remain unexecuted while engine installation runs. ADR-048's prior disabled notes
+are historical; its promotion/release gate is unchanged. No production deployment is authorized.
+
+
+FR-OPS-002/NFR-MNT-001: each Compose worker now checks its explicit node identity and requires
+that node's pong. A healthy export consumer cannot mask an unavailable ordinary worker (or vice
+versa). Deterministic checks exercise both actual Compose probes with own, foreign, missing and
+invalid replies. This corrects health reporting; queue separation and the sole scheduler remain
+unchanged. Runtime container verification remains pending image completion.
+
+
+Health and gateway follow-up: `make format lint test-export-worker` passes all 15 cases,
+including both actual Compose probes rejecting foreign/missing/invalid replies and the real
+hard-stop/lease-recovery case. `make format lint test-export-gateway` passes all three real
+Next/API HTTP cases. Unauthenticated attachment requests must now return exactly 401
+REAUTH_REQUIRED (or the corresponding fixed navigation redirect); a missing route/404 no longer
+passes the regression. These are not native browser download or complete container acceptance.
+Docker PostgreSQL, Redis, Mailpit and web are currently healthy; API/worker images, MinIO and
+browser engines are still building/installing. No commit or main promotion is claimed.
+
+
+FR-ID-006 interrupted-download acceptance: the isolated E2E process now offers per-generation
+corruption/stall controls over its in-memory encrypted store and a bounded 700-event synthetic
+history. Installation refuses any database search path other than the harness's random E2E
+schema. Fixture routes are absent from application entry points, images and generated contracts;
+the web gateway does not expose them. No real storage or external provider participates.
+Four deterministic fixture checks pass within the 606-case unit suite. New browser journeys
+require mid-stream corruption/cancellation to fail, release the reader and preserve a complete
+frozen retry. They are added but not yet executed pending browser installation. The actual
+Next/API HTTP suite additionally exercises the same faults independently of native browsers.
+
+
+Fault transport result: `make format lint test-export-gateway` passes all three HTTP cases
+(8.7 seconds), now including a multi-chunk synthetic export, corrupt second-chunk failure,
+client timeout/disconnect during a stalled second read, observed reader closure and exact frozen
+retry after each failure. This uses the real API/Next transport with fake storage. It does not
+substitute for native browser save/cancel or MinIO verification. `make check-docs` passes.
+
+
+NFR-COMP-001/NFR-MNT-001: add `make e2e-chromium-full`, an explicit supplementary command
+using the installed pinned full Chromium in new headless mode. It retains both shards and all
+assertions; normal CI and the three-engine acceptance requirement remain unchanged. This allows
+real-browser progress during the separate headless-shell download, without restarting the live
+installer or substituting an unpinned system browser. Execution evidence follows separately.
+
+
+First full-Chromium shard: 13/14 tests passed, including native background-command recovery,
+saving frozen attachments, user cancellation, corrupt second-chunk failure and successful retry.
+The old administrator privacy-review test selected every export in the shared queue; concurrent
+new export fixtures made its final assertion ambiguous. Scope its export/deletion locators to
+the exact references returned by that learner's requests, retaining all permission/review/
+download assertions. Both Chromium shards are being rerun; no complete browser pass is claimed.
+
+
+Full pinned Chromium result: `make format lint e2e-chromium-full` passes both shards,
+14 + 14 = 28 tests (25 browser journeys and three HTTP-only gateway cases). This includes
+background-command lost acknowledgement, native attachment saves/frozen retry, cancellation,
+corrupt second-chunk failure and reader closure, existing privacy review/holds, operations
+metrics, narrow touch reflow and the existing learning/content/channel journeys. The ambiguous
+admin locator failure is resolved using exact owned references; no assertions were removed.
+`make security-source openapi-check` also passes: no secret leaks and matching generated contracts.
+Firefox/WebKit, default headless-shell execution, native MinIO, full application containers and
+hosted regression remain outstanding. This does not grant production or ADR-048 acceptance.
+
+
+Learner UI next-slice readiness: [review and acceptance plan](E6_LEARNER_UI_READINESS.md)
+identifies the existing functional screens and the remaining shared navigation/home/recommendation
+work for FR-REV-006 and NFR-ACC-001/BW-001/COMP-001. No visual acceptance or new feature is claimed.
+
+
+Learner UI foundation candidate (FR-REV-006, NFR-ACC-001/BW-001/COMP-001): shared learner
+navigation and skip link, consistent home/recommendation styling and explicit synthetic-preview
+notice now use existing routes and API state. Shared navigation replaces redundant progress/history
+menus; staff routes retain their separate workspace. Navigation prefetch is disabled. No backend,
+consent, grade, mastery or retention behavior changes. New 320/1280-pixel, enlarged-text, keyboard,
+axe and anonymous-state browser checks accompany the existing authenticated recommendation suite.
+Build/lint/types passed before the new tests; full regression and screenshot review are pending.
+
+
+Learner UI foundation verification: `make format lint build e2e-chromium-full` passes all
+30 tests (15 per shard), including both new 320/1280-pixel home checks, 200% text reflow,
+44-pixel navigation targets, keyboard skip/focus, active destinations, staff separation, axe,
+and the existing authenticated recommendation/learning/privacy/channel journeys. Cold first-
+question transfer is 175,609 bytes against the unchanged 250,000-byte ceiling. Desktop and
+320-pixel screenshots were inspected with no clipping; local copies are under `.local/ui-review`.
+The web container rebuild succeeded. This is Chromium engineering evidence, not full browser,
+physical-device, screen-reader, academic, brand or pilot acceptance. Subsequent page design
+and the remaining export acceptance gates are still open. No new ADR or API/migration is needed.
+
+
+Onboarding presentation candidate (FR-ID-001/003/004/005, NFR-ACC-001/COMP-001): apply
+consistent field/button/card styling and remove obsolete claims that learning and diagnostics
+are unimplemented. When the server reports learning_allowed, offer the existing diagnostic
+route as a next action. Preserve separate guardian verification/assent, withdrawal, OTP limits,
+session security and synthetic notices. Browser and screenshot verification is in progress.
+
+Local runtime update: API and ordinary worker images built and both containers are healthy.
+Web, PostgreSQL, Redis and Mailpit remain healthy. Fictional email sign-in codes are available
+only through local Mailpit at localhost:8025. MinIO and the dependent export worker remain
+pending; do not equate partial stack health with complete export acceptance.
+
+
+Onboarding result: `make format lint build e2e-chromium-full` passed 30 cases; after adding
+explicit consent-gated next-action and onboarding reflow/screenshot assertions, `make format
+lint e2e-chromium-full` again passed 30 cases. Desktop and 320-pixel onboarding screenshots
+were inspected and retained under `.local/ui-review`. The rebuilt web container is healthy.
+Existing adult/minor/guardian, withdrawal, cookie and retry protections continue to pass.
+
+Local review setup: an initial assessment seed failed because the developer catalog was empty.
+`make seed` populated S4/two subjects/six clusters; its storage-init step still fails because
+MinIO is unavailable. Standard assessment/numeric/diagnostic/reassessment/multiple-choice seeds
+then passed. The consecutive hints seed hit the existing shared fixture OTP cooldown; retrying
+`make seed-hints` after the cooldown passed without weakening authentication limits. All fixtures
+are synthetic and excluded from academic release counts. API, ordinary worker, web, PostgreSQL,
+Redis and Mailpit are healthy; storage/export-worker and other browser engines remain pending.
+
+
+Practice/diagnostic presentation candidate (FR-DIAG-004, FR-REV-005/006, FR-GRD-006,
+NFR-ACC-001/BW-001/COMP-001): apply consistent question cards, selected answer controls and
+primary submit actions. Shared SavedProgress displays only the server's saved-answer count,
+never mastery or a diagnostic score. Preserve hint/solution gating, immutable submissions and
+same-key retries. Browser assertions cover saved progress after acknowledgements, and captures
+cover desktop/mobile questions. Verification is running; no acceptance claim yet.
+
+
+NFR-MNT-001 container build refinement: copy workspace manifests and dependency patches
+before installing the frozen web lockfile, then copy application/package source. This preserves
+pinned dependencies and runtime image behavior while allowing ordinary UI edits to reuse the
+install layer. The previous Dockerfile copied all source before installation, causing repeated
+network downloads on every local visual update. Build/cache evidence remains pending.
+
+
+Practice/diagnostic result: `make format lint build e2e-chromium-full` passes 30 cases after
+the final spacing/button corrections. Native saved-progress values are checked against server
+acknowledgements, including lost-response recovery; keyboard/axe/320-pixel journeys still pass.
+Desktop practice/diagnostic and mobile practice screenshots were inspected. The rebuilt web
+image now reuses the frozen dependency-install layer (`CACHED`) after a source-only change;
+its latest container is healthy. No grading, consent or diagnostic disclosure rules changed.
+
+
+Native storage gate update: the pinned MinIO source build completed and its service is healthy.
+`make seed` now passes both catalog and private storage initialization. `make test-export-storage`
+passes all 59 cases, including real signed async MinIO reads, scope/listing, encrypted round trip,
+anonymous denial and owned-object cleanup. The earlier unavailable-MinIO failures are not waived;
+`make migrate test security` is running again with storage available. The new export worker has
+started and its readiness is being checked. Browser installation remains live.
+
+
+FR-ID-006/NFR-MNT-001 full Docker delivery evidence: `make smoke-export` passed through
+the running Next/API/ordinary Beat/export-worker/MinIO topology. A fresh fictional account
+receives its OTP only in local Mailpit; the probe searches only its own unpredictable recipient,
+verifies via secure-cookie gateway flow, queues a request and waits at most 45 status reads.
+The real scheduled worker published a 2,191-byte private export; exact length, own identifier,
+no-store and frozen retry matched. The probe revokes only its session; normal retention handles
+its synthetic request/copy. No credentials, OTP, identifier or contents are printed.
+
+Add this journey to `make container-smoke`, retaining existing preservation of already-running
+services. Two deterministic fake-transport tests verify bounded local behavior and reject a
+changed retry file; the unit suite passes 608 cases. Full native integration remains in progress.
+This proves local delivery, not production or long-history load acceptance.
+
+
+### Native regression acceptance update — 9 October 2026
+
+FR-ID-006, FR-OPS-002/003, NFR-SEC-001/002, NFR-REL-002 and NFR-MNT-001:
+`make migrate test security` completed successfully with 606 unit/contract, 32 tooling and
+245 integration cases; the later two smoke-probe cases passed in the 608-case unit run.
+Actual MinIO checks now pass, resolving the earlier unavailable-storage failures. Bandit,
+secret boundaries and Python/Node dependency audits pass. `make recovery-drill test-web-content`
+also passes: 56 tables/285 rows restored in 256 ms, immutable/export guards verified, and
+one isolated content-admin browser case. Object-storage recovery and production RPO/RTO
+remain unverified. Evidence: `.local/async-export-complete-native-regression.log` and
+`.local/async-export-final-recovery-ui.log`. Remaining browser matrix, container vulnerability
+scan and hosted CI still gate promotion; ADR-048 remains proposed.

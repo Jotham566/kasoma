@@ -36,6 +36,16 @@ test("FR-REV/GRD: retry after lost acknowledgement, resume, keyboard grading and
     page.getByRole("heading", { name: "Question 1 of 5" }),
   ).toBeVisible();
   await expect(
+    page.getByRole("progressbar", { name: "Saved answers" }),
+  ).toHaveAttribute("value", "0");
+  await expect(
+    page.getByRole("progressbar", { name: "Saved answers" }),
+  ).toHaveAttribute("max", "5");
+  await page.screenshot({
+    path: ".local/ui-review/practice-desktop.png",
+    fullPage: true,
+  });
+  await expect(
     page.getByRole("button", { name: "Show worked solution" }),
   ).toHaveCount(0);
   // NFR-BW-001: a new context has no onboarding/navigation asset cache. The

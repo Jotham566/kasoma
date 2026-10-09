@@ -1,101 +1,97 @@
-# Current Sprint: remaining MVP operational and grading gates
+# Current sprint: export acceptance and learner UI completion
 
-Updated 9 October 2026. Main implementation is `8c08890`. Work remains synthetic/local.
+Updated 9 October 2026. Main remains `bb2f4eb`; current work is uncommitted on
+`codex/async-personal-exports`. All development data is synthetic. No production acceptance,
+academic approval or MVP completion is claimed.
 
-## Verified and promoted
+## Local review stack
 
-Narrow touch learner coverage passed hosted CI 37925290651 at `83c6102`: 66 real-API browser
-executions, one isolated UI, 621 Python and five tooling cases, plus the full setup/recovery/role/
-security/container pipeline. Recovery restored 54 tables/272 rows in 454 ms. Cold transfers were
-192785/194253/193654 bytes, all below 250000. Promoted to main and removed its branch locally/remotely.
-[Evidence](E9_MOBILE_REFLOW_VERIFICATION.md). Physical/branded/mobile acceptance remains open.
+All eight Compose services are running and healthy: web, API, ordinary worker, dedicated export
+worker, PostgreSQL/pgvector, Redis, private MinIO and Mailpit. Keep them running for user review.
 
-Recent merged slices include ADR-045 exact accountability holds (`ce9d9f3`, CI 37924489562),
-MinIO download resilience (`04de7ea`, CI 37923437046), batched export projection (`8c14590`,
-CI 37918757085), and reviewed rubrics/telemetry/security refresh (`ed7d7d5`, CI 37914864557).
-All completed branches are removed. ADR-044 learner short-text delivery and deletion execution
-remain disabled. Earlier E0–E9 evidence is preserved in the requirements register.
+- UI: http://localhost:3000
+- Local email capture: http://localhost:8025
+- Use fictional details only; real learner/guardian data is prohibited.
+- Synthetic choice, numeric, diagnostic, hints, multiple-choice and reassessment fixtures are seeded.
+- `make seed` now passes catalog and private storage initialization.
 
-Evidence: [holds](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md),
-[MinIO](E0_MINIO_DOWNLOAD_RECOVERY.md), [export projection](E8_EXPORT_PROJECTION_VERIFICATION.md),
-[rubrics](E2_REVIEWED_RUBRICS_VERIFICATION.md), [telemetry](E8_MODEL_TELEMETRY_VERIFICATION.md),
-[dependency refresh](E9_DEPENDENCY_REFRESH_2026_10_09.md).
+Earlier MinIO download failures are resolved. The live browser installer completed pinned Chromium
+and its headless shell and is downloading Firefox; WebKit follows. Do not restart a live download
+because output is quiet. See the [local runbook](../runbooks/LOCAL_DEVELOPMENT.md).
 
-## Verified objective load and assessment concurrency
+## Candidate export slice
 
-NFR-PERF-001/002 and NFR-SCL-001 have a verified local engineering baseline under ADR-046.
-The isolated real-HTTP baseline creates 2,000 synthetic registrations, 500 active learners and
-288 original reviewed fixtures. Fifty concurrent journeys submit objective answers at a 20/s target.
-No application limits, thresholds or providers are changed.
+Requirements: FR-ID-006, FR-OPS-002/003, NFR-SEC-001/002, NFR-OBS-001 and NFR-MNT-001.
+[ADR-048](../decisions/ADR/048-asynchronous-owned-export-delivery.md) remains proposed until its
+full acceptance gates pass. Candidate API, learner controls and scheduler/worker wiring are
+active locally; do not promote unverified work to main.
 
-The first profile exposed START p95 652.530 ms despite a mixed p95 of 30.115 ms. Per-operation
-gates now prevent masking. ADR-046 shares immutable content read locks while still excluding
-retirement, limits manual candidate work and batches final plan eligibility checks. Ordering,
-permission, consent, content, grading/mastery and channel rules remain intact.
+Implemented: recent-owner queue/status/frozen download, additive job/generation constraints,
+consistent bounded projection, authorization rechecks, encrypted publication, bounded cleanup,
+separate hard-limited worker, exact-length cancellable transport, native browser downloads and
+minimized operational metrics. Existing synchronous exports remain compatible. This does not
+enable deletion or change legal accountability retention.
 
-Final local baseline: 7,000 HTTP requests, 500 completed sessions, 2,500 grades, zero errors,
-50 peak in-flight and successful owned-database cleanup. START p95 is 440.633 ms and objective
-answer p95 27.221 ms; actual dispatch 19.996/s. Startup p99 remains about one second and is a
-risk signal. This is not production or representative long-history/provider acceptance.
-[Full metrics and limitations](E9_OBJECTIVE_LOAD_VERIFICATION.md).
+Current evidence:
 
-Nineteen deterministic harness cases and six PostgreSQL lock/filter cases pass. Full native
-`make format lint test` passed 450 unit/contract and 195 integration cases, including channel
-parity, rubric exclusion and restricted-role checks; only storage/Mailpit failed because MinIO
-is unavailable. Contract/build/security checks pass with no known dependency vulnerabilities.
-Migration/recovery passes (54 tables/272 rows, 238 ms, pgvector/immutable guards, no cleanup failure).
-Hosted CI 37933227560 passed all 646 Python, 66 browser, five tooling and one isolated UI case,
-plus full service/recovery/security/container checks. Promoted `f2dbf8a` and removed its branch.
+- 608 unit/contract and 32 tooling cases pass; lint, formatting and types pass.
+- 59 storage cases pass, including actual signed MinIO reads, private-access denial and owned cleanup.
+- 41 focused lifecycle/API cases and 15 worker checks pass, including real process hard-stop/recovery.
+- Complete native `make migrate test security` passes: 606 unit/contract cases, 32 tooling cases
+  and 245 integration cases, including the previously unavailable real MinIO checks. Two later
+  smoke-probe unit cases also pass in the separate 608-case unit run. Dependency/security checks pass.
+- Full pinned Chromium passes 30 cases across both shards, including native cancellation/corruption,
+  frozen retry, privacy review and operational metrics. Firefox/WebKit and hosted regression remain open.
+- Populated synthetic logical recovery passes again (56 tables/285 rows, 256 ms); object-storage restore
+  and production PITR/RPO/RTO are explicitly unverified.
+- `make container-smoke` passes both eight-service health and a real scheduled export through
+  Next/API/Beat/export-worker/MinIO, with exact-length frozen retry and scoped session logout.
+- Source secret scanning and generated OpenAPI/client checks pass.
 
-## Verified incremental personal-export encoding
+Full chronology and evidence boundaries: [export verification](E8_ASYNC_EXPORT_VERIFICATION.md).
+The isolated content-admin browser check also passes. Container vulnerability scanning is running.
+Before promotion: finish the remaining browser matrix, container security and hosted CI; resolve any failures, then record ADR status and promotion evidence.
 
-FR-ID-006 and NFR-SEC-001/002/MNT-001: apply the existing full-envelope 2 MiB cap while projecting
-rows, with bounded collected chunks and deterministic cursor cleanup. Preserve all disclosure,
-row accounting, retry, authorization and retention rules. Native focused tests pass. Full native regression passed 458 unit/contract and 198 integration
-cases; unavailable MinIO caused its only failure. Hosted CI 37949902270 passed at `a485bb6` (657 Python/66 browser plus full gates); promoted
-to main and removed its branch. [Evidence](E8_EXPORT_ENCODING_VERIFICATION.md).
-This internal ADR-028 refactor does not enable large-history fulfillment or need a new ADR.
+## Learner UI work
 
-## Verified private export artifact format
+Requirements: FR-ID-001/003/004/005, FR-DIAG-004/005, FR-REV-005/006, FR-GRD-006,
+FR-MST-004/005 and NFR-ACC-001/BW-001/COMP-001/LOC-001/MNT-001.
 
-ADR-047 defines a bounded internal encrypted chunk/manifest format for FR-ID-006 and
-NFR-SEC-001/002/MNT-001. Tests verify binding, integrity, limits, failure/cancellation and round-trip
-use of the owned projection. [Verification](E8_PRIVATE_EXPORT_ARTIFACT_VERIFICATION.md).
-496 unit/contract, five tooling and 15 focused PostgreSQL export cases pass, along with lint/types,
-contracts and security. Hosted CI 37950849215 passed at `8c08890` (696 Python/66 browser plus full gates); promoted
-to main and removed its branch. No application route/worker/storage publication is enabled.
+The running web now includes shared learner navigation and keyboard skip access, a responsive
+home/recommendation layout, onboarding cards/fields and consent-gated diagnostic navigation,
+and clearer practice/diagnostic questions with a server-derived saved-answer progress bar.
+Synthetic notices and existing consent, scoring, hint/solution, sealing and replay rules remain.
+Staff routes remain separate. No external assets, fonts, analytics or provider dependencies were added.
 
-## Active slice: bounded private export storage
+Thirty Chromium cases pass, including 320/1280-pixel home/onboarding checks, 200% text reflow,
+44-pixel navigation targets, keyboard/axe, existing learning journeys and saved-progress assertions.
+Desktop/mobile captures were inspected and retained under `.local/ui-review`. The current web image
+is deployed locally; source-only rebuilds reuse the frozen dependency layer. This is not physical-
+device, screen-reader, approved-brand or pilot acceptance.
 
-The ADR-047 MinIO adapter bounds reads before allocation, closes responses on every path and
-uses only exact UUID references under the owned prefix. 520 unit/contract plus five tooling and
-24 focused fake-provider cases pass. The real MinIO case cannot run successfully without the
-native service; hosted acceptance is required. [Evidence](E8_PRIVATE_EXPORT_STORAGE_VERIFICATION.md).
-[ADR-048](../decisions/ADR/048-asynchronous-owned-export-delivery.md) is a proposal, not an accepted
-lifecycle. Queue/publication/cleanup/streaming work remains next and is not enabled.
+Next UI work: finish progress/history and account/privacy/channel presentation, then staff screens;
+review action hierarchy and supported-device usability. Keep API state authoritative, sparse-evidence
+wording accurate and the 250,000-byte cold-question transfer gate unchanged.
+[Plan and evidence](E6_LEARNER_UI_READINESS.md).
 
-## Native environment
+## Verified main baseline
 
-Docker 29.8.2 and PostgreSQL/Redis work using the documented Docker CLI PATH. The pinned MinIO
-source checksum passed, but module downloads encountered EOFs; the final cache/retry build is
-exhausted all three attempts with module EOFs. Native Playwright has Chromium/FFmpeg; the
-headless-shell retry also exhausted its downloads after connection resets. Native storage/browser acceptance remains incomplete. No volumes or
-developer data were reset. Host-native Ollama connectivity passes with cloud disabled; no inference,
-model download or Gemini evaluation ran.
+Main `bb2f4eb` passed hosted CI 37962081120 for the private storage adapter: 721 Python cases,
+66 browser executions and the full recovery/security/container pipeline. Its completed branch was
+removed. Earlier merged evidence includes [incremental exports](E8_EXPORT_ENCODING_VERIFICATION.md),
+[encrypted artifact format](E8_PRIVATE_EXPORT_ARTIFACT_VERIFICATION.md),
+[objective load](E9_OBJECTIVE_LOAD_VERIFICATION.md), [mobile reflow](E9_MOBILE_REFLOW_VERIFICATION.md),
+[reviewed rubrics](E2_REVIEWED_RUBRICS_VERIFICATION.md) and
+[accountability holds](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md).
+See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete historical register.
 
-## Next MVP delivery and release gates
+## Remaining MVP and release gates
 
-FR-ID-006 large-history delivery needs the asynchronous worker/artifact/download contract in the
-[readiness assessment](E8_LARGE_HISTORY_EXPORT_READINESS.md). Resolve snapshot authorization,
-leases/retries, atomic publication, orphan cleanup, encryption binding, resource ceilings and
-owner-only streaming before enablement. Existing synchronous row/byte caps remain unchanged.
+Learner short-text integration/fallback and academic calibration, aggregate telemetry, complete
+hold coverage, deletion/anonymization and accountability-retention processors remain incomplete.
+Do not expand into mature whitepaper features or silently reduce these requirements.
 
-The [short-text assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) tracks pending/neutral results,
-worker/fallback/mastery integration and academic calibration. Automatic scoring remains disabled.
-Aggregate telemetry, representative load evidence, remaining hold coverage, accountability expiry
-and the reviewed anonymization/recovery proposal remain incomplete.
-
-The [release register](RELEASE_GATES.md) tracks kickoff/capacity, academic mappings/rights/approved
-inventory and benchmark, privacy/guardian/DPIA, Week 8 provider, production OTP/MFA/roles,
-PITR/RPO/RTO, branded/physical-mobile browser and pilot approvals. The 12-week deadline and all
-acceptance thresholds remain unchanged; the MVP is not complete.
+The [release register](RELEASE_GATES.md) retains external gates: kickoff/capacity, approved academic
+mappings/rights/inventory/benchmark, privacy and safeguarding approval, Week 8 providers, production
+security/operations, PITR/RPO/RTO, supported devices and pilot sign-offs. Synthetic tests are not
+substitutes. No kickoff date or delivery-week acceptance is inferred from engineering progress.

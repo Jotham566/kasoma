@@ -13,6 +13,7 @@ from services.health import Health
 from services.operations import emit_alerts, evaluate
 from services.operations_contracts import (
     Count,
+    ExportCounts,
     OperationCounts,
     OperationsView,
     OperationThresholds,
@@ -98,6 +99,8 @@ def test_operational_alerts_are_allowlisted_metadata(caplog):
         ("ops_failed_import_threshold", 0),
         ("ops_import_age_seconds", 59),
         ("ops_flag_backlog_threshold", 10001),
+        ("ops_export_failure_threshold", 0),
+        ("ops_export_age_seconds", 59),
     ],
 )
 def test_operational_limits_fail_closed(field, value):
@@ -112,6 +115,32 @@ def test_operational_worker_schedule():
         "schedule": 60.0,
     }
     assert "kasoma.monitor_operations" in app.tasks
+
+
+def test_export_alert_threshold_boundaries_and_recovery():
+    health = Health(status="ok", database="up", redis="up")
+    limits = OperationThresholds(
+        failed_imports=1,
+        import_age_seconds=300,
+        unresolved_flags=20,
+        export_failures=2,
+        export_age_seconds=300,
+    )
+    exports = ExportCounts(
+        queued=Count(value=1),
+        running=Count(value=1),
+        failed_finished_24h=Count(value=1),
+        oldest_pending_seconds=299,
+    )
+    assert evaluate(health, "up", values(exports=exports), limits) == []
+    breached = exports.model_copy(
+        update={"failed_finished_24h": Count(value=2), "oldest_pending_seconds": 300}
+    )
+    alerts = evaluate(health, "up", values(exports=breached), limits)
+    assert {a.code for a in alerts} == {"EXPORT_FAILED", "EXPORT_STALLED"}
+    assert all(a.severity == "WARNING" for a in alerts)
+    assert evaluate(health, "up", values(exports=exports), limits) == []
+    assert evaluate(health, "up", values(exports=None), limits) == []
 
 
 @pytest.mark.parametrize(

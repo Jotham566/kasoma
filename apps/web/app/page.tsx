@@ -23,81 +23,92 @@ export default async function Home() {
     /* Render a safe, recoverable state without printing connection errors. */
   }
   return (
-    <main className="mx-auto max-w-2xl p-8">
-      <p className="text-sm font-semibold tracking-wide">KASOMA</p>
-      <h1 className="mt-8 text-4xl font-semibold">Know what to revise next.</h1>
-      <p className="mt-6">Revision for Senior 4 Mathematics and Physics.</p>
-      <p className="mt-4">
-        Synthetic practice is available for development. Diagnostic estimates
-        are available with synthetic fixtures. Academic approval remains
-        pending.
-      </p>
-      <div className="mt-8 rounded-xl border border-slate-300 p-5">
-        <Status>
-          {available
-            ? "Services are ready."
-            : "Services are temporarily unavailable. Please try again."}
-        </Status>
-        {/* Full navigation deliberately refreshes server readiness. */}
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a
-          className="mt-4 inline-flex min-h-11 items-center underline"
-          href="/"
-        >
-          Check again
-        </a>
+    <main className="home-page">
+      <div className="development-banner">
+        <span className="environment-tag">Development preview</span>
+        <p>Synthetic practice only. Academic approval remains pending.</p>
       </div>
-      <Link
-        href="/onboarding"
-        className="mt-6 inline-flex min-h-11 items-center underline"
+      <section className="home-intro" aria-labelledby="home-title">
+        <p className="eyebrow">Senior 4 · Mathematics &amp; Physics</p>
+        <h1 id="home-title">Know what to revise next.</h1>
+        <p className="home-description">
+          Find a starting point, practise a little, and build a clearer picture
+          of your learning.
+        </p>
+      </section>
+      <div className="home-grid">
+        <RecommendationCard />
+        <aside className="home-options" aria-label="Other ways to get started">
+          <section className="surface-card">
+            <span className="step-label">Find your starting point</span>
+            <h2>Not sure where to begin?</h2>
+            <p>
+              A subject diagnostic helps identify what to practise. Your results
+              include how much evidence supports each estimate.
+            </p>
+            <Link
+              className="ui-button ui-button-secondary"
+              href="/diagnostic"
+              prefetch={false}
+            >
+              Start a subject diagnostic
+            </Link>
+          </section>
+          <section className="surface-card">
+            <span className="step-label">Make it your session</span>
+            <h2>Have a topic in mind?</h2>
+            <p>
+              Choose a topic for focused practice, with reviewed hints and
+              worked solutions after you answer.
+            </p>
+            <Link className="ui-text-link" href="/revise" prefetch={false}>
+              Practise a topic <span aria-hidden="true">→</span>
+            </Link>
+          </section>
+        </aside>
+      </div>
+      <section
+        className="home-account surface-card"
+        aria-labelledby="account-title"
       >
-        Set up a synthetic learner profile
-      </Link>
-      <Link
-        href="/revise"
-        className="mt-6 inline-flex min-h-11 items-center underline"
-      >
-        Practise a topic
-      </Link>
-      <Link
-        href="/diagnostic"
-        className="mt-6 inline-flex min-h-11 items-center underline"
-      >
-        Start a subject diagnostic
-      </Link>
-      <nav
-        aria-label="Learning history and progress"
-        className="flex flex-wrap gap-4"
-      >
+        <div>
+          <p className="eyebrow">Your learning, your account</p>
+          <h2 id="account-title">Pick up where you left off.</h2>
+          <p>
+            Sign in to keep your saved answers and learning history together.
+          </p>
+        </div>
         <Link
-          className="inline-flex min-h-11 items-center underline"
-          href="/progress"
+          className="ui-button ui-button-secondary"
+          href="/onboarding"
+          prefetch={false}
         >
-          Progress
+          Set up a synthetic learner profile
         </Link>
-        <Link
-          className="inline-flex min-h-11 items-center underline"
-          href="/history"
-        >
-          History
-        </Link>
-      </nav>
-      <Link
-        className="inline-flex min-h-11 items-center underline"
-        href="/privacy"
-      >
-        Your data requests
-      </Link>
-      <Link
-        className="inline-flex min-h-11 items-center underline"
-        href="/channels/whatsapp"
-      >
-        WhatsApp channel
-      </Link>
-      <RecommendationCard />
-      <small className="mt-6 block text-slate-600">
-        Support reference: {requestId}
-      </small>
+      </section>
+      <footer className="home-footer">
+        <nav aria-label="Account and privacy" className="home-footer-links">
+          <Link href="/privacy" prefetch={false}>
+            Your data requests
+          </Link>
+          <Link href="/channels/whatsapp" prefetch={false}>
+            WhatsApp channel
+          </Link>
+        </nav>
+        <div className="service-status">
+          <Status>
+            {available
+              ? "Services are ready."
+              : "Services are temporarily unavailable. Please try again."}
+          </Status>
+          {/* A full navigation refreshes server readiness. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/">Check again</a>
+        </div>
+        <small className="support-reference">
+          Support reference: {requestId}
+        </small>
+      </footer>
     </main>
   );
 }
