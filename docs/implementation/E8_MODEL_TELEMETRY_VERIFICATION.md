@@ -1,8 +1,7 @@
 # E8 synthetic model telemetry verification
 
 Requirements: NFR-OBS-001, FR-OPS-002; supports FR-OPS-004 and AI specification §3.
-Status: implemented; 427 unit/contract and five tooling checks pass; dependency audit blocks
-promotion and hosted regression is pending.
+Status: implemented; 427 unit/contract and five tooling checks pass; hosted regression is pending.
 
 The existing short-text rehearsal now emits a closed model.call event per actual gateway dispatch
 and a model.rehearsal outcome, sharing a caller-supplied UUID or fresh correlation UUID. The same
@@ -42,3 +41,6 @@ instrumentation; its limited correlation/fingerprint policy is recorded here and
 `make format lint openapi-check test-unit` passed. Bandit, local secret checks and Python audit
 passed, but `make security` failed the JavaScript audit on newly reported high-severity Next.js,
 sharp and source-map-js advisories. Dependency remediation and fresh regression are required.
+
+The dependency refresh resolves the reported audit failures; full post-install lint/types/contracts,
+427 unit/contract plus five tooling checks, build and security pass. Hosted regression remains pending.

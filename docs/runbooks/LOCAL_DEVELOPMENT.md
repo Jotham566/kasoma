@@ -659,3 +659,8 @@ part of this workflow. Dashboard AI_USAGE remains unavailable pending durable ag
 
 Use `make test-reviewed-rubrics` for focused real-database rubric checks before the recovery drill;
 CI runs the same focused check without replacing full regression or recovery.
+
+For the October security refresh, the runtime Next.js pin is 16.3.8 with bounded Sharp/source-map-js
+overrides. ADR-031's lint-only plugin/patch is unchanged and its five tooling checks pass. Use
+`make deps-lock setup` then `make lint test build security` after dependency edits. See
+[dependency verification](../implementation/E9_DEPENDENCY_REFRESH_2026_10_09.md).

@@ -238,3 +238,8 @@ The rubric SQL guard incorrectly treated the existing item_versions.document JSO
 Normalize a local comparison value to JSONB before equality/existence checks; retain the original
 column, stored documents and hashes. Existing fresh/upgrade and projection tests cover this path;
 complete hosted rerun remains required.
+
+9 October dependency remediation (NFR-MNT-001/security gate): runtime Next.js is pinned to 16.3.8,
+with affected Sharp/source-map-js versions resolved to 0.35.5/1.2.2. `make deps-lock setup` and
+post-install lint/types/contracts/build, 427 unit/contract plus five tooling checks, and both audits
+pass with no known vulnerabilities reported. Hosted application/container checks remain pending.
