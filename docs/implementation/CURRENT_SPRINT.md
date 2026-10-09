@@ -1,82 +1,60 @@
 # Current Sprint: remaining MVP operational and grading gates
 
-Updated 9 October 2026. Main implementation is `ed7d7d5`. Completed branches through rubric context, restricted
-login, learning-record holds and ephemeral expiry have been removed. Work remains synthetic/local.
+Updated 9 October 2026. Main implementation is `8c14590`. Work remains synthetic/local.
 
-## Verified implementation
+## Verified and promoted
 
-| Slice | Commit / hosted CI | Evidence |
-| --- | --- | --- |
-| Signed five-question WhatsApp practice | `5063528` / 37220225176 | 469 Python, 20 browser, five tooling checks; [report](E7_CONVERSATION_VERIFICATION.md) |
-| Minimized channel operations | `34950b0` / 37221185319 | 479 Python, 20 browser, five tooling checks; [report](E8_CHANNEL_OPERATIONS_VERIFICATION.md) |
-| Strict synthetic rubric candidate validation | `3b74f5b` / 37221835579 | 519 Python, 20 browser, five tooling checks; [report](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md) |
-| Fake dual-pass/budgeted rehearsal | `2ce14c3` / 37222368566 | 534 Python, 20 browser, five tooling checks; [report](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md) |
-| Isolated logical recovery | `42a6e08` / 37223872075 | 550 Python, 20 browser, five tooling checks; 52 tables/270 rows restored; [report](E9_RECOVERY_VERIFICATION.md) |
-| API response-start timing | `74a4a8f` / 37226011029 | 556 Python, 60 browser, five tooling checks; [report](E8_REQUEST_TIMING_VERIFICATION.md) |
-| Three-engine journeys and cold transfer | `96a16d0` / 37224172033 | 550 Python, 60 browser, five tooling checks; 191389–194127 bytes; [report](E9_BROWSER_COVERAGE_VERIFICATION.md) |
+Hosted CI [37918757085](https://github.com/Jotham566/kasoma/actions/runs/37918757085)
+passed at `8c14590`: 427 unit/contract plus 184 integration tests (611 Python), five tooling tests,
+63 real-API browser executions and one isolated editor test. Clean setup/migrations/seed, focused
+rubric/role checks, lint/format/types/contracts/build, security/source/image scans and container smoke
+passed. Recovery restored 54 tables/272 synthetic rows in 385 ms with pgvector/immutable guards and
+no cleanup failures. Cold transfer was 191501/194260/193634 bytes, below 250000 for all engines.
+The implementation is on main and its completed branch is removed locally and remotely.
 
-Each run also passed clean setup/migrations/seed, lint/types/contracts/build, security scans/audits
-and container smoke. Earlier native database/browser attempts failed before assertions while Docker was unavailable.
-Hosted evidence does not substitute for native application acceptance. The first
-recovery run failed on a table-name check; it was fixed and the complete pipeline rerun.
+The preceding reviewed-rubric/telemetry release passed CI 37914864557 at `ed7d7d5`
+(609 Python, 63 browser, one isolated UI and five tooling tests). ADR-044 authoring/review is verified
+with learner delivery disabled; minimized model telemetry and the Next.js/Sharp/source-map-js
+security refresh are verified. All completed branches through export projection have been removed.
 
-Restricted-login verification, learning-record holds and bounded identity expiry passed CI
-37228338121 (574 Python, 60 browser, five tooling checks). Explicit rubric context passed CI
-37228984415 (587 Python, 60 browser, five tooling checks), including all preceding changes and
-clean migrations/recovery/security/container checks. See [permissions](E9_RUNTIME_ROLE_VERIFICATION.md),
-[holds](E8_LEARNING_HOLDS_VERIFICATION.md), [expiry](E1_EPHEMERAL_EXPIRY_VERIFICATION.md) and
-[rehearsal](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md). Production credentials remain unchanged.
+Evidence: [rubrics](E2_REVIEWED_RUBRICS_VERIFICATION.md),
+[telemetry](E8_MODEL_TELEMETRY_VERIFICATION.md),
+[dependencies](E9_DEPENDENCY_REFRESH_2026_10_09.md),
+[export projection](E8_EXPORT_PROJECTION_VERIFICATION.md).
+Earlier verified E0–E9 slices and their individual evidence remain in the requirements register.
 
-## Newly verified and promoted
+## Local environment recovery
 
-Hosted CI [37914864557](https://github.com/Jotham566/kasoma/actions/runs/37914864557)
-passed at `ed7d7d5`: 427 unit/contract and 182 integration tests (609 Python total), five tooling
-tests, 63 real-API browser journeys across Chromium/Firefox/WebKit and one isolated editor UI test.
-Clean setup/migrations/seed, eight focused rubric cases, restricted-login verification,
-lint/format/types/contracts/build, dependency/source/image security checks and container smoke all
-passed. The isolated logical recovery restored 54 tables/272 synthetic rows in 455 ms and verified
-pgvector/immutable guards; this is not production PITR/RPO/RTO evidence. Cold question transfers
-were 191529/194251/193635 bytes, each below 250000. Commit `ed7d7d5` is on main; both completed
-rubric/telemetry branches were deleted locally and remotely.
+Native Docker is available (29.8.2). The documented CLI PATH adjustment and
+`make services-db migrate test-reviewed-rubrics test-data-exports` passed: PostgreSQL/Redis healthy,
+eight rubric and eleven export cases verified. Full native `make lint test` passed 427 unit/contract
+and 183 integration cases; its storage/Mailpit case failed because MinIO was not running. Separate
+contract, recovery (54 tables/272 rows, 221 ms), restricted-role and security checks passed, with no
+known vulnerabilities reported. This is not a full native acceptance pass.
 
-FR-CNT-001/002/003/004, FR-GRD-003/004 and NFR-SEC-002: version-pinned reviewed rubrics under
-ADR-044 are verified with learner assignment disabled. [Rubric evidence](E2_REVIEWED_RUBRICS_VERIFICATION.md).
-NFR-OBS-001/FR-OPS-002: minimized fake gateway call/outcome telemetry is verified; durable
-aggregation remains pending. [Telemetry evidence](E8_MODEL_TELEMETRY_VERIFICATION.md).
-NFR-MNT-001: Next.js/Sharp/source-map-js dependency remediation passes the complete pipeline.
-[Dependency evidence](E9_DEPENDENCY_REFRESH_2026_10_09.md).
+The MinIO source download passed its checksum, but `go mod download` later failed with unexpected
+EOFs in four module downloads. Native Playwright installed Chromium/FFmpeg; the headless-shell
+transfer encountered timeout/connection resets and is retrying. No data or volumes were reset.
 
-## Active local verification and next slice
+Next address NFR-MNT-001 build resilience: bounded retries and a verified module cache for the
+same pinned MinIO source build. Preserve checksum verification, fail on exhausted attempts and
+verify real container health/storage once dependencies arrive. Do not replace the approved release
+or weaken network/security checks to make setup pass.
 
-Docker Desktop now responds (29.8.2). The installed CLI needed the macOS PATH adjustment documented
-in the runbook. Approved service image builds and isolated browser downloads are running; native
-migration/seed/database/browser assertions remain pending. Earlier native failures remain historical.
+## Next MVP delivery slice
 
-Next implement the FR-ID-006 personal-export read projection in bounded batches, preserving the v1
-privacy allowlist, sealed diagnostic rules and existing all-or-nothing synchronous limits. Then add
-verified asynchronous large-history delivery under an explicit ADR. The
-[readiness assessment](E8_LARGE_HISTORY_EXPORT_READINESS.md) records snapshot/authorization,
-resource, privacy, expiry and atomic-publication requirements; it is not implementation acceptance.
+FR-ID-006 large-history delivery needs the explicit asynchronous worker/artifact/download contract
+in the [readiness assessment](E8_LARGE_HISTORY_EXPORT_READINESS.md). The accepted projection
+refactor bounds ORM hydration but retains synchronous row/byte caps and current transaction policy.
+The next design must resolve snapshot authorization, leases/retries, atomic publication, orphan
+cleanup, encryption binding, resource limits and owner-only streaming delivery before enablement.
 
-## Dependencies and remaining MVP gates
+The [short-text assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) tracks pending/neutral results,
+worker/fallback/mastery integration and academic calibration. Automatic scoring remains disabled.
+Aggregate telemetry/load evidence, remaining hold coverage, large-history fulfillment, accountability
+expiry and the reviewed anonymization/recovery proposal remain incomplete.
 
-The [short-text integration assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies pending/
-neutral results, idempotent worker, fallback and mastery boundaries. Automatic scoring remains
-disabled; academic truth and benchmark/calibration approval cannot be inferred from fake agreement.
-Complete aggregate telemetry/load evidence, remaining hold coverage, large-history exports and
-accountability expiry. Prepare the concrete anonymization/recovery proposal before destructive
-execution. Current slices do not rewrite immutable evidence.
-
-The [release register](RELEASE_GATES.md) tracks missing kickoff/capacity, exact NCDC mappings, rights
-and approved inventory, expert benchmarks, privacy/guardian/DPIA, Week 8 provider choice, production
-OTP/MFA/restricted roles, managed PITR/RPO/RTO, branded/mobile/versioned browser and pilot sign-offs.
-The approved 12-week deadline and acceptance thresholds remain unchanged. The MVP is not complete.
-
-FR-ID-006 projection work is now implemented on `codex/export-projection`: batched ORM reads,
-owned joins/subqueries and SQL diagnostic sealing preserve the existing bounded v1 delivery.
-Local lint/types/contracts and 427 unit/contract tests pass; focused native database and full hosted
-acceptance remain pending. [Projection verification](E8_EXPORT_PROJECTION_VERIFICATION.md).
-
-Native follow-up: `make services-db migrate test-reviewed-rubrics test-data-exports` now passes
-(eight rubric and eleven export cases). PostgreSQL/Redis and migrations are verified on this Mac.
-The full native suite/recovery/security is running; MinIO build and browser downloads remain pending.
+The [release register](RELEASE_GATES.md) tracks required kickoff/capacity, academic mappings/rights/
+approved inventory and benchmark, privacy/guardian/DPIA, Week 8 provider, production OTP/MFA/roles,
+PITR/RPO/RTO, branded/mobile browser and pilot approvals. The 12-week deadline and all acceptance
+thresholds remain unchanged; the MVP is not complete.

@@ -86,3 +86,67 @@ must not be naively started before waiting for authentication locks: stale sessi
 would weaken authorization. Specify the worker's durable authorization boundary, isolation/retry
 policy and connection usage explicitly; test concurrency rather than assuming that a transaction
 alone makes every read current and consistent.
+
+## Async delivery design to resolve in the implementation ADR
+
+The following is a design proposal, not a new accepted contract or permission to publish artifacts.
+
+- Keep existing small synchronous exports and their retry documents compatible. A separate explicit,
+  recent-OTP owner command queues a durable job for the pending EXPORT request. Queue/status/download
+  must remain owner-only; ADMIN review does not grant download access. Never persist a bearer token.
+- Use one job per request and a new unpredictable generation ID per claim. Database claim state,
+  finite leases, attempt limits and a closed failure reason support visible retry/dead-letter status.
+  A late worker cannot publish after losing its lease or after another path completes the request.
+- Establish the read snapshot only after the account authorization lock has been acquired. A short
+  coordinating transaction may hold that lock while a separate repeatable-read transaction starts
+  and validates the durable request/active account. Release the coordinator once the snapshot is
+  established, rather than blocking all learning for the entire export. Final publication rechecks
+  the live account, request and generation lease in a fresh transaction. Test this two-connection
+  protocol against revocation, closure, competing synchronous completion and interrupted workers.
+- Stream the same explicit allowlist into a versioned, understandable JSON artifact. Bound database
+  fetch batches, individual serialized records, plaintext chunks, overall bytes/rows and execution
+  time. Resource exhaustion leaves the request pending with a visible failure, never truncated
+  completion. An increased resource ceiling is not a legal response deadline or pilot SLO.
+- Store independently encrypted bounded chunks in the approved private MinIO boundary. Object keys
+  use unpredictable generation/chunk references without identity fields. Bind ciphertext to its
+  generation, ordinal and format; authenticate each chunk and verify recorded sizes/digests. The
+  existing local encryption boundary may be reused only with explicit cross-object binding; raw
+  standalone ciphertext must not be swappable between export requests.
+- Only a complete manifest with exact section counts, ordered chunk references, whole-artifact
+  integrity and generated-at time can be published. Commit request completion, retention deadline,
+  manifest pointer, receipt/audit/outbox evidence and availability expiry atomically. A failed
+  storage upload/database commit leaves private unpublished objects for bounded orphan cleanup.
+  Readers must never discover artifacts merely by listing a bucket or guessing an object key.
+- Serve through an authenticated application endpoint with recent OTP and current revocation/owner
+  checks. Do not expose public or bearer object URLs. The API and web proxy must preserve streaming,
+  no-store, server-generated attachment names, bounded timeouts and incomplete-transfer failure.
+  Verify chunk integrity before emitting its plaintext and abort if the artifact cannot complete;
+  test that the web download does not treat an interrupted response as a successful complete file.
+- Fix availability to 24 hours after successful publication. Read-time expiry is mandatory even if
+  cleanup is delayed. Cleanup removes disposable manifest/chunks and unpublished generations while
+  retaining minimized six-year request accountability and applicable holds. Do not delete an object
+  based on age alone without confirming the generation's publication/lease state.
+- Include job/manifest metadata in owner export and deletion-impact inventory only through an
+  explicit minimized projection. Do not recursively include past plaintext artifacts or storage
+  keys. Operational events carry counts, durations, closed reasons and correlation IDs, never raw
+  answers, identities, object locations, bearer tokens or provider diagnostics.
+
+Before accepting this design, verify the existing worker's 15/20-second task limits, the database's
+2-second statement timeout and the proxy's 8-second request timeout against the chosen bounded job
+and download protocol. Do not silently increase global limits or assume Celery redelivery alone
+provides exactly-once completion. Dedicated bulk-operation limits, recovery behavior and tests must
+be part of the ADR and implementation. The current projection refactor does not change these limits.
+
+The proposed encrypted chunk envelope should include the request ID, generation ID, ordinal,
+format version and payload inside the authenticated ciphertext; successful decryption alone does
+not establish that an object belongs to the requested export. Compare each envelope to trusted
+manifest metadata before emitting any plaintext. Verify whole-file integrity before emitting the
+last chunk so an integrity failure cannot produce an apparently complete attachment.
+
+Prefer a same-origin authenticated attachment navigation for large downloads, avoiding a full
+JavaScript Blob allocation on constrained learner devices. If adopting that path, retain strict
+cookie/site-origin controls, server-injected API authorization, explicit user action, current owner/
+revocation checks, bounded streaming time, cancellation and Content-Length/incomplete-transfer
+behavior. A test must show that a revoked or corrupted mid-stream download is reported as failed.
+The existing buffered synchronous route remains compatible until a separately tested replacement
+is enabled. Choosing chunk/artifact/job limits and API routes remains part of the future ADR.

@@ -1,8 +1,7 @@
 # E8 bounded personal-export projection verification
 
 Requirements: FR-ID-006, NFR-SEC-001/002, NFR-MNT-001.
-Status: implemented; local lint/types/contracts and 427 unit/contract checks pass;
-all 11 focused real-database export cases pass natively; full regression pending.
+Status: verified synthetic regression and promoted to main.
 
 The synchronous ADR-028 export now reads related rows through server-side cursors in batches of
 100, closing cursors on success, row-limit failure and consumer exceptions. Owner-filtered SQL
@@ -39,7 +38,23 @@ Run `make lint openapi-check test test-data-exports` plus the existing hosted br
 container gates before promotion. The [large-history readiness](E8_LARGE_HISTORY_EXPORT_READINESS.md)
 records the remaining asynchronous snapshot, artifact, resource and owner-delivery work.
 
-Native `make services-db migrate test-reviewed-rubrics test-data-exports` passed on 9 October:
-PostgreSQL/Redis are healthy, migrations applied, eight rubric cases and eleven export cases passed.
-Full native regression/recovery/security is running. MinIO build and browser download acceptance
-remain separate and pending.
+## Acceptance results
+
+Hosted CI [37918757085](https://github.com/Jotham566/kasoma/actions/runs/37918757085)
+passed at `8c14590`: 427 unit/contract plus 184 integration tests (611 Python), five tooling tests,
+63 real-API browser executions and one isolated editor test. Clean setup/migrations/seed, focused
+rubric/role checks, lint/format/types/contracts/build, security/source/image scans and container smoke
+passed. Recovery restored 54 tables/272 synthetic rows in 385 ms with pgvector/immutable guards and
+no cleanup failures. Cold transfer was 191501/194260/193634 bytes, below 250000 for all engines.
+The implementation is on main and its completed branch is removed locally and remotely.
+
+Native Docker is available (29.8.2). The documented CLI PATH adjustment and
+`make services-db migrate test-reviewed-rubrics test-data-exports` passed: PostgreSQL/Redis healthy,
+eight rubric and eleven export cases verified. Full native `make lint test` passed 427 unit/contract
+and 183 integration cases; its storage/Mailpit case failed because MinIO was not running. Separate
+contract, recovery (54 tables/272 rows, 221 ms), restricted-role and security checks passed, with no
+known vulnerabilities reported. This is not a full native acceptance pass.
+
+The MinIO source download passed its checksum, but `go mod download` later failed with unexpected
+EOFs in four module downloads. Native Playwright installed Chromium/FFmpeg; the headless-shell
+transfer encountered timeout/connection resets and is retrying. No data or volumes were reset.

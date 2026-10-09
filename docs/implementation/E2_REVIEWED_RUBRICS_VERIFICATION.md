@@ -64,3 +64,8 @@ reproduced a label association problem after textarea remount. Explicit unique R
 label associations fix the lookup without weakening multiline value or API round-trip assertions.
 The complete successful run above supersedes those failures. Browser binaries use .local/browsers
 to avoid the shared-cache lock failure seen during the first native install.
+
+Native follow-up: Docker PostgreSQL/Redis, migrations and all eight focused rubric cases pass.
+The full native suite passed 183 integration cases but failed storage while MinIO was unavailable.
+MinIO module downloads subsequently failed with unexpected EOFs; browser binaries also encountered
+network timeouts/resets. Hosted acceptance above remains valid; native setup is still incomplete.

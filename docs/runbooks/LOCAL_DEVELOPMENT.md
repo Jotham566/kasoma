@@ -690,3 +690,13 @@ and Redis without waiting for the MinIO source build. It uses the same approved 
 and loopback ports as `make services`. It does not replace `make services seed` or verify object
 storage. The export reader batches ORM hydration while retaining ADR-028 synchronous limits and
 privacy filters; see [projection verification](../implementation/E8_EXPORT_PROJECTION_VERIFICATION.md).
+
+The 9 October native database retry passed migrations, focused rubric/export suites and the logical
+recovery/restricted-login checks. Full `make test` still needs MinIO/Mailpit: a database-only stack
+correctly fails the storage integration test. Do not treat `make services-db` as full setup.
+
+Current native limitation: interrupted module downloads can still fail the MinIO build even with
+Docker running. The 9 October source checksum passed, but four Go module downloads ended in
+unexpected EOFs. Browser downloads also encountered timeout/connection resets. Preserve checksums,
+pins and existing volumes when retrying; daemon/database availability does not establish complete
+local service or browser acceptance.

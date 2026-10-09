@@ -243,13 +243,32 @@ existing bounded synchronous implementation to projection, async delivery and pr
 This is assessment only; large-history fulfillment remains incomplete. Native Docker now responds,
 but local migration/seed/application assertions await the approved image builds/browser downloads.
 
-FR-ID-006/NFR-SEC-001/002/NFR-MNT-001 projection refactor: services/data_export_projection.py and
-tests/integration/test_data_exports.py add bounded ORM hydration, SQL-owned reference/sealing
-queries, exact cap accounting and cursor cleanup. `make services-db` and `make test-data-exports`
-provide focused local verification while full object-storage setup remains separate.
-[Evidence](E8_EXPORT_PROJECTION_VERIFICATION.md): local static/unit checks pass; database/full
-regression pending. This does not satisfy the remaining large-history fulfillment gate.
+## Export projection acceptance and native recovery
 
-Native follow-up: `make services-db migrate test-reviewed-rubrics test-data-exports` now passes
-(eight rubric and eleven export cases). PostgreSQL/Redis and migrations are verified on this Mac.
-The full native suite/recovery/security is running; MinIO build and browser downloads remain pending.
+FR-ID-006/NFR-SEC-001/002/NFR-MNT-001: services/data_export_projection.py and
+tests/integration/test_data_exports.py verify batched ORM hydration, owned SQL reference/sealing
+queries, exact row-cap accounting and cursor cleanup. See
+[projection evidence](E8_EXPORT_PROJECTION_VERIFICATION.md).
+
+Hosted CI [37918757085](https://github.com/Jotham566/kasoma/actions/runs/37918757085)
+passed at `8c14590`: 427 unit/contract plus 184 integration tests (611 Python), five tooling tests,
+63 real-API browser executions and one isolated editor test. Clean setup/migrations/seed, focused
+rubric/role checks, lint/format/types/contracts/build, security/source/image scans and container smoke
+passed. Recovery restored 54 tables/272 synthetic rows in 385 ms with pgvector/immutable guards and
+no cleanup failures. Cold transfer was 191501/194260/193634 bytes, below 250000 for all engines.
+The implementation is on main and its completed branch is removed locally and remotely.
+
+Native Docker is available (29.8.2). The documented CLI PATH adjustment and
+`make services-db migrate test-reviewed-rubrics test-data-exports` passed: PostgreSQL/Redis healthy,
+eight rubric and eleven export cases verified. Full native `make lint test` passed 427 unit/contract
+and 183 integration cases; its storage/Mailpit case failed because MinIO was not running. Separate
+contract, recovery (54 tables/272 rows, 221 ms), restricted-role and security checks passed, with no
+known vulnerabilities reported. This is not a full native acceptance pass.
+
+The MinIO source download passed its checksum, but `go mod download` later failed with unexpected
+EOFs in four module downloads. Native Playwright installed Chromium/FFmpeg; the headless-shell
+transfer encountered timeout/connection resets and is retrying. No data or volumes were reset.
+
+This supersedes earlier pending projection/native-database entries. Large-history delivery remains
+incomplete; the readiness document is a proposal, not accepted asynchronous behavior. NFR-MNT-001
+next covers bounded verified dependency-download recovery without replacing the MinIO source pin.

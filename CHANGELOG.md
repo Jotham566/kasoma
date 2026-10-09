@@ -1,10 +1,23 @@
 # Changelog
 
-## In progress — bounded personal-export reads
+## 9 October 2026 — verified bounded export projection
+
+Hosted CI [37918757085](https://github.com/Jotham566/kasoma/actions/runs/37918757085)
+passed at `8c14590`: 427 unit/contract plus 184 integration tests (611 Python), five tooling tests,
+63 real-API browser executions and one isolated editor test. Clean setup/migrations/seed, focused
+rubric/role checks, lint/format/types/contracts/build, security/source/image scans and container smoke
+passed. Recovery restored 54 tables/272 synthetic rows in 385 ms with pgvector/immutable guards and
+no cleanup failures. Cold transfer was 191501/194260/193634 bytes, below 250000 for all engines.
+The implementation is on main and its completed branch is removed locally and remotely.
+
+- Native migrations, focused rubric/export tests, recovery, role and security checks pass. Full native integration has one unavailable-storage failure; MinIO/Playwright downloads encountered network interruptions.
+- Record the asynchronous export design proposal and the next verified dependency-download resilience work; neither enables new learner scoring or large-history delivery.
+
+## 9 October 2026 — bounded personal-export reads
 
 - Replace retained ORM lookup collections with batched reads and owner-filtered SQL joins/subqueries (FR-ID-006, NFR-SEC-001/002, NFR-MNT-001).
 - Preserve diagnostic sealing, exact related-row accounting, all-or-nothing synchronous limits and existing authorization/retention. No API, migration or architecture change.
-- Add synthetic memory/batch, exact-cap and cursor-cleanup regressions plus focused database commands. Eight rubric and eleven focused export cases now pass natively; full regression remains pending. Async large-history delivery is separate.
+- Add synthetic memory/batch, exact-cap and cursor-cleanup regressions plus focused database commands. Eight rubric and eleven focused export cases pass natively; full hosted acceptance is recorded above. Async large-history delivery is separate.
 
 ## 9 October 2026 — verified rubric, telemetry and dependency release
 
