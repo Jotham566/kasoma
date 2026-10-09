@@ -28,6 +28,8 @@
 
 ## Work in progress — asynchronous owned export lifecycle
 
+- Pass updated-database HIGH/CRITICAL scans for both local API and web images after the bounded download-timeout adjustment.
+
 - Audit export acceptance against concrete security, cleanup, large-history and interruption assertions; retain explicit browser/container/hosted promotion gates.
 
 - Allow a finite configurable 30-minute container scan timeout after the default five-minute vulnerability database download timed out. Keep current database updates and HIGH/CRITICAL failure gates unchanged.

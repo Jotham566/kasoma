@@ -1,10 +1,10 @@
 # Current sprint: export acceptance and learner UI completion
 
-Updated 9 October 2026. Main remains `bb2f4eb`; export/UI candidate `c08341b` is pushed on
-`codex/async-personal-exports`, with hosted CI 37979693427 running. Subsequent progress/history
-UI follow-up is committed locally as `7968206`; staff navigation is committed as `162f173`.
-Both await push after the earlier candidate run finishes. All development data is synthetic. No production acceptance,
-academic approval or MVP completion is claimed.
+Updated 9 October 2026. Main remains `bb2f4eb`. Export candidate `c08341b` and UI follow-ups
+through `be42dbd` are complete locally on `codex/async-personal-exports`. They are being pushed
+together for final-head hosted CI, superseding candidate run 37979693427 without claiming it
+passed. Native container scanning and the latest full-stack export smoke now pass. All data is
+synthetic; no production, academic or MVP completion is claimed.
 
 ## Local review stack
 
@@ -51,8 +51,8 @@ Current evidence:
 - Source secret scanning and generated OpenAPI/client checks pass.
 
 Full chronology and evidence boundaries: [export verification](E8_ASYNC_EXPORT_VERIFICATION.md).
-The isolated content-admin browser check also passes. Container vulnerability scanning timed out during its initial database download; a retry with
-a configurable 30-minute per-image timeout is running. No vulnerability result is claimed.
+The isolated content-admin browser check also passes. Container vulnerability scanning now passes for API and web with no HIGH/CRITICAL findings.
+The initial five-minute database-download timeout was resolved by the configurable 30-minute bound.
 Before promotion: finish the remaining browser matrix, container security and hosted CI; resolve any failures, then record ADR status and promotion evidence.
 
 ## Learner UI work

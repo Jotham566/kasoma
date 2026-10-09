@@ -464,3 +464,19 @@ remains valid; the hosted candidate and container scan are still running.
 
 This audit does not accept ADR-048 or authorize main promotion. No acceptance threshold,
 retention policy, provider choice or legal/academic approval changes.
+
+
+Native container security result: `make security-containers` completed successfully for both
+`kasoma-api` and `kasoma-web` with the updated vulnerability database and no HIGH/CRITICAL
+findings. Evidence: `.local/async-export-container-security-retry.log`. The initial attempt
+failed before scanning due to the database-download deadline; extending only the finite
+timeout resolved it. This closes the local image-scan gate, not hosted/latest-head browser
+acceptance or production security approval.
+
+
+Latest UI container verification: `make container-smoke` passes with all eight services healthy
+and an actual scheduled owned export through web/API/Beat/export-worker/MinIO. The 2,191-byte
+synthetic JSON copy has an exact-length frozen retry; the smoke session is revoked afterward.
+Existing services remain running. Evidence: `.local/final-ui-container-smoke.log`.
+The completed UI follow-ups are now queued for one final-head hosted run; the earlier candidate
+run is superseded, not treated as passed. Main/ADR acceptance still requires the final run.

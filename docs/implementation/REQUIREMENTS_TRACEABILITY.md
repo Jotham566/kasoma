@@ -770,3 +770,19 @@ human usability acceptance. Source/contract/doc checks pass. The web image built
 Evidence: `.local/content-editor-ui-checks.log`, `.local/content-editor-source-checks.log`
 and `.local/ui-review/content-editor-*.png`. No academic eligibility or publication change;
 no API/migration or ADR change. Remaining browser/pilot gates stay open.
+
+
+Native container security result: `make security-containers` completed successfully for both
+`kasoma-api` and `kasoma-web` with the updated vulnerability database and no HIGH/CRITICAL
+findings. Evidence: `.local/async-export-container-security-retry.log`. The initial attempt
+failed before scanning due to the database-download deadline; extending only the finite
+timeout resolved it. This closes the local image-scan gate, not hosted/latest-head browser
+acceptance or production security approval.
+
+
+Latest UI container verification: `make container-smoke` passes with all eight services healthy
+and an actual scheduled owned export through web/API/Beat/export-worker/MinIO. The 2,191-byte
+synthetic JSON copy has an exact-length frozen retry; the smoke session is revoked afterward.
+Existing services remain running. Evidence: `.local/final-ui-container-smoke.log`.
+The completed UI follow-ups are now queued for one final-head hosted run; the earlier candidate
+run is superseded, not treated as passed. Main/ADR acceptance still requires the final run.
