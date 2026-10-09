@@ -2,7 +2,7 @@
 
 Updated 9 October 2026. Main remains `bb2f4eb`; export/UI candidate `c08341b` is pushed on
 `codex/async-personal-exports`, with hosted CI 37979693427 running. Subsequent progress/history
-UI work is uncommitted. All development data is synthetic. No production acceptance,
+UI follow-up is committed locally as `7968206`; staff navigation is uncommitted. All development data is synthetic. No production acceptance,
 academic approval or MVP completion is claimed.
 
 ## Local review stack
@@ -76,7 +76,9 @@ Progress/history presentation passes lint/types/build and all 30 Chromium cases,
 inspected without clipping; its rebuilt local web is healthy.
 Privacy/channel presentation passes lint/types/build and all 30 Chromium cases, including mobile
 privacy axe/reflow, frozen export retry, channel STOP/unlink and Kampala expiry. Captures reviewed.
-Next UI work: staff screens and final learner action hierarchy;
+Shared staff navigation passes lint/types/build, 30 Chromium journeys, isolated editor and
+source/contract checks. Desktop/mobile captures reviewed; the rebuilt web image is available.
+Next UI work: staff screen presentation and final learner action hierarchy;
 review action hierarchy and supported-device usability. Keep API state authoritative, sparse-evidence
 wording accurate and the 250,000-byte cold-question transfer gate unchanged.
 [Plan and evidence](E6_LEARNER_UI_READINESS.md).

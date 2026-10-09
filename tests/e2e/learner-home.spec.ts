@@ -81,6 +81,25 @@ for (const width of [320, 1280]) {
     });
     await page.goto("/admin/operations");
     await expect(navigation).toHaveCount(0);
+    const staffNavigation = page.getByRole("navigation", {
+      name: "Workspace navigation",
+    });
+    await expect(staffNavigation).toBeVisible();
+    await expect(
+      staffNavigation.getByRole("link", { name: "Operations", exact: true }),
+    ).toHaveAttribute("aria-current", "page");
+    await expect(
+      staffNavigation.getByRole("link", { name: "Audit", exact: true }),
+    ).toHaveCount(0);
+    await reflow();
+    for (const link of await staffNavigation.getByRole("link").all()) {
+      expect((await link.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+    }
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    await page.screenshot({
+      path: `.local/ui-review/staff-${width}.png`,
+      fullPage: true,
+    });
     await page.getByRole("button", { name: "Refresh operations" }).click();
     await expect(page.getByRole("status")).toContainText(
       "Snapshot unavailable.",

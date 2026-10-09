@@ -203,3 +203,23 @@ time is checked against the server expiry in Africa/Kampala. Privacy/channel mob
 were inspected without clipping. Source/contract/doc checks pass. Evidence:
 `.local/privacy-channel-ui-checks.log` and `.local/privacy-channel-contract-checks.log`.
 Other browser engines and real-device/pilot acceptance remain open.
+
+
+### Staff navigation candidate — 9 October 2026
+
+FR-CNT-001/003/006, FR-OPS-002, FR-ID-006 and NFR-ACC-001/SEC-002/MNT-001:
+add one shared staff header with links to existing content/review, imports, flags, privacy
+review and operations routes. Active destination and 44-pixel controls support narrow screens.
+No staff role is inferred from navigation; each existing API continues to enforce access.
+No Audit link is invented while a dedicated audit screen remains absent. Learner navigation
+stays separate. Browser checks cover narrow/wide header reflow, active destination, axe and
+unauthorized operational denial. Verification is running; no API, migration or ADR change.
+
+
+Staff navigation verification: `make format lint build e2e-chromium-full test-web-content`
+passes 30 Chromium journey cases plus the isolated rubric-editor case. Narrow/wide captures
+were inspected without clipping. Active navigation, 44-pixel targets, axe and anonymous
+operations denial pass. Source secret, generated contract and documentation checks pass.
+The rebuilt web image is ready for local review. Evidence: `.local/staff-navigation-checks.log`,
+`.local/staff-navigation-source-checks.log` and `.local/ui-review/staff-*.png`. No new ADR
+or API/migration change. Full browser/pilot acceptance and remaining staff page design are open.

@@ -616,3 +616,37 @@ body {
     width: 100%;
   }
 }
+
+.staff-header {
+  background: var(--kasoma-paper);
+  border-bottom: 1px solid var(--kasoma-line);
+}
+.staff-header-inner {
+  max-width: 1120px;
+  margin: auto;
+  padding: 1.25rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.staff-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.staff-caption {
+  color: var(--kasoma-muted);
+  font-size: 0.8rem;
+}
+.staff-navigation {
+  flex-basis: 100%;
+}
+@media (max-width: 640px) {
+  .staff-header-inner {
+    padding: 1rem;
+  }
+  .staff-navigation a {
+    flex: 1 1 auto;
+  }
+}

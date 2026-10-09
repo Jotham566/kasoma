@@ -2,6 +2,8 @@
 
 ## Work in progress — learner UI foundation
 
+- Add consistent staff workspace navigation for existing routes with active state, narrow-screen touch controls and unchanged server authorization. Lint/types/build, 30 Chromium journeys and the isolated editor check pass; desktop/mobile captures reviewed.
+
 - Restyle privacy requests and WhatsApp linking for mobile, preserving explicit consent/re-authentication and retry controls; display link-code expiry explicitly in Kampala time. Lint/types/build and all 30 Chromium cases pass; mobile captures reviewed.
 
 - Restyle confidence-aware progress and session history with responsive cards, explicit empty/auth recovery actions and consistent touch controls. Preserve server-derived estimates, diagnostic sealing and pagination; lint/types/build and 30 Chromium cases pass, with desktop/mobile screenshot review.
