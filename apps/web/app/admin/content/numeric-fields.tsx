@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { components } from "@kasoma/api-client";
 
 type Spec = components["schemas"]["NumericSpec"];
-const input = "block w-full rounded border border-slate-500 p-3 mt-1 mb-4";
+const input = "ui-input mb-4";
 
 export function NumericFields({ initial }: { initial?: Spec | null }) {
   const [count, setCount] = useState(initial?.units.length ?? 1);

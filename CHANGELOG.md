@@ -2,6 +2,8 @@
 
 ## Work in progress — learner UI foundation
 
+- Style the content queue/editor and rubric/numeric fields consistently while retaining exact draft and independent-review semantics. Lint/types/build, mobile/axe/exact-save-reload and all 30 Chromium journeys pass; desktop/mobile captures reviewed.
+
 - Apply shared presentation to operations, flags and synthetic imports; preserve unavailable metrics and explicit audited review controls. Lint/types/build and 30 Chromium cases pass; authenticated mobile/desktop captures reviewed.
 
 - Add consistent staff workspace navigation for existing routes with active state, narrow-screen touch controls and unchanged server authorization. Lint/types/build, 30 Chromium journeys and the isolated editor check pass; desktop/mobile captures reviewed.

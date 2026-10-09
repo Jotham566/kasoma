@@ -8,7 +8,7 @@ import { RubricFields } from "./rubric-fields";
 type Context = components["schemas"]["ContentContext"];
 type Document = components["schemas"]["DraftDocument"];
 type Version = components["schemas"]["VersionView"];
-const input = "block w-full rounded border border-slate-500 p-3 mt-1 mb-4";
+const input = "ui-input mb-4";
 
 export function Editor({
   context,
@@ -63,6 +63,8 @@ export function Editor({
   }
   return (
     <form
+      className="surface-card content-editor"
+      aria-label="Draft editor"
       onSubmit={(event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -510,10 +512,7 @@ export function Editor({
           required
         />
       </label>
-      <button
-        disabled={busy}
-        className="rounded bg-slate-900 text-white px-5 py-3 my-3 disabled:opacity-50"
-      >
+      <button disabled={busy} className="ui-button ui-button-primary">
         Save draft
       </button>
     </form>

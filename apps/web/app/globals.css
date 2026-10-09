@@ -695,3 +695,32 @@ body {
     padding: 1.25rem 1rem;
   }
 }
+
+.content-editor {
+  display: grid;
+  gap: 0.75rem;
+}
+.content-editor > label {
+  display: block;
+  font-weight: 600;
+}
+.content-editor fieldset {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--kasoma-line);
+  border-radius: 0.6rem;
+}
+.content-editor legend {
+  max-width: 100%;
+  font-weight: 600;
+  padding: 0 0.3rem;
+}
+.content-workspace pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .content-editor {
+    padding: 1rem;
+  }
+}

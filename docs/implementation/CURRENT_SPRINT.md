@@ -81,7 +81,9 @@ Shared staff navigation passes lint/types/build, 30 Chromium journeys, isolated 
 source/contract checks. Desktop/mobile captures reviewed; the rebuilt web image is available.
 Operations/flags/import presentation passes lint/types/build and 30 Chromium journeys;
 authenticated operations captures reviewed at desktop and 320 pixels.
-Next UI work: content editor presentation and final learner action hierarchy;
+Content editor presentation passes lint/types/build, mobile/axe/exact-save-reload and all
+30 Chromium journeys. Captures reviewed; human usability acceptance remains open.
+Next UI work: final learner action hierarchy and supported-device acceptance;
 review action hierarchy and supported-device usability. Keep API state authoritative, sparse-evidence
 wording accurate and the 250,000-byte cold-question transfer gate unchanged.
 [Plan and evidence](E6_LEARNER_UI_READINESS.md).

@@ -243,3 +243,22 @@ heartbeat and unmeasured instrumentation remain explicit. Source, contract and d
 checks pass. Web image rebuilt. Evidence: `.local/staff-operations-ui-checks.log`,
 `.local/staff-operations-source-checks.log` and `.local/ui-review/operations-*.png`.
 No API, migration or architecture changes; other engines/pilot gates remain open.
+
+
+### Content editor presentation candidate — 9 October 2026
+
+FR-CNT-001/003/005 and NFR-ACC-001/COMP-001/MNT-001: style the existing content/review
+queue, staff preview, author fields and rubric/numeric controls consistently. Fieldsets have
+bounded width and a named draft form; save remains explicit. No document/schema, review,
+rights, eligibility or versioning behavior changes. The isolated controlled-rubric test adds
+desktop/mobile captures, 320-pixel reflow and axe before verifying exact save/reload.
+Verification is running. No API, migration or architectural decision changes.
+
+
+Content editor result: `make format lint build test-web-content e2e-chromium-full` passes
+the isolated mobile/axe/exact-rubric-save/reload test and all 30 Chromium journeys.
+Desktop/mobile captures were inspected without clipping; the long authoring form still needs
+human usability acceptance. Source/contract/doc checks pass. The web image built successfully.
+Evidence: `.local/content-editor-ui-checks.log`, `.local/content-editor-source-checks.log`
+and `.local/ui-review/content-editor-*.png`. No academic eligibility or publication change;
+no API/migration or ADR change. Remaining browser/pilot gates stay open.

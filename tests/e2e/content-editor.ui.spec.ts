@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 import type { components } from "@kasoma/api-client";
 
 type Version = components["schemas"]["VersionView"];
@@ -74,6 +75,21 @@ test("FR-CNT-003: controlled rubric survives save and explicit reload", async ({
   await page
     .getByLabel("Change reason", { exact: true })
     .fill("Synthetic rubric save");
+  await page.screenshot({
+    path: ".local/ui-review/content-editor-desktop.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 320, height: 740 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.screenshot({
+    path: ".local/ui-review/content-editor-mobile.png",
+    fullPage: true,
+  });
   await page.getByRole("button", { name: "Save draft", exact: true }).click();
   await expect(page.getByRole("status")).toHaveText("Version 1: DRAFT.");
   await expect(page.getByLabel("Response format")).toHaveValue("SHORT_TEXT");

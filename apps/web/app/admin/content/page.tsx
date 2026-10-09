@@ -11,8 +11,7 @@ type Document = components["schemas"]["DraftDocument"];
 type Review = components["schemas"]["ReviewView"];
 type ReviewInput = components["schemas"]["ReviewInput"];
 const api = () => apiClient("", crypto.randomUUID());
-const button =
-  "rounded border border-slate-600 px-4 py-3 my-2 disabled:opacity-50";
+const button = "ui-button ui-button-secondary my-2";
 const labels: Record<string, string> = {
   curriculum: "Curriculum and learning-outcome alignment",
   competency_difficulty: "Competency and difficulty tags",
@@ -200,27 +199,21 @@ export default function ContentWorkspace() {
     context?.roles.includes("CONTENT_AUTHOR") &&
     (!selected || selected.author_id === context.actor_id);
   return (
-    <main className="mx-auto max-w-4xl p-6">
-      <Link
-        className="inline-flex min-h-11 items-center underline mr-4"
-        href="/admin/flags"
-      >
+    <main className="staff-page content-workspace">
+      <Link className="ui-text-link" href="/admin/flags">
         Learner flags
       </Link>
-      <Link
-        className="underline inline-flex min-h-11 items-center"
-        href="/onboarding"
-      >
+      <Link className="ui-text-link" href="/onboarding">
         Sign in or refresh staff verification
       </Link>
       <h1 className="text-3xl font-semibold my-6">Content workspace</h1>
       {context?.roles.includes("ADMIN") && (
-        <Link className="underline" href="/admin/operations">
+        <Link className="ui-text-link" href="/admin/operations">
           Operations health
         </Link>
       )}
       {context?.roles.includes("CONTENT_AUTHOR") && (
-        <Link className="underline" href="/admin/content/imports">
+        <Link className="ui-text-link" href="/admin/content/imports">
           Import synthetic draft items
         </Link>
       )}
@@ -228,12 +221,15 @@ export default function ContentWorkspace() {
         Synthetic development only. Workflow approval does not certify academic
         quality or count toward the production content target.
       </p>
-      <p role="status" aria-live="polite" className="border rounded p-4 my-4">
+      <p role="status" aria-live="polite" className="surface-card">
         {status}
       </p>
       {context && (
         <>
-          <section aria-labelledby="queue">
+          <section
+            aria-labelledby="queue"
+            className="surface-card staff-record"
+          >
             <h2 id="queue" className="text-xl font-semibold">
               Items and review queue
             </h2>
@@ -310,7 +306,10 @@ export default function ContentWorkspace() {
             />
           )}
           {selected && (
-            <section aria-labelledby="preview">
+            <section
+              aria-labelledby="preview"
+              className="surface-card staff-record"
+            >
               <h2 id="preview" className="text-xl font-semibold my-4">
                 Staff preview — version {selected.version}, {selected.status}
               </h2>

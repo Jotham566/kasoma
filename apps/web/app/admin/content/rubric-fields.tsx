@@ -5,9 +5,8 @@ import type { components } from "@kasoma/api-client";
 
 type Rubric = components["schemas"]["RubricDraft"];
 type Criterion = components["schemas"]["RubricCriterion"];
-const input = "block w-full rounded border border-slate-500 p-3 mt-1 mb-4";
-const button =
-  "min-h-11 rounded border border-slate-500 px-4 py-2 disabled:opacity-50";
+const input = "ui-input mb-4";
+const button = "ui-button ui-button-secondary";
 const empty = (id: string): Criterion => ({
   criterion_id: id,
   maximum_points: 1,
