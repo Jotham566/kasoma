@@ -6,7 +6,7 @@ Export head `ac4e10f` hosted run 37987018714 was cancelled by the 40-minute job
 limit during `make e2e security containers`. The runner annotation explicitly says
 the maximum execution time was exceeded. It is not a successful full run.
 Timing head `b014070` run 37991389904 failed during service startup: Docker Hub
-returned an unauthenticated pull-rate limit for Mailpit. Application tests were
+returned an unauthenticated pull-rate limit for Mailpit. The standalone content UI check passed, but the full backend regression was
 not reached by that run. Neither run permits main promotion.
 
 ## Changes
@@ -48,3 +48,29 @@ Hosted verification of this remediation remains pending.
 Sources: [official Mailpit mirror documentation](https://mailpit.axllent.org/docs/install/docker/),
 [cache action release](https://github.com/actions/cache/releases/tag/v6.1.0),
 [pinned action definition](https://github.com/actions/cache/blob/55cc8345863c7cc4c66a329aec7e433d2d1c52a9/action.yml).
+
+## Broader registry throttling follow-up
+
+Run 37992401078 at `f9516f7` also failed during service startup, this time on
+PostgreSQL's Docker Hub pull limit. The Mailpit mirror alone was insufficient.
+The CI workflow now merges `https://mirror.gcr.io` into the disposable Linux runner's
+Docker daemon configuration, validates it with `dockerd --validate`, and restarts
+that runner's daemon with a 60-second bound before any application containers start.
+Existing daemon settings and mirrors are preserved. Docker Hub remains the fallback
+for cache misses; cache availability is not guaranteed. Native Docker is never changed.
+
+Both upstream and public-cache manifest inspections for `pgvector/pgvector:0.8.2-pg16`
+returned `sha256:00ba258a66dac104fd5171074a0084462a64a1369d8513f3d0a634e2f24d15bc`.
+This is CI artifact transport, not a production cloud dependency or provider decision.
+No application image version, test or security scan is relaxed. The new
+`make ci-docker-config` command requires Linux GitHub Actions and an explicit temporary
+configuration path; it never installs/restarts Docker itself. Tooling tests cover
+preservation, idempotence, malformed inputs and refusal outside that CI environment.
+Hosted startup and the complete pipeline still require verification.
+
+Source: [public Docker Hub cache configuration](https://docs.cloud.google.com/artifact-registry/docs/pull-cached-dockerhub-images).
+
+Local follow-up validation passes: `make format lint test-tooling check-ci-profile
+security-source`, including all 35 tooling tests, types, document checks and no
+source-secret findings. All eight native Compose services remain healthy. Log:
+`.local/ci-public-cache-checks.log`. This does not prove hosted mirror startup.

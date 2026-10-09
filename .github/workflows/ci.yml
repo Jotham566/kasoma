@@ -30,6 +30,20 @@ jobs:
           path: .local/browsers
           key: playwright-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}
       - run: make check-ci-profile
+      - name: Configure public image cache on disposable CI runner
+        env:
+          CI_DOCKER_CONFIG: ${{ runner.temp }}/kasoma-docker-daemon.json
+        run: |
+          if sudo test -f /etc/docker/daemon.json; then
+            sudo cat /etc/docker/daemon.json > "$CI_DOCKER_CONFIG"
+          else
+            echo '{}' > "$CI_DOCKER_CONFIG"
+          fi
+          make ci-docker-config
+          sudo dockerd --validate --config-file "$CI_DOCKER_CONFIG"
+          sudo install -m 0644 "$CI_DOCKER_CONFIG" /etc/docker/daemon.json
+          sudo timeout 60s systemctl restart docker
+          docker info --format '{{json .RegistryConfig.Mirrors}}'
       - run: make build e2e-install test-web-content
       - run: make services migrate seed
       - run: make test-reviewed-rubrics

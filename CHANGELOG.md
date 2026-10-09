@@ -2,6 +2,10 @@
 
 ## Work in progress — hosted verification recovery
 
+- Address the subsequent PostgreSQL pull throttle with a public Docker Hub cache
+  configured only on disposable CI runners. Preserve daemon settings, validate before
+  bounded restart, and test configuration merging and local-execution refusal.
+
 - Address the observed 40-minute hosted timeout with a bounded 90-minute job and
   lock-keyed browser cache. Use the byte-identical official Mailpit mirror only in CI
   after Docker Hub throttled the runner. Every application/security check remains required.

@@ -18,6 +18,9 @@ services:
 .PHONY: check-ci-profile
 check-ci-profile:
 	docker compose -f docker-compose.yml -f docker-compose.ci.yaml config --quiet
+.PHONY: ci-docker-config
+ci-docker-config:
+	node scripts/ci-docker-mirror.mjs
 .PHONY: services-db test-data-exports
 services-db:
 	docker compose up -d --wait postgres redis
@@ -154,7 +157,7 @@ expire-exports:
 deps-lock:
 	$(PNPM) install --lockfile-only
 test-tooling:
-	node --test scripts/tooling.test.mjs scripts/export-stream.test.mjs
+	node --test scripts/tooling.test.mjs scripts/export-stream.test.mjs scripts/ci-docker-mirror.test.mjs
 
 .PHONY: process-imports
 process-imports:

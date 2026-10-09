@@ -926,3 +926,13 @@ The workflow has a 90-minute whole-job limit and a lock-keyed browser-binary cac
 all setup, migration, test, recovery, browser, security and container steps still run.
 See [CI verification](../implementation/E9_CI_RUNTIME_VERIFICATION.md) for the observed
 failures, artifact equality evidence and pending hosted gate.
+
+### CI image-cache recovery
+
+The hosted workflow uses a public Docker Hub cache on its disposable Linux runner
+before starting services. `make ci-docker-config` merges the cache into the temporary
+file specified by `CI_DOCKER_CONFIG`; it refuses ordinary local execution. The workflow
+validates and installs that file and restarts only the hosted daemon. Do not run these
+privileged workflow steps on the review machine. Local Compose and its eight services
+remain unchanged. Cache misses fall back to Docker Hub and can still be throttled.
+See [CI verification](../implementation/E9_CI_RUNTIME_VERIFICATION.md).
