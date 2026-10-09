@@ -1,5 +1,11 @@
 # Changelog
 
+## Work in progress — short-text learner integration
+
+- Reconcile readiness against existing assessment/mastery contracts and the mandatory
+  beta expert-audit and automatic band-disablement rules. Scoring and learner selection
+  remain disabled; this assessment provides no academic acceptance.
+
 ## Work in progress — hosted verification recovery
 
 - Address the subsequent PostgreSQL pull throttle with a public Docker Hub cache
@@ -598,3 +604,9 @@ Record meaningful repository and product changes here. A documentation baseline 
 
 - Fix the NFR-SEC-002 test grant profile after CI 37227070209 exposed the attempt-hint guard's users-row lock requirement.
 - Permit only the existing mutable display_name field; add explicit denied identity/status/birth-date writes and exact column-grant cleanup. Production credentials remain unchanged; rerun required.
+
+FR-GRD-004/005 and NFR-SEC-002: internal `services/short_text_contracts.py` adds bounded
+answer input and distinct pending/neutral outcomes, rejecting scores and hidden/provider
+material. ADR-050 remains proposed; runtime routes, worker and privacy integration are
+not implemented by these contracts. Verification passes: 699 unit/contract tests (33 new outcome/input cases), 35 tooling
+checks, format/lint/types and generated-contract comparison. No HTTP schema changed.

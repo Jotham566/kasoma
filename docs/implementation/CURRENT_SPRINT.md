@@ -132,6 +132,16 @@ removed. Earlier merged evidence includes [incremental exports](E8_EXPORT_ENCODI
 [accountability holds](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md).
 See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete historical register.
 
+## Short-text integration follow-up
+
+FR-GRD-003/004/005, FR-MST-001 and FR-ID-006: the updated
+[readiness assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies pending/neutral
+contract changes, immutable-grade/mastery boundaries and privacy coverage dependencies.
+It now includes the required >=10% blinded beta audit and automatic band disablement
+below 90% exact agreement or after a critical error. No learner grading is enabled.
+Next: propose the eligibility/pending-workflow ADR, then implement the complete synthetic
+worker-to-learner path with neutral fallback and corresponding persistence/privacy tests.
+
 ## Remaining MVP and release gates
 
 [Channel-hold readiness](E8_CHANNEL_HOLD_READINESS.md) records the inspected mutable-state and
@@ -177,3 +187,9 @@ The full service-bound integration/security run passed all 246 integration cases
 dependency/security checks. Firefox's export shard passes. Two later home-navigation
 checks found fractional rounding below the 44px target minimum; shared learner/staff
 navigation is now 48px, preserving the >=44px assertion. Full three-engine rerun active.
+
+FR-GRD-004/005 and NFR-SEC-002: internal `services/short_text_contracts.py` adds bounded
+answer input and distinct pending/neutral outcomes, rejecting scores and hidden/provider
+material. ADR-050 remains proposed; runtime routes, worker and privacy integration are
+not implemented by these contracts. Verification passes: 699 unit/contract tests (33 new outcome/input cases), 35 tooling
+checks, format/lint/types and generated-contract comparison. No HTTP schema changed.

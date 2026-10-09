@@ -319,3 +319,9 @@ promotion remain pending. This proposal does not authorize deletion or change re
 See [ADR-049](../decisions/ADR/049-local-request-histograms.md). Attribute-free OTel
 histograms and bounded local Redis aggregation are in progress. Runtime latency
 aggregation remains unavailable until integration and acceptance pass.
+
+### ADR-050 — short-text pending outcomes and eligibility (proposed)
+
+See [ADR-050](../decisions/ADR/050-short-text-pending-and-eligibility.md). Internal
+pending/neutral contracts are being implemented; no learner route, scoring band or
+assignment is enabled. Complete asynchronous/privacy/academic gates remain required.

@@ -108,3 +108,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-049 proposal: Bounded local request histograms](049-local-request-histograms.md)
   records the in-progress OTel aggregation, privacy and finite local retention design.
+
+- [ADR-050: Short-text pending outcomes and eligibility](050-short-text-pending-and-eligibility.md)
+  proposes the pending/neutral boundary and complete learner-integration gates.

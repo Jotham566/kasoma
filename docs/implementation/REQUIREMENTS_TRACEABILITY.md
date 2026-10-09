@@ -69,6 +69,11 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | Full hosted synthetic regression evidence recorded per slice; release acceptance remains separately gated |
 | NFR-LOC-001 | English shell; UTC storage/wire; progress/history dates in Africa/Kampala | Configuration and browser history checks | Progress/history presentation implemented; wider localization review pending |
 
+FR-GRD-003/004/005 / FR-MST-001 / FR-ID-006: the 10 October
+[short-text readiness update](E4_SHORT_TEXT_INTEGRATION_READINESS.md) records inspected
+pending/neutral contract gaps and mandatory beta audit/automatic disablement controls.
+This is design-readiness evidence only; learner short-text acceptance remains incomplete.
+
 E4 numeric execution evidence: [verification report](E4_VERIFICATION.md).
 
 NFR-MNT-001: [CI runtime/mirror remediation](E9_CI_RUNTIME_VERIFICATION.md) addresses
@@ -843,3 +848,9 @@ Final native follow-up evidence: all 90 browser executions pass (30 Chromium,
 48px navigation. All 246 integration cases/security checks and the later 625-case
 unit plus 32-tooling run pass. Rebuilt eight-service smoke and API/web image scans
 pass. Hosted final-head verification and ADR-048 promotion remain pending.
+
+FR-GRD-004/005 and NFR-SEC-002: internal `services/short_text_contracts.py` adds bounded
+answer input and distinct pending/neutral outcomes, rejecting scores and hidden/provider
+material. ADR-050 remains proposed; runtime routes, worker and privacy integration are
+not implemented by these contracts. Verification passes: 699 unit/contract tests (33 new outcome/input cases), 35 tooling
+checks, format/lint/types and generated-contract comparison. No HTTP schema changed.
