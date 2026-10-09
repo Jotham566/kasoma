@@ -59,10 +59,11 @@ def upgrade() -> None:
     CREATE TRIGGER protect_rubric_criterion BEFORE INSERT OR UPDATE OR DELETE ON rubric_criteria
       FOR EACH ROW EXECUTE FUNCTION draft_rubric_guard();
     CREATE FUNCTION review_rubric_guard() RETURNS trigger LANGUAGE plpgsql AS $$
-    DECLARE maximum integer; total integer; material jsonb; count_criteria integer;
+    DECLARE maximum integer; total integer; material jsonb; count_criteria integer; document jsonb;
     BEGIN
+      document := NEW.document::jsonb;
       IF NEW.status NOT IN ('IN_REVIEW','APPROVED') THEN RETURN NEW; END IF;
-      IF NEW.document->>'response_type'='SHORT_TEXT' THEN
+      IF document->>'response_type'='SHORT_TEXT' THEN
         SELECT maximum_points INTO maximum FROM rubrics WHERE id=NEW.id;
         SELECT sum(maximum_points), count(*), jsonb_agg(jsonb_build_object(
           'criterion_id',criterion_id,'maximum_points',maximum_points,
@@ -70,18 +71,18 @@ def upgrade() -> None:
           'common_errors',common_errors,'prohibited_inferences',prohibited_inferences)
           ORDER BY position) INTO total,count_criteria,material
           FROM rubric_criteria WHERE rubric_id=NEW.id;
-        IF maximum IS NULL OR maximum IS DISTINCT FROM (NEW.document->>'maximum_points')::integer
+        IF maximum IS NULL OR maximum IS DISTINCT FROM (document->>'maximum_points')::integer
           OR total IS DISTINCT FROM maximum OR count_criteria NOT BETWEEN 1 AND 20
-          OR material IS DISTINCT FROM NEW.document->'rubric'->'criteria'
-          OR NEW.document->>'partial_credit' IS DISTINCT FROM 'CRITERION_SUM'
-          OR NEW.document->'choices' IS DISTINCT FROM '[]'::jsonb
-          OR NEW.document->>'correct_choice_id' IS DISTINCT FROM ''
-          OR NEW.document->'correct_choice_ids' IS DISTINCT FROM '[]'::jsonb
-          OR NEW.document->'numeric_spec' IS DISTINCT FROM 'null'::jsonb
+          OR material IS DISTINCT FROM document->'rubric'->'criteria'
+          OR document->>'partial_credit' IS DISTINCT FROM 'CRITERION_SUM'
+          OR document->'choices' IS DISTINCT FROM '[]'::jsonb
+          OR document->>'correct_choice_id' IS DISTINCT FROM ''
+          OR document->'correct_choice_ids' IS DISTINCT FROM '[]'::jsonb
+          OR document->'numeric_spec' IS DISTINCT FROM 'null'::jsonb
         THEN RAISE EXCEPTION 'Complete matching rubric required'; END IF;
       ELSIF EXISTS(SELECT 1 FROM rubrics WHERE id=NEW.id)
-        OR (NEW.document ? 'rubric' AND NEW.document->'rubric'<>'null'::jsonb)
-        OR NEW.document->>'partial_credit' IS DISTINCT FROM 'ALL_OR_NOTHING'
+        OR (document ? 'rubric' AND document->'rubric'<>'null'::jsonb)
+        OR document->>'partial_credit' IS DISTINCT FROM 'ALL_OR_NOTHING'
       THEN RAISE EXCEPTION 'Objective items cannot carry a rubric'; END IF;
       RETURN NEW;
     END $$;

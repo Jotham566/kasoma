@@ -62,3 +62,8 @@ Rubric acceptance follow-up (9 October): CI 37909280438 passed clean migration/s
 synthetic recovery population. `make test-reviewed-rubrics` now runs before recovery to expose
 focused database diagnostics; the complete recovery and regression gates remain required. No
 rubric acceptance or main promotion is claimed from this failed run.
+
+The rubric SQL guard incorrectly treated the existing item_versions.document JSON column as JSONB.
+Normalize a local comparison value to JSONB before equality/existence checks; retain the original
+column, stored documents and hashes. Existing fresh/upgrade and projection tests cover this path;
+complete hosted rerun remains required.
