@@ -1,5 +1,11 @@
 # Changelog
 
+## 9 October 2026 — synthetic model-call telemetry
+
+- Instrument the existing fake short-text rehearsal with correlated, closed per-call and outcome events (NFR-OBS-001, FR-OPS-002; AI gateway specification).
+- Record bounded metadata, elapsed time and provider-reported usage; failures report unknown usage and omit provider diagnostics. Use disposable per-rehearsal HMAC fingerprints instead of stable answer hashes.
+- Add privacy/schema/correlation/repair/failure tests. No live inference, learner scoring, cost estimate or aggregate dashboard acceptance is enabled.
+
 ## 9 October 2026 — reviewed rubric authoring
 
 - Add version-pinned rubric/criterion persistence and independent short-text content review (FR-CNT-001–004, FR-GRD-003/004, NFR-SEC-002; ADR-044).

@@ -232,3 +232,9 @@ ADR-044 now provides reviewed rubric persistence and explicit criterion material
 integration. It does not enable learner assignment or connect content to model scoring. Academic
 eligibility, benchmark/calibration, pending/neutral results and safe fallback remain gates. See
 [reviewed-rubric verification](../implementation/E2_REVIEWED_RUBRICS_VERIFICATION.md).
+
+The offline rehearsal emits closed per-call and final-outcome telemetry under
+[the synthetic telemetry policy](../implementation/E8_MODEL_TELEMETRY_VERIFICATION.md): registered
+labels, elapsed time, reported usage and per-rehearsal keyed fingerprints. Unknown usage is null,
+unregistered provider strings are not logged, and no raw material or stable answer hash is retained.
+This does not establish durable production metering, cost, aggregate alerts or calibration.

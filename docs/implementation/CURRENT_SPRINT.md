@@ -50,3 +50,10 @@ The [release register](RELEASE_GATES.md) tracks missing kickoff/capacity, exact 
 and approved inventory, expert benchmarks, privacy/guardian/DPIA, Week 8 provider choice, production
 OTP/MFA/restricted roles, managed PITR/RPO/RTO, branded/mobile/versioned browser and pilot sign-offs.
 The approved 12-week deadline and all acceptance thresholds remain unchanged.
+
+## Following slice: synthetic gateway telemetry
+
+NFR-OBS-001/FR-OPS-002: model.call and model.rehearsal events now record minimized timing,
+registered labels, reported usage and safe per-rehearsal fingerprints. 427 unit/contract checks pass; newly reported JavaScript dependency advisories block
+promotion, and hosted regression is pending. [Evidence](E8_MODEL_TELEMETRY_VERIFICATION.md). Dashboard aggregation, production log
+retention and provider accuracy/cost remain open; no inference adapter is enabled.

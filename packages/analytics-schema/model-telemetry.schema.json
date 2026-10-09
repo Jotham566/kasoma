@@ -1,0 +1,210 @@
+{
+  "$defs": {
+    "ModelCallEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "correlation_id": {
+          "format": "uuid",
+          "title": "Correlation Id",
+          "type": "string"
+        },
+        "deployment": {
+          "const": "offline-synthetic-rehearsal",
+          "default": "offline-synthetic-rehearsal",
+          "title": "Deployment",
+          "type": "string"
+        },
+        "elapsed_ms": {
+          "minimum": 0,
+          "title": "Elapsed Ms",
+          "type": "integer"
+        },
+        "event": {
+          "const": "model.call",
+          "default": "model.call",
+          "title": "Event",
+          "type": "string"
+        },
+        "call_index": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Call Index",
+          "type": "integer"
+        },
+        "task": {
+          "const": "grade_short_answer",
+          "default": "grade_short_answer",
+          "title": "Task",
+          "type": "string"
+        },
+        "prompt_version": {
+          "enum": [
+            "synthetic-short-text-criteria-first-v2",
+            "synthetic-short-text-criteria-first-v2-repair",
+            "synthetic-short-text-evidence-first-v2",
+            "synthetic-short-text-evidence-first-v2-repair",
+            "UNREGISTERED"
+          ],
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "provider": {
+          "enum": ["fake", "UNREGISTERED", "UNAVAILABLE"],
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "enum": ["fixture-v1", "UNREGISTERED", "UNAVAILABLE"],
+          "title": "Model",
+          "type": "string"
+        },
+        "status": {
+          "enum": ["CANDIDATE", "LOW_CONFIDENCE", "FLAGGED", "FAILED"],
+          "title": "Status",
+          "type": "string"
+        },
+        "input_tokens": {
+          "anyOf": [
+            {
+              "maximum": 8192,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Input Tokens"
+        },
+        "output_tokens": {
+          "anyOf": [
+            {
+              "maximum": 4096,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Output Tokens"
+        },
+        "usage_source": {
+          "enum": ["PROVIDER_REPORTED", "UNAVAILABLE"],
+          "title": "Usage Source",
+          "type": "string"
+        },
+        "input_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Input Fingerprint",
+          "type": "string"
+        },
+        "output_fingerprint": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Output Fingerprint"
+        }
+      },
+      "required": [
+        "correlation_id",
+        "elapsed_ms",
+        "call_index",
+        "prompt_version",
+        "provider",
+        "model",
+        "status",
+        "input_tokens",
+        "output_tokens",
+        "usage_source",
+        "input_fingerprint",
+        "output_fingerprint"
+      ],
+      "title": "ModelCallEvent",
+      "type": "object"
+    },
+    "RehearsalEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "correlation_id": {
+          "format": "uuid",
+          "title": "Correlation Id",
+          "type": "string"
+        },
+        "deployment": {
+          "const": "offline-synthetic-rehearsal",
+          "default": "offline-synthetic-rehearsal",
+          "title": "Deployment",
+          "type": "string"
+        },
+        "elapsed_ms": {
+          "minimum": 0,
+          "title": "Elapsed Ms",
+          "type": "integer"
+        },
+        "event": {
+          "const": "model.rehearsal",
+          "default": "model.rehearsal",
+          "title": "Event",
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "AGREEMENT",
+            "FLAGGED",
+            "INPUT_INVALID",
+            "BUDGET",
+            "PROVIDER_FAILURE",
+            "PROVIDER_FALLBACK",
+            "VALIDATION_FAILED",
+            "DISAGREEMENT"
+          ],
+          "title": "Reason",
+          "type": "string"
+        },
+        "requests": {
+          "maximum": 3,
+          "minimum": 0,
+          "title": "Requests",
+          "type": "integer"
+        },
+        "automatic_scoring_enabled": {
+          "const": false,
+          "default": false,
+          "title": "Automatic Scoring Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": ["correlation_id", "elapsed_ms", "reason", "requests"],
+      "title": "RehearsalEvent",
+      "type": "object"
+    }
+  },
+  "anyOf": [
+    {
+      "$ref": "#/$defs/ModelCallEvent"
+    },
+    {
+      "$ref": "#/$defs/RehearsalEvent"
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

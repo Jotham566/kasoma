@@ -642,3 +642,17 @@ migration tests and all three browser engines. See [rubric evidence](../implemen
 Do not deploy a pre-rubric binary after storing SHORT_TEXT documents: it cannot parse them. Preserve
 migration 0023 and protected evidence, disable new authoring in a compatible forward fix, and retain
 the disabled learner assignment guard. Do not downgrade/drop reviewed rubric records.
+
+## Synthetic model-call events
+
+The existing fake rehearsal emits model.call for each dispatched pass/repair and model.rehearsal
+for its final outcome. Correlate using the UUID, call_index and registered prompt version. A
+CANDIDATE is unvalidated provider output; only the rehearsal outcome explains agreement/fallback,
+and automatic scoring remains false. Tokens are provider-reported, not independently metered;
+null values on failure mean unknown consumption. Do not sum null usage as zero or infer model cost.
+
+Fingerprints use a new secret HMAC key for each rehearsal; the key is discarded and hashes cannot
+be compared across rehearsals. Never add prompts, answers, context IDs, provider errors or arbitrary
+model labels to these events. See [verification](../implementation/E8_MODEL_TELEMETRY_VERIFICATION.md).
+Use `make test-unit lint security` for synthetic checks; do not run local or Gemini inference as
+part of this workflow. Dashboard AI_USAGE remains unavailable pending durable aggregation.

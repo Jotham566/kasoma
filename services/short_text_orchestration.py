@@ -7,6 +7,7 @@ from uuid import UUID
 
 from pydantic import Field
 
+from services.model_telemetry import RehearsalReason, RehearsalTelemetry
 from services.providers import ModelGateway, ModelTask
 from services.short_text_validation import (
     ShortTextCandidate,
@@ -51,6 +52,7 @@ def rehearse_short_text(
     flagged: bool,
     budget: RehearsalBudget,
     clock: Callable[[], float] = monotonic,
+    request_id: UUID | None = None,
 ) -> RehearsalResult:
     """At most two independent passes plus one global schema repair, under one budget.
 
@@ -60,8 +62,12 @@ def rehearse_short_text(
     """
     started = clock()
     requests = input_tokens = output_tokens = 0
+    telemetry = RehearsalTelemetry(request_id)
 
-    def result(reason: str, candidate: ShortTextCandidate | None = None) -> RehearsalResult:
+    def result(
+        reason: RehearsalReason, candidate: ShortTextCandidate | None = None
+    ) -> RehearsalResult:
+        telemetry.finish(reason, requests)
         return RehearsalResult.model_validate(
             {
                 "status": "AGREEING_CANDIDATES" if candidate else "LOW_CONFIDENCE",
@@ -116,7 +122,7 @@ def rehearse_short_text(
             )
             requests += 1
             try:
-                output = gateway.execute(task)
+                output = telemetry.execute(gateway, task, requests)
             except Exception:
                 # Never propagate provider diagnostics, requests, answers or credentials.
                 return result("PROVIDER_FAILURE")

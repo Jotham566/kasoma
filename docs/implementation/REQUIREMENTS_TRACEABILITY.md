@@ -221,3 +221,10 @@ service, staff UI, generated API schemas, learner selection/SQL exclusion, staff
 three contract cases, eight database cases and a three-engine browser journey are implemented.
 Local 416 unit/contract plus five tooling checks pass; hosted migration/application acceptance is
 pending. No learner scoring, calibrated eligibility, new model call or academic approval is implied.
+
+NFR-OBS-001/FR-OPS-002 and AI gateway §3 instrumentation:
+[synthetic telemetry evidence](E8_MODEL_TELEMETRY_VERIFICATION.md). services/model_telemetry.py,
+short_text_orchestration.py and the closed model-telemetry.schema.json record actual call attempts
+and rehearsal outcomes with minimized metadata and ephemeral keyed fingerprints. Eleven additional
+contract cases exercise privacy, unknown usage, repairs, timing and schema closure. 427 unit/contract checks pass; JavaScript audit remediation and
+hosted regression remain pending. Durable aggregation/alerts and live-provider usage remain gaps.
