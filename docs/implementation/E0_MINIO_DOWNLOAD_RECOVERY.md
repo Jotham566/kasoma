@@ -1,8 +1,8 @@
 # E0 MinIO dependency-download recovery
 
 Requirement: NFR-MNT-001; bootstrap reproducibility and existing source-integrity gates.
-Status: implemented; 431 unit/contract plus five tooling checks, lint/types and generated contracts
-pass. Real rebuilt service/seed/storage and complete hosted acceptance remain pending.
+Status: verified in hosted CI 37923437046 at `04de7ea`, promoted to main. Native image download
+remains incomplete; hosted acceptance does not establish native storage availability.
 
 ## Evidence and change
 
@@ -38,3 +38,13 @@ Retries are bounded by attempt count, not a new application/provider timeout or 
 A continuing network interruption can still fail setup safely. Do not delete volumes, weaken
 checksums, disable verification or replace the approved source release to make the command pass.
 Native browser download timeouts/resets are separate; Playwright's own retry remains in progress.
+
+## Hosted acceptance
+
+[CI 37923437046](https://github.com/Jotham566/kasoma/actions/runs/37923437046) passed the actual
+service build, migrations/seed, 431 unit/contract plus 184 integration cases (615 Python), five
+tooling checks, 63 real-API browser executions and one isolated editor case. Recovery restored
+54 tables/272 rows in 361 ms with pgvector/immutable guards and no cleanup failures. Lint/types,
+contracts/build, restricted-role verification, dependency/source/image scans and container smoke
+all passed. Cold question transfers were 191513/194257/193614 bytes across the three engines.
+Commit `04de7ea` is on main; the completed branch was removed locally and remotely.

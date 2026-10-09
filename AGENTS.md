@@ -108,9 +108,14 @@ hold coverage, large-history fulfillment and accountability-retention processors
 Offline synthetic short-text candidate validation and budgeted fake dual-pass rehearsal are
 verified. Isolated synthetic logical recovery and Chromium/Firefox/WebKit journeys with a
 cold question transfer budget are verified. Restricted assessment database login, grade/mastery
-record holds and bounded OTP/rate expiry are verified. Reviewed rubric authoring under ADR-044 is
+record holds and bounded OTP/rate expiry are verified. Exact flag-history and request-review holds
+are verified under ADR-045; full preservation coverage and deletion execution remain pending.
+Reviewed rubric authoring under ADR-044 is
 verified with learner delivery disabled. Learner short-text integration, academic calibration,
-production PITR/RPO/RTO and branded/mobile browser acceptance remain pending. See
+production PITR/RPO/RTO and branded/mobile browser acceptance remain pending.
+Narrow 320-pixel touch journeys are verified across the three test engines; physical-device and
+branded-browser acceptance remain separate. The ADR-046 objective load baseline passes locally
+with shared content locks and batched plan validation; hosted regression remains pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

@@ -12,16 +12,16 @@ results. `AssessmentService.view`, `grade` and `result`, and `mastery.record`, d
 same contract. A LOW_CONFIDENCE result must not be disguised as a zero-point GradeView.
 
 Migration 0023 implements version-pinned `rubrics` and `rubric_criteria`, with independent content
-review and SQL immutability/projection guards. Hosted acceptance is pending in
+review and SQL immutability/projection guards. Hosted acceptance passed in CI 37914864557; see
 [the rubric report](E2_REVIEWED_RUBRICS_VERIFICATION.md). The rehearsal requires explicit criterion
 text, acceptable evidence, common errors and prohibited inference, in addition to IDs/maxima.
 Synthetic fixtures and v2 prompts remain without benchmark or production academic approval.
 
 ## Next complete learner slice
 
-1. Finish hosted acceptance of independently reviewed, versioned rubric/criterion persistence with acceptable evidence,
-   common errors and prohibited inference; pin a rubric version to an immutable item version.
-   Reuse author/reviewer separation, rights/mapping checks, retirement and audit controls.
+1. Build on the verified independently reviewed rubric/criterion persistence, including acceptable
+   evidence, common errors and prohibited inference, pinned to immutable item versions. Preserve
+   author/reviewer separation, rights/mapping checks, retirement and audit controls.
 2. Add an explicit short-text eligibility service. Require approved current item/rubric/context,
    supported subject/topic/language/length and versioned enablement evidence. Keep automatic scoring
    disabled until the frozen benchmark, calibrated bands and owner approvals exist.
@@ -54,8 +54,9 @@ named source and destination databases, migrate/seed only synthetic fixtures, ba
 source, restore to the fresh destination, compare rows/schema and verify immutable/ownership
 guards. It must never restore over or dump the configured developer database, reset Docker
 volumes, or drop a database it did not create. Record elapsed time and cleanup failures separately.
-Native execution currently requires restoration of the missing Docker installation; hosted CI can
-verify isolated fixtures. A logical synthetic restore does not prove managed 35-day PITR, encryption,
+Native Docker and isolated logical recovery now work; current evidence includes 54 tables and
+272 synthetic rows. See [recovery verification](E9_RECOVERY_VERIFICATION.md) and the current
+sprint for subsequent runs. A logical synthetic restore does not prove managed 35-day PITR, encryption,
 production RPO ≤24 hours or RTO ≤8 hours; those remain Week 8/provider and pre-beta gates.
 
 Sources: [domain model](../specifications/03_Domain_and_Data_Model.md),

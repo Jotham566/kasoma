@@ -48,24 +48,24 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor; bounded JSON import API/UI and transactional worker | Content tests; import contract/API/browser regressions; [import evidence](E2_IMPORTS_VERIFICATION.md) | Partial: create/edit verified; structured synthetic JSON import verified; other formats and academic release pending |
 | FR-CNT-002 | Role checks and immutable author ownership; self-review blocked even with both roles | API self-review denial; SQL review guard; disabled author approval in browser | Local implemented |
 | FR-CNT-003 | Return, approval, high-risk/disputed second review, retirement and append-only reviews | Full API/browser workflow; two-reviewer and retired-selection tests | Local implemented with synthetic content |
-| FR-CNT-004 | Immutable approved versions, explicit successor drafts and normalized frozen mappings | API mutation rejection; direct SQL history/mapping/attempt tests; retired-version grades/solutions remain unchanged | Partial: choice/numeric attempts and grades pin immutable versions/hash; migration preserves legacy choice rows; rubric pinning pending |
+| FR-CNT-004 | Immutable approved versions, explicit successor drafts, normalized frozen mappings and version-pinned reviewed rubrics | API mutation rejection; direct SQL history/mapping/attempt/rubric tests; retired-version grades/solutions remain unchanged | Choice/numeric provenance and ADR-044 rubric authoring verified; short-text learner attempt integration remains pending |
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single/multiple-choice and numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; channel code/link/unlink/STOP events and safe correlated processing logs are implemented; remaining dispatch pending |
 | FR-OPS-002 | ADMIN snapshot/dashboard, bounded import/flag/channel cohorts, fake-dispatch p95, monitoring heartbeat and configurable local alerts | [Operations verification](E8_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs, Redis/worker and browser tests | Partial: local visibility verified and merged; AI/SMS/email/grade-failure/HTTP-latency/mastery/pre-intake telemetry and production alerting pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
 | FR-OPS-004 | Typed channel attempt/outbound limits, bounded failures and feature flag | [E7 evidence](E7_LINKING_READINESS.md); configuration/rate/failure tests | Local channel limits verified; AI limits and production usage telemetry pending |
-| NFR-PERF-001 | — | — | Not started |
+| NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); full hosted regression and representative deployment/history/provider acceptance pending |
 | NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
 | NFR-REL-001 | — | — | Not started |
 | NFR-REL-002 | Isolated synthetic logical recovery command (ADR-042) | 16 safety cases; [recovery evidence](E9_RECOVERY_VERIFICATION.md) | Synthetic logical recovery verified in CI 37223872075; production PITR/RPO/RTO pending |
-| NFR-SCL-001 | — | — | Not started |
+| NFR-SCL-001 | Synthetic 2,000-registration/500-active/50-concurrent objective load profile | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local 7,000-request baseline passed with 500 sessions/2,500 grades and no errors; broader scale acceptance pending |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
 | NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, assessment, diagnostic, progress/history and flag/triage axe/keyboard checks; remaining journey matrix pending |
 | NFR-BW-001 | Cold-context first-question encoded transfer check, including headers/prefetch and no media exclusions for the synthetic fixture | Existing assessment E2E journey; [browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md) | Synthetic cold transfer verified across three engines: 191389–194127 bytes; media/mobile/latency release checks remain |
-| NFR-COMP-001 | Full journey harness for isolated Chromium/Firefox/WebKit runs | [Browser matrix evidence](E9_BROWSER_COVERAGE_VERIFICATION.md), [narrow viewport regression](E9_MOBILE_REFLOW_VERIFICATION.md) | Engine regression verified per slice; new 320-pixel touch journey awaits runtime acceptance; branded/current-previous/physical mobile acceptance pending |
-| NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs; additive API response-start timing | Unit redaction and real worker propagation tests | Foundation verified; response-start timing hosted regression pending; aggregation/domain tracing remains partial |
+| NFR-COMP-001 | Full journey harness for isolated Chromium/Firefox/WebKit runs | [Browser matrix evidence](E9_BROWSER_COVERAGE_VERIFICATION.md), [narrow viewport regression](E9_MOBILE_REFLOW_VERIFICATION.md) | 66 browser executions, including 320-pixel touch journey, verified in CI 37925290651; branded/current-previous/physical mobile acceptance pending |
+| NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs; API response-start and synthetic model-call timing | Unit redaction and real worker propagation tests; [model telemetry evidence](E8_MODEL_TELEMETRY_VERIFICATION.md) | Minimized timing verified through hosted CI 37914864557; durable aggregation/domain tracing remains partial |
 | NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | Full hosted synthetic regression evidence recorded per slice; release acceptance remains separately gated |
 | NFR-LOC-001 | English shell; UTC storage/wire; progress/history dates in Africa/Kampala | Configuration and browser history checks | Progress/history presentation implemented; wider localization review pending |
 
@@ -276,14 +276,16 @@ next covers bounded verified dependency-download recovery without replacing the 
 NFR-MNT-001 native setup resilience: infra/containers/minio.Dockerfile,
 infra/containers/download-go-modules.sh and tests/contract/test_minio_download_recovery.py connect
 bounded download retries and mandatory integrity verification to four deterministic subprocess
-cases. [Verification](E0_MINIO_DOWNLOAD_RECOVERY.md): local lint/types/contracts and 431 unit/contract
-checks pass; real service rebuild/storage and full hosted acceptance remain pending. ADR-019 pins
+cases. [Verification](E0_MINIO_DOWNLOAD_RECOVERY.md): full hosted CI 37923437046 passed at `04de7ea`
+(615 Python, 63 browser, one isolated UI and five tooling checks), including actual services and
+security/container gates. Promoted to main; native image download remains incomplete. ADR-019 pins
 and runtime behavior are unchanged; browser download recovery is a separate environment issue.
 
 FR-ID-006/BR-010/FR-OPS-003/NFR-SEC-002 accountability hold coverage:
 [ADR-045](../decisions/ADR/045-accountability-record-holds.md), migration 0024,
 services/legal_holds.py and legal_hold_contracts.py, the administrator selector, generated API
 contracts, expanded exact-record integration cases and the administrator browser journey.
-[Verification](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md): 19 focused native cases and local
-static/unit checks pass; full regression/browser acceptance pending. FLAG_HISTORY and
+[Verification](E8_ACCOUNTABILITY_HOLDS_VERIFICATION.md): 19 focused native cases and hosted CI
+37924489562 pass (621 Python, 63 browser, one isolated UI, five tooling plus full security/container
+gates). Promoted `ce9d9f3` to main and removed its branch. FLAG_HISTORY and
 DATA_REQUEST_REVIEW add preservation only; incomplete coverage and disabled deletion remain.

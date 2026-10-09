@@ -39,8 +39,17 @@ class Diagnostics:
         self.identity = assessment.identity
 
     def candidates(
-        self, db: Session, actor: UUID, subject: UUID, *, channel: str = "WEB"
+        self,
+        db: Session,
+        actor: UUID,
+        subject: UUID,
+        *,
+        channel: str = "WEB",
+        topic_id: UUID | None = None,
+        per_topic_limit: int = 1000,
     ) -> list[ItemVersion]:
+        if not 1 <= per_topic_limit <= 1000:
+            raise ValueError("Candidate limit is outside the supported range")
         excluded = set(
             db.scalars(
                 select(ItemVersion.item_id)
@@ -61,12 +70,13 @@ class Diagnostics:
             )
         )
         result = []
-        for topic in db.scalars(
-            select(Topic).where(Topic.subject_id == subject).order_by(Topic.id)
-        ):
+        topics = select(Topic).where(Topic.subject_id == subject)
+        if topic_id is not None:
+            topics = topics.where(Topic.id == topic_id)
+        for topic in db.scalars(topics.order_by(Topic.id)):
             result.extend(
                 self.assessment.content.assessment_candidates(
-                    db, subject, topic.id, excluded, 1000, lock=False, channel=channel
+                    db, subject, topic.id, excluded, per_topic_limit, lock=False, channel=channel
                 )
             )
         return result

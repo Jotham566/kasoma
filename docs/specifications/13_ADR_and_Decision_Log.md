@@ -292,3 +292,10 @@ See [ADR-045](../decisions/ADR/045-accountability-record-holds.md). FLAG_HISTORY
 DATA_REQUEST_REVIEW extend exact preservation to existing immutable rows owned through their
 parent flag/request. Review targets use request_id. Normal parent workflows, independent authorized
 claimant controls, privacy and immutable evidence remain; deletion stays disabled.
+
+### ADR-046 — shared assessment content locks
+
+See [ADR-046](../decisions/ADR/046-shared-assessment-content-locks.md). Assessment content reads
+use shared row locks that still exclude retirement/writes; manual topic selection avoids unrelated
+topic enumeration. Existing content eligibility, grading, transaction and channel boundaries remain.
+The objective load baseline checks operation-specific latency rather than hiding slow routes in an aggregate.

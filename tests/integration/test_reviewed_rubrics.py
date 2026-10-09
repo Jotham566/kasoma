@@ -211,6 +211,8 @@ def test_approved_rubric_is_excluded_from_web_whatsapp_and_sql_assignment(assess
             assert target not in {candidate.id for candidate in candidates}
         with pytest.raises(ContentError, match="CONTENT_NOT_APPROVED"):
             content.assessment_version(db, target, UUID(body["subject_id"]))
+        with pytest.raises(ContentError, match="CONTENT_NOT_APPROVED"):
+            content.assessment_versions(db, [target], UUID(body["subject_id"]))
     session = start(client, actors["learner"], plan)
     assert session.status_code == 201, session.text
     with (

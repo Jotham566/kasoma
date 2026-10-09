@@ -52,6 +52,8 @@ make build
 make e2e-install
 make e2e
 make test-web-mobile # focused 320-pixel synthetic touch journey; also included in e2e
+make test-load-profile # deterministic load-runner isolation/measurement checks
+make load-objective # optional full-size isolated synthetic HTTP load; creates/drops its own database
 make security
 make containers
 make security-source

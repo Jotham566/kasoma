@@ -1,6 +1,7 @@
 # E9 narrow learner journey verification
 
-Requirements: NFR-ACC-001, NFR-COMP-001. Status: implemented regression; runtime acceptance pending.
+Requirements: NFR-ACC-001, NFR-COMP-001. Status: verified in hosted CI 37925290651 at `83c6102`;
+promoted to main. Physical/branded/mobile release gates remain separate.
 
 The existing real-API engine suite adds one synthetic learner journey at a 320×640 CSS-pixel
 viewport with touch enabled. It verifies contact/profile/consent controls, five-question practice,
@@ -30,3 +31,15 @@ No journey assertion ran; this is an environment failure, not a passed mobile te
 Physical Android Chrome, current/previous branded browser releases, macOS/iOS Safari, assistive
 technology and agreed low-bandwidth/load performance remain release gates. Preserve these gaps
 even if all emulated checks pass.
+
+## Hosted acceptance
+
+[CI 37925290651](https://github.com/Jotham566/kasoma/actions/runs/37925290651) passed 22 real-API
+cases in each engine (66 browser executions), including the new narrow touch journey, plus one
+isolated editor case. All 621 Python and five tooling cases passed. Clean services/migrations/seed,
+role checks, lint/types/contracts/build, security/source/image scans and container smoke passed.
+Recovery restored 54 tables/272 rows in 454 ms with pgvector/immutable guards and no cleanup
+failure. Cold question transfers were 192785/194253/193654 bytes, all below 250000.
+Commit `83c6102` is on main and its completed branch was removed locally/remotely. No application
+layout changes were necessary. Earlier native launch failure remains an independent environment
+gap while the pinned browser downloads complete.

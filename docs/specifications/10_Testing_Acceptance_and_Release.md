@@ -111,6 +111,14 @@ MVP target profile:
 
 Targets follow NFRs in the SRD. Tests report p50/p95/p99, errors and resource use. AI provider latency is reported separately.
 
+The implemented `make load-objective` command exercises a local-only disposable synthetic database,
+2,000 registered/500 active learners, 50 concurrent objective journeys and a 20-answer/second target.
+It checks each measured operation's p95 as well as the mixed aggregate, records achieved dispatch
+rate and scoped resource use, and fails on errors or incomplete sessions. See the
+[objective baseline evidence](../implementation/E9_OBJECTIVE_LOAD_VERIFICATION.md) and ADR-046.
+This finite baseline does not replace representative histories, numeric/provider-failure scenarios,
+database/container resource measurements, a daily soak or production deployment acceptance.
+
 ## 6. Test data
 
 - Use synthetic identities and original fixture questions.

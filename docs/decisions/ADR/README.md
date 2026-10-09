@@ -94,3 +94,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-045: Individual accountability-record holds](045-accountability-record-holds.md)
   adds exact immutable flag-history and data-request-review preservation targets.
+
+- [ADR-046: Shared assessment content locks](046-shared-assessment-content-locks.md)
+  permits concurrent immutable readers while excluding content writes and preserving eligibility.

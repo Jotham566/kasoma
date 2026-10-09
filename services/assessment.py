@@ -285,21 +285,22 @@ class AssessmentService:
                 reasons = list(selected.item_reasons)
                 plan_version = selected.inputs.configuration.algorithm_version
                 snapshot = selected.model_dump(mode="json")
-                candidates = [
-                    self.content.assessment_version(db, version, body.subject_id)
-                    for version in selected.item_version_ids
-                ]
+                candidates = self.content.assessment_versions(
+                    db, list(selected.item_version_ids), body.subject_id
+                )
             else:
-                candidates = [
-                    v
-                    for v in self.diagnostics.candidates(
-                        db, actor, body.subject_id, channel=channel
+                candidates = self.diagnostics.candidates(
+                    db,
+                    actor,
+                    body.subject_id,
+                    channel=channel,
+                    topic_id=topic_id,
+                    per_topic_limit=body.desired_item_count,
+                )
+                if candidates:
+                    candidates = self.content.assessment_versions(
+                        db, [v.id for v in candidates], body.subject_id
                     )
-                    if v.topic_id == topic_id
-                ][: body.desired_item_count]
-                candidates = [
-                    self.content.assessment_version(db, v.id, body.subject_id) for v in candidates
-                ]
             if len(candidates) < body.desired_item_count:
                 raise IdentityError("INSUFFICIENT_CONTENT", 409)
             session = AssessmentSession(

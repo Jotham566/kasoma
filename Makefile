@@ -227,3 +227,13 @@ test-legal-holds:
 .PHONY: test-web-mobile
 test-web-mobile:
 	$(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts
+
+.PHONY: load-objective test-load-profile
+load-objective:
+	$(UV) python -m scripts.objective_load
+test-load-profile:
+	$(UV) pytest tests/contract/test_objective_load.py
+
+.PHONY: test-assessment-locks
+test-assessment-locks:
+	$(UV) pytest tests/integration/test_assessment_content_locks.py --allow-hosts=localhost,127.0.0.1,::1

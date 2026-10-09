@@ -1,22 +1,30 @@
 # Changelog
 
-## In progress — narrow learner journey
+## In progress — isolated objective HTTP load baseline
+
+- Add a local-only temporary-database profile for NFR-PERF-001/002 and NFR-SCL-001: 2,000 synthetic registrations, 500 active learners, 50 concurrent journeys, 288 original fixtures and paced objective answers.
+- Report real HTTP percentiles, errors, completion, pacing and scoped resource evidence; preserve all application limits and strict latency gates.
+- Add cleanup/isolation/metrics tests and strict typing. Runtime acceptance and broader history/provider/deployment scenarios remain pending.
+- The initial run exposed 653 ms session-start p95 despite a 30 ms mixed p95. Require operation-specific latency gates and implement ADR-046 shared immutable-content locks plus focused topic selection; database concurrency/recheck tests pass, fresh load/full regression pending.
+- Batch final plan eligibility/locking and bound manual candidate work. Final native baseline passes: 7,000 requests, zero errors, 500 sessions/2,500 grades, START p95 441 ms and answer p95 27 ms at 19.996 answer dispatches/s. Full regression/security/hosted acceptance remains pending.
+
+## 9 October 2026 — verified narrow learner journey
 
 - Add NFR-ACC-001/NFR-COMP-001 coverage at 320 CSS pixels with touch enabled: onboarding, five-question practice, durable resume, feedback, progress and history.
 - Check horizontal reflow, actual key touch-target dimensions and axe results; include the journey in all three existing engine runs and add `make test-web-mobile` for focused verification.
-- Static lint/types/test inventory pass; actual browser execution remains pending. This is emulated viewport evidence, not physical Android or branded Safari acceptance.
+- Hosted CI 37925290651 passed 66 real-API browser executions, 621 Python, five tooling and one isolated UI case, plus full recovery/security/container gates. Promoted `83c6102` and removed its branch. This is emulated viewport evidence, not physical Android or branded Safari acceptance.
 
-## In progress — exact accountability-record holds
+## 9 October 2026 — verified exact accountability-record holds
 
 - Add FLAG_HISTORY and DATA_REQUEST_REVIEW under ADR-045 (FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002), using immutable parent ownership and exact primary-key references.
 - Add migration 0024, strict generated contracts, administrator options and SQL DELETE protection; preserve normal triage, immutable evidence, finite decisions and disabled deletion.
-- Native migration and 19 focused hold cases pass. Expand ownership, upgrade, lifecycle and browser regressions; full acceptance remains pending.
+- Hosted CI 37924489562 passed 621 Python, five tooling, 63 real-API browser and one isolated UI case, including migration/recovery, role/security and container smoke. Promoted `ce9d9f3` to main and removed its branch locally/remotely. Native focused cases pass; unavailable native storage remains separate.
 
-## In progress — verified MinIO download recovery
+## 9 October 2026 — verified MinIO download recovery
 
 - Add at most three dependency-download attempts and terminal Go module verification after native network EOFs (NFR-MNT-001).
 - Reuse locked module/build caches for the unchanged ADR-019 source/compiler/base pins; verify and compile within one build step.
-- Add four deterministic helper regressions. Local lint/types/contracts and 431 unit/contract checks pass; actual service rebuild and hosted acceptance remain pending.
+- Hosted CI 37923437046 passed 615 Python, five tooling, 63 browser and one isolated UI test, actual service/seed, recovery, security scans and container smoke. Promoted `04de7ea` to main and removed its branch locally/remotely; native module downloads remain incomplete.
 
 ## 9 October 2026 — verified bounded export projection
 

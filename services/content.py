@@ -687,7 +687,7 @@ class ContentService:
                 if not supports(document):
                     continue
             if lock:
-                db.refresh(version, with_for_update=True)
+                db.refresh(version, with_for_update={"read": True})
             if version.status != "APPROVED":
                 continue
             result.append(version)
@@ -697,7 +697,40 @@ class ContentService:
 
     def assessment_version(self, db: Session, version_id: UUID, subject_id: UUID) -> ItemVersion:
         version = self.eligible_version(db, version_id, subject_id, synthetic=True)
-        db.refresh(version, with_for_update=True)
+        # FOR SHARE permits concurrent assessments but still excludes status/content writes.
+        db.refresh(version, with_for_update={"read": True})
         if version.status != "APPROVED" or version.document.get("response_type") == "SHORT_TEXT":
             raise ContentError("CONTENT_NOT_APPROVED", status=409)
         return version
+
+    def assessment_versions(
+        self, db: Session, version_ids: list[UUID], subject_id: UUID
+    ) -> list[ItemVersion]:
+        """Lock/revalidate a bounded plan together, preserving the selector's original order."""
+        if not 1 <= len(version_ids) <= 15 or len(set(version_ids)) != len(version_ids):
+            raise ContentError("CONTENT_NOT_APPROVED", status=409)
+        versions = list(
+            db.scalars(
+                select(ItemVersion)
+                .join(Item)
+                .join(Subject)
+                .join(Level)
+                .where(
+                    ItemVersion.id.in_(version_ids),
+                    ItemVersion.status == "APPROVED",
+                    ItemVersion.synthetic.is_(True),
+                    Item.subject_id == subject_id,
+                    Subject.name.in_(["Mathematics", "Physics"]),
+                    Level.name == "S4",
+                )
+                .order_by(ItemVersion.item_id, ItemVersion.id)
+                .with_for_update(read=True, of=ItemVersion)
+                .execution_options(populate_existing=True)
+            )
+        )
+        indexed = {version.id: version for version in versions}
+        if len(indexed) != len(version_ids) or any(
+            version.document.get("response_type") == "SHORT_TEXT" for version in versions
+        ):
+            raise ContentError("CONTENT_NOT_APPROVED", status=404)
+        return [indexed[version_id] for version_id in version_ids]

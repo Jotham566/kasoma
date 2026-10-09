@@ -1,8 +1,8 @@
 # E8 exact accountability-record hold verification
 
 Requirements: FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002.
-Status: implemented; native migration and 19 focused hold cases pass. Local lint/types/contracts
-and 431 unit/contract tests pass; complete regression/browser acceptance remains pending.
+Status: verified in hosted CI 37924489562 at `ce9d9f3`, promoted to main. Native migration and
+19 focused hold cases pass; full native storage acceptance remains separate.
 
 [ADR-045](../decisions/ADR/045-accountability-record-holds.md) extends the existing exact-record
 registry to FLAG_HISTORY and DATA_REQUEST_REVIEW. Flag history uses its own id and the immutable
@@ -27,7 +27,8 @@ replay, exact scope, multiple holds, release/expiry, protected DELETE, preview a
 Two further cases cover continued parent triage with immutable old history, and upgrading twice
 from 0023 while preserving a previous hold and its retry before adding a request-review hold.
 Post-release UPDATE denial is also checked alongside DELETE for all five learning/accountability
-targets. Full regression including these added assertions is running.
+targets. Native regression including these added assertions passed 431 unit/contract and 189
+integration cases; the one storage/Mailpit case failed because native MinIO was still unavailable.
 
 The existing three-engine administrator journey now checks all nine options and creates an
 actual DATA_REQUEST_REVIEW hold alongside a DATA_REQUEST hold, preserving lost-acknowledgement,
@@ -40,5 +41,16 @@ No destructive processor, retention period, provider call or real-data fixture w
 
 Additional native checks passed: `make lint openapi-check build security`, with both dependency
 audits reporting no known vulnerabilities, and `make recovery-drill test-runtime-role` (54 tables,
-272 rows, 235 ms restore, pgvector/immutable guards, no cleanup failures). Full native regression
+272 rows, 235 ms restore, pgvector/immutable guards, no cleanup failures). Full native acceptance
 and hosted browser/container acceptance remain pending; local MinIO downloads are still incomplete.
+
+## Final hosted acceptance
+
+[CI 37924489562](https://github.com/Jotham566/kasoma/actions/runs/37924489562) passed at `ce9d9f3`:
+431 unit/contract plus 190 integration cases (621 Python), five tooling checks, 63 real-API browser
+executions and one isolated editor case. Clean setup/services/migrations/seed, focused rubric and
+restricted-role checks, lint/types/contracts/build, security/source/image scans and container smoke
+all passed. Recovery restored 54 tables/272 rows in 478 ms with pgvector/immutable guards and no
+cleanup failures. Cold question transfers were 191510/194227/193605 bytes across the three engines.
+Promoted to main; the completed branch was removed locally/remotely. This supersedes the earlier
+hosted-pending observations; native MinIO download remains incomplete.
