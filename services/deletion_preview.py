@@ -28,6 +28,8 @@ from services.domain.content import (
     Item,
     ItemMapping,
     ItemVersion,
+    Rubric,
+    RubricCriterionRow,
 )
 from services.domain.data_requests import (
     DataExport,
@@ -178,6 +180,8 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
         (LegalHoldReceipt, LegalHoldReceipt.actor_id == user),
         (Item, Item.author_id == user),
         (ItemVersion, ItemVersion.id.in_(versions)),
+        (Rubric, Rubric.id.in_(versions)),
+        (RubricCriterionRow, RubricCriterionRow.rubric_id.in_(versions)),
         (ItemMapping, ItemMapping.item_version_id.in_(versions)),
         (
             ContentReview,

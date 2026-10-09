@@ -205,3 +205,19 @@ criterion text, acceptable evidence, common errors and prohibited inferences. Th
 boundary/privacy cases pass locally; fake prompt versions are v2. See
 [validation evidence](E4_SHORT_TEXT_VALIDATION_VERIFICATION.md). Persistence, academic approval,
 calibrated enablement and the learner fallback path remain incomplete.
+
+## 9 October 2026 acceptance and reviewed-rubric slice
+
+NFR-SEC-002 restricted-login checks, FR-ID-006/BR-010 learning-record holds and FR-ID-001 bounded
+authentication expiry passed CI 37228338121. Commit `64394ac` additionally passed full CI
+37228984415: 587 Python, 60 browser and five tooling checks plus clean migration/recovery/security/
+container gates. It is on main and the four completed branches are removed. This supersedes earlier
+pending entries for these slices and explicit rubric material (FR-GRD-003/004).
+
+FR-CNT-001/002/003/004, FR-GRD-003/004 and NFR-SEC-002 reviewed rubric authoring:
+[ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md),
+[verification](E2_REVIEWED_RUBRICS_VERIFICATION.md). Migration 0023, content/rubric contracts and
+service, staff UI, generated API schemas, learner selection/SQL exclusion, staff deletion inventory,
+three contract cases, eight database cases and a three-engine browser journey are implemented.
+Local 416 unit/contract plus five tooling checks pass; hosted migration/application acceptance is
+pending. No learner scoring, calibrated eligibility, new model call or academic approval is implied.

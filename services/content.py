@@ -29,6 +29,8 @@ from services.domain.content import (
     Item,
     ItemMapping,
     ItemVersion,
+    Rubric,
+    RubricCriterionRow,
 )
 from services.domain.curriculum import Competency, Concept, Level, Subject, Topic
 from services.domain.flags import ContentFlag
@@ -76,6 +78,9 @@ class ContentService:
             document=DraftDocument.model_validate(version.document),
             requires_second_review=version.requires_second_review,
             approval_count=self.approvals(db, version),
+            rubric_version_id=version.id
+            if version.document.get("rubric") and db.get(Rubric, version.id) is not None
+            else None,
             created_at=version.created_at,
             updated_at=version.updated_at,
         )
@@ -280,6 +285,18 @@ class ContentService:
                 sum(m.weight for m in document.competency_mappings), 1, abs_tol=1e-6
             ):
                 fields.append("competency_mappings")
+            if document.response_type == "SHORT_TEXT":
+                if document.rubric is None:
+                    fields.append("rubric")
+                elif (
+                    sum(c.maximum_points for c in document.rubric.criteria)
+                    != document.maximum_points
+                ):
+                    fields.append("rubric.criteria")
+                if document.partial_credit != "CRITERION_SUM":
+                    fields.append("partial_credit")
+            elif document.rubric is not None or document.partial_credit != "ALL_OR_NOTHING":
+                fields.append("rubric" if document.rubric is not None else "partial_credit")
             if document.response_type in {"SINGLE_CHOICE", "MULTIPLE_CHOICE"}:
                 choices = document.choices
                 ids = {c.id for c in choices}
@@ -307,7 +324,10 @@ class ContentService:
             else:
                 if document.choices or document.correct_choice_id or document.correct_choice_ids:
                     fields.append("choices")
-                if document.numeric_spec is None:
+                if document.response_type == "SHORT_TEXT":
+                    if document.numeric_spec is not None:
+                        fields.append("numeric_spec")
+                elif document.numeric_spec is None:
                     fields.append("numeric_spec")
                 else:
                     fields.extend(
@@ -329,6 +349,24 @@ class ContentService:
             ]
         )
         db.flush()
+
+    def rubric_rows(self, db: Session, version: ItemVersion, document: DraftDocument) -> None:
+        if document.rubric is None and not version.document.get("rubric"):
+            return
+        db.execute(delete(RubricCriterionRow).where(RubricCriterionRow.rubric_id == version.id))
+        db.execute(delete(Rubric).where(Rubric.id == version.id))
+        if document.rubric is not None:
+            db.add(Rubric(id=version.id, maximum_points=document.maximum_points))
+            db.flush()
+            db.add_all(
+                [
+                    RubricCriterionRow(
+                        rubric_id=version.id, position=position, **criterion.model_dump()
+                    )
+                    for position, criterion in enumerate(document.rubric.criteria, 1)
+                ]
+            )
+            db.flush()
 
     def audit(
         self,
@@ -451,6 +489,7 @@ class ContentService:
         db.add(version)
         db.flush()
         self.mapping_rows(db, version, body.document)
+        self.rubric_rows(db, version, body.document)
         db.add(
             ContentReceipt(
                 actor_id=actor, key=key, request_hash=fingerprint, item_version_id=version.id
@@ -499,6 +538,7 @@ class ContentService:
                 self.validate(db, item.subject_id, body.document, complete=False)
                 # Mapping triggers see DRAFT before the version row is changed.
                 self.mapping_rows(db, version, body.document)
+                self.rubric_rows(db, version, body.document)
                 version.document = body.document.model_dump(mode="json")
                 version.content_hash = digest(version.document)
                 version.topic_id, version.concept_id = (
@@ -636,7 +676,10 @@ class ContentService:
                 continue
             seen.add(version.item_id)
             document = DraftDocument.model_validate(version.document)
-            if channel not in document.channel_suitability:
+            if (
+                document.response_type == "SHORT_TEXT"
+                or channel not in document.channel_suitability
+            ):
                 continue
             if channel == "WHATSAPP":
                 from services.whatsapp_format import supports
@@ -655,6 +698,6 @@ class ContentService:
     def assessment_version(self, db: Session, version_id: UUID, subject_id: UUID) -> ItemVersion:
         version = self.eligible_version(db, version_id, subject_id, synthetic=True)
         db.refresh(version, with_for_update=True)
-        if version.status != "APPROVED":
+        if version.status != "APPROVED" or version.document.get("response_type") == "SHORT_TEXT":
             raise ContentError("CONTENT_NOT_APPROVED", status=409)
         return version

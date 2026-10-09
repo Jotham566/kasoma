@@ -382,3 +382,14 @@ Scope remains one named record; related attempts, estimates and other evidence a
 held. Existing four target types and all decision/release/retention controls remain unchanged.
 Coverage is still incomplete and no erasure or anonymization is enabled. See
 [ADR-043](../decisions/ADR/043-learning-record-holds.md).
+
+## Implemented reviewed-rubric boundary (ADR-044)
+
+Migration 0023 adds rubrics(id = item_versions.id, maximum_points) and rubric_criteria keyed by
+(rubric_id, criterion_id), with stable positions and explicit text, acceptable evidence, common
+errors and prohibited inferences. The owning item supplies version number and review lifecycle.
+Normalized material must exactly match the canonical document before IN_REVIEW/APPROVED and is
+mutable only in DRAFT. SHORT_TEXT session assignment is rejected in SQL until learner integration
+is approved. Existing objective documents/hashes are unchanged. See
+[ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md) and
+[verification](../implementation/E2_REVIEWED_RUBRICS_VERIFICATION.md).

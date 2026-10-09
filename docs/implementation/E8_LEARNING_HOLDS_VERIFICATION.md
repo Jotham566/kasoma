@@ -26,3 +26,12 @@ three new contract cases but all six integration fixtures fail before assertions
 connection boundary. Hosted clean migration and application tests are required before promotion. This is partial preservation coverage, not account erasure clearance or
 production legal/privacy approval. Remaining source/channel/embedded-reference/log/backup coverage,
 accountability expiry, reviewed transforms and real recovery/privacy gates remain open.
+
+## Hosted acceptance recorded 9 October 2026
+
+Commit `64394ac` passed [CI 37228984415](https://github.com/Jotham566/kasoma/actions/runs/37228984415):
+413 unit/contract, 174 integration, 60 browser and five tooling checks, plus focused restricted-login,
+clean migrations/seed, isolated recovery (52 tables, 272 rows), lint/types/contracts/build, security
+and container smoke. It is promoted to main. This supersedes earlier hosted-pending statements.
+Native PostgreSQL remains unavailable; production, academic and other stated scope limits remain.
+The restricted-login users-row lock grant correction is included and verified.

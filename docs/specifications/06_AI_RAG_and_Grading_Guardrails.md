@@ -227,3 +227,8 @@ The synthetic v2 rehearsal contexts additionally require explicit criterion text
 common errors and prohibited inferences. Both passes receive the same bounded authored fixture
 material. Field presence and structural validation do not establish academic correctness, approved
 context provenance or model eligibility; all learner-scoring gates above remain mandatory.
+
+ADR-044 now provides reviewed rubric persistence and explicit criterion material for future
+integration. It does not enable learner assignment or connect content to model scoring. Academic
+eligibility, benchmark/calibration, pending/neutral results and safe fallback remain gates. See
+[reviewed-rubric verification](../implementation/E2_REVIEWED_RUBRICS_VERIFICATION.md).

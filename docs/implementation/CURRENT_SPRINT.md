@@ -1,7 +1,7 @@
 # Current Sprint: remaining MVP operational and grading gates
 
-Updated 4 October 2026. Main is `74a4a8f`. Completed conversation, channel operations, short-text
-foundation, recovery, browser and request-timing branches have been removed. Work remains synthetic/local.
+Updated 9 October 2026. Main is `64394ac`. Completed branches through rubric context, restricted
+login, learning-record holds and ephemeral expiry have been removed. Work remains synthetic/local.
 
 ## Verified implementation
 
@@ -20,25 +20,19 @@ and container smoke. Native database/browser attempts failed before assertions b
 is unavailable. Hosted evidence does not claim that native installation has recovered. The first
 recovery run failed on a table-name check; it was fixed and the complete pipeline rerun.
 
+Restricted-login verification, learning-record holds and bounded identity expiry passed CI
+37228338121 (574 Python, 60 browser, five tooling checks). Explicit rubric context passed CI
+37228984415 (587 Python, 60 browser, five tooling checks), including all preceding changes and
+clean migrations/recovery/security/container checks. See [permissions](E9_RUNTIME_ROLE_VERIFICATION.md),
+[holds](E8_LEARNING_HOLDS_VERIFICATION.md), [expiry](E1_EPHEMERAL_EXPIRY_VERIFICATION.md) and
+[rehearsal](E4_SHORT_TEXT_REHEARSAL_VERIFICATION.md). Production credentials remain unchanged.
+
 ## Active implementation
 
-NFR-SEC-002: a temporary restricted database login now exercises objective assessment, idempotency,
-mastery evidence and explicit permission denials. Hosted database execution is pending; the native
-fixture cannot connect. Default application credentials are unchanged.
-[Permission evidence](E9_RUNTIME_ROLE_VERIFICATION.md).
-
-FR-ID-006/BR-010: ADR-043 adds exact grade/mastery evidence/history hold targets with ownership
-locks and unchanged immutable protections. Local 397 unit/contract checks pass; hosted migration/
-application acceptance is pending. [Learning hold evidence](E8_LEARNING_HOLDS_VERIFICATION.md).
-
-FR-ID-001/NFR-OBS-001: bounded worker expiry replaces request-triggered bulk removal of expired
-OTP/rate records. Row locks protect rate refresh against cleanup. Local 400 unit/contract checks pass; hosted
-acceptance is pending;
-[expiry evidence](E1_EPHEMERAL_EXPIRY_VERIFICATION.md).
-
-FR-GRD-003/004: the synthetic criterion context now carries required rubric text/evidence/error/
-inference material, with v2 rehearsal prompts and 13 additional boundary/privacy cases. Local
-413 unit/contract checks pass; persisted approved rubrics and learner scoring remain unavailable.
+FR-CNT-001/002/003/004, FR-GRD-003/004, NFR-SEC-002: ADR-044 adds version-pinned reviewed
+rubrics, staff authoring/review, SQL projection/immutability checks and disabled learner assignment.
+Local 416 unit/contract checks pass; fresh/upgrade database and 63 browser executions await hosted
+acceptance. [Rubric evidence](E2_REVIEWED_RUBRICS_VERIFICATION.md).
 
 ## Next dependencies and acceptance work
 
@@ -56,8 +50,3 @@ The [release register](RELEASE_GATES.md) tracks missing kickoff/capacity, exact 
 and approved inventory, expert benchmarks, privacy/guardian/DPIA, Week 8 provider choice, production
 OTP/MFA/restricted roles, managed PITR/RPO/RTO, branded/mobile/versioned browser and pilot sign-offs.
 The approved 12-week deadline and all acceptance thresholds remain unchanged.
-
-Runtime-role verification follow-up: hosted CI 37227070209 exposed the existing users-row lock in
-attempt_hint_guard. The test profile adds only the mutable display_name column grant and verifies
-identity/status/birth-date remain denied. All 162 existing integration cases passed; the corrected
-restricted-login case and full pipeline are pending rerun. No production credential change.

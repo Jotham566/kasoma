@@ -105,3 +105,21 @@ class ContentImport(Base):
     available_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class Rubric(Base):
+    __tablename__ = "rubrics"
+    id: Mapped[UUID] = mapped_column(ForeignKey("item_versions.id"), primary_key=True)
+    maximum_points: Mapped[int]
+
+
+class RubricCriterionRow(Base):
+    __tablename__ = "rubric_criteria"
+    rubric_id: Mapped[UUID] = mapped_column(ForeignKey("rubrics.id"), primary_key=True)
+    criterion_id: Mapped[str] = mapped_column(primary_key=True)
+    position: Mapped[int]
+    maximum_points: Mapped[int]
+    criterion_text: Mapped[str]
+    acceptable_evidence: Mapped[list[str]] = mapped_column(JSON)
+    common_errors: Mapped[list[str]] = mapped_column(JSON)
+    prohibited_inferences: Mapped[list[str]] = mapped_column(JSON)

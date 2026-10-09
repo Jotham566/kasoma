@@ -278,3 +278,10 @@ owned temporary databases. No developer-database overwrite, production PITR or R
 See [ADR-043](../decisions/ADR/043-learning-record-holds.md). Extend the partial hold registry to
 grades, mastery evidence and mastery history with exact ownership and row locks. Grade references
 use attempt_id. Existing immutability and independent authorization remain; deletion stays disabled.
+
+### ADR-044 — version-pinned reviewed rubrics
+
+See [ADR-044](../decisions/ADR/044-reviewed-rubric-persistence.md). Synthetic SHORT_TEXT authoring
+reuses independent content review. Rubric IDs equal immutable item-version IDs; normalized criteria
+must match the reviewed document and cannot change outside DRAFT. Learner assignment stays disabled;
+academic calibration and pending/fallback integration are separate gates.

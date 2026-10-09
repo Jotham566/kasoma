@@ -50,6 +50,8 @@ def main() -> None:
     for label, roles in {
         "author": ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"],
         "import-author": ["CONTENT_AUTHOR"],
+        "rubric-author": ["CONTENT_AUTHOR", "ACADEMIC_REVIEWER"],
+        "rubric-reviewer": ["ACADEMIC_REVIEWER"],
         "reviewer": ["ACADEMIC_REVIEWER"],
         "second": ["ACADEMIC_REVIEWER"],
         "flag-reviewer": ["ACADEMIC_REVIEWER"],

@@ -88,3 +88,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-043: Individual learning-record holds](043-learning-record-holds.md)
   adds explicit grade, mastery evidence and mastery history preservation targets.
+
+- [ADR-044: Version-pinned reviewed rubrics](044-reviewed-rubric-persistence.md)
+  records normalized immutable rubric material and disabled short-text learner assignment.

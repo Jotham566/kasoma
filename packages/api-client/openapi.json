@@ -1149,8 +1149,11 @@
             ]
           },
           "partial_credit": {
-            "const": "ALL_OR_NOTHING",
             "default": "ALL_OR_NOTHING",
+            "enum": [
+              "ALL_OR_NOTHING",
+              "CRITERION_SUM"
+            ],
             "title": "Partial Credit",
             "type": "string"
           },
@@ -1180,7 +1183,8 @@
             "enum": [
               "SINGLE_CHOICE",
               "MULTIPLE_CHOICE",
-              "NUMERIC"
+              "NUMERIC",
+              "SHORT_TEXT"
             ],
             "title": "Response Type",
             "type": "string"
@@ -1209,6 +1213,16 @@
             ],
             "title": "Rights Status",
             "type": "string"
+          },
+          "rubric": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RubricDraft"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "source": {
             "default": "",
@@ -3680,6 +3694,88 @@
         "title": "ReviewView",
         "type": "object"
       },
+      "RubricCriterion": {
+        "additionalProperties": false,
+        "properties": {
+          "acceptable_evidence": {
+            "items": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "title": "Acceptable Evidence",
+            "type": "array"
+          },
+          "common_errors": {
+            "items": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 10,
+            "title": "Common Errors",
+            "type": "array"
+          },
+          "criterion_id": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+            "title": "Criterion Id",
+            "type": "string"
+          },
+          "criterion_text": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Criterion Text",
+            "type": "string"
+          },
+          "maximum_points": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Maximum Points",
+            "type": "integer"
+          },
+          "prohibited_inferences": {
+            "items": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 10,
+            "title": "Prohibited Inferences",
+            "type": "array"
+          }
+        },
+        "required": [
+          "criterion_id",
+          "maximum_points",
+          "criterion_text",
+          "acceptable_evidence",
+          "common_errors",
+          "prohibited_inferences"
+        ],
+        "title": "RubricCriterion",
+        "type": "object"
+      },
+      "RubricDraft": {
+        "additionalProperties": false,
+        "properties": {
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/RubricCriterion"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Criteria",
+            "type": "array"
+          }
+        },
+        "required": [
+          "criteria"
+        ],
+        "title": "RubricDraft",
+        "type": "object"
+      },
       "SessionHistoryEntry": {
         "additionalProperties": false,
         "properties": {
@@ -4311,6 +4407,18 @@
           "revision": {
             "title": "Revision",
             "type": "integer"
+          },
+          "rubric_version_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rubric Version Id"
           },
           "status": {
             "title": "Status",

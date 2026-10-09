@@ -1,5 +1,18 @@
 # Changelog
 
+## 9 October 2026 — reviewed rubric authoring
+
+- Add version-pinned rubric/criterion persistence and independent short-text content review (FR-CNT-001–004, FR-GRD-003/004, NFR-SEC-002; ADR-044).
+- Preserve legacy document hashes and request retries; require complete matching criteria before review and freeze normalized material with its item version.
+- Add staff author/reviewer forms, generated contracts, SQL assignment exclusion and synthetic regression cases. Learner short-text delivery and model scoring remain disabled.
+- Local lint/types/contracts/build/security and 416 unit/contract plus five tooling checks pass. Native database/browser setup remains unavailable; hosted acceptance is pending.
+
+## 9 October 2026 — verified holds, expiry and rubric context
+
+- Promote `64394ac` after CI 37228984415: 587 Python (413 unit/contract, 174 integration), 60 browser and five tooling checks, clean migrations/recovery/security/container gates.
+- This includes restricted-login permission verification, ADR-043 learning-record holds and bounded authentication expiry, also verified by CI 37228338121. Remove their four completed branches.
+- The earlier missing users-row lock grant is fixed and verified. Production grants, full retention/erasure and academic grading approval remain open.
+
 ## 4 October 2026 — explicit synthetic rubric material
 
 - Require criterion text, acceptable evidence, common errors and prohibited inferences in the offline short-text context (FR-GRD-003/004; specified rubric fields).

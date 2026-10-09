@@ -40,3 +40,12 @@ library import; tests now use the repository's existing dependency-free event-bo
 Native focused `make test` reaches only contract checks: all five database fixtures fail before
 assertions because PostgreSQL on localhost:55432 remains unavailable. Hosted execution is required
 before promotion. No model, email, messaging or cloud runtime call is made.
+
+## Hosted acceptance recorded 9 October 2026
+
+Commit `64394ac` passed [CI 37228984415](https://github.com/Jotham566/kasoma/actions/runs/37228984415):
+413 unit/contract, 174 integration, 60 browser and five tooling checks, plus focused restricted-login,
+clean migrations/seed, isolated recovery (52 tables, 272 rows), lint/types/contracts/build, security
+and container smoke. It is promoted to main. This supersedes earlier hosted-pending statements.
+Native PostgreSQL remains unavailable; production, academic and other stated scope limits remain.
+The restricted-login users-row lock grant correction is included and verified.

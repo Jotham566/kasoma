@@ -8,30 +8,21 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
-    StringConstraints,
     ValidationError,
     model_validator,
 )
 
+from services.rubric_contracts import RubricCriterion
+
 Identifier = Annotated[str, Field(pattern=r"^[A-Za-z][A-Za-z0-9_-]{0,63}$")]
 Text = Annotated[str, Field(min_length=1, max_length=2000)]
 Points = Annotated[int, Field(ge=0, le=100)]
-RubricText = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)]
 
 
 class StrictContract(BaseModel):
     model_config = ConfigDict(
         extra="forbid", strict=True, allow_inf_nan=False, hide_input_in_errors=True
     )
-
-
-class RubricCriterion(StrictContract):
-    criterion_id: Identifier
-    maximum_points: int = Field(ge=1, le=100)
-    criterion_text: RubricText = Field(repr=False)
-    acceptable_evidence: list[RubricText] = Field(min_length=1, max_length=10, repr=False)
-    common_errors: list[RubricText] = Field(max_length=10, repr=False)
-    prohibited_inferences: list[RubricText] = Field(max_length=10, repr=False)
 
 
 class SyntheticRubricContext(StrictContract):

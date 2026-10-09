@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { components } from "@kasoma/api-client";
 import { NumericFields } from "./numeric-fields";
+import { RubricFields } from "./rubric-fields";
 
 type Context = components["schemas"]["ContentContext"];
 type Document = components["schemas"]["DraftDocument"];
@@ -23,6 +24,9 @@ export function Editor({
   const initial = selected?.document;
   const [format, setFormat] = useState<Document["response_type"]>(
     initial?.response_type ?? "SINGLE_CHOICE",
+  );
+  const [rubric, setRubric] = useState<NonNullable<Document["rubric"]> | null>(
+    initial?.rubric ?? null,
   );
   const [choices, setChoices] = useState(
     initial?.choices?.length
@@ -82,7 +86,7 @@ export function Editor({
             : ["WEB"],
           prompt: value("prompt"),
           choices:
-            format === "NUMERIC"
+            format === "NUMERIC" || format === "SHORT_TEXT"
               ? []
               : choices.map((choice) => ({
                   id: choice.id,
@@ -133,7 +137,9 @@ export function Editor({
               return { version_id, confidence: Number(confidence) };
             }),
           maximum_points: Number(value("maximum_points")),
-          partial_credit: "ALL_OR_NOTHING",
+          partial_credit:
+            format === "SHORT_TEXT" ? "CRITERION_SUM" : "ALL_OR_NOTHING",
+          rubric: format === "SHORT_TEXT" ? rubric : null,
           hints: [0, 1, 2]
             .map((i) => value(`hint_${i}`).trim())
             .filter(Boolean),
@@ -154,9 +160,9 @@ export function Editor({
         {selected ? "Edit draft" : "Create draft"}
       </h2>
       <p className="mb-4">
-        Text-only choice or numeric response. Drafts may be incomplete;
-        submission validates every required field. No media uploads in this
-        slice.
+        Text-only objective responses or short-text rubrics for review. Drafts
+        may be incomplete; submission validates every required field. No media
+        uploads in this slice.
       </p>
       <label>
         Title
@@ -302,12 +308,15 @@ export function Editor({
             setFormat(e.target.value as Document["response_type"])
           }
         >
+          <option value="SHORT_TEXT">Short text (review only)</option>
           <option value="SINGLE_CHOICE">Single choice</option>
           <option value="MULTIPLE_CHOICE">Multiple choice (select all)</option>
           <option value="NUMERIC">Numeric</option>
         </select>
       </label>
-      {format === "NUMERIC" ? (
+      {format === "SHORT_TEXT" ? (
+        <RubricFields value={rubric} onChange={setRubric} />
+      ) : format === "NUMERIC" ? (
         <NumericFields initial={initial?.numeric_spec} />
       ) : (
         <>

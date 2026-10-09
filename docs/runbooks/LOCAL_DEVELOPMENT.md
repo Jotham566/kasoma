@@ -627,3 +627,18 @@ investigating cleanup. FAILED means the transaction rolled back and both committ
 normal scheduled retries can continue. Do not print records, reset rate limits, delete by prefix or
 clear tables to resolve a backlog. See
 [verification](../implementation/E1_EPHEMERAL_EXPIRY_VERIFICATION.md).
+
+## Synthetic reviewed rubrics
+
+With `make setup services migrate seed` complete, a CONTENT_AUTHOR can select SHORT_TEXT in the
+existing content editor, enter criteria/evidence/errors/prohibited inference and save a draft.
+Review requires criterion points to sum to the item maximum and all existing curriculum/rights
+metadata. Submit to a different ACADEMIC_REVIEWER with the complete checklist; second-review rules
+still apply. Returned drafts may be corrected; approved edits require a new item/rubric version.
+Use only original synthetic content. Approval does not place these items into learner sessions.
+
+Run `make openapi openapi-check lint test build e2e security` for changes, including fresh/upgrade
+migration tests and all three browser engines. See [rubric evidence](../implementation/E2_REVIEWED_RUBRICS_VERIFICATION.md).
+Do not deploy a pre-rubric binary after storing SHORT_TEXT documents: it cannot parse them. Preserve
+migration 0023 and protected evidence, disable new authoring in a compatible forward fix, and retain
+the disabled learner assignment guard. Do not downgrade/drop reviewed rubric records.

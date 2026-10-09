@@ -1372,9 +1372,9 @@ export interface components {
             /**
              * Partial Credit
              * @default ALL_OR_NOTHING
-             * @constant
+             * @enum {string}
              */
-            partial_credit: "ALL_OR_NOTHING";
+            partial_credit: "ALL_OR_NOTHING" | "CRITERION_SUM";
             /** Prerequisite Concept Ids */
             prerequisite_concept_ids?: string[];
             /**
@@ -1392,7 +1392,7 @@ export interface components {
              * @default SINGLE_CHOICE
              * @enum {string}
              */
-            response_type: "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "NUMERIC";
+            response_type: "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "NUMERIC" | "SHORT_TEXT";
             /**
              * Rights Conditions
              * @default
@@ -1409,6 +1409,7 @@ export interface components {
              * @enum {string}
              */
             rights_status: "ORIGINAL_KASOMA" | "LICENSED" | "PUBLIC_DOMAIN_CONFIRMED" | "PERMISSION_CONFIRMED" | "REFERENCE_ONLY_NO_REPRODUCTION" | "UNKNOWN_BLOCKED";
+            rubric?: components["schemas"]["RubricDraft"] | null;
             /**
              * Source
              * @default
@@ -2493,6 +2494,26 @@ export interface components {
              */
             reviewer_id: string;
         };
+        /** RubricCriterion */
+        RubricCriterion: {
+            /** Acceptable Evidence */
+            acceptable_evidence: string[];
+            /** Common Errors */
+            common_errors: string[];
+            /** Criterion Id */
+            criterion_id: string;
+            /** Criterion Text */
+            criterion_text: string;
+            /** Maximum Points */
+            maximum_points: number;
+            /** Prohibited Inferences */
+            prohibited_inferences: string[];
+        };
+        /** RubricDraft */
+        RubricDraft: {
+            /** Criteria */
+            criteria: components["schemas"]["RubricCriterion"][];
+        };
         /** SessionHistoryEntry */
         SessionHistoryEntry: {
             /** Answered Count */
@@ -2779,6 +2800,8 @@ export interface components {
             requires_second_review: boolean;
             /** Revision */
             revision: number;
+            /** Rubric Version Id */
+            rubric_version_id?: string | null;
             /** Status */
             status: string;
             /**

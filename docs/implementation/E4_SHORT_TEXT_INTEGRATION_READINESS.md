@@ -1,24 +1,25 @@
 # Short-text learner integration readiness
 
-Reviewed 4 October 2026. Requirements: FR-GRD-003/004/005, FR-CNT-003/004,
+Reviewed 9 October 2026. Requirements: FR-GRD-003/004/005, FR-CNT-003/004,
 FR-MST-001, FR-ID-003/006. This assessment grants no academic enablement.
 
 ## Current boundary
 
 ADR-040 validates synthetic output and ADR-041 rehearses independent fake passes and bounded
-repair. Neither is connected to learner routes, database grades or mastery. `DraftDocument`
-supports only choice/multiple-choice/numeric. `GradeView` admits only definitive deterministic
+repair. Neither is connected to learner routes, database grades or mastery. ADR-044 adds SHORT_TEXT authoring/review to `DraftDocument`, while learner selection and
+submission remain limited to choice/multiple-choice/numeric. `GradeView` admits only definitive deterministic
 results. `AssessmentService.view`, `grade` and `result`, and `mastery.record`, deserialize that
 same contract. A LOW_CONFIDENCE result must not be disguised as a zero-point GradeView.
 
-The specified `rubrics` and `rubric_criteria` entities do not yet exist. The rehearsal now requires
-explicit criterion text, acceptable evidence, common errors and prohibited inference, in addition
-to IDs/maxima. These remain original fixture material without academic approval or a persistence/
-review workflow. Synthetic v2 prompt wording is not a benchmark-approved production prompt.
+Migration 0023 implements version-pinned `rubrics` and `rubric_criteria`, with independent content
+review and SQL immutability/projection guards. Hosted acceptance is pending in
+[the rubric report](E2_REVIEWED_RUBRICS_VERIFICATION.md). The rehearsal requires explicit criterion
+text, acceptable evidence, common errors and prohibited inference, in addition to IDs/maxima.
+Synthetic fixtures and v2 prompts remain without benchmark or production academic approval.
 
 ## Next complete learner slice
 
-1. Add independently reviewed, versioned rubric/criterion persistence with acceptable evidence,
+1. Finish hosted acceptance of independently reviewed, versioned rubric/criterion persistence with acceptable evidence,
    common errors and prohibited inference; pin a rubric version to an immutable item version.
    Reuse author/reviewer separation, rights/mapping checks, retirement and audit controls.
 2. Add an explicit short-text eligibility service. Require approved current item/rubric/context,

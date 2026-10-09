@@ -546,3 +546,19 @@ No parent/child cascade of hold scope is implied. All recent-auth, independent c
 idempotency, expiry, release and audit controls remain unchanged. Generated enums and administrator
 labels reflect seven supported targets; deletion and complete hold coverage remain unavailable.
 See [ADR-043](../decisions/ADR/043-learning-record-holds.md).
+
+## Reviewed rubric authoring (ADR-044)
+
+Existing staff draft create/edit/review endpoints accept response_type=SHORT_TEXT and optional
+rubric.criteria; VersionView adds nullable rubric_version_id. Each criterion requires an ID,
+maximum_points, criterion_text, acceptable_evidence, common_errors and prohibited_inferences.
+The latter two lists may explicitly be empty. Criteria are unique and ordered (1–20); text entries
+are nonblank and at most 2,000 characters, lists at most ten entries. These are engineering bounds.
+Review requires summed points equal the item maximum, CRITERION_SUM, no choices/answer keys/numeric
+specification and all existing rights/mapping/checklist controls. Objective formats retain
+ALL_OR_NOTHING and cannot carry rubrics. Absent/null rubrics serialize as absent, preserving legacy
+idempotency/hash semantics. See generated OpenAPI for exact strict schemas.
+
+No learner submission format is added. Selectors and a database guard exclude short-text items;
+content approval alone does not authorize model grading. Rubric bodies remain staff-only.
+[Verification](../implementation/E2_REVIEWED_RUBRICS_VERIFICATION.md).

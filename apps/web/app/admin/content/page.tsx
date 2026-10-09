@@ -360,6 +360,55 @@ export default function ContentWorkspace() {
                   </ul>
                   <p>Maximum points: {selected.document.maximum_points}</p>
                 </section>
+              ) : selected.document.response_type === "SHORT_TEXT" ? (
+                <section
+                  aria-label="Authored rubric"
+                  className="space-y-3 my-4"
+                >
+                  <h3 className="font-semibold">Short-text rubric</h3>
+                  <p>
+                    Review only. Learner delivery remains disabled pending
+                    grading approval.
+                  </p>
+                  <p>
+                    Rubric version:{" "}
+                    {selected.rubric_version_id ?? "Not supplied"}. Maximum
+                    points: {selected.document.maximum_points}.
+                  </p>
+                  {!selected.document.rubric && <p>No rubric supplied.</p>}
+                  <ol className="space-y-4">
+                    {selected.document.rubric?.criteria.map((criterion) => (
+                      <li key={criterion.criterion_id}>
+                        <h4>
+                          {criterion.criterion_id}: {criterion.criterion_text} (
+                          {criterion.maximum_points} points)
+                        </h4>
+                        {(
+                          [
+                            ["acceptable_evidence", "Acceptable evidence"],
+                            ["common_errors", "Common errors"],
+                            ["prohibited_inferences", "Prohibited inferences"],
+                          ] as const
+                        ).map(([field, label]) => (
+                          <div key={field}>
+                            <p className="font-semibold">{label}</p>
+                            {criterion[field].length ? (
+                              <ul>
+                                {criterion[field].map((entry, i) => (
+                                  <li className="whitespace-pre-wrap" key={i}>
+                                    {entry}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p>None specified.</p>
+                            )}
+                          </div>
+                        ))}
+                      </li>
+                    ))}
+                  </ol>
+                </section>
               ) : (
                 <p className="my-4">
                   Correct option:{" "}

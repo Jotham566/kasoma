@@ -69,7 +69,7 @@ def plan(
     candidates = []
     for version in versions:
         doc = DraftDocument.model_validate(version.document)
-        if doc.concept_id is None or doc.topic_id is None:
+        if doc.response_type == "SHORT_TEXT" or doc.concept_id is None or doc.topic_id is None:
             continue
         prerequisites.setdefault(doc.concept_id, set()).update(doc.prerequisite_concept_ids)
         for mapping in doc.competency_mappings:

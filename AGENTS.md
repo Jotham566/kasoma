@@ -99,7 +99,7 @@ deletion-impact preview is merged. Specific-record legal holds for consent, atte
 content flags and data requests are merged. Bounded synthetic JSON draft imports, source
 locators and atomic worker processing are verified. Local ADMIN operational health and
 threshold alerts are merged. Bounded local channel queue/status and fake-dispatch timing
-are verified; AI/general request telemetry remains pending. Local consent-gated WhatsApp
+are verified; minimized API response-start timing is verified, while AI/aggregate telemetry remains pending. Local consent-gated WhatsApp
 linking, signed durable intake, STOP/unlink barriers, fake delivery and expiry are verified.
 Internal channel selection and objective grading/mastery parity are verified under ADR-037.
 End-to-end five-question WhatsApp conversations, reply binding, shared grading, STOP/expiry and
@@ -107,7 +107,9 @@ safe fake delivery are verified under ADR-038. Deletion/anonymization, remaining
 hold coverage, large-history fulfillment and accountability-retention processors remain pending.
 Offline synthetic short-text candidate validation and budgeted fake dual-pass rehearsal are
 verified. Isolated synthetic logical recovery and Chromium/Firefox/WebKit journeys with a
-cold question transfer budget are verified. Learner short-text integration, academic calibration,
+cold question transfer budget are verified. Restricted assessment database login, grade/mastery
+record holds and bounded OTP/rate expiry are verified. Reviewed rubric authoring under ADR-044 is
+implemented pending hosted acceptance. Learner short-text integration, academic calibration,
 production PITR/RPO/RTO and branded/mobile browser acceptance remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain

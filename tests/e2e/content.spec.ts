@@ -175,3 +175,137 @@ test("staff workspace denies anonymous access without exposing content", async (
     0,
   );
 });
+
+test("FR-CNT-003/FR-GRD-003: author and independently review a disabled short-text rubric", async ({
+  browser,
+}) => {
+  const authorContext = await browser.newContext();
+  const reviewerContext = await browser.newContext();
+  const author = await authorContext.newPage();
+  const reviewer = await reviewerContext.newPage();
+  try {
+    await signIn(author, "rubric-author");
+    await author
+      .getByLabel("Title", { exact: true })
+      .fill("Browser synthetic rubric");
+    await author
+      .getByLabel("Question prompt")
+      .fill("Original synthetic fixture: write Alpha.");
+    await author.getByLabel("Response format").selectOption("SHORT_TEXT");
+    const rubric = author.getByRole("region", {
+      name: "Short-text rubric",
+      exact: true,
+    });
+    await expect(rubric).toContainText("Learner delivery remains disabled");
+    await rubric
+      .getByRole("button", { name: "Add criterion", exact: true })
+      .click();
+    const criterion = rubric.getByRole("group", {
+      name: "Criterion 1",
+      exact: true,
+    });
+    await criterion
+      .getByLabel("Criterion text", { exact: true })
+      .fill("Explicitly write the label Alpha.");
+    await criterion
+      .getByLabel("Acceptable evidence 1", { exact: true })
+      .fill("Alpha\nwith the original label preserved");
+    await criterion
+      .getByRole("button", { name: "Add common error", exact: true })
+      .click();
+    await criterion.getByLabel("Common error 1", { exact: true }).fill("Beta");
+    await criterion
+      .getByRole("button", { name: "Add prohibited inference", exact: true })
+      .click();
+    await criterion
+      .getByLabel("Prohibited inference 1", { exact: true })
+      .fill("Do not infer an omitted label.");
+    await author
+      .getByLabel("Worked solution", { exact: true })
+      .fill("The original requested label is Alpha.");
+    await author
+      .getByLabel("Feedback and remediation")
+      .fill("Read the requested label again.");
+    await author
+      .getByLabel("Source and provenance")
+      .fill("Original synthetic browser rubric fixture");
+    await author.getByLabel("Rights status").selectOption("ORIGINAL_KASOMA");
+    await author
+      .getByLabel("Rights evidence")
+      .fill("Original fixture without third-party material");
+    await author
+      .getByLabel("Rights conditions")
+      .fill("Synthetic test use only");
+    await author
+      .getByLabel("Change reason", { exact: true })
+      .fill("Create original synthetic rubric");
+    expect(
+      (await new AxeBuilder({ page: author }).analyze()).violations,
+    ).toEqual([]);
+    await author
+      .getByRole("button", { name: "Save draft", exact: true })
+      .click();
+    await expect(author.getByRole("status")).toHaveText("Version 1: DRAFT.");
+    await author.getByRole("button", { name: "Reload selected item" }).click();
+    await expect(
+      author
+        .getByRole("region", { name: "Short-text rubric", exact: true })
+        .getByLabel("Acceptable evidence 1", { exact: true }),
+    ).toHaveValue("Alpha\nwith the original label preserved");
+    await author
+      .getByLabel("Submission reason")
+      .fill("Ready for independent rubric review");
+    await author
+      .getByRole("button", { name: "Submit for review", exact: true })
+      .click();
+    await expect(author.getByRole("status")).toHaveText(
+      "Version 1: IN_REVIEW.",
+    );
+    await expect(
+      author.getByRole("button", { name: "Approve", exact: true }),
+    ).toBeDisabled();
+    await signIn(reviewer, "rubric-reviewer");
+    const queued = reviewer.getByRole("button", {
+      name: "Browser synthetic rubric — v1 · IN_REVIEW",
+      exact: true,
+    });
+    while (!(await queued.count())) {
+      await reviewer
+        .getByRole("button", { name: "Load more", exact: true })
+        .click();
+      await expect(reviewer.getByRole("status")).toHaveText(
+        "More items loaded.",
+      );
+    }
+    await queued.click();
+    const preview = reviewer.getByRole("region", {
+      name: "Authored rubric",
+      exact: true,
+    });
+    await expect(preview).toContainText("Explicitly write the label Alpha.");
+    await expect(preview).toContainText("Do not infer an omitted label.");
+    await expect(preview).toContainText("Beta");
+    await expect(preview).toContainText("Learner delivery remains disabled");
+    for (const checkbox of await reviewer
+      .getByRole("group", { name: "Independent academic checklist" })
+      .getByRole("checkbox")
+      .all())
+      await checkbox.check();
+    await reviewer
+      .getByLabel("Review comments")
+      .fill("Synthetic rubric independently checked");
+    expect(
+      (await new AxeBuilder({ page: reviewer }).analyze()).violations,
+    ).toEqual([]);
+    await reviewer
+      .getByRole("button", { name: "Approve", exact: true })
+      .click();
+    await expect(reviewer.getByRole("status")).toHaveText(
+      "Version 1: APPROVED.",
+    );
+    await expect(preview).toContainText("Learner delivery remains disabled");
+  } finally {
+    await authorContext.close();
+    await reviewerContext.close();
+  }
+});
