@@ -8,6 +8,10 @@
 
 ## Work in progress — hosted verification recovery
 
+- Record continued PostgreSQL throttling after successful mirror configuration. Add
+  optional, step-scoped Docker Hub authentication with a pinned official login action;
+  preserve anonymous fork verification and automatic logout. Credentials remain external.
+
 - Address the subsequent PostgreSQL pull throttle with a public Docker Hub cache
   configured only on disposable CI runners. Preserve daemon settings, validate before
   bounded restart, and test configuration merging and local-execution refusal.

@@ -44,6 +44,22 @@ jobs:
           sudo install -m 0644 "$CI_DOCKER_CONFIG" /etc/docker/daemon.json
           sudo timeout 60s systemctl restart docker
           docker info --format '{{json .RegistryConfig.Mirrors}}'
+      - name: Check optional registry credential availability
+        id: registry-credentials
+        env:
+          REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          REGISTRY_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          if [ -n "$REGISTRY_USERNAME" ] && [ -n "$REGISTRY_TOKEN" ]; then
+            echo 'available=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Authenticate public image pulls when credentials are available
+        if: steps.registry-credentials.outputs.available == 'true'
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          logout: true
       - run: make build e2e-install test-web-content
       - run: make services migrate seed
       - run: make test-reviewed-rubrics

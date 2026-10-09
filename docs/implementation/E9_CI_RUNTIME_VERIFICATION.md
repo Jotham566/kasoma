@@ -74,3 +74,29 @@ Local follow-up validation passes: `make format lint test-tooling check-ci-profi
 security-source`, including all 35 tooling tests, types, document checks and no
 source-secret findings. All eight native Compose services remain healthy. Log:
 `.local/ci-public-cache-checks.log`. This does not prove hosted mirror startup.
+
+## Authenticated pulls remain available when cache misses are throttled
+
+Run 37993094065 at `bbe3b43` validated the daemon configuration, restarted successfully
+and reported the configured public mirror. Build/browser/content checks then passed,
+but PostgreSQL service startup still hit Docker Hub's anonymous pull limit. Thus the
+cache is not sufficient evidence of reliable hosted service startup. Logs are retained
+under `.local/ci-public-cache-hosted-full.log` and its failure counterpart.
+
+The workflow now supports optional repository Actions secrets `DOCKERHUB_USERNAME`
+and `DOCKERHUB_TOKEN` (read-only Docker Hub token). A step projects only availability;
+credentials are scoped to that check and the official pinned Docker login action,
+never to application containers or client variables. Login automatically logs out at
+job completion. No credential values are printed, cached or committed. Fork runs without
+secrets retain anonymous public pulls and every verification gate. Missing credentials
+are not an application test pass; pull throttling remains a possible infrastructure failure.
+The owner has been asked to configure these secrets securely; no token is requested in chat.
+
+The [official login action v4.6.0](https://github.com/docker/login-action/releases/tag/v4.6.0)
+is pinned to `dbcb813823bdd20940b903addbd779551569679f`; its action metadata uses Node 24.
+This remains CI artifact access, not application provider selection or cloud provisioning.
+
+Optional-auth workflow local checks pass: `make format lint test-tooling
+check-ci-profile security-source`, including 35 tooling tests, types and no source
+secret findings. Log: `.local/ci-registry-auth-checks.log`. Authenticated pulls cannot
+be claimed until the repository secrets exist and a hosted run verifies them.

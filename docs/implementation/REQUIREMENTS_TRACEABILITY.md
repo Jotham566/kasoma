@@ -854,3 +854,7 @@ answer input and distinct pending/neutral outcomes, rejecting scores and hidden/
 material. ADR-050 remains proposed; runtime routes, worker and privacy integration are
 not implemented by these contracts. Verification passes: 699 unit/contract tests (33 new outcome/input cases), 35 tooling
 checks, format/lint/types and generated-contract comparison. No HTTP schema changed.
+
+NFR-MNT-001: CI cache configuration passed remotely in run 37993094065, but PostgreSQL
+pull throttling persisted. Optional read-only registry authentication is prepared; hosted
+acceptance remains open. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).

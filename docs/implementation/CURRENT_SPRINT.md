@@ -1,11 +1,10 @@
 # Current sprint: export acceptance and learner UI completion
 
-Latest hosted status, 10 October: export run 37987018714 hit the 40-minute job timeout.
-Timing run 37991389904 failed on Docker Hub's Mailpit pull limit; remediation run
-37992401078 at `f9516f7` failed on PostgreSQL's pull limit. The next CI change adds a
-public image cache to the disposable runner only. Local application verification
-passes; no current candidate has full hosted acceptance. See
-[runtime/mirror verification](E9_CI_RUNTIME_VERIFICATION.md).
+Latest hosted status, 10 October: run 37993094065 at `bbe3b43` passed runner mirror
+configuration and build/browser/content setup, then failed on PostgreSQL's anonymous
+Docker Hub pull limit. The workflow now supports optional read-only Docker Hub Actions
+secrets; owner setup is requested. Local application verification passes. No current
+candidate has full hosted acceptance. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).
 
 Updated 9 October 2026. Main remains `bb2f4eb`. The pushed candidate `2a3b251`
 failed its original two Firefox export cases. Local follow-ups now pass all 90 browser

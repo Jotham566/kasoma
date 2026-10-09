@@ -936,3 +936,9 @@ validates and installs that file and restarts only the hosted daemon. Do not run
 privileged workflow steps on the review machine. Local Compose and its eight services
 remain unchanged. Cache misses fall back to Docker Hub and can still be throttled.
 See [CI verification](../implementation/E9_CI_RUNTIME_VERIFICATION.md).
+
+If hosted cache misses are throttled, maintainers can set repository Actions secrets
+`DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` using a read-only Docker Hub token. The
+workflow checks availability without printing values, uses the pinned official login
+action and logs out afterward. Do not put these credentials in `.env`, Compose, source,
+chat or browser variables. Fork runs without secrets continue anonymous public pulls.
