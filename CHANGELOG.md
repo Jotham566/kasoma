@@ -18,6 +18,16 @@
 
 ## Work in progress — hosted verification recovery
 
+- Reproduce WebKit attachment timeouts in a network-isolated Linux control. Explicit
+  HTML download intent passes complete/stalled/corrupt native transfers. Apply that
+  intent to the background-export link; application error/retry acceptance is pending.
+  Add bounded recent-owner status preflight and closed in-page errors after the
+  attribute-only change failed signed-out notice regression; download authorization
+  remains independent. Test unavailable status, no download and frozen recovery.
+  Verification passes 90 native browser executions, three Linux transport controls,
+  six final privacy executions, lint/types, contracts, source scanning and rebuilt
+  container scans/smoke. Exact-head hosted acceptance remains required.
+
 - Record the hosted Linux WebKit attachment failures after successful service/backend
   and Chromium/Firefox checks. Add a complete native-download loopback control with
   filename and exact-byte assertions; preserve mandatory application acceptance.

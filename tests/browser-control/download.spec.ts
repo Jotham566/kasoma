@@ -8,7 +8,7 @@ test("control complete attachment: native filename and exact bytes", async ({
   const body = Buffer.from(JSON.stringify({ synthetic: "x".repeat(196608) }));
   const server = createServer((request, response) => {
     if (request.url !== "/file") {
-      response.end('<a href="/file">Download control</a>');
+      response.end('<a href="/file" download>Download control</a>');
       return;
     }
     response.writeHead(200, {
@@ -48,7 +48,7 @@ for (const fault of ["stall", "corrupt"] as const) {
     let requests = 0;
     const server = createServer((request, response) => {
       if (request.url !== "/file") {
-        response.end('<a href="/file">Download control</a>');
+        response.end('<a href="/file" download>Download control</a>');
         return;
       }
       requests++;

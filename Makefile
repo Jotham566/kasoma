@@ -283,6 +283,16 @@ test-export-download:
 test-export-download-control:
 	$(PNPM) exec playwright test --config=playwright.export-control.config.ts
 
+.PHONY: test-export-download-control-linux
+test-export-download-control-linux:
+	docker run --rm --network none --memory 2g --cpus 2 --shm-size=256m --read-only --tmpfs /tmp \
+		-e KASOMA_E2E_BROWSER=webkit -e PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
+		-v "$(CURDIR)/node_modules:/work/node_modules:ro" \
+		-v "$(CURDIR)/tests/browser-control:/work/tests/browser-control:ro" \
+		-v "$(CURDIR)/playwright.export-control.config.ts:/work/playwright.export-control.config.ts:ro" \
+		-w /work mcr.microsoft.com/playwright@sha256:6446946a1d9fd62d9ae501312a2d76a43ee688542b21622056a372959b65d63d \
+		node node_modules/@playwright/test/cli.js test --config=playwright.export-control.config.ts --output=/tmp/control-results
+
 .PHONY: test-firefox-native-download
 test-firefox-native-download:
 	$(UV) python -m scripts.firefox_native_control

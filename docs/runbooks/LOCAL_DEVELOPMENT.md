@@ -863,6 +863,23 @@ filename and exact saved bytes. The fault controls track connection closure and 
 corruption on browser retries; retained traces contain only local synthetic traffic.
 It is a diagnostic command, not a replacement for the application browser suite.
 
+`make test-export-download-control-linux` runs those WebKit controls in the official
+Playwright 1.58.2 Ubuntu Noble image pinned by manifest digest. It uses the host's
+installed Playwright JavaScript package, a read-only filesystem, temporary output,
+2 GiB/2 CPU limits and no external network. Only node_modules, the control tests and
+their configuration are mounted; no environment file or application volume is exposed.
+The image must be available locally (its initial pull requires registry access).
+It uses the host architecture: on the M4 this is Linux ARM64, not hosted AMD64.
+Its bundled Node 24.13.0 is a browser diagnostic runtime, not a replacement for the
+repository's pinned application runtime. Hosted application acceptance remains required.
+
+The export action checks recent-owner job status before starting the browser's native
+attachment, with a ten-second client deadline and closed privacy-page errors for
+unavailable, expired or unauthenticated requests. The file is never buffered into a
+browser Blob. Status success does not authorize file access: the streaming endpoint
+independently rechecks ownership, session and expiry. A later interrupted/failed native
+transfer is retried through the same action while its frozen copy remains available.
+
 
 `make test-firefox-native-download` diagnoses the pinned macOS Firefox's own download
 manager via its built-in Marionette protocol. It requires `make e2e-install`, uses a

@@ -101,6 +101,14 @@ URLs. Cancellation closes upstream/storage resources. A missing/corrupt/expired/
 incomplete upstream response must abort the download, not produce a successful truncated JSON file.
 Exact whole-transfer limits and browser failure UX require evidence before acceptance.
 
+Linux WebKit control evidence requires explicit HTML download intent for native
+attachments. Before dispatching that attachment, the learner UI checks the existing
+recent-owner status endpoint with a ten-second client deadline and reports closed
+failures on the privacy page; only READY starts a download. The status check is not
+an authorization grant, does not buffer file bytes and cannot bypass the independent
+download-time owner/session/expiry checks. Duplicate clicks share the in-flight check.
+This candidate refinement requires native privacy/error/retry and hosted acceptance.
+
 ## Inventory, observability and acceptance
 
 Include minimized job/generation status in owner exports and deletion-impact inventory; exclude

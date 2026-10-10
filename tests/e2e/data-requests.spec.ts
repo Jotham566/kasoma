@@ -113,6 +113,48 @@ test("FR-ID-006: background command replay, explicit status and native frozen at
     page.getByRole("link", { name: "Save background export", exact: true }),
   ).toBeVisible();
   expect(await save()).toEqual(original);
+  let unexpectedDownloads = 0;
+  const recordDownload = () => unexpectedDownloads++;
+  page.on("download", recordDownload);
+  const jobRoute = "**/api/v1/me/data-requests/*/export-job";
+  let expired = true;
+  const unavailable = async (route: import("@playwright/test").Route) => {
+    if (expired) {
+      const response = await route.fetch();
+      await route.fulfill({
+        response,
+        json: { ...(await response.json()), status: "EXPIRED" },
+      });
+      return;
+    }
+    await route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error: { code: "SERVICE_UNAVAILABLE", message: "synthetic failure" },
+      }),
+    });
+  };
+  await page.route(jobRoute, unavailable);
+  await page
+    .getByRole("link", { name: "Save background export", exact: true })
+    .click();
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText(
+    "This copy has expired. Submit a new export request.",
+  );
+  expect(unexpectedDownloads).toBe(0);
+  expired = false;
+  await page
+    .getByRole("link", { name: "Save background export", exact: true })
+    .click();
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText(
+    "The download could not start. Check your connection and try again. Your request is retained.",
+  );
+  expect(unexpectedDownloads).toBe(0);
+  page.off("download", recordDownload);
+  await page.unroute(jobRoute, unavailable);
+  expect(await save()).toEqual(original);
+  await expect(page.getByRole("main").getByRole("alert")).toHaveCount(0);
   await page.context().clearCookies();
   await page
     .getByRole("link", { name: "Save background export", exact: true })

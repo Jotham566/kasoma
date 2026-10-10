@@ -1,12 +1,26 @@
 # Current sprint: export acceptance and learner UI completion
 
-Latest hosted status, 10 October: run 38004530911 at `84772f1` passed service startup,
+Hosted status, 10 October: run 38004530911 at `84772f1` passed service startup,
 backend regression, recovery, restricted-role checks and Chromium/Firefox journeys.
 Three Linux WebKit native-download cases timed out, including the successful export.
 This supersedes the earlier registry-startup failures as the immediate blocker.
 A complete-transfer loopback control now checks native filename and exact bytes;
 all three controls pass on macOS WebKit. Linux diagnosis remains open. No current
 candidate has full hosted acceptance. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).
+
+Linux ARM64 transport follow-up: the pinned WebKit control reproduces all three
+download-event timeouts. Adding explicit HTML `download` intent passes all three
+controls. The candidate export link now declares that intent; native application
+privacy/retry/error checks are running. No hosted or release acceptance is claimed.
+Latest hosted run 38032691929 at `0270f0a` also reproduced all three header-only control
+timeouts. Attribute-only application testing caught a signed-out notice regression;
+the candidate now checks recent-owner status before dispatching the native attachment
+and preserves closed in-page errors. The download still rechecks authorization and expiry.
+The native full browser matrix now passes all 90 executions. Linux transport controls,
+rebuilt image scans and all eight service/export/metrics smoke checks pass. A final
+expired-status notice mapping passes all six focused privacy executions across the
+three engines, alongside format/lint/types/build. The fix is ready for commit and
+fresh complete hosted verification; main remains unchanged until acceptance passes.
 
 Updated 9 October 2026. Main remains `bb2f4eb`. The pushed candidate `2a3b251`
 failed its original two Firefox export cases. Local follow-ups now pass all 90 browser

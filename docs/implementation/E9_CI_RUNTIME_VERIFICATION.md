@@ -124,3 +124,56 @@ pipeline first. Every existing application and security gate remains required.
 Chromium also passes all three controls (`.local/chromium-complete-control.log`).
 `make format lint` passes, including document links/whitespace and Python/TypeScript
 types (`.local/webkit-control-quality.log`). The local eight-service stack remains healthy.
+
+### Linux reproduction and explicit download intent
+
+The official `mcr.microsoft.com/playwright:v1.58.2-noble` manifest digest is
+`sha256:6446946a1d9fd62d9ae501312a2d76a43ee688542b21622056a372959b65d63d`.
+Its WebKit 2248 matches the repository browser revision. On Linux ARM64, all three
+header-only anchor controls time out waiting for a native download event, without any
+Kasoma gateway, authentication, service or database. Evidence: `.local/linux-webkit-control.log`.
+Changing only the control anchor to explicit HTML `download` intent passes all three
+cases in 2.6 seconds, including exact filename/bytes and failed/cancelled transfers
+(`.local/linux-webkit-download-hint.log`). This is a platform-specific control result,
+not evidence that every browser or the hosted AMD64 application is fixed.
+
+The background-export anchor now declares the same intent while preserving the
+same-origin cookie gateway, streaming response, server filename, length/integrity
+checks and expiry/authorization controls. Native application privacy tests must also
+prove error behavior after sign-out and frozen retry before accepting this change.
+No Blob buffering, provider call, timeout relaxation or architectural change is added.
+
+Hosted AMD64 run [38032691929](https://github.com/Jotham566/kasoma/actions/runs/38032691929)
+at `0270f0a` reproduced all three header-only control timeouts before backend startup.
+The local log is `.local/linux-webkit-hosted-control.log`; this confirms the control
+failure also occurs on the hosted architecture.
+
+An attribute-only application change failed the existing signed-out notice assertion
+on Chromium: an explicit download does not navigate to the error page. That incomplete
+approach is not accepted. The candidate now performs a recent-owner status request
+with a ten-second client deadline before dispatching a native attachment. Only READY
+starts the download. Closed error messages remain on the privacy page; concurrent
+clicks cannot create overlapping status checks. This check does not grant authority:
+the real export endpoint still rechecks owner/session/expiry before and during streaming.
+Non-success download responses remain HTTP failures. Browser cancellation/corruption
+and exact frozen retry remain mandatory, with an added unavailable-status/no-download
+and recovery assertion. Application verification is running.
+
+Native full regression passes all 90 application executions across Chromium, Firefox
+and WebKit (`.local/download-intent-full-browsers.log`), including native cancellation,
+corruption rejection, frozen retry and signed-out notices. A subsequent explicit EXPIRED
+status-to-notice mapping is receiving focused three-engine privacy regression; the full
+run above precedes that small mapping addition. Linux controls pass all three cases again
+(`.local/linux-webkit-intent-final.log`). `make containers security-containers container-smoke`
+passes, with rebuilt web, no HIGH/CRITICAL image findings, all eight healthy services,
+scheduled export/frozen retry and live request-metrics smoke. Source scanning and generated
+OpenAPI/client comparison also pass. Logs: `.local/download-intent-containers.log` and
+`.local/download-intent-source-contracts.log`. No database or API schema changed in this fix;
+migration/backend acceptance belongs to the pending complete hosted run.
+
+Final focused verification passes: `make format lint build test-web-privacy`, six
+executions across Chromium/Firefox/WebKit, including explicit expired status,
+unavailable status with no download, exact frozen recovery and signed-out notices.
+Log: `.local/download-intent-final-privacy.log`. This includes the final expiry mapping.
+The fix is ready for commit and a fresh complete hosted run; main promotion still
+requires that run to pass. ADR-048 remains proposed.

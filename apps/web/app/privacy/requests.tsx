@@ -7,6 +7,7 @@ import { apiClient, type components } from "@kasoma/api-client";
 import { LegalHolds } from "./legal-holds";
 
 import { DeletionImpact } from "./deletion-impact";
+import { exportNotice as downloadNotice } from "./export-notice";
 
 type Schema = components["schemas"];
 const api = () => apiClient("", crypto.randomUUID());
@@ -46,7 +47,42 @@ export function Requests({
   } | null>(null);
   const [busy, setBusy] = useState(true);
   const [status, setStatus] = useState("Loading requests…");
+  const [downloadError, setDownloadError] = useState<string>();
+  const startingDownload = useRef(false);
   const mounted = useRef(true);
+  async function saveBackground(target: string) {
+    if (startingDownload.current) return;
+    startingDownload.current = true;
+    setDownloadError(undefined);
+    try {
+      const job = check(
+        await api().GET("/api/v1/me/data-requests/{target}/export-job", {
+          params: { path: { target } },
+          signal: AbortSignal.timeout(10_000),
+        }),
+      );
+      if (job.status === "EXPIRED") throw new Error("EXPORT_EXPIRED");
+      if (job.status !== "READY") throw new Error("EXPORT_NOT_READY");
+      if (!mounted.current) return;
+      // Check status without buffering the file. The download still independently
+      // rechecks authorization/expiry before and throughout the streamed response.
+      const link = document.createElement("a");
+      link.href = `/api/v1/me/data-requests/${target}/export-file`;
+      link.download = "";
+      document.body.append(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      const code = error instanceof Error ? error.message : "";
+      if (mounted.current)
+        setDownloadError(
+          downloadNotice(code === "AUTH_REQUIRED" ? "REAUTH_REQUIRED" : code) ??
+            downloadNotice("SERVICE_UNAVAILABLE"),
+        );
+    } finally {
+      startingDownload.current = false;
+    }
+  }
   async function load(next?: string) {
     const page = check(
       await api().GET(
@@ -246,7 +282,9 @@ export function Requests({
       <h1 className="text-3xl font-semibold">
         {staff ? "Data request review" : "Your data requests"}
       </h1>
-      {!staff && exportNotice && <p role="alert">{exportNotice}</p>}
+      {!staff && (downloadError || exportNotice) && (
+        <p role="alert">{downloadError || exportNotice}</p>
+      )}
       <p>
         {staff
           ? "Administrators can claim requests for review. Only the account owner can download an export. Deletion processing remains pending."
@@ -443,6 +481,11 @@ export function Requests({
                     <a
                       className="ui-text-link"
                       href={`/api/v1/me/data-requests/${row.id}/export-file`}
+                      download
+                      onClick={(event) => {
+                        event.preventDefault();
+                        void saveBackground(row.id);
+                      }}
                     >
                       Save background export
                     </a>

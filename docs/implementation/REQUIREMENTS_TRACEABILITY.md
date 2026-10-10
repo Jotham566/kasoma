@@ -87,6 +87,16 @@ backend and Chromium/Firefox checks but failed three Linux WebKit attachments.
 with exact filename/bytes. All three controls pass on macOS WebKit; Linux diagnosis
 and full hosted acceptance remain pending. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).
 
+Linux ARM64 comparison reproduces the three control timeouts; explicit HTML download
+intent passes the same filename/byte/cancellation/corruption checks. The background
+export link adopts that intent, with application regression pending. The documented
+`make test-export-download-control-linux` preserves a bounded, isolated reproduction.
+The complete native browser matrix now passes 90 executions, including streamed fault
+rejection, native frozen retry and recent-owner preflight errors. Rebuilt container
+security/health/export/metrics smoke passes; final expired-notice privacy regression
+passes all six executions with format/lint/types/build. Exact-head hosted acceptance
+remains pending. No release gate is waived.
+
 FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-MNT-001 in progress:
 [request aggregation](E8_REQUEST_AGGREGATION_VERIFICATION.md) adds an isolated OTel
 histogram component and percentile/property tests under proposed ADR-049. Runtime
