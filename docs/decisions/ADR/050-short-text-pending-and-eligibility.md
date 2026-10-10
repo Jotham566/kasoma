@@ -64,6 +64,52 @@ use minimized error projection; never log Pydantic's raw input-bearing error obj
 
 ### Proposed versioned calibration/audit policy
 
+#### Next audit persistence boundary
+
+The next slice must bind each automatic grade to its immutable band and allocate a
+monotonic publication ordinal under that band's lock. Persist a separate aggregate
+counter so future personal-data retention cannot reset sampling ordinals. Grade,
+mastery evidence, publication binding, counter increment and any required audit
+assignment must commit together; retries must reuse the original ordinal and audit.
+Do not infer successful publication from a completed provider call or workflow state.
+
+Audit review stores criterion points and closed critical-error categories, with the
+reviewer's identity and completion time retained as restricted accountability evidence.
+It references the existing encrypted attempt and pinned rubric rather than copying
+learner answers into another table. Blinded expert projections must omit learner
+identity, model points/confidence/feedback, prior audit decisions and sampling ordinals.
+Use existing independent staff-review constraints, including excluding the item author;
+review ownership and authorization must be enforced by the service and SQL constraints.
+
+An immutable completed review updates the completed count and rolling window under the
+same band lock. Persist any critical-error/below-threshold disablement in that transaction,
+so publication cannot race past an already committed disablement. Concurrent reviews,
+claims, duplicates, rollback and stale publication require PostgreSQL tests. Review
+does not mutate the original grade; correction/contest behavior needs its additive
+contract and separate acceptance.
+
+These new per-grade records require owned minimized export projection, diagnostic
+sealing, deletion-impact inventory, exact-record legal holds, and preservation of
+attempt/rubric linkage before runtime wiring. Holding an immutable review must not
+freeze unrelated work or the entire account. Apply the existing privacy retention
+schedule; do not use audit accountability as permission to retain raw answers forever.
+Publication/audit persistence and expert projections remain unimplemented. This design
+does not broaden enabled answer formats or authorize academic/production use.
+
+Durable preparation: migration 0028 stores immutable global report projections and
+scope bindings, with disabled initial state and exact SQL-generated history. Migration
+0029 adds a composite topic/subject FK to retain scope through future curriculum updates;
+insertion-time validation alone proved insufficient in a regression test. Activation
+requires a separately controlled timestamp column; worker grants cover only disablement
+fields and history insertion. No activation application command or genuine approval
+resolver exists yet. A band may activate once and disable once; disablement cannot be
+reset by updating report metadata or the feature flag. A future approved replacement
+must resolve new authority evidence, not merely allocate new IDs. Runtime publication
+must hold the refreshed band row lock until grade/mastery/audit commit. Metadata contains
+no learner answers or reviewer identities; per-grade audits still require their own
+privacy/hold/retention design and acceptance. See
+[storage evidence](../../implementation/E4_BAND_STORAGE_VERIFICATION.md).
+
 `short-text-calibration-v1` binds subject, topic, English language, response-length
 range and model/prompt/configuration versions to an immutable report digest, frozen
 benchmark identifier and approval reference. Exact integer counts enforce the separate

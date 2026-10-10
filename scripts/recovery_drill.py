@@ -65,6 +65,10 @@ def check_guards(engine: Engine) -> None:
     for statement in (
         "UPDATE attempts SET channel = 'WHATSAPP'",
         "UPDATE assessment_grading_history SET snapshot=snapshot",
+        "UPDATE grading_bands SET held_out_exact=held_out_exact",
+        "UPDATE grading_band_history SET snapshot=snapshot",
+        "UPDATE topics t SET subject_id=(SELECT id FROM subjects WHERE id<>t.subject_id LIMIT 1) "
+        "WHERE t.id IN (SELECT topic_id FROM grading_bands)",
         "UPDATE assessment_grading_work SET status='QUEUED',revision=revision+1",
         "UPDATE grades SET answer_specification_hash = 'synthetic-tampering'",
         "UPDATE item_versions SET document = '{}'::jsonb WHERE status = 'APPROVED'",

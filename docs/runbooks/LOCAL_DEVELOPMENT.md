@@ -979,3 +979,10 @@ record selector and incomplete-coverage wording. These commands use synthetic da
 policy with synthetic report and approval IDs. It makes no model call and enables no
 band or learner scoring. Use `make test-unit` for complete component regression; actual
 academic reports, authorized persistence and worker publication remain separate gates.
+
+`make test-grading-bands` verifies migration 0028's immutable calibration metadata,
+row locking and sticky disablement using isolated synthetic schemas. No seed band is
+created in the review application and no activation endpoint exists. `make test-runtime-role`
+checks that the real restricted login can disable but cannot write approval metadata or
+the activation timestamp. `make recovery-drill` includes unapproved synthetic band/history
+rows in its isolated logical restore; this is not production PITR or academic acceptance.

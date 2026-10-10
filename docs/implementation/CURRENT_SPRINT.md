@@ -1,8 +1,9 @@
 # Current sprint: export acceptance and learner UI completion
 
 Current hosted run: 38033307073 at `5f959ef` is in progress. The Linux WebKit native
-transport check now passes, as do service startup/migrations/seed. The full backend,
-browser, recovery and security/container pipeline must still pass before promotion.
+transport check now passes, as do service startup/migrations/seed, recovery, restricted
+role and full backend checks. Browser/security/container verification is in progress;
+the complete pipeline must pass before promotion.
 
 Hosted status, 10 October: run 38004530911 at `84772f1` passed service startup,
 backend regression, recovery, restricted-role checks and Chromium/Firefox journeys.
@@ -152,6 +153,18 @@ removed. Earlier merged evidence includes [incremental exports](E8_EXPORT_ENCODI
 See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete historical register.
 
 ## Short-text integration follow-up
+
+Durable calibration metadata/state is under full regression: migration 0028 enforces
+disabled registration, immutable report metadata, one-time activation and sticky
+disablement with automatic exact history. Eleven focused SQL cases, the real restricted
+login and populated 60-table recovery pass. There is no activation application command
+or learner enablement. See [band storage verification](E4_BAND_STORAGE_VERIFICATION.md).
+Lint/types, contracts, security/source scans and rebuilt container health/export/metrics
+smoke also pass. Full backend regression passes 279 integration and 780 unit/contract
+cases plus 35 tooling checks. A later scope-reparenting regression found a missing
+persistent binding; additive migration 0029 fixes it. All 13 focused SQL cases, populated
+upgrade, restricted login and recovery pass after that fix. Follow-up branch
+`codex/grading-band-state` awaits complete hosted acceptance before main promotion.
 
 FR-GRD-003/004/005 / FR-MST-001: versioned calibration/audit eligibility passes
 780 unit/contract and 35 tooling cases, lint/types, contracts and security checks.

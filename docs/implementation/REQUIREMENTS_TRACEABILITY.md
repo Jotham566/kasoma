@@ -107,6 +107,15 @@ remain partial. No application acceptance is inferred from the component.
 
 E5 diagnostic/mastery evidence: [verification report](E5_VERIFICATION.md).
 
+FR-GRD-003/004 / FR-MST-001 / NFR-SEC-001/002 / NFR-REL-002: migration 0028 and
+`services/grading_band_store.py` add immutable global calibration metadata, locked
+state and sticky disablement with exact history. Eleven focused PostgreSQL cases,
+restricted disable-only worker permissions and populated recovery pass; full regression
+passes 279 integration cases. Additive migration 0029 then closes a reproduced
+topic-reparenting gap with a composite FK; 13 focused SQL cases, populated upgrade,
+restricted login and recovery pass on that correction. Exact-head hosted verification
+is pending. [Evidence and remaining runtime/approval gates](E4_BAND_STORAGE_VERIFICATION.md).
+
 FR-GRD-003/004/005 / FR-MST-001 / NFR-SEC-002: the proposed ADR-050 eligibility
 component binds calibration evidence and audit state to the exact band/scope/versions.
 It rejects insufficient counts, missing approvals, harmful/pending subgroup review,

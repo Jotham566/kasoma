@@ -6,17 +6,21 @@ from uuid import uuid4
 from sqlalchemy.orm import Session
 
 from scripts.assessment_fixtures import seed_assessment
+from scripts.grading_fixtures import unapproved_band
 from scripts.recovery_exports import RecoveryExport, populate_export
 from services.assessment import AssessmentService
 from services.assessment_contracts import ChoiceResponse, StartRevision, SubmitAnswer
 from services.config import Settings
 from services.database import engine_for
 from services.domain.assessment import Attempt
+from services.grading_band_store import disable as disable_band
+from services.grading_band_store import register as register_band
 from services.grading_work_store import claim_next, enqueue, finish_neutral
 from services.identity import IdentityService
 from services.identity_contracts import ConsentInput, OTPRequest, OTPVerify, ProfilePatch
 from services.providers import FakeMessagingProvider
 from services.seed import seed
+from services.short_text_eligibility import GradingScope
 
 
 def populate(settings: Settings) -> RecoveryExport:
@@ -58,6 +62,19 @@ def populate(settings: Settings) -> RecoveryExport:
         )
         assessment = AssessmentService(identity)
         topic = assessment.topics(token, subject)[0].id
+        band = unapproved_band(
+            GradingScope(
+                subject_id=subject,
+                topic_id=topic,
+                language="en",
+                model_version="fake-v1",
+                prompt_version="synthetic-v2",
+                configuration_version="test-v1",
+            )
+        )
+        with Session(engine) as db, db.begin():
+            register_band(db, band, identity.clock())
+            disable_band(db, band.id, identity.clock(), "MANUAL")
         session = assessment.start(
             token, StartRevision(subject_id=subject, topic_id=topic), uuid4(), uuid4()
         )

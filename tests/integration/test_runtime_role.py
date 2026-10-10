@@ -10,6 +10,7 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 
+from scripts.grading_fixtures import unapproved_band
 from services.assessment import AssessmentService
 from services.assessment_contracts import ChoiceResponse, StartRevision, SubmitAnswer
 from services.database import engine_for
@@ -21,12 +22,17 @@ from services.domain.assessment import (
     Grade,
     SessionItem,
 )
+from services.domain.curriculum import Topic
+from services.domain.grading_bands import GradingBandHistory
 from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import RateBucket
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
+from services.grading_band_store import disable as disable_band
+from services.grading_band_store import register as register_band
 from services.grading_work_store import claim_next, enqueue, finish_neutral
 from services.identity import IdentityError, IdentityService
 from services.providers import FakeMessagingProvider
+from services.short_text_eligibility import GradingScope
 from tests.integration.test_assessment import assessment as assessment_fixture
 from tests.integration.test_identity import consent, profile
 
@@ -40,6 +46,19 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
     original, client, actors, _, _, plan = assessment
     assert profile(client, actors["other"], "2000-01-01")[0]["id"]
     assert consent(client, actors["other"], "SELF").status_code == 200
+    with Session(original.engine) as db, db.begin():
+        topic = db.scalar(select(Topic).order_by(Topic.id))
+        band = unapproved_band(
+            GradingScope(
+                subject_id=topic.subject_id,
+                topic_id=topic.id,
+                language="en",
+                model_version="fake-v1",
+                prompt_version="synthetic-v2",
+                configuration_version="test-v1",
+            )
+        )
+        register_band(db, band, original.clock())
     role = "kasoma_runtime_test_" + uuid4().hex
     with original.engine.connect() as db:
         schema = db.scalar(text("SELECT current_schema()"))
@@ -81,6 +100,7 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                     (AssessmentEvent, "INSERT"),
                     (GradingWorkRow, "INSERT, UPDATE"),
                     (GradingHistory, "INSERT"),
+                    (GradingBandHistory, "INSERT"),
                     (MasteryEvidence, "INSERT"),
                     (MasteryEstimate, "INSERT, UPDATE"),
                     (MasteryHistory, "INSERT"),
@@ -91,6 +111,12 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                             f"TO {quoted_role}"
                         )
                     )
+                db.execute(
+                    text(
+                        f"GRANT UPDATE (enabled,disabled_at,disable_reason,revision,updated_at) "
+                        f"ON {quoted_schema}.grading_bands TO {quoted_role}"
+                    )
+                )
                 # PostgreSQL row locking needs UPDATE on at least one column. The existing
                 # identity/revision trigger forbids changing this ID, and revision is not writable.
                 db.execute(
@@ -138,8 +164,17 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
         assert service.submit(token, session.id, answer, key, uuid4()) == grade
         with pytest.raises(IdentityError, match="RESOURCE_NOT_FOUND"):
             service.get(other, session.id)
+        with Session(restricted) as db, db.begin():
+            assert disable_band(db, band.id, original.clock(), "MANUAL")
+            assert db.scalar(select(func.count()).select_from(GradingBandHistory)) == 2
         for statement in (
             f"CREATE TABLE {quoted_schema}.unauthorized_table (id int)",
+            f"UPDATE {quoted_schema}.grading_bands SET activated_at=now(),enabled=true",
+            f"UPDATE {quoted_schema}.grading_bands SET approval_id=gen_random_uuid()",
+            f"UPDATE {quoted_schema}.grading_bands SET held_out_exact=held_out_cases",
+            f"DELETE FROM {quoted_schema}.grading_bands",
+            f"UPDATE {quoted_schema}.grading_band_history SET snapshot=snapshot",
+            f"DELETE FROM {quoted_schema}.grading_band_history",
             f"ALTER TABLE {quoted_schema}.attempts DISABLE TRIGGER ALL",
             f"DROP TABLE {quoted_schema}.grades",
             f"DELETE FROM {quoted_schema}.assessment_grading_work",
@@ -223,6 +258,12 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                     text(f"REVOKE UPDATE (id) ON {quoted_schema}.attempts FROM {quoted_role}")
                 )
                 db.execute(text(f"REVOKE ALL ON SCHEMA {quoted_schema} FROM {quoted_role}"))
+                db.execute(
+                    text(
+                        f"REVOKE UPDATE (enabled,disabled_at,disable_reason,revision,updated_at) "
+                        f"ON {quoted_schema}.grading_bands FROM {quoted_role}"
+                    )
+                )
                 db.execute(text(f"DROP ROLE {quoted_role}"))
     with original.engine.connect() as db:
         assert (

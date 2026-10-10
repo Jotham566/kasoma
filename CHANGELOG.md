@@ -2,6 +2,14 @@
 
 ## Work in progress — short-text learner integration
 
+- Add immutable calibration-band metadata and exact transition history, disabled
+  registration, locked snapshots and sticky disablement. Verify worker permissions
+  allow disablement without approval/activation rights and extend populated recovery.
+  No activation command or learner scoring is enabled. Full backend regression passes
+  279 integration cases; a later reproduced topic-reparenting gap is closed with
+  migration 0029's composite scope FK. Thirteen focused SQL cases, populated upgrade,
+  restricted-login and recovery checks pass after that correction; hosted acceptance remains required.
+
 - Add a versioned calibration/audit eligibility component with exact threshold counts,
   scope/version/length binding, approval-reference requirements, audit coverage and
   sticky-disablement checks. Propose a bounded rolling window and prefix-complete 10%
