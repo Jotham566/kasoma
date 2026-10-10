@@ -2,6 +2,14 @@
 
 ## Work in progress — short-text learner integration
 
+- Add a versioned calibration/audit eligibility component with exact threshold counts,
+  scope/version/length binding, approval-reference requirements, audit coverage and
+  sticky-disablement checks. Propose a bounded rolling window and prefix-complete 10%
+  audit selection under ADR-050; academic approval and durable/runtime integration remain
+  required. No band or learner scoring is enabled by this component.
+  Verification passes 780 unit/contract and 35 tooling tests, lint/types, generated
+  contracts, source-secret and dependency/security checks.
+
 - Define one-claim grading transitions with bounded queue/lease expiry and exact
   terminal replay. Interrupted claims fall back without resetting model-call budgets;
   late workers cannot publish. Durable persistence/worker wiring remains pending.

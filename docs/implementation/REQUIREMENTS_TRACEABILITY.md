@@ -107,6 +107,15 @@ remain partial. No application acceptance is inferred from the component.
 
 E5 diagnostic/mastery evidence: [verification report](E5_VERIFICATION.md).
 
+FR-GRD-003/004/005 / FR-MST-001 / NFR-SEC-002: the proposed ADR-050 eligibility
+component binds calibration evidence and audit state to the exact band/scope/versions.
+It rejects insufficient counts, missing approvals, harmful/pending subgroup review,
+critical errors, incomplete audit coverage and rolling agreement below 90%.
+[Verification and remaining runtime gates](E4_ELIGIBILITY_VERIFICATION.md). This is
+not academic approval, durable automatic disablement or learner grading acceptance.
+Component checks pass 780 unit/contract and 35 tooling cases, lint/types, generated
+contracts and security scans; runtime and approval gates remain open.
+
 E5 recommended practice: [verification report](E5_RECOMMENDATIONS_VERIFICATION.md).
 
 E4 reviewed hints: [verification report](E4_HINTS_VERIFICATION.md).

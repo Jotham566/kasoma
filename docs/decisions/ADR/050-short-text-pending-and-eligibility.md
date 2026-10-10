@@ -1,7 +1,7 @@
 # ADR-050: Short-text pending outcomes, eligibility and neutral fallback
 
 Date: 10 October 2026
-Status: Proposed; contracts only, learner integration and acceptance pending
+Status: Proposed; components under implementation, learner integration and acceptance pending
 Requirements: FR-GRD-003/004/005, FR-MST-001, FR-ID-003/006, NFR-SEC-002
 
 ## Context and proposed decision
@@ -61,6 +61,41 @@ use minimized error projection; never log Pydantic's raw input-bearing error obj
    no-score/no-mastery fallback and all three browser engines before promotion.
 
 ## Alternatives and rollout
+
+### Proposed versioned calibration/audit policy
+
+`short-text-calibration-v1` binds subject, topic, English language, response-length
+range and model/prompt/configuration versions to an immutable report digest, frozen
+benchmark identifier and approval reference. Exact integer counts enforce the separate
+85% overall within-tolerance and 90% held-out exact-agreement requirements. An approved
+subgroup review and zero critical errors are required. No default enabled band exists;
+schema-valid identifiers are not evidence that an approval exists. Persistence must
+resolve the actual authorized report and approval before passing a projection to the gate.
+
+Propose the latest 100 completed expert audits per band as the rolling window, ordered
+by completion. Until 100 exist, use all completed audits. This is a bounded, responsive
+engineering policy requiring academic approval before production, not an already
+approved statistical sample-size claim. Below 90% exact agreement or any critical error
+must persist sticky band disablement; later good results or window eviction cannot
+silently re-enable it. A newly approved report/configuration is required for enablement.
+Pending assignments never count as completed or correct. Stored completed counts must
+agree with the projected window, preventing missing reviews from becoming an empty,
+implicitly passing window. No completed audits initially means no observed rolling
+agreement; it does not replace the required approved held-out calibration.
+
+Assign ordinal 1 and every tenth subsequent published grade to blinded expert audit.
+This yields `ceil(N/10)` assignments in every publication prefix, satisfying at least
+10% even for a partial batch. Allocate ordinal/assignment atomically with grade/mastery
+publication under the band lock; expose neither ordinal nor model scores to the blinded
+expert. This systematic sample has no claim of random representativeness; the academic
+approval must cover this policy or a revised, versioned sampling rule before beta.
+
+`services/short_text_eligibility.py` implements this necessary candidate gate only.
+It neither authenticates an approval, writes an audit/grade, disables a database band,
+nor authorizes learner delivery. Durable report/state/audit persistence, independent
+expert access, exact-record privacy coverage and worker publication remain mandatory.
+Recheck current locked band/audit state before dispatch and publication; consent,
+approved content, injection/safety/domain checks and dual-pass validation are separate.
 
 Making all grade fields optional would allow ambiguous or accidentally scored pending
 responses. Storing low confidence as zero would misstate learning evidence. Mutating

@@ -974,3 +974,8 @@ Migration 0027 adds exact `GRADING_HISTORY` holds. `make test-grading-work` cove
 independent administrator workflow and SQL preservation. `make build test-web-privacy`
 runs the privacy journeys across Chromium, Firefox and WebKit, including the updated
 record selector and incomplete-coverage wording. These commands use synthetic data.
+
+`make test-short-text-eligibility` verifies the proposed ADR-050 calibration/audit
+policy with synthetic report and approval IDs. It makes no model call and enables no
+band or learner scoring. Use `make test-unit` for complete component regression; actual
+academic reports, authorized persistence and worker publication remain separate gates.

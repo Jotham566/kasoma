@@ -1,5 +1,9 @@
 # Current sprint: export acceptance and learner UI completion
 
+Current hosted run: 38033307073 at `5f959ef` is in progress. The Linux WebKit native
+transport check now passes, as do service startup/migrations/seed. The full backend,
+browser, recovery and security/container pipeline must still pass before promotion.
+
 Hosted status, 10 October: run 38004530911 at `84772f1` passed service startup,
 backend regression, recovery, restricted-role checks and Chromium/Firefox journeys.
 Three Linux WebKit native-download cases timed out, including the successful export.
@@ -12,7 +16,7 @@ Linux ARM64 transport follow-up: the pinned WebKit control reproduces all three
 download-event timeouts. Adding explicit HTML `download` intent passes all three
 controls. The candidate export link now declares that intent; native application
 privacy/retry/error checks are running. No hosted or release acceptance is claimed.
-Latest hosted run 38032691929 at `0270f0a` also reproduced all three header-only control
+Pre-fix hosted run 38032691929 at `0270f0a` also reproduced all three header-only control
 timeouts. Attribute-only application testing caught a signed-out notice regression;
 the candidate now checks recent-owner status before dispatching the native attachment
 and preserves closed in-page errors. The download still rechecks authorization and expiry.
@@ -148,6 +152,15 @@ removed. Earlier merged evidence includes [incremental exports](E8_EXPORT_ENCODI
 See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete historical register.
 
 ## Short-text integration follow-up
+
+FR-GRD-003/004/005 / FR-MST-001: versioned calibration/audit eligibility passes
+780 unit/contract and 35 tooling cases, lint/types, contracts and security checks.
+It enforces separate overall/held-out thresholds, exact scope/version/
+length matching, approved subgroup review, critical-error exclusion and audit coverage.
+ADR-050 proposes the rolling/sampling policy; no academic acceptance, report authority,
+durable disablement or learner scoring is inferred. Next wire approved report/state
+persistence and atomic audit assignment before worker publication. See
+[eligibility verification](E4_ELIGIBILITY_VERIFICATION.md).
 
 FR-GRD-003/004/005, FR-MST-001 and FR-ID-006: the updated
 [readiness assessment](E4_SHORT_TEXT_INTEGRATION_READINESS.md) identifies pending/neutral
