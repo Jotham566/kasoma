@@ -18,6 +18,10 @@
 
 ## Work in progress — hosted verification recovery
 
+- Record the hosted Linux WebKit attachment failures after successful service/backend
+  and Chromium/Firefox checks. Add a complete native-download loopback control with
+  filename and exact-byte assertions; preserve mandatory application acceptance.
+
 - Record continued PostgreSQL throttling after successful mirror configuration. Add
   optional, step-scoped Docker Hub authentication with a pinned official login action;
   preserve anonymous fork verification and automatic logout. Credentials remain external.

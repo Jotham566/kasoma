@@ -61,6 +61,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           logout: true
       - run: make build e2e-install test-web-content
+      - name: Verify native WebKit attachment transport
+        env:
+          KASOMA_E2E_BROWSER: webkit
+        run: make test-export-download-control
       - run: make services migrate seed
       - run: make test-reviewed-rubrics
       - run: make recovery-drill

@@ -100,3 +100,27 @@ Optional-auth workflow local checks pass: `make format lint test-tooling
 check-ci-profile security-source`, including 35 tooling tests, types and no source
 secret findings. Log: `.local/ci-registry-auth-checks.log`. Authenticated pulls cannot
 be claimed until the repository secrets exist and a hosted run verifies them.
+
+## Native Linux WebKit attachment investigation
+
+Run [38004530911](https://github.com/Jotham566/kasoma/actions/runs/38004530911)
+at `84772f1` completed with failure. Service startup, recovery, restricted-role and
+backend checks passed, as did Chromium and Firefox. WebKit's second shard failed
+three native attachment cases: successful frozen export, stall and corruption, each
+timing out before a download event. Twelve other second-shard cases passed. The
+pipeline did not reach its final security/container gates; main promotion remains blocked.
+
+For FR-ID-006 / NFR-COMP-001 / NFR-MNT-001, the existing loopback transport control
+now includes a complete JSON attachment with native filename and exact-byte checks.
+`KASOMA_E2E_BROWSER=webkit make test-export-download-control` passes all three controls
+on macOS (complete, stall, corrupt). Evidence: `.local/webkit-complete-control.log`.
+This isolates successful attachment behavior for Linux comparison; it does not resolve
+the hosted failure or replace application acceptance. No runtime policy, download
+transport, timeout or browser requirement has been changed.
+
+CI now runs the WebKit control after browser installation and before service startup,
+so a transport-only failure can be diagnosed without repeating the entire backend
+pipeline first. Every existing application and security gate remains required.
+Chromium also passes all three controls (`.local/chromium-complete-control.log`).
+`make format lint` passes, including document links/whitespace and Python/TypeScript
+types (`.local/webkit-control-quality.log`). The local eight-service stack remains healthy.

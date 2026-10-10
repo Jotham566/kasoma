@@ -81,6 +81,12 @@ an observed whole-job timeout and registry throttling. The disposable-runner cac
 configuration preserves existing settings and has isolated tooling regression tests. It does not waive any test
 or constitute main/release acceptance; new exact-head hosted verification is required.
 
+FR-ID-006 / NFR-COMP-001 / NFR-MNT-001: hosted run 38004530911 passed startup,
+backend and Chromium/Firefox checks but failed three Linux WebKit attachments.
+`tests/browser-control/download.spec.ts` adds a successful native attachment control
+with exact filename/bytes. All three controls pass on macOS WebKit; Linux diagnosis
+and full hosted acceptance remain pending. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).
+
 FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-MNT-001 in progress:
 [request aggregation](E8_REQUEST_AGGREGATION_VERIFICATION.md) adds an isolated OTel
 histogram component and percentile/property tests under proposed ADR-049. Runtime

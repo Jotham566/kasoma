@@ -856,9 +856,10 @@ Traces contain synthetic authentication state: keep them local and do not commit
 This focused command does not replace the full browser matrix.
 
 
-`KASOMA_E2E_BROWSER=firefox make test-export-download-control` runs two plain
+`KASOMA_E2E_BROWSER=firefox make test-export-download-control` runs three plain
 loopback HTTP attachment controls without starting Kasoma, PostgreSQL or a gateway.
-Use chromium/webkit for comparison. The control tracks connection closure and repeats
+Use chromium/webkit for comparison. The complete-transfer control verifies native
+filename and exact saved bytes. The fault controls track connection closure and repeat
 corruption on browser retries; retained traces contain only local synthetic traffic.
 It is a diagnostic command, not a replacement for the application browser suite.
 

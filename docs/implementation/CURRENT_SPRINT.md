@@ -1,9 +1,11 @@
 # Current sprint: export acceptance and learner UI completion
 
-Latest hosted status, 10 October: run 37993094065 at `bbe3b43` passed runner mirror
-configuration and build/browser/content setup, then failed on PostgreSQL's anonymous
-Docker Hub pull limit. The workflow now supports optional read-only Docker Hub Actions
-secrets; owner setup is requested. Local application verification passes. No current
+Latest hosted status, 10 October: run 38004530911 at `84772f1` passed service startup,
+backend regression, recovery, restricted-role checks and Chromium/Firefox journeys.
+Three Linux WebKit native-download cases timed out, including the successful export.
+This supersedes the earlier registry-startup failures as the immediate blocker.
+A complete-transfer loopback control now checks native filename and exact bytes;
+all three controls pass on macOS WebKit. Linux diagnosis remains open. No current
 candidate has full hosted acceptance. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).
 
 Updated 9 October 2026. Main remains `bb2f4eb`. The pushed candidate `2a3b251`
