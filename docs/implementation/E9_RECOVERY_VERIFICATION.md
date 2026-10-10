@@ -66,3 +66,10 @@ namespace migration, production PITR or RPO/RTO. ADR-048 remains proposed pendin
 Recovery follow-up regression: `make format lint test-export-jobs test-unit` passes 40 focused
 PostgreSQL cases, 590 unit/contract and 21 tooling cases. Three new cases prove read-only export
 verification rejects corrupt ciphertext, missing objects and mismatched expected bytes.
+
+10 October durable-grading extension: the isolated source now includes an ungraded
+synthetic attempt plus neutral work and three exact history snapshots. Restore compares
+58 tables/291 rows and passes in 948 ms, including restored work/history immutability,
+pgvector and frozen export verification. Cleanup reports no failures. This adds local
+logical evidence; object storage, production PITR/RPO/RTO and pilot acceptance remain
+unverified. See [grading verification](E4_DURABLE_GRADING_VERIFICATION.md).

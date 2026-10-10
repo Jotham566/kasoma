@@ -27,6 +27,7 @@ from services.domain.curriculum import Competency, Concept, Subject, Topic
 from services.domain.data_requests import DataRequest
 from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag
+from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import Consent, Identifier, IdentityEvent, LearnerSubject, User
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
 from services.domain.messaging import (
@@ -234,6 +235,27 @@ def _records(
                     "choices": [c.model_dump() for c in doc.choices],
                 },
                 "grade_released": grade_released,
+            },
+        )
+    yield ("grading_work", None)
+    for work in rows(
+        select(GradingWorkRow)
+        .where(GradingWorkRow.attempt_id.in_(visible))
+        .order_by(GradingWorkRow.attempt_id)
+    ):
+        yield ("grading_work", fields(work, "attempt_id status queued_at claimed_at finished_at"))
+    yield ("grading_history", None)
+    for history in rows(
+        select(GradingHistory)
+        .where(GradingHistory.attempt_id.in_(visible))
+        .order_by(GradingHistory.attempt_id, GradingHistory.revision)
+    ):
+        yield (
+            "grading_history",
+            fields(history, "id attempt_id revision")
+            | {
+                name: history.snapshot[name]
+                for name in ("status", "queued_at", "claimed_at", "finished_at")
             },
         )
     yield ("grades", None)

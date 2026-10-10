@@ -294,3 +294,13 @@ worker-exports:
 .PHONY: smoke-export
 smoke-export:
 	$(UV) python -m scripts.export_smoke
+
+.PHONY: test-grading-work
+test-grading-work:
+	$(UV) pytest tests/contract/test_short_text_workflow.py tests/integration/test_grading_work_store.py tests/integration/test_grading_history_holds.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-web-privacy
+test-web-privacy:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/data-requests.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/data-requests.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/data-requests.spec.ts

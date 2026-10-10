@@ -123,3 +123,43 @@ band, validation and audit-disablement state and store grade/mastery atomically.
 current component has no database adapter, broker registration or learner delivery.
 Those remain the next integration work; transition tests do not establish durable
 queue, concurrency, model execution or application acceptance.
+
+## Durable storage preparation
+
+Migration 0026 adds assessment_grading_work and immutable assessment_grading_history.
+Work binds to an existing attempt and original correlation ID; its revision and
+triggered exact snapshots track QUEUED, one RUNNING claim, and one terminal outcome.
+SQL enforces lease/time bounds, forbids claim renewal or terminal rewriting, requires
+an actual grade for GRADED, and forbids grade insertion alongside an unresolved work
+state at transaction commit. Concurrent claims use row locks with SKIP LOCKED; queue
+replay locks the existing attempt, preserving the original command. Expiry is bounded
+to at most 100 rows per transaction. Model dispatch must occur only after claim commit.
+
+This is a format-independent storage substrate. The learner-facing service must still
+validate short-text format/eligibility before enqueueing and authorize disclosure.
+The substrate tests use valid synthetic ungraded objective attempts to exercise SQL
+without bypassing ADR-044's short-text assignment guard. They are not short-text
+submission or academic acceptance. No route, selector, assignment guard or worker
+registration changes in this preparation. Inventory, owned exports, exact-record
+holds and restricted-role coverage must be completed before runtime integration.
+Deletion is currently refused to preserve evidence; the approved learning-data
+retention policy still applies and a tested processor remains required.
+
+The restricted-runtime test now grants INSERT/UPDATE on current work and INSERT on
+history, with no history UPDATE/DELETE or schema privileges. Attempt row locking needs
+UPDATE on one column: grant only immutable attempts.id and retain the trigger that
+rejects edits. The real restricted-login test verifies queue/claim/neutral completion,
+history write denial and inability to change attempt IDs. This does not grant worker
+access to unreviewed grades or replace the future publication checks.
+
+## Exact history preservation
+
+Migration 0027 extends the existing independently reviewed hold workflow with
+GRADING_HISTORY, identified by the immutable history row UUID. Ownership is derived
+through the referenced attempt and checked in both service and SQL. The current work
+row is a projection of these exact snapshots. Holding one snapshot preserves its
+state and linkage while later transitions append new records; it does not freeze the
+worker or create an account-wide hold. Existing history immutability survives hold
+release. The foreign keys and current no-delete guards preserve the referenced work
+and attempt; future retention processing must retain the context of held snapshots
+before removing any projection or linkage. No deletion processor is enabled here.

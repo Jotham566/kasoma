@@ -622,3 +622,18 @@ unavailable, not zero. Owner async routes remain unregistered pending ADR-048 ac
 Current candidate: owner export-job/export-file routes are now registered and included in the
 generated client for local synthetic acceptance. Earlier unregistered-stage notes are historical.
 The transport/authorization contract above applies; full ADR-048 promotion remains gated.
+
+### Durable grading metadata in owned exports
+
+The personal-export records map adds `grading_work` and `grading_history` groups.
+Both are owned through attempts and preserve the existing diagnostic-release filter.
+Only attempt/status/time metadata is exposed, plus history ID/revision; correlation
+IDs, worker claim tokens, internal reasons and whole snapshots remain excluded. The
+new storage is not yet wired to learner short-text routes or workers. See
+[durable grading verification](../implementation/E4_DURABLE_GRADING_VERIFICATION.md).
+
+The record-hold API also accepts `GRADING_HISTORY`, with `record_id` equal to the
+immutable grading-history row UUID. An attempt ID is not a history ID. Independent
+ADMIN review, ownership, finite expiry, retry and release semantics remain unchanged.
+Holding a history snapshot does not prevent new workflow transitions; release does
+not permit mutation of retained evidence. Deletion remains disabled.

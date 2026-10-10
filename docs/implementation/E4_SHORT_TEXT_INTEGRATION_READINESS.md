@@ -142,3 +142,14 @@ Verification passes: `make format lint test-unit openapi-check security-source`,
 including 747 unit/contract cases (17 new transitions) and 35 tooling checks. Log:
 `.local/short-text-workflow-checks.log`. This is a transition component only; durable SQL locking,
 worker wiring, eligibility, grade/mastery publication and privacy coverage are unimplemented.
+
+FR-GRD-004/005 / NFR-SEC-002: migration 0026, grading-work models and transactional
+storage are under verification. Commands have one claim, bounded expiry and immutable
+transition snapshots. No learner/worker path is enabled. Use `make test-grading-work`;
+privacy inventory/export/hold coverage and restricted-role checks remain integration gates.
+
+Durable-store focused verification passes 24 cases (seven PostgreSQL, 17 transition),
+including contention, rollback, expiry, publication consistency and owned/foreign
+export projection. Work/history counts are in deletion inventory. Full backend
+regression is running; exact-record holds and restricted-role extension still gate
+runtime enablement. See `docs/implementation/E4_DURABLE_GRADING_VERIFICATION.md`.

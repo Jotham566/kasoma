@@ -3,12 +3,16 @@
 from datetime import date
 from uuid import uuid4
 
+from sqlalchemy.orm import Session
+
 from scripts.assessment_fixtures import seed_assessment
 from scripts.recovery_exports import RecoveryExport, populate_export
 from services.assessment import AssessmentService
 from services.assessment_contracts import ChoiceResponse, StartRevision, SubmitAnswer
 from services.config import Settings
 from services.database import engine_for
+from services.domain.assessment import Attempt
+from services.grading_work_store import claim_next, enqueue, finish_neutral
 from services.identity import IdentityService
 from services.identity_contracts import ConsentInput, OTPRequest, OTPVerify, ProfilePatch
 from services.providers import FakeMessagingProvider
@@ -68,6 +72,33 @@ def populate(settings: Settings) -> RecoveryExport:
             uuid4(),
             uuid4(),
         )
+        # Valid ungraded synthetic attempt for durable-state recovery; no assignment
+        # guard or academic eligibility is bypassed and no model call is performed.
+        pending_item = assessment.next_item(token, session.id, uuid4())
+        attempt_id = uuid4()
+        with Session(engine) as db, db.begin():
+            actor = assessment.authorize(db, token)
+            db.add(
+                Attempt(
+                    id=attempt_id,
+                    learner_id=actor,
+                    session_item_id=pending_item.session_item_id,
+                    item_version_id=pending_item.item_version_id,
+                    choice_id="A",
+                    response=None,
+                    submitted_at=identity.clock(),
+                    hint_count=0,
+                    highest_hint_level=0,
+                    channel="WEB",
+                )
+            )
+            db.flush()
+            enqueue(db, attempt_id, uuid4(), identity.clock())
+        with Session(engine) as db, db.begin():
+            work = claim_next(db, identity.clock())
+            if work is None or work.claim_id is None:
+                raise RuntimeError("Synthetic grading claim missing")
+            finish_neutral(db, attempt_id, work.claim_id, identity.clock())
         return populate_export(identity, token)
     finally:
         engine.dispose()

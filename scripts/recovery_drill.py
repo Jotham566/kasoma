@@ -64,6 +64,8 @@ def inventory(engine: Engine) -> dict[str, tuple[int, str]]:
 def check_guards(engine: Engine) -> None:
     for statement in (
         "UPDATE attempts SET channel = 'WHATSAPP'",
+        "UPDATE assessment_grading_history SET snapshot=snapshot",
+        "UPDATE assessment_grading_work SET status='QUEUED',revision=revision+1",
         "UPDATE grades SET answer_specification_hash = 'synthetic-tampering'",
         "UPDATE item_versions SET document = '{}'::jsonb WHERE status = 'APPROVED'",
         "UPDATE personal_export_generations SET digest = repeat('0', 64)",

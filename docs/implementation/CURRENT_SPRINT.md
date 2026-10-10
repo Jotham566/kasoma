@@ -208,3 +208,46 @@ Verification passes: `make format lint test-unit openapi-check security-source`,
 including 747 unit/contract cases (17 new transitions) and 35 tooling checks. Log:
 `.local/short-text-workflow-checks.log`. This is a transition component only; durable SQL locking,
 worker wiring, eligibility, grade/mastery publication and privacy coverage are unimplemented.
+
+FR-GRD-004/005 / NFR-SEC-002: migration 0026, grading-work models and transactional
+storage are under verification. Commands have one claim, bounded expiry and immutable
+transition snapshots. No learner/worker path is enabled. Use `make test-grading-work`;
+privacy inventory/export/hold coverage and restricted-role checks remain integration gates.
+
+Durable-store focused verification passes 24 cases (seven PostgreSQL, 17 transition),
+including contention, rollback, expiry, publication consistency and owned/foreign
+export projection. Work/history counts are in deletion inventory. Full backend
+regression is running; exact-record holds and restricted-role extension still gate
+runtime enablement. See `docs/implementation/E4_DURABLE_GRADING_VERIFICATION.md`.
+
+NFR-SEC-001/002: the durable-work restricted-login extension passes independently:
+queue, claim and neutral completion work with bounded grants; history mutation,
+command deletion, schema changes and immutable attempt-ID edits are rejected. Source
+secret scanning and generated-contract comparison pass. Full backend run remains live;
+new history hold coverage and worker/publication integration are still pending.
+
+FR-ID-006 / BR-010 / NFR-SEC-002: migration 0027 and the existing hold service now
+support exact immutable grading-history records, preserving ownership and independent
+review. The administrator selector/generated contracts include GRADING_HISTORY;
+incomplete-coverage wording no longer reports a stale record count. Focused integration
+and three-engine privacy verification are pending; learner grading remains disabled.
+
+Durable grading/history local evidence: 26 focused cases and six privacy browser
+executions pass across Chromium/Firefox/WebKit. Populated isolated recovery passes
+(58 tables, 291 rows, 948 ms) with immutable grading snapshots. Container refresh and
+both smoke probes pass. Bandit found a runtime assert in the earlier workflow helper;
+explicit validation replaces it and Bandit passes. Full backend/final security checks
+remain active; see `docs/implementation/E4_DURABLE_GRADING_VERIFICATION.md`.
+
+Latest hosted run 38004530911 at `84772f1` has passed full backend regression and moved
+to browser/security/container checks. Current local durable-storage/history code has
+747 unit/contract and 35 tooling cases passing, plus complete source/dependency checks.
+Its broad integration run and final image scan/refresh are still active; nothing is
+promoted to main before the relevant hosted gate completes.
+
+Durable grading/history local gate now passes: full migration/backend run has 747
+unit/contract, 35 tooling and 266 integration cases; two additional history-hold cases
+and the extended restricted-login check pass separately. Six three-engine privacy
+journeys, populated logical recovery, source/dependency checks, final rebuilt image
+scans and eight-service smoke pass. Exact-head hosted acceptance remains required;
+worker/learner/scoring integration is still disabled.

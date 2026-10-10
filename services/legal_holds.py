@@ -15,6 +15,7 @@ from services.domain.data_requests import (
     LegalHoldReceipt,
 )
 from services.domain.flags import ContentFlag, FlagHistory
+from services.domain.grading_work import GradingHistory
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence, MasteryHistory
 from services.identity import IdentityError, IdentityService
@@ -144,6 +145,12 @@ class LegalHoldService:
                 ),
                 "CONTENT_FLAG": select(ContentFlag.id).where(
                     ContentFlag.id == body.record_id, ContentFlag.reporter_id == request.user_id
+                ),
+                "GRADING_HISTORY": select(GradingHistory.id)
+                .join(Attempt, Attempt.id == GradingHistory.attempt_id)
+                .where(
+                    GradingHistory.id == body.record_id,
+                    Attempt.learner_id == request.user_id,
                 ),
                 "FLAG_HISTORY": select(FlagHistory.id)
                 .join(ContentFlag, ContentFlag.id == FlagHistory.flag_id)

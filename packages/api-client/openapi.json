@@ -2151,7 +2151,8 @@
               "MASTERY_EVIDENCE",
               "MASTERY_HISTORY",
               "FLAG_HISTORY",
-              "DATA_REQUEST_REVIEW"
+              "DATA_REQUEST_REVIEW",
+              "GRADING_HISTORY"
             ],
             "title": "Record Type",
             "type": "string"
@@ -2265,7 +2266,8 @@
               "MASTERY_EVIDENCE",
               "MASTERY_HISTORY",
               "FLAG_HISTORY",
-              "DATA_REQUEST_REVIEW"
+              "DATA_REQUEST_REVIEW",
+              "GRADING_HISTORY"
             ],
             "title": "Record Type",
             "type": "string"

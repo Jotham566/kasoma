@@ -325,7 +325,7 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     );
     await expect(
       admin.getByText(
-        "Legal holds cover seven record types; other records still require review.",
+        "Legal-hold coverage is incomplete; other records still require review.",
         {
           exact: true,
         },
@@ -351,6 +351,7 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       "Mastery evidence",
       "Mastery history",
       "Flag history",
+      "Grading history",
       "Data request review (request reference)",
     ]);
     await expect(

@@ -942,3 +942,17 @@ If hosted cache misses are throttled, maintainers can set repository Actions sec
 workflow checks availability without printing values, uses the pinned official login
 action and logs out afterward. Do not put these credentials in `.env`, Compose, source,
 chat or browser variables. Fork runs without secrets continue anonymous public pulls.
+
+### Durable grading storage preparation
+
+`make test-grading-work` verifies the pure transition policy and PostgreSQL store in
+isolated synthetic schemas, without model calls. `make migrate` applies additive
+migration 0026; it does not enable short-text assignment or dispatch. Owned exports and
+deletion previews include minimized work/history metadata. No worker should enqueue
+or process learner short-text work until the remaining privacy, role and learner-path
+[gates](../implementation/E4_DURABLE_GRADING_VERIFICATION.md) pass.
+
+Migration 0027 adds exact `GRADING_HISTORY` holds. `make test-grading-work` covers the
+independent administrator workflow and SQL preservation. `make build test-web-privacy`
+runs the privacy journeys across Chromium, Firefox and WebKit, including the updated
+record selector and incomplete-coverage wording. These commands use synthetic data.

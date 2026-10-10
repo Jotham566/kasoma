@@ -41,6 +41,7 @@ from services.domain.data_requests import (
 )
 from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag, FlagHistory, FlagMutationReceipt
+from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import (
     AuthSession,
     Challenge,
@@ -140,6 +141,8 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
         (SessionItem, SessionItem.session_id.in_(sessions)),
         (Attempt, Attempt.learner_id == user),
         (Grade, Grade.attempt_id.in_(attempts)),
+        (GradingWorkRow, GradingWorkRow.attempt_id.in_(attempts)),
+        (GradingHistory, GradingHistory.attempt_id.in_(attempts)),
         (AssessmentReceipt, AssessmentReceipt.learner_id == user),
         (AssessmentEvent, AssessmentEvent.session_id.in_(sessions)),
         (RecommendationSnapshot, RecommendationSnapshot.learner_id == user),

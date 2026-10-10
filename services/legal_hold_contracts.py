@@ -18,6 +18,7 @@ RecordType = Literal[
     "MASTERY_HISTORY",
     "FLAG_HISTORY",
     "DATA_REQUEST_REVIEW",
+    "GRADING_HISTORY",
 ]
 HoldReason = Literal["LEGAL_OBLIGATION", "SECURITY_INVESTIGATION"]
 

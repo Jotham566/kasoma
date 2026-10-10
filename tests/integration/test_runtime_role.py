@@ -21,8 +21,10 @@ from services.domain.assessment import (
     Grade,
     SessionItem,
 )
+from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import RateBucket
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
+from services.grading_work_store import claim_next, enqueue, finish_neutral
 from services.identity import IdentityError, IdentityService
 from services.providers import FakeMessagingProvider
 from tests.integration.test_assessment import assessment as assessment_fixture
@@ -77,6 +79,8 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                     (Grade, "INSERT"),
                     (AssessmentReceipt, "INSERT"),
                     (AssessmentEvent, "INSERT"),
+                    (GradingWorkRow, "INSERT, UPDATE"),
+                    (GradingHistory, "INSERT"),
                     (MasteryEvidence, "INSERT"),
                     (MasteryEstimate, "INSERT, UPDATE"),
                     (MasteryHistory, "INSERT"),
@@ -92,6 +96,9 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                 db.execute(
                     text(f"GRANT UPDATE (id) ON {quoted_schema}.item_versions TO {quoted_role}")
                 )
+                # Queue replay locks an existing attempt; only its immutable ID needs UPDATE
+                # privilege for FOR UPDATE. The existing immutable trigger rejects changes.
+                db.execute(text(f"GRANT UPDATE (id) ON {quoted_schema}.attempts TO {quoted_role}"))
                 # attempt_hint_guard locks users; allow only the mutable profile-name
                 # column, never identity/status/birth-date or role changes.
                 db.execute(
@@ -135,6 +142,9 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
             f"CREATE TABLE {quoted_schema}.unauthorized_table (id int)",
             f"ALTER TABLE {quoted_schema}.attempts DISABLE TRIGGER ALL",
             f"DROP TABLE {quoted_schema}.grades",
+            f"DELETE FROM {quoted_schema}.assessment_grading_work",
+            f"UPDATE {quoted_schema}.assessment_grading_history SET revision=revision+1",
+            f"DELETE FROM {quoted_schema}.assessment_grading_history",
             f"UPDATE {quoted_schema}.attempts SET channel = 'WHATSAPP'",
             f"UPDATE {quoted_schema}.grades SET answer_specification_hash = 'tampered'",
             f"UPDATE {quoted_schema}.user_roles SET role = 'ADMIN'",
@@ -159,6 +169,39 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
         with Session(restricted) as db:
             for model in (Attempt, Grade, MasteryEvidence):
                 assert db.scalar(select(func.count()).select_from(model)) == 1
+        # Exercise the durable store under the same real restricted login. This valid
+        # ungraded fixture is storage coverage, not short-text delivery enablement.
+        next_assignment = service.next_item(token, session.id, uuid4())
+        pending_id = uuid4()
+        with Session(restricted) as db, db.begin():
+            actor = service.authorize(db, token)
+            db.add(
+                Attempt(
+                    id=pending_id,
+                    learner_id=actor,
+                    session_item_id=next_assignment.session_item_id,
+                    item_version_id=next_assignment.item_version_id,
+                    choice_id="A",
+                    response=None,
+                    submitted_at=identity.clock(),
+                    hint_count=0,
+                    highest_hint_level=0,
+                    channel="WEB",
+                )
+            )
+            db.flush()
+            enqueue(db, pending_id, uuid4(), identity.clock())
+        with Session(restricted) as db, db.begin():
+            work = claim_next(db, identity.clock())
+            assert work is not None
+            finished = finish_neutral(db, pending_id, work.claim_id, identity.clock())
+            assert finished.status == "LOW_CONFIDENCE"
+            assert db.scalar(select(func.count()).select_from(GradingHistory)) == 3
+        with restricted.connect() as db:
+            with pytest.raises(DBAPIError) as rejected:
+                db.execute(text(f"UPDATE {quoted_schema}.attempts SET id=id"))
+            assert rejected.value.orig.sqlstate == "P0001"
+            db.rollback()
         assert password not in caplog.text + capsys.readouterr().out
     finally:
         if restricted is not None:
@@ -175,6 +218,9 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                     text(
                         f"REVOKE UPDATE (display_name) ON {quoted_schema}.users FROM {quoted_role}"
                     )
+                )
+                db.execute(
+                    text(f"REVOKE UPDATE (id) ON {quoted_schema}.attempts FROM {quoted_role}")
                 )
                 db.execute(text(f"REVOKE ALL ON SCHEMA {quoted_schema} FROM {quoted_role}"))
                 db.execute(text(f"DROP ROLE {quoted_role}"))

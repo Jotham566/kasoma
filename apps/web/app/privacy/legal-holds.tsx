@@ -205,6 +205,7 @@ export function LegalHolds({
                   <option value="MASTERY_EVIDENCE">Mastery evidence</option>
                   <option value="MASTERY_HISTORY">Mastery history</option>
                   <option value="FLAG_HISTORY">Flag history</option>
+                  <option value="GRADING_HISTORY">Grading history</option>
                   <option value="DATA_REQUEST_REVIEW">
                     Data request review (request reference)
                   </option>

@@ -54,7 +54,8 @@ class GradingWork(StrictContract):
             if self.finished_at < (self.claimed_at or self.queued_at):
                 raise ValueError("Completion precedes work")
             deadline = self.lease_until if claimed else self.queued_at + QUEUE_LIMIT
-            assert deadline is not None
+            if deadline is None:
+                raise ValueError("Missing claim deadline")
             if self.reason in {"QUEUE_EXPIRED", "WORKER_EXPIRED"}:
                 if self.finished_at < deadline or (self.reason == "WORKER_EXPIRED") != claimed:
                     raise ValueError("Invalid expiry outcome")
