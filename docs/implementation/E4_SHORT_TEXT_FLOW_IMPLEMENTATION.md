@@ -121,3 +121,19 @@ The current rebuilt-image vulnerability scan remains in progress while downloadi
 the fresh database. Commit/push the locally verified candidate for hosted verification;
 promote only after the remaining checks pass.
 No new main promotion, complete short-text feature or academic acceptance is claimed.
+
+## Hosted verification and main promotion — 18 October 2026
+
+The latest status supersedes the in-progress notes above. Commit
+`853f80af293ba5e78538534c7218beba7f50074e` passes the entire hosted pipeline
+[39143803289](https://github.com/Jotham566/kasoma/actions/runs/39143803289), including
+current container vulnerability scans. It is pushed to main; its merged branch is
+removed locally and remotely. Local scanning was interrupted after a registry protocol
+failure and the power interruption; it is not recorded as a local pass. Hosted scanning
+provides the completed exact-source gate without weakening scanner thresholds.
+
+The power interruption preserved Git changes and the committed source. Docker Desktop
+and the persistent eight-service review stack are restored and healthy from existing volumes;
+no database reset, destructive migration or reseeding of real data is performed.
+Expert review remains on the next branch. This closes the disabled synthetic slice,
+not the complete short-text capability or MVP release.

@@ -1,7 +1,11 @@
 # Current sprint: short-text grading integration
 
 Updated 18 October 2026. This header supersedes the historical slice notes below.
-Main is `bd00c49`; current candidate branch is `codex/short-text-learner-flow`.
+Verified application baseline on main is `853f80a`. The disabled synthetic learner-flow source passes hosted run
+[39143803289](https://github.com/Jotham566/kasoma/actions/runs/39143803289) and is
+promoted to main. Its merged branch is removed locally and remotely.
+Current next-slice branch: `codex/grading-expert-review`, based on that candidate.
+Do not promote the next branch ahead of its verification.
 
 ## Current verification and promotion state
 
@@ -30,11 +34,21 @@ Main is `bd00c49`; current candidate branch is `codex/short-text-learner-flow`.
   cases, lint/types/contracts, source/dependency security, populated encrypted logical
   recovery and rebuilt eight-service export/metrics smoke pass. The broad backend
   passes 307 integration cases (later additions pass in focused runs).
-  Current container vulnerability scanning and hosted verification remain pending.
+  Hosted verification, including current container vulnerability scanning, now passes.
   Normal runtime is disabled;
   independent expert review and rolling disablement are the next implementation.
 
+After a power interruption, Git work is intact. Docker Desktop and all eight persistent
+services are restored and healthy from existing volumes. Local scanner transport failure
+and interruption are not reported as passing evidence; the hosted source gate passes.
+
 ## Immediate implementation sequence
+
+The [expert review readiness assessment](E4_EXPERT_REVIEW_READINESS.md) identifies
+completed-review storage/access, exact privacy coverage and a release-subset sampling
+gap. [ADR-051](../decisions/ADR/051-blinded-review-and-release-unit-sampling.md) proposes
+additional within-session/band sampling without rewriting global ordinals. Draft
+migration 0033 and blinded contracts are under implementation; no acceptance is claimed.
 
 Finish learner-flow regression and recovery acceptance, independent blinded expert review and atomic band
 disablement with the short-text worker, grade/mastery transaction and learner fallback.

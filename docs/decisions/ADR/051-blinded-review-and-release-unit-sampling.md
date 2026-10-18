@@ -1,0 +1,63 @@
+# ADR-051: Blinded expert review and release-unit audit coverage
+
+Date: 18 October 2026
+Status: Proposed; implementation and acceptance pending
+Requirements: FR-GRD-003/004/005, FR-ID-003/006, NFR-SEC-002
+
+## Context
+
+Production-pilot decision 16 requires independent blinded audit of at least ten percent
+of automatically returned short-text grades and sticky disablement below 90% rolling
+exact agreement or on any critical error. Publication storage currently assigns audits
+at global ordinals 1, 11, 21. Internal diagnostic grades can remain sealed permanently;
+their global sample does not guarantee coverage of the subset actually made available.
+Completed expert review, blinded access and runtime rolling state are unimplemented.
+
+## Proposed decision
+
+Keep immutable global ordinals and their existing sample. For new model publications,
+also sample ordinal 1 and each tenth subsequent publication within its session/band.
+Persist the new audit-policy version and session ordinal; do not rewrite old evidence.
+Counters permit additional assignments while preserving the global minimum and
+assigned <= published bound. Objective storage fixtures retain their existing policy.
+
+This covers revision publication prefixes and whole completed diagnostic release units,
+including interleaved abandoned diagnostics. It may require more than ten percent
+review, particularly short sessions; it does not claim random representativeness.
+The academic lead must approve the versioned sampling/window policy before actual beta.
+
+Expert task projection omits learner identity, model results, ordinals and previous
+reviews. Require current academic-reviewer authorization independent of the learner
+and item author. Validate the complete pinned rubric point set and closed critical-error
+classification. Store one immutable completed expert review per assignment with exact
+reviewer/request provenance; determine agreement from stored criterion points, never a
+reviewer's declaration that the model was correct. Duplicate same-input completion is
+idempotent and conflicting completion fails safely. No grade override is implied.
+
+Complete reviews and any disablement under the same refreshed exclusive band lock used
+by publication. Order the latest 100 completed reviews deterministically; pending
+assignments do not count as completed. Preserve aggregate completion counts through
+future permitted retention, and recheck current audit state before dispatch/publication.
+Later good outcomes never re-enable a disabled band.
+
+New review records require minimized owned export, sealed diagnostic handling,
+deletion-impact inventory, exact-record holds, restricted-role verification and
+populated logical recovery. Keep answers in their original encrypted record. No new
+indefinite retention, destructive transform or real learner processing is authorized.
+
+## Acceptance and alternatives
+
+Verify independence/IDOR, blinded output, complete integer rubric points, exact agreement,
+critical and below-threshold disablement, deterministic window bounds, duplicate and
+concurrent completion, publication races, rollback, sampling under interleaved sealed
+diagnostics, privacy/hold coverage and the complete learner/browser regression.
+
+Counting pending assignments as correct hides missing evidence. Sampling only persisted
+global ordinals fails the release-subset case. Rewriting old ordinals destroys immutable
+evidence. These alternatives are rejected. Keeping the normal application disabled is
+mandatory until the complete integration and genuine external approval gates pass.
+
+Sources: [readiness assessment](../../implementation/E4_EXPERT_REVIEW_READINESS.md),
+[ADR-050](050-short-text-pending-and-eligibility.md),
+[AI controls](../../specifications/06_AI_RAG_and_Grading_Guardrails.md),
+[production rules](../../specifications/16_Production_Pilot_Decisions.md).

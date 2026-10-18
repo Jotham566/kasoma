@@ -1069,3 +1069,19 @@ The broad backend run is now terminal: 307 integration cases pass in 901.92 seco
 Its earlier collection is supplemented by the final 18-case flow and 831-case unit
 runs above. Container vulnerability-database download and hosted verification still
 gate promotion. This is verified disabled synthetic engineering, not MVP acceptance.
+
+## Independent expert-review candidate — 18 October 2026
+
+FR-GRD-003/004/005, FR-ID-003/006 and NFR-SEC-002: the next branch proposes ADR-051
+and begins draft migration 0033 plus blinded review contracts. It addresses the
+unimplemented completed-review/rolling-disablement path and adds release-unit sampling
+to cover diagnostics that remain sealed. No application acceptance is claimed; tests,
+staff/runtime wiring, exact holds, export/inventory and recovery remain pending. See
+[readiness](E4_EXPERT_REVIEW_READINESS.md).
+
+18 October recovery/promotion update: disabled learner-flow commit `853f80a` passes the
+complete hosted run [39143803289](https://github.com/Jotham566/kasoma/actions/runs/39143803289)
+including rebuilt-image security and container smoke. It is promoted to main and the
+merged branch removed. Local scan interruption is not a local pass. The next review
+branch remains uncommitted/unverified after its initial 20 contract/SQL cases; no
+complete grading, real-data or MVP acceptance is claimed.

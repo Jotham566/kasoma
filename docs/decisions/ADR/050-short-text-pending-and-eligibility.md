@@ -1,7 +1,7 @@
 # ADR-050: Short-text pending outcomes, eligibility and neutral fallback
 
 Date: 10 October 2026
-Status: Proposed; components under implementation, learner integration and acceptance pending
+Status: Accepted for disabled synthetic engineering; actual learner enablement remains gated
 Requirements: FR-GRD-003/004/005, FR-MST-001, FR-ID-003/006, NFR-SEC-002
 
 ## Context and proposed decision
@@ -331,3 +331,15 @@ Beat and immediate wake-ups route explicitly, without mixing export-worker execu
 The owned feedback endpoint adds an account-bound engineering ceiling of 120 reads per
 minute. Automatic web polling stops after twelve checks, three seconds apart, with
 one request in flight; manual retry and durable result ownership remain unchanged.
+
+## Disabled-stage acceptance — 18 October 2026
+
+Commit `853f80af293ba5e78538534c7218beba7f50074e` passes complete hosted verification
+[39143803289](https://github.com/Jotham566/kasoma/actions/runs/39143803289), including
+backend, three-engine browser journeys, migration/recovery, restricted login, security,
+rebuilt-image scanning and container smoke. It is promoted to main. This accepts only
+the disabled synthetic stage described above under delegated implementation discretion.
+No real calibration, reviewer qualification, privacy/safety approval or learner scoring
+is accepted. Independent blinded review, rolling disablement and actual release-unit
+audit coverage remain work before enablement; the next proposed decision records the
+sampling edge case without rewriting this slice's immutable evidence.

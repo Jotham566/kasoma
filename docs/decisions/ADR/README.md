@@ -110,4 +110,7 @@ This directory location follows the user-requested repository organization. It d
   records verified local OTel aggregation, privacy and finite retention controls.
 
 - [ADR-050: Short-text pending outcomes and eligibility](050-short-text-pending-and-eligibility.md)
-  proposes the pending/neutral boundary and complete learner-integration gates.
+  accepts the verified disabled synthetic path and retains actual learner-enablement gates.
+
+- [ADR-051: Blinded review and release-unit sampling](051-blinded-review-and-release-unit-sampling.md)
+  proposes independent review and audit coverage when diagnostic grades remain sealed.

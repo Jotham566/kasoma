@@ -1,6 +1,19 @@
 # Changelog
 
+## Work in progress — independent grading review
+
+- Propose ADR-051 for blinded review and release-unit sampling. Begin additive review
+  evidence, completion counters and atomic sticky disablement, retaining encrypted
+  answer references and old publication ordinals. This candidate is unverified;
+  staff/runtime integration, exact holds, exports and full acceptance remain pending.
+  No real learner grading or academic approval is enabled.
+
 ## Work in progress — short-text learner integration
+
+- Promote disabled synthetic learner flow `853f80a` to main after complete hosted run
+  39143803289 passes, including current container scans. Remove its merged branch.
+  Restore the local review stack after a power interruption without resetting volumes.
+  Actual learner scoring and the independent expert-review slice remain gated.
 
 - Verify nine synthetic short-text browser journeys across Chromium, Firefox and
   WebKit, including mobile neutral fallback, review requests and sealed diagnostics.
