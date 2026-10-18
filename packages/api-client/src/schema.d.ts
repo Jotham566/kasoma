@@ -954,7 +954,8 @@ export interface components {
         };
         /** AnsweredItem */
         AnsweredItem: {
-            grade: components["schemas"]["GradeView"];
+            /** Grade */
+            grade: components["schemas"]["GradeView"] | components["schemas"]["RubricGradeView"] | components["schemas"]["PendingShortTextGrade"] | components["schemas"]["LowConfidenceShortTextGrade"];
             /** Position */
             position: number;
             /**
@@ -962,6 +963,15 @@ export interface components {
              * Format: uuid
              */
             session_item_id: string;
+        };
+        /** CandidateFeedback */
+        CandidateFeedback: {
+            /** Correct Elements */
+            correct_elements: string[];
+            /** Missing Elements */
+            missing_elements: string[];
+            /** Next Action */
+            next_action: string;
         };
         /** CatalogEntry */
         CatalogEntry: {
@@ -1116,6 +1126,20 @@ export interface components {
              * @constant
              */
             token_type: "Bearer";
+        };
+        /** CriterionResult */
+        CriterionResult: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Evidence Excerpt */
+            evidence_excerpt: string;
+            /**
+             * Justification Code
+             * @enum {string}
+             */
+            justification_code: "SUPPORTED" | "MISSING" | "CONTRADICTED";
+            /** Points Awarded */
+            points_awarded: number;
         };
         /** DataExportBundle */
         DataExportBundle: {
@@ -2057,7 +2081,7 @@ export interface components {
             /** Prompt Blocks */
             prompt_blocks: components["schemas"]["PromptBlock"][];
             /** Response Spec */
-            response_spec: components["schemas"]["ResponseSpec"] | components["schemas"]["MultipleChoiceResponseSpec"] | components["schemas"]["NumericResponseSpec"];
+            response_spec: components["schemas"]["ResponseSpec"] | components["schemas"]["MultipleChoiceResponseSpec"] | components["schemas"]["NumericResponseSpec"] | components["schemas"]["ShortTextResponseSpec"];
             /** Selection Reason */
             selection_reason: string;
             /**
@@ -2094,6 +2118,39 @@ export interface components {
              * @default ok
              */
             status: string;
+        };
+        /** LowConfidenceShortTextGrade */
+        LowConfidenceShortTextGrade: {
+            /**
+             * Attempt Id
+             * Format: uuid
+             */
+            attempt_id: string;
+            /** Fallback */
+            fallback: components["schemas"]["ObjectiveEquivalentFallback"] | components["schemas"]["RequestReviewFallback"];
+            /**
+             * Item Version Id
+             * Format: uuid
+             */
+            item_version_id: string;
+            /**
+             * Mastery Update Status
+             * @default NOT_APPLICABLE
+             * @constant
+             */
+            mastery_update_status: "NOT_APPLICABLE";
+            /**
+             * Message Code
+             * @default GRADE_LOW_CONFIDENCE
+             * @constant
+             */
+            message_code: "GRADE_LOW_CONFIDENCE";
+            /**
+             * Status
+             * @default LOW_CONFIDENCE
+             * @constant
+             */
+            status: "LOW_CONFIDENCE";
         };
         /** Mapping */
         Mapping: {
@@ -2243,6 +2300,19 @@ export interface components {
              */
             purpose: "LOGIN" | "LINK";
         };
+        /** ObjectiveEquivalentFallback */
+        ObjectiveEquivalentFallback: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "OBJECTIVE_EQUIVALENT";
+            /**
+             * Session Id
+             * Format: uuid
+             */
+            session_id: string;
+        };
         /** OperationAlert */
         OperationAlert: {
             /**
@@ -2356,6 +2426,42 @@ export interface components {
              * @enum {string}
              */
             worker: "up" | "unavailable";
+        };
+        /** PendingShortTextGrade */
+        PendingShortTextGrade: {
+            /**
+             * Attempt Id
+             * Format: uuid
+             */
+            attempt_id: string;
+            /**
+             * Item Version Id
+             * Format: uuid
+             */
+            item_version_id: string;
+            /**
+             * Mastery Update Status
+             * @default NOT_APPLICABLE
+             * @constant
+             */
+            mastery_update_status: "NOT_APPLICABLE";
+            /**
+             * Message Code
+             * @default GRADE_PENDING
+             * @constant
+             */
+            message_code: "GRADE_PENDING";
+            /**
+             * Poll Url
+             * @default
+             */
+            poll_url: string;
+            /**
+             * Status
+             * @default PENDING
+             * @constant
+             */
+            status: "PENDING";
         };
         /** ProfilePatch */
         ProfilePatch: {
@@ -2528,6 +2634,14 @@ export interface components {
             /** Refresh Token */
             refresh_token: string;
         };
+        /** RequestReviewFallback */
+        RequestReviewFallback: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "REQUEST_REVIEW";
+        };
         /** RequestTiming */
         RequestTiming: {
             /**
@@ -2640,6 +2754,67 @@ export interface components {
             /** Criteria */
             criteria: components["schemas"]["RubricCriterion"][];
         };
+        /** RubricGradeView */
+        RubricGradeView: {
+            /**
+             * Attempt Id
+             * Format: uuid
+             */
+            attempt_id: string;
+            /** Confidence */
+            confidence: number;
+            /** Criterion Results */
+            criterion_results: components["schemas"]["CriterionResult"][];
+            /** Detected Misconception Ids */
+            detected_misconception_ids: string[];
+            feedback: components["schemas"]["CandidateFeedback"];
+            /** Grader Version */
+            grader_version: string;
+            /**
+             * Highest Hint Level
+             * @default 0
+             */
+            highest_hint_level: number;
+            /**
+             * Hint Count
+             * @default 0
+             */
+            hint_count: number;
+            /**
+             * Item Version Id
+             * Format: uuid
+             */
+            item_version_id: string;
+            /**
+             * Mastery Update Status
+             * @default NOT_IMPLEMENTED
+             * @enum {string}
+             */
+            mastery_update_status: "NOT_IMPLEMENTED" | "COMPLETED";
+            /**
+             * Method
+             * @default RUBRIC_MODEL
+             * @constant
+             */
+            method: "RUBRIC_MODEL";
+            /** Points Awarded */
+            points_awarded: number;
+            /** Points Possible */
+            points_possible: number;
+            /**
+             * Rubric Version Id
+             * Format: uuid
+             */
+            rubric_version_id: string;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @default GRADED
+             * @constant
+             */
+            status: "GRADED";
+        };
         /** SessionHistoryEntry */
         SessionHistoryEntry: {
             /** Answered Count */
@@ -2741,6 +2916,31 @@ export interface components {
              */
             topic_id: string;
         };
+        /** ShortTextResponse */
+        ShortTextResponse: {
+            /** Text */
+            text: string;
+            /**
+             * Type
+             * @constant
+             */
+            type: "SHORT_TEXT";
+        };
+        /** ShortTextResponseSpec */
+        ShortTextResponseSpec: {
+            /**
+             * Maximum Characters
+             * @default 2000
+             * @constant
+             */
+            maximum_characters: 2000;
+            /**
+             * Type
+             * @default SHORT_TEXT
+             * @constant
+             */
+            type: "SHORT_TEXT";
+        };
         /** SkillSummary */
         SkillSummary: {
             /** Competency */
@@ -2840,7 +3040,7 @@ export interface components {
         /** SubmitAnswer */
         SubmitAnswer: {
             /** Response */
-            response: components["schemas"]["ChoiceResponse"] | components["schemas"]["MultipleChoiceResponse"] | components["schemas"]["NumericResponse"];
+            response: components["schemas"]["ChoiceResponse"] | components["schemas"]["MultipleChoiceResponse"] | components["schemas"]["NumericResponse"] | components["schemas"]["ShortTextResponse"];
             /**
              * Session Item Id
              * Format: uuid
@@ -5019,7 +5219,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GradeView"];
+                    "application/json": components["schemas"]["GradeView"] | components["schemas"]["RubricGradeView"] | components["schemas"]["PendingShortTextGrade"] | components["schemas"]["LowConfidenceShortTextGrade"];
                 };
             };
             /** @description Bad Request */
@@ -7589,7 +7789,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GradeView"] | components["schemas"]["DiagnosticReceipt"];
+                    "application/json": components["schemas"]["GradeView"] | components["schemas"]["RubricGradeView"] | components["schemas"]["PendingShortTextGrade"] | components["schemas"]["LowConfidenceShortTextGrade"] | components["schemas"]["DiagnosticReceipt"];
                 };
             };
             /** @description Bad Request */

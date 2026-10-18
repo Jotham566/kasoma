@@ -13,6 +13,7 @@ from services.domain.assessment import (
     AssessmentReceipt,
     AssessmentSession,
     Attempt,
+    Grade,
     Reassessment,
     SessionItem,
 )
@@ -47,6 +48,8 @@ def access(
         service.authorize(db, token, parent.subject_id)
         if parent.kind != "REVISION":
             raise IdentityError("REASSESSMENT_NOT_ALLOWED", 403)
+        if db.get(Grade, original.id) is None:
+            raise IdentityError("REASSESSMENT_NOT_ALLOWED", 409)
         digest = identity.digest("assessment", "reassessment:" + str(original_id))
         if key:
             service.replay(db, actor, key, digest)
@@ -127,7 +130,14 @@ def access(
                 raise ValueError("Missing selected item")
             # Stable lock order avoids reciprocal learner selections deadlocking.
             for version_id in sorted([source.id, target.id], key=str):
-                service.content.assessment_version(db, version_id, parent.subject_id)
+                service.content.assessment_version(
+                    db,
+                    version_id,
+                    parent.subject_id,
+                    assigned_band_id=assignment.grading_band_id
+                    if version_id == source.id
+                    else None,
+                )
             now = identity.clock()
             session = AssessmentSession(
                 id=uuid4(),
@@ -151,6 +161,7 @@ def access(
                     item_version_id=target.id,
                     position=1,
                     reason=session.reason,
+                    grading_band_id=service.assignment_band(db, target),
                 )
             )
             db.flush()

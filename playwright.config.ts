@@ -20,7 +20,7 @@ if (
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  testIgnore: "**/*.ui.spec.ts",
+  testIgnore: ["**/*.ui.spec.ts", "**/short-text.spec.ts"],
   use: {
     baseURL: "http://127.0.0.1:13000",
     browserName,

@@ -35,14 +35,22 @@ def test_duplicate_rubric_keys_are_rejected():
         RubricDraft(criteria=[criterion(), criterion()])
 
 
-def test_review_only_short_text_is_not_a_learner_or_channel_response():
+def test_bounded_web_contract_does_not_enable_short_text_channel_delivery():
     document = DraftDocument(
         response_type="SHORT_TEXT",
         partial_credit="CRITERION_SUM",
         rubric={"criteria": [criterion()]},
     )
     assert not supports(document)
-    with pytest.raises(ValidationError):
-        SubmitAnswer.model_validate(
-            {"session_item_id": uuid4(), "response": {"type": "SHORT_TEXT", "text": "Alpha"}}
-        )
+    submitted = SubmitAnswer.model_validate(
+        {"session_item_id": uuid4(), "response": {"type": "SHORT_TEXT", "text": "Alpha"}}
+    )
+    assert submitted.response.type == "SHORT_TEXT"
+    for field in ["score", "rubric_version_id", "automatic_scoring_enabled"]:
+        with pytest.raises(ValidationError):
+            SubmitAnswer.model_validate(
+                {
+                    "session_item_id": uuid4(),
+                    "response": {"type": "SHORT_TEXT", "text": "Alpha", field: True},
+                }
+            )

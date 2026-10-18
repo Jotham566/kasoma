@@ -73,3 +73,11 @@ synthetic attempt plus neutral work and three exact history snapshots. Restore c
 pgvector and frozen export verification. Cleanup reports no failures. This adds local
 logical evidence; object storage, production PITR/RPO/RTO and pilot acceptance remain
 unverified. See [grading verification](E4_DURABLE_GRADING_VERIFICATION.md).
+
+18 October encrypted-result extension: the generated disposable source includes one
+actual encrypted short-text answer/result, model publication/mastery/audit, and a frozen
+owned export. Restore verifies exact table inventories and decrypts the restored answer,
+criterion excerpt and points coherently without changing evidence. Latest passing run:
+63 tables, 602 rows, 1,510 ms, no cleanup failures; log
+`.local/short-text-final-verification.log`. This remains local synthetic logical evidence,
+not production PITR/RPO/RTO or object-storage recovery.

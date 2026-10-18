@@ -1,5 +1,6 @@
 """Mastery-owned writes inside the assessment transaction; replayable evidence."""
 
+import json
 from datetime import datetime
 from uuid import UUID, uuid4
 
@@ -12,6 +13,7 @@ from services.domain.assessment import Attempt, Grade
 from services.domain.content import ItemVersion
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
 from services.mastery_engine import Estimate, Evidence, GradeInput, estimate, normalize
+from services.rubric_grade_protection import StoredRubricGrade
 
 
 def project_skill(
@@ -29,7 +31,11 @@ def project_skill(
 
 def record(db: Session, attempt: Attempt, grade: Grade, at: datetime) -> None:
     """Caller holds the authenticated learner lock; never edits grades or old evidence."""
-    result = GradeView.model_validate(grade.result)
+    result = (
+        StoredRubricGrade.model_validate_json(json.dumps(grade.result))
+        if grade.result.get("method") == "RUBRIC_MODEL"
+        else GradeView.model_validate(grade.result)
+    )
     version = db.get(ItemVersion, attempt.item_version_id)
     if version is None:
         raise ValueError("Missing pinned content")

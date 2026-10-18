@@ -9,6 +9,12 @@ from pydantic import Field, field_validator, model_validator
 from services.content_contracts import Choice
 from services.identity_contracts import Contract
 from services.numeric import NumericForm
+from services.rubric_grade_contracts import RubricGradeView
+from services.short_text_contracts import (
+    LowConfidenceShortTextGrade,
+    PendingShortTextGrade,
+    ShortTextResponse,
+)
 
 
 class StartRevision(Contract):
@@ -65,7 +71,7 @@ class NumericResponse(Contract):
 
 class SubmitAnswer(Contract):
     session_item_id: UUID
-    response: ChoiceResponse | MultipleChoiceResponse | NumericResponse
+    response: ChoiceResponse | MultipleChoiceResponse | NumericResponse | ShortTextResponse
 
 
 class Feedback(Contract):
@@ -90,10 +96,13 @@ class GradeView(Contract):
     mastery_update_status: Literal["NOT_IMPLEMENTED", "COMPLETED"] = "NOT_IMPLEMENTED"
 
 
+AttemptGrade = GradeView | RubricGradeView | PendingShortTextGrade | LowConfidenceShortTextGrade
+
+
 class AnsweredItem(Contract):
     session_item_id: UUID
     position: int
-    grade: GradeView
+    grade: AttemptGrade
 
 
 class SessionView(Contract):
@@ -137,6 +146,11 @@ class NumericResponseSpec(Contract):
     input_mode: Literal["text"] = "text"
 
 
+class ShortTextResponseSpec(Contract):
+    type: Literal["SHORT_TEXT"] = "SHORT_TEXT"
+    maximum_characters: Literal[2000] = 2000
+
+
 class HintRequest(Contract):
     expected_hint_level: int = Field(ge=0, le=3)
 
@@ -158,7 +172,9 @@ class LearnerItem(Contract):
     item_version_id: UUID
     position: int
     prompt_blocks: list[PromptBlock]
-    response_spec: ResponseSpec | MultipleChoiceResponseSpec | NumericResponseSpec
+    response_spec: (
+        ResponseSpec | MultipleChoiceResponseSpec | NumericResponseSpec | ShortTextResponseSpec
+    )
     maximum_points: int
     selection_reason: str
     hints: list[RevealedHint] = Field(default_factory=list)

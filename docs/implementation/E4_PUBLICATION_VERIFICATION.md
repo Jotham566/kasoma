@@ -73,3 +73,12 @@ read timeout. `.local/grading-publication-security-retry.log` confirms the compl
 security retry passed. No dependency, threshold or scanner was changed. The baseline
 `46a0f8a` passed hosted run 38034913518 and is now on main; merged historical branches
 were removed. The publication changes require a new hosted run before promotion.
+
+## Verified main promotion — 18 October 2026
+
+Publication commit `bd00c49f8e212235b51ba456ec8c6da571b18917` passes the full hosted
+pipeline [39137945443](https://github.com/Jotham566/kasoma/actions/runs/39137945443).
+It has been fast-forwarded to main and pushed. Merged calibration, publication,
+request-timing and export branches were removed locally and remotely. This closes the
+publication storage slice only; the learner-flow and independent expert-review gates
+above remain separate.

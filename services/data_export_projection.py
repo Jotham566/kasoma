@@ -10,7 +10,7 @@ from sqlalchemy import Select, Text, cast, exists, func, or_, select
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import InstrumentedAttribute, Session
 
-from services.assessment_contracts import GradeView
+from services.assessment_outcomes import answer_binding, grade_projection, response_projection
 from services.content_contracts import DraftDocument
 from services.data_export_encoding import ExportRecord, encode_records
 from services.data_request_contracts import DataExportBundle
@@ -39,6 +39,8 @@ from services.domain.messaging import (
 )
 from services.identity import IdentityError, IdentityService
 from services.mastery_engine import Estimate, Evidence
+from services.rubric_grade_contracts import RubricGradeView
+from services.rubric_grade_protection import ResultBinding
 
 MAX_RECORDS = 10_000
 EXCLUSIONS = [
@@ -228,9 +230,7 @@ def _records(
             fields(a, "id item_version_id submitted_at hint_count highest_hint_level channel")
             | {
                 "session_id": str(session_id),
-                "response": a.response
-                if a.response is not None
-                else {"type": "SINGLE_CHOICE", "choice_id": a.choice_id},
+                "response": response_projection(identity, a),
                 "question": {
                     "prompt": doc.prompt,
                     "choices": [c.model_dump() for c in doc.choices],
@@ -274,15 +274,34 @@ def _records(
             },
         )
     yield ("grades", None)
-    for g in rows(select(Grade).where(Grade.attempt_id.in_(visible)).order_by(Grade.attempt_id)):
-        result = GradeView.model_validate(g.result)
+    for g, attempt, band_id in rows(
+        select(Grade, Attempt, SessionItem.grading_band_id)
+        .join(Attempt, Attempt.id == Grade.attempt_id)
+        .join(SessionItem, SessionItem.id == Attempt.session_item_id)
+        .where(Grade.attempt_id.in_(visible))
+        .order_by(Grade.attempt_id),
+        scalar=False,
+    ):
+        binding = (
+            ResultBinding(answer=answer_binding(attempt), band_id=band_id) if band_id else None
+        )
+        result = grade_projection(identity, db, attempt, g, pinned_binding=binding)
+        rubric_fields = (
+            result.model_dump(
+                mode="json",
+                include={"rubric_version_id", "criterion_results", "detected_misconception_ids"},
+            )
+            if isinstance(result, RubricGradeView)
+            else {}
+        )
         yield (
             "grades",
             fields(
                 result,
                 "attempt_id item_version_id status score points_awarded points_possible "
                 "confidence method grader_version",
-            ),
+            )
+            | rubric_fields,
         )
     yield ("hints", None)
     for r in rows(select(HintUse).where(HintUse.learner_id == actor).order_by(HintUse.id)):

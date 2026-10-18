@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from scripts.assessment_fixtures import seed_assessment
 from scripts.grading_fixtures import unapproved_band
 from scripts.recovery_exports import RecoveryExport, populate_export
+from scripts.recovery_short_text import populate_short_text
 from services.assessment import AssessmentService
 from services.assessment_contracts import ChoiceResponse, StartRevision, SubmitAnswer
 from services.config import Settings
@@ -140,6 +141,21 @@ def populate(settings: Settings) -> RecoveryExport:
             if work is None or work.claim_id is None:
                 raise RuntimeError("Synthetic grading claim missing")
             finish_neutral(db, attempt_id, work.claim_id, identity.clock())
+        # Finish the existing plan so its objective items are excluded from the
+        # subsequent synthetic written-answer plan through the normal selector.
+        for _ in range(3):
+            remaining = assessment.next_item(token, session.id, uuid4())
+            assessment.submit(
+                token,
+                session.id,
+                SubmitAnswer(
+                    session_item_id=remaining.session_item_id,
+                    response=ChoiceResponse(choice_id="A"),
+                ),
+                uuid4(),
+                uuid4(),
+            )
+        populate_short_text(identity, token, subject, topic)
         return populate_export(identity, token)
     finally:
         engine.dispose()

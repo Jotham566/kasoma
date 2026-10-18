@@ -5,6 +5,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from services.assessment import AssessmentService
+from services.assessment_contracts import GradeView
 from services.content_contracts import DraftDocument
 from services.domain.assessment import Attempt, SessionItem
 from services.domain.curriculum import Subject, Topic
@@ -45,7 +46,10 @@ def render_practice(identity: IdentityService, db: Session, row: OutboundMessage
         if session.kind != "REVISION" or session.item_count != 5:
             raise IdentityError("FORBIDDEN", 403)
         service.content.assessment_version(db, item.item_version_id, session.subject_id)
-        message = feedback_text(service.grade(db, attempt.id), session.id, item.position, origin)
+        grade = service.grade(db, attempt.id)
+        if not isinstance(grade, GradeView):
+            raise IdentityError("CONTENT_NOT_APPROVED", 409)
+        message = feedback_text(grade, session.id, item.position, origin)
     else:
         state = db.get(ConversationState, row.link_id)
         if (

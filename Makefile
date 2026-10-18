@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := help
 PYTHON ?= python3
 TRIVY_TIMEOUT ?= 30m
+TRIVY_DB_REPOSITORY ?= mirror.gcr.io/aquasec/trivy-db:2,ghcr.io/aquasecurity/trivy-db:2
 export PATH := $(CURDIR)/.local/runtime/node_modules/node/bin:$(CURDIR)/.local/tools/bin:$(PATH)
 export NEXT_TELEMETRY_DISABLED := 1
 export TURBO_TELEMETRY_DISABLED := 1
@@ -66,6 +67,7 @@ e2e:
 	$(MAKE) e2e-chromium
 	$(MAKE) e2e-firefox
 	$(MAKE) e2e-webkit
+	$(MAKE) test-web-short-text
 build:
 	$(PNPM) build
 containers:
@@ -87,8 +89,8 @@ eval-local eval-gemini-free eval-compare:
 security-source:
 	$(UV) python scripts/scan_source.py
 security-containers:
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --timeout $(TRIVY_TIMEOUT) --severity HIGH,CRITICAL --exit-code 1 kasoma-api
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --timeout $(TRIVY_TIMEOUT) --severity HIGH,CRITICAL --exit-code 1 kasoma-web
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --no-progress --db-repository $(TRIVY_DB_REPOSITORY) --timeout $(TRIVY_TIMEOUT) --severity HIGH,CRITICAL --exit-code 1 kasoma-api
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v kasoma-trivy-cache:/root/.cache/ aquasec/trivy:0.74.0 image --no-progress --db-repository $(TRIVY_DB_REPOSITORY) --timeout $(TRIVY_TIMEOUT) --severity HIGH,CRITICAL --exit-code 1 kasoma-web
 ollama-check:
 	$(UV) python -m scripts.ollama_check
 
@@ -320,6 +322,16 @@ test-grading-bands:
 .PHONY: test-grading-publications
 test-grading-publications:
 	$(UV) pytest tests/integration/test_grading_publications.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-short-text-flow
+test-short-text-flow:
+	$(UV) pytest tests/integration/test_short_text_flow.py tests/integration/test_short_text_processing.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-web-short-text
+test-web-short-text:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --config playwright.short-text.config.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --config playwright.short-text.config.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --config playwright.short-text.config.ts
 
 .PHONY: test-web-privacy
 test-web-privacy:

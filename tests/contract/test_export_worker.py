@@ -40,7 +40,7 @@ def test_repository_launches_keep_export_work_exclusive_and_hard_limited():
     )
     commands = ast.literal_eval(assignment.value)
     ordinary = next(command for command in commands if "celery" in command)
-    assert "--queues=operations,imports,messaging" in ordinary
+    assert "--queues=operations,grading,imports,messaging" in ordinary
     assert sum("--beat" in command for command in commands) == 1
     compose = (
         Path("docker-compose.yml").read_text().split("  worker:\n", 1)[1].split("  web:\n", 1)[0]
@@ -48,7 +48,7 @@ def test_repository_launches_keep_export_work_exclusive_and_hard_limited():
     launch = next(
         line.strip()[9:] for line in compose.splitlines() if line.strip().startswith("command: ")
     )
-    assert "--queues=operations,imports,messaging" in shlex.split(launch)
+    assert "--queues=operations,grading,imports,messaging" in shlex.split(launch)
 
 
 @pytest.mark.parametrize("service,prefix", [("worker", "worker"), ("export-worker", "exports")])

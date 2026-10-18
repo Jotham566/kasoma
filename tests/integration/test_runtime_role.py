@@ -42,6 +42,7 @@ from services.short_text_eligibility import GradingScope
 from tests.integration.test_assessment import assessment as assessment_fixture
 from tests.integration.test_grading_bands import activate_synthetic
 from tests.integration.test_identity import consent, profile
+from tests.integration.test_short_text_processing import exercise_restricted_short_text_flow
 
 assessment = assessment_fixture
 pytestmark = pytest.mark.integration
@@ -275,6 +276,7 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                 db.execute(text(f"UPDATE {quoted_schema}.attempts SET id=id"))
             assert rejected.value.orig.sqlstate == "P0001"
             db.rollback()
+        exercise_restricted_short_text_flow(assessment, identity)
         assert password not in caplog.text + capsys.readouterr().out
     finally:
         if restricted is not None:

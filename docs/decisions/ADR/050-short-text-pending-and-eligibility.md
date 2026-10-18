@@ -259,3 +259,75 @@ and current consent/content/eligibility checks. Objective fixtures verify this s
 without bypassing the existing SHORT_TEXT assignment exclusion. No learner format is
 enabled. Owned projection, exact holds and deletion inventory cover the new personal
 records; preservation still needs the existing future retention processor.
+
+## Definitive result representation under integration
+
+The internal rubric result is distinct from deterministic `GradeView` and unresolved
+outcomes. It pins rubric/item identity and uses the existing validated criterion-result
+and authored-feedback shapes. Integer criterion totals must equal awarded points and
+score must equal awarded/possible points; confidence is finite and never grants
+eligibility. Do not place a zero-grade placeholder into unresolved workflows.
+
+Criterion evidence contains confidential answer excerpts. The result formatter hides
+these from representations, rechecks exact answer/context evidence, and grants no
+persistence/disclosure authorization. The full path must encrypt answer-bearing result
+material at rest and expose it only through current ownership/consent and diagnostic
+sealing checks. No plaintext result writer or learner route is introduced by the
+intermediate contract. Existing assignment exclusions remain until complete acceptance.
+
+## Candidate cohesive implementation — 18 October 2026
+
+Draft migration 0032 pins an assignment to a calibration band and permits only a
+bounded encrypted SHORT_TEXT response, with generated rubric foreign keys. An enabled,
+matching band and approved pinned rubric are necessary SQL conditions. Application
+selection additionally requires a disabled-by-default flag and a trusted report authority;
+the normal application has no report authority. Test authority exists only in isolated
+synthetic fixtures. This candidate supersedes ADR-044's unconditional SQL exclusion only
+on its working branch; complete learner-path acceptance is required before promotion.
+
+The answer-bearing result is authenticated encrypted material bound to the five answer
+identities plus band ID. A confidential quote-free summary retains points/confidence,
+criterion points and version references for SQL consistency and mastery. Decryption
+checks exact binding and summary equality. Use existing identity encryption; engineering
+ceilings are 128 KiB plaintext and 192 KiB ASCII ciphertext, with failures closed rather
+than truncating. Existing attempt/grade holds preserve their whole encrypted records.
+Owned exports decrypt authorized answers/results and exclude internal band IDs/ciphertext.
+
+Submission atomically commits attempt, receipt, work and `attempt.saved`; neutral state
+transitions append `attempt.grade_unavailable` without points. A successful publication
+requires matching rubric points, grade, terminal work, mastery and audit in the same
+transaction. No unresolved outcome may use the deterministic grade placeholder.
+
+The one-job task inherits the 15/20-second worker limits beneath the 30-second lease.
+A bounded wake-up follows commit and periodic five-second drain recovers wake-up failure.
+Every model pass rechecks current authority in a short transaction, releases locks,
+then calls the provider within the remaining global five-second rehearsal budget.
+The current implementation supports FakeModelProvider only and defaults to unavailable
+report/safety gates. Human approvals, real detectors/adapters and independent blinded
+expert review are not invented by these defaults. Rolling review integration remains
+mandatory before scoring is enabled for actual learner use.
+
+## Proposed staged adoption boundary
+
+The cohesive branch may be accepted as a disabled synthetic engineering slice after
+complete backend/browser, migration/recovery, restricted-login, contracts and security
+verification. This does not accept the full automatic-grading capability. It replaces
+ADR-044's unconditional SQL assignment exclusion with pinned-band constraints while
+preserving the normal application's effective exclusion: flag false, no report authority,
+no safety authority, fake-only processor and synthetic-only context/selection. No public
+activation command or seeded enabled band is introduced. Worker grants cannot activate
+reports. Test authorities are confined to isolated, explicitly synthetic fixtures.
+
+All seven complete-integration requirements above remain gates before any actual
+learner enablement. In particular, absent independent review/rolling disablement is an
+unfinished feature, not an approved exemption; no real report, reviewer qualification,
+safety detector or model adapter is inferred from tests. The earlier candidate statement
+requiring complete acceptance before promotion applies to the complete enabled learner
+path. Disabled-stage acceptance must explicitly state its narrower boundary and evidence.
+
+Grading dispatch uses its own `grading` queue as required by production decision 16;
+the local worker consumes it alongside existing operations/imports/messaging queues.
+Beat and immediate wake-ups route explicitly, without mixing export-worker execution.
+The owned feedback endpoint adds an account-bound engineering ceiling of 120 reads per
+minute. Automatic web polling stops after twelve checks, three seconds apart, with
+one request in flight; manual retry and durable result ownership remain unchanged.

@@ -16,6 +16,7 @@ from sqlalchemy.engine import URL, make_url
 from sqlalchemy.exc import DBAPIError
 
 from scripts.recovery_fixture import populate
+from scripts.recovery_short_text import verify_short_text
 from services.config import Settings
 from services.domain.assessment import Attempt, Grade
 from services.domain.content import ItemVersion
@@ -217,7 +218,9 @@ def drill(settings: Settings) -> dict[str, object]:
                 "database_url": SecretStr(destination_url.render_as_string(hide_password=False))
             }
         )
-        export.verify(IdentityService(restored_engine, restored_settings, fake, fake))
+        restored_identity = IdentityService(restored_engine, restored_settings, fake, fake)
+        export.verify(restored_identity)
+        verify_short_text(restored_identity)
         if inventory(restored_engine) != before or inventory(source_engine) != before:
             raise RuntimeError("Recovery verification changed evidence")
         result.update(
@@ -228,6 +231,7 @@ def drill(settings: Settings) -> dict[str, object]:
             immutable_guards_verified=True,
             pgvector_verified=True,
             populated_export_verified=True,
+            encrypted_short_text_verified=True,
             object_storage_recovery_verified=False,
             production_rpo_rto_verified=False,
         )

@@ -36,6 +36,7 @@ from services.domain.curriculum import Competency, Concept, Level, Subject, Topi
 from services.domain.flags import ContentFlag
 from services.identity import IdentityError, IdentityService
 from services.numeric import specification_errors
+from services.short_text_policy import ShortTextPolicy
 from services.staff import authorize
 
 READ_ROLES = {"CONTENT_AUTHOR", "ACADEMIC_REVIEWER", "ADMIN"}
@@ -60,8 +61,11 @@ def digest(value: object) -> str:
 
 
 class ContentService:
-    def __init__(self, identity: IdentityService) -> None:
+    def __init__(
+        self, identity: IdentityService, short_text: ShortTextPolicy | None = None
+    ) -> None:
         self.identity = identity
+        self.short_text = short_text or ShortTextPolicy(identity)
 
     def view(self, db: Session, version: ItemVersion) -> VersionView:
         item = db.get(Item, version.item_id)
@@ -676,9 +680,10 @@ class ContentService:
                 continue
             seen.add(version.item_id)
             document = DraftDocument.model_validate(version.document)
-            if (
-                document.response_type == "SHORT_TEXT"
-                or channel not in document.channel_suitability
+            if channel not in document.channel_suitability:
+                continue
+            if document.response_type == "SHORT_TEXT" and (
+                channel != "WEB" or self.short_text.band_for(db, version) is None
             ):
                 continue
             if channel == "WHATSAPP":
@@ -695,11 +700,36 @@ class ContentService:
                 break
         return result
 
-    def assessment_version(self, db: Session, version_id: UUID, subject_id: UUID) -> ItemVersion:
+    def assessment_version(
+        self,
+        db: Session,
+        version_id: UUID,
+        subject_id: UUID,
+        *,
+        assigned_band_id: UUID | None = None,
+    ) -> ItemVersion:
         version = self.eligible_version(db, version_id, subject_id, synthetic=True)
         # FOR SHARE permits concurrent assessments but still excludes status/content writes.
         db.refresh(version, with_for_update={"read": True})
-        if version.status != "APPROVED" or version.document.get("response_type") == "SHORT_TEXT":
+        permitted = True
+        if version.document.get("response_type") == "SHORT_TEXT":
+            if assigned_band_id is None:
+                permitted = self.short_text.band_for(db, version) is not None
+            else:
+                # The caller has already authorized the owned immutable assignment.
+                # Preserve a served answer through band withdrawal; the worker must
+                # independently recheck current authority before any model dispatch.
+                from services.domain.grading_bands import GradingBandRow
+
+                band = db.get(GradingBandRow, assigned_band_id)
+                scope = self.short_text.scope(db, version)
+                permitted = band is not None and (band.subject_id, band.topic_id) == (
+                    scope.subject_id,
+                    scope.topic_id,
+                )
+        elif assigned_band_id is not None:
+            permitted = False
+        if version.status != "APPROVED" or not permitted:
             raise ContentError("CONTENT_NOT_APPROVED", status=409)
         return version
 
@@ -730,7 +760,9 @@ class ContentService:
         )
         indexed = {version.id: version for version in versions}
         if len(indexed) != len(version_ids) or any(
-            version.document.get("response_type") == "SHORT_TEXT" for version in versions
+            version.document.get("response_type") == "SHORT_TEXT"
+            and self.short_text.band_for(db, version) is None
+            for version in versions
         ):
             raise ContentError("CONTENT_NOT_APPROVED", status=404)
         return [indexed[version_id] for version_id in version_ids]

@@ -29,7 +29,7 @@ commands = [
         "--loglevel=INFO",
         "--pool=solo",
         "--concurrency=1",
-        "--queues=operations,imports,messaging",
+        "--queues=operations,grading,imports,messaging",
         "--beat",
         "--schedule=.local/celerybeat",
     ],

@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 
 from celery import Celery
 
+from services.assessment import AssessmentService
 from services.config import Settings
 from services.content_imports import process_imports
 from services.data_exports import expire
@@ -12,6 +13,7 @@ from services.identity_expiry import expire_identity
 from services.observability import correlation_id, emit, tracer
 from services.operations import monitor
 from services.providers import FakeMessagingProvider
+from services.short_text_processor import ShortTextProcessor
 from services.whatsapp_jobs import process_messages
 
 
@@ -30,8 +32,14 @@ def make_worker(settings: Settings) -> Celery:
         task_default_queue="operations",
         broker_connection_retry_on_startup=True,
         task_publish_retry=False,
-        task_queues={"operations": {}, "imports": {}, "messaging": {}},
+        task_queues={"operations": {}, "grading": {}, "imports": {}, "messaging": {}},
+        task_routes={"kasoma.grade_short_text": {"queue": "grading"}},
         beat_schedule={
+            "short-text-grading": {
+                "task": "kasoma.grade_short_text",
+                "schedule": 5.0,
+                "options": {"queue": "grading"},
+            },
             "channel-messages": {
                 "task": "kasoma.channel_messages",
                 "schedule": 10.0,
@@ -55,6 +63,16 @@ def make_worker(settings: Settings) -> Celery:
             span.set_attribute("correlation_id", request_id)
             emit("worker.smoke", request_id, "WORKER", 200)
         return {"correlation_id": request_id, "status": "ok"}
+
+    @app.task(shared=False, name="kasoma.grade_short_text", acks_late=True)  # type: ignore[untyped-decorator]
+    def grade_short_text() -> bool:
+        engine = engine_for(settings)
+        try:
+            fake = FakeMessagingProvider()
+            identity = IdentityService(engine, settings, fake, fake)
+            return ShortTextProcessor(AssessmentService(identity)).process_one()
+        finally:
+            engine.dispose()
 
     @app.task(shared=False, name="kasoma.expire_exports", bind=True)  # type: ignore[untyped-decorator]
     def expire_exports(task: Any) -> int:

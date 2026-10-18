@@ -8,6 +8,7 @@ from sqlalchemy import JSON, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from services.database import Base
+from services.domain.grading_bands import GradingBandRow
 
 
 class AssessmentSession(Base):
@@ -40,6 +41,7 @@ class SessionItem(Base):
     position: Mapped[int]
     reason: Mapped[str]
     served_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    grading_band_id: Mapped[UUID | None] = mapped_column(ForeignKey(GradingBandRow.id))
 
 
 class Attempt(Base):

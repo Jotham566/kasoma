@@ -4,7 +4,7 @@ from datetime import timedelta
 from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
-from sqlalchemy import and_, or_, select
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import Session
 
 from services.assessment_contracts import (
@@ -25,9 +25,12 @@ from services.domain.assessment import (
 )
 from services.domain.content import ItemVersion
 from services.domain.curriculum import Competency, Topic
+from services.domain.grading_work import GradingWorkRow
+from services.grading_work_store import apply, snapshot
 from services.identity import IdentityError
 from services.mastery import project_skill, reconcile
 from services.mastery_engine import BASELINE, fingerprint
+from services.short_text_workflow import expire_work
 
 if TYPE_CHECKING:
     from services.assessment import AssessmentService
@@ -37,6 +40,44 @@ class Diagnostics:
     def __init__(self, assessment: "AssessmentService"):
         self.assessment = assessment
         self.identity = assessment.identity
+
+    def complete_if_ready(self, db: Session, session: AssessmentSession, request: UUID) -> bool:
+        if session.kind != "DIAGNOSTIC" or session.status != "ACTIVE":
+            return False
+        attempts = select(Attempt.id).join(SessionItem).where(SessionItem.session_id == session.id)
+        if (
+            db.scalar(select(func.count()).select_from(attempts.subquery())) or 0
+        ) < session.item_count:
+            return False
+        for row in db.scalars(
+            select(GradingWorkRow)
+            .where(GradingWorkRow.attempt_id.in_(attempts))
+            .order_by(GradingWorkRow.attempt_id)
+            .with_for_update()
+        ):
+            apply(db, row, expire_work(snapshot(row), self.identity.clock()))
+            if row.status in {"QUEUED", "RUNNING"}:
+                return False
+        unresolved = db.scalar(
+            select(Attempt.id)
+            .where(
+                Attempt.id.in_(attempts),
+                ~select(Grade.attempt_id).where(Grade.attempt_id == Attempt.id).exists(),
+                ~select(GradingWorkRow.attempt_id)
+                .where(
+                    GradingWorkRow.attempt_id == Attempt.id,
+                    GradingWorkRow.status == "LOW_CONFIDENCE",
+                )
+                .exists(),
+            )
+            .limit(1)
+        )
+        if unresolved is not None:
+            return False
+        session.status, session.completed_at = "COMPLETED", self.identity.clock()
+        self.complete(db, session)
+        self.assessment.event(db, session.id, "diagnostic.completed", request)
+        return True
 
     def candidates(
         self,
@@ -176,7 +217,7 @@ class Diagnostics:
             select(SessionItem, ItemVersion, Grade)
             .join(ItemVersion, ItemVersion.id == SessionItem.item_version_id)
             .join(Attempt, Attempt.session_item_id == SessionItem.id)
-            .join(Grade, Grade.attempt_id == Attempt.id)
+            .outerjoin(Grade, Grade.attempt_id == Attempt.id)
             .where(SessionItem.session_id == session.id)
             .order_by(SessionItem.position)
         ):
@@ -184,7 +225,7 @@ class Diagnostics:
             covered_topics.add(doc.topic_id)
             for mapping in doc.competency_mappings:
                 covered_competencies.add(mapping.competency_id)
-                if doc.concept_id:
+                if doc.concept_id and grade is not None:
                     latest[(doc.concept_id, mapping.competency_id)] = grade.result["score"]
         documents = {v.id: DraftDocument.model_validate(v.document) for v in candidates}
         uncovered = sorted(
@@ -243,6 +284,7 @@ class Diagnostics:
             item_version_id=chosen.id,
             position=len(assigned) + 1,
             reason=reason,
+            grading_band_id=self.assessment.assignment_band(db, chosen),
         )
         db.add(item)
         db.flush()

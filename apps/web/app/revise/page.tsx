@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { FlagForm } from "../flag-form";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
 import { SavedProgress, Status } from "@kasoma/ui";
 import { Hints } from "./hints";
+import { PendingFeedback } from "./pending-feedback";
 
 type Schema = components["schemas"];
 const button = "ui-button ui-button-secondary";
@@ -62,7 +63,10 @@ export default function Revise() {
     setRevisionSession(state);
   }
   const [item, setItem] = useState<Schema["LearnerItem"] | null>(null);
-  const [grade, setGrade] = useState<Schema["GradeView"] | null>(null);
+  const [grade, setGrade] = useState<Schema["AnsweredItem"]["grade"] | null>(
+    null,
+  );
+  const [shortText, setShortText] = useState("");
   const [solution, setSolution] = useState("");
   const [choice, setChoice] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -72,6 +76,21 @@ export default function Revise() {
   const [ready, setReady] = useState(false);
   const [status, setStatus] = useState("Loading your practice options…");
   const retry = useRef<{ fingerprint: string; key: string } | null>(null);
+  const pollingError = useCallback((code: string) => {
+    setStatus(
+      code === "USAGE_LIMIT_REACHED"
+        ? "Please wait a minute before checking feedback again. Your answer is saved."
+        : (messages[code] ??
+            "Feedback could not be checked. Your saved answer is retained."),
+    );
+    if (["AUTH_REQUIRED", "CONSENT_REQUIRED", "FORBIDDEN"].includes(code)) {
+      setReady(false);
+      setItem(null);
+      setGrade(null);
+      setSession(null);
+      setSolution("");
+    }
+  }, []);
   function key(body: unknown) {
     const fingerprint = JSON.stringify(body);
     if (retry.current?.fingerprint !== fingerprint)
@@ -120,6 +139,7 @@ export default function Revise() {
     setChoice("");
     setSelectedIds([]);
     setNumericValue("");
+    setShortText("");
     setUnit("");
     const state = value(
       await client().GET("/api/v1/sessions/{session_id}", {
@@ -318,8 +338,50 @@ export default function Revise() {
             total={session.item_count}
           />
           {session.status === "COMPLETED" && (
-            <h2 className="text-xl font-semibold">Practice complete</h2>
+            <h2 className="text-xl font-semibold">
+              {session.answers.some(
+                (answer) => answer.grade.status === "PENDING",
+              )
+                ? "All answers saved; feedback pending"
+                : "Practice complete"}
+            </h2>
           )}
+          {!item &&
+            session.answers.some(
+              (answer) => answer.grade.status !== "GRADED",
+            ) && (
+              <section className="space-y-2" aria-label="Saved feedback">
+                {session.answers
+                  .filter((answer) => answer.grade.status !== "GRADED")
+                  .map((answer) => (
+                    <button
+                      className={button}
+                      key={answer.session_item_id}
+                      disabled={busy}
+                      onClick={() =>
+                        void run(async () => {
+                          setGrade(
+                            value(
+                              await client().GET(
+                                "/api/v1/attempts/{attempt_id}/grade",
+                                {
+                                  params: {
+                                    path: {
+                                      attempt_id: answer.grade.attempt_id,
+                                    },
+                                  },
+                                },
+                              ),
+                            ),
+                          );
+                        })
+                      }
+                    >
+                      Check saved feedback for question {answer.position}
+                    </button>
+                  ))}
+              </section>
+            )}
           {["ABANDONED", "EXPIRED"].includes(session.status) && (
             <p>This session has ended. Your submitted answers are retained.</p>
           )}
@@ -332,11 +394,16 @@ export default function Revise() {
                   const body: Schema["SubmitAnswer"] = {
                     session_item_id: item.session_item_id,
                     response:
-                      item.response_spec.type === "NUMERIC"
-                        ? { type: "NUMERIC", value: numericValue, unit }
-                        : item.response_spec.type === "MULTIPLE_CHOICE"
-                          ? { type: "MULTIPLE_CHOICE", choice_ids: selectedIds }
-                          : { type: "SINGLE_CHOICE", choice_id: choice },
+                      item.response_spec.type === "SHORT_TEXT"
+                        ? { type: "SHORT_TEXT", text: shortText }
+                        : item.response_spec.type === "NUMERIC"
+                          ? { type: "NUMERIC", value: numericValue, unit }
+                          : item.response_spec.type === "MULTIPLE_CHOICE"
+                            ? {
+                                type: "MULTIPLE_CHOICE",
+                                choice_ids: selectedIds,
+                              }
+                            : { type: "SINGLE_CHOICE", choice_id: choice },
                   };
                   const result = value(
                     await client().POST(
@@ -355,7 +422,7 @@ export default function Revise() {
                       },
                     ),
                   );
-                  if (result.status !== "GRADED") throw new Error("FORBIDDEN");
+                  if (result.status === "SAVED") throw new Error("FORBIDDEN");
                   setGrade(result);
                   setItem(null);
                   retry.current = null;
@@ -385,7 +452,26 @@ export default function Revise() {
                   disabled={busy}
                 />
               )}
-              {item.response_spec.type === "NUMERIC" ? (
+              {item.response_spec.type === "SHORT_TEXT" ? (
+                <>
+                  <label htmlFor="written-answer">Your written answer</label>
+                  <textarea
+                    id="written-answer"
+                    className={input}
+                    value={shortText}
+                    required
+                    autoComplete="off"
+                    maxLength={4000}
+                    rows={5}
+                    aria-describedby="short-text-help"
+                    onChange={(event) => setShortText(event.target.value)}
+                  />
+                  <span id="short-text-help">
+                    {Array.from(shortText).length} of 2000 characters. Your
+                    answer is saved when you submit it.
+                  </span>
+                </>
+              ) : item.response_spec.type === "NUMERIC" ? (
                 <fieldset disabled={busy} className="space-y-3">
                   <legend>Enter a numeric answer</legend>
                   <label>
@@ -486,18 +572,35 @@ export default function Revise() {
                 className="ui-button ui-button-primary"
                 disabled={
                   busy ||
-                  (item.response_spec.type === "NUMERIC"
-                    ? !numericValue.trim()
-                    : item.response_spec.type === "MULTIPLE_CHOICE"
-                      ? selectedIds.length === 0
-                      : !choice)
+                  (item.response_spec.type === "SHORT_TEXT"
+                    ? !shortText.trim() || Array.from(shortText).length > 2000
+                    : item.response_spec.type === "NUMERIC"
+                      ? !numericValue.trim()
+                      : item.response_spec.type === "MULTIPLE_CHOICE"
+                        ? selectedIds.length === 0
+                        : !choice)
                 }
               >
                 Submit answer
               </button>
             </form>
           )}
-          {grade && (
+          {grade && grade.status !== "GRADED" && (
+            <PendingFeedback
+              key={grade.attempt_id}
+              grade={grade}
+              busy={busy}
+              onResult={setGrade}
+              onError={pollingError}
+              onNext={
+                session.status === "ACTIVE"
+                  ? () => void run(() => loadSession(session.id, false))
+                  : undefined
+              }
+              onEquivalent={(id) => void run(() => loadSession(id))}
+            />
+          )}
+          {grade && grade.status === "GRADED" && (
             <section
               className="space-y-3"
               aria-label="Answer feedback"
@@ -514,10 +617,30 @@ export default function Revise() {
                 <p key={i}>{text}</p>
               ))}
               <p>{grade.feedback.next_action}</p>
-              <FlagForm key={grade.attempt_id} attemptId={grade.attempt_id} />
+              {"criterion_results" in grade && (
+                <ul className="space-y-2">
+                  {grade.criterion_results.map((criterion) => (
+                    <li key={criterion.criterion_id}>
+                      <p>
+                        {criterion.criterion_id}: {criterion.points_awarded}{" "}
+                        points
+                      </p>
+                      {criterion.evidence_excerpt && (
+                        <blockquote className="whitespace-pre-wrap break-words">
+                          {criterion.evidence_excerpt}
+                        </blockquote>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <FlagForm
+                key={`flag-${grade.attempt_id}`}
+                attemptId={grade.attempt_id}
+              />
               {session.kind !== "REASSESSMENT" && (
                 <Hints
-                  key={grade.attempt_id}
+                  key={`hints-${grade.attempt_id}`}
                   sessionId={session.id}
                   attemptId={grade.attempt_id}
                   disabled={busy}

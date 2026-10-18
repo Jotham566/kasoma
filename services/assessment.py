@@ -8,10 +8,10 @@ from sqlalchemy.orm import Session
 
 from services.assessment_contracts import (
     AnsweredItem,
+    AttemptGrade,
     ChoiceResponse,
     DiagnosticReceipt,
     DiagnosticView,
-    GradeView,
     LearnerItem,
     MultipleChoiceResponse,
     MultipleChoiceResponseSpec,
@@ -21,11 +21,13 @@ from services.assessment_contracts import (
     RecommendationView,
     ResponseSpec,
     SessionView,
+    ShortTextResponseSpec,
     SolutionView,
     StartRevision,
     SubmitAnswer,
     TopicView,
 )
+from services.assessment_outcomes import outcome
 from services.content import ContentService
 from services.content_contracts import DraftDocument
 from services.domain.assessment import (
@@ -43,15 +45,27 @@ from services.domain.identity import LearnerProfile, User
 from services.grading import grade_choice, grade_multiple_choice, grade_numeric
 from services.identity import IdentityError, IdentityService
 from services.mastery import reconcile
+from services.short_text_contracts import ShortTextResponse
+from services.short_text_policy import ShortTextPolicy
+from services.short_text_submission import submit_encrypted
 
 
 class AssessmentService:
-    def __init__(self, identity: IdentityService):
+    def __init__(self, identity: IdentityService, short_text: ShortTextPolicy | None = None):
         self.identity = identity
-        self.content = ContentService(identity)
+        self.short_text = short_text or ShortTextPolicy(identity)
+        self.content = ContentService(identity, self.short_text)
         from services.diagnostics import Diagnostics
 
         self.diagnostics = Diagnostics(self)
+
+    def assignment_band(self, db: Session, version: ItemVersion) -> UUID | None:
+        if version.document.get("response_type") != "SHORT_TEXT":
+            return None
+        band = self.short_text.band_for(db, version)
+        if band is None:
+            raise IdentityError("CONTENT_NOT_APPROVED", 409)
+        return band.id
 
     def authorize(self, db: Session, token: str, subject: UUID | None = None) -> UUID:
         actor = self.identity.authenticate(db, token).user_id
@@ -115,12 +129,11 @@ class AssessmentService:
             AnsweredItem(
                 session_item_id=item.id,
                 position=item.position,
-                grade=GradeView.model_validate(grade.result),
+                grade=self.grade(db, attempt.id),
             )
-            for item, grade in db.execute(
-                select(SessionItem, Grade)
+            for item, attempt in db.execute(
+                select(SessionItem, Attempt)
                 .join(Attempt, Attempt.session_item_id == SessionItem.id)
-                .join(Grade, Grade.attempt_id == Attempt.id)
                 .where(SessionItem.session_id == session.id)
                 .order_by(SessionItem.position)
             )
@@ -327,6 +340,7 @@ class AssessmentService:
                         item_version_id=v.id,
                         position=i + 1,
                         reason=reasons[i],
+                        grading_band_id=self.assignment_band(db, v),
                     )
                     for i, v in enumerate(candidates)
                 ]
@@ -387,11 +401,14 @@ class AssessmentService:
                 if s.expires_at > self.identity.clock()
             ]
 
-    def get(self, token: str, session_id: UUID) -> SessionView | DiagnosticView:
+    def get(
+        self, token: str, session_id: UUID, request: UUID | None = None
+    ) -> SessionView | DiagnosticView:
         with Session(self.identity.engine) as db, db.begin():
             actor = self.authorize(db, token)
             session = self.owned(db, actor, session_id)
             self.authorize(db, token, session.subject_id)
+            self.diagnostics.complete_if_ready(db, session, request or uuid4())
             return (
                 self.diagnostics.view(db, session)
                 if session.kind == "DIAGNOSTIC"
@@ -434,7 +451,9 @@ class AssessmentService:
             item = self.diagnostics.assign(db, session)
         if item is None:
             raise IdentityError("SESSION_NOT_ACTIVE", 409)
-        version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
+        version = self.content.assessment_version(
+            db, item.item_version_id, session.subject_id, assigned_band_id=item.grading_band_id
+        )
         document = DraftDocument.model_validate(version.document)
         if channel not in document.channel_suitability:
             raise IdentityError("CONTENT_NOT_APPROVED", 409)
@@ -445,14 +464,19 @@ class AssessmentService:
             spec = document.numeric_spec
             if spec is None:
                 raise IdentityError("CONTENT_NOT_APPROVED", 409)
-            response_spec: ResponseSpec | MultipleChoiceResponseSpec | NumericResponseSpec = (
-                NumericResponseSpec(
-                    unit_options=[u.label for u in spec.units],
-                    accepted_forms=spec.accepted_forms,
-                    significant_figures_policy=spec.significant_figures_policy,
-                    significant_figures=spec.significant_figures,
-                )
+            response_spec: (
+                ResponseSpec
+                | MultipleChoiceResponseSpec
+                | NumericResponseSpec
+                | ShortTextResponseSpec
+            ) = NumericResponseSpec(
+                unit_options=[u.label for u in spec.units],
+                accepted_forms=spec.accepted_forms,
+                significant_figures_policy=spec.significant_figures_policy,
+                significant_figures=spec.significant_figures,
             )
+        elif document.response_type == "SHORT_TEXT":
+            response_spec = ShortTextResponseSpec()
         elif document.response_type == "MULTIPLE_CHOICE":
             response_spec = MultipleChoiceResponseSpec(choices=document.choices)
         else:
@@ -474,7 +498,7 @@ class AssessmentService:
 
     def submit(
         self, token: str, session_id: UUID, body: SubmitAnswer, key: UUID, request: UUID
-    ) -> GradeView | DiagnosticReceipt:
+    ) -> AttemptGrade | DiagnosticReceipt:
         with Session(self.identity.engine) as db, db.begin():
             actor = self.identity.authenticate(db, token).user_id
             return self.submit_in_transaction(db, actor, session_id, body, key, request)
@@ -489,7 +513,7 @@ class AssessmentService:
         request: UUID,
         *,
         channel: str = "WEB",
-    ) -> GradeView | DiagnosticReceipt:
+    ) -> AttemptGrade | DiagnosticReceipt:
         self.authorize_actor(db, actor)
         session = self.owned(db, actor, session_id)
         self.authorize_actor(db, actor, session.subject_id)
@@ -520,13 +544,31 @@ class AssessmentService:
         item = self.pending(db, session.id)
         if item is None or item.id != body.session_item_id or item.served_at is None:
             raise IdentityError("RESOURCE_NOT_FOUND", 404)
-        version = self.content.assessment_version(db, item.item_version_id, session.subject_id)
+        version = self.content.assessment_version(
+            db, item.item_version_id, session.subject_id, assigned_band_id=item.grading_band_id
+        )
         document = DraftDocument.model_validate(version.document)
         if channel not in document.channel_suitability:
             raise IdentityError("CONTENT_NOT_APPROVED", 409)
         attempt_id = uuid4()
         if document.response_type != body.response.type:
             raise IdentityError("VALIDATION_FAILED", 422)
+        if isinstance(body.response, ShortTextResponse):
+            if channel != "WEB":
+                raise IdentityError("VALIDATION_FAILED", 422)
+            return submit_encrypted(
+                self,
+                db,
+                actor,
+                session,
+                item,
+                version,
+                body.response,
+                attempt_id,
+                key,
+                request,
+                fingerprint,
+            )
         try:
             if isinstance(body.response, NumericResponse):
                 result = grade_numeric(
@@ -598,34 +640,28 @@ class AssessmentService:
             hint_count=hint_count,
             highest_hint_level=highest_hint_level,
         )
-        completed = (
-            self.diagnostics.view(db, session).answered_count >= session.item_count
-            if session.kind == "DIAGNOSTIC"
-            else self.pending(db, session.id) is None
-        )
+        if session.kind == "DIAGNOSTIC":
+            self.diagnostics.complete_if_ready(db, session, request)
+            return DiagnosticReceipt(attempt_id=attempt_id)
+        completed = self.pending(db, session.id) is None
         if completed and session.kind == "REASSESSMENT":
             self.event(db, session.id, "reassessment.completed", request, attempt_id)
         if completed:
-            if session.kind == "DIAGNOSTIC":
-                self.diagnostics.complete(db, session)
             session.status, session.completed_at = "COMPLETED", self.identity.clock()
             self.event(
                 db,
                 session.id,
-                "diagnostic.completed" if session.kind == "DIAGNOSTIC" else "session.completed",
+                "session.completed",
                 request,
             )
-        return DiagnosticReceipt(attempt_id=attempt_id) if session.kind == "DIAGNOSTIC" else result
+        return result
 
-    def grade(self, db: Session, attempt_id: UUID) -> GradeView:
-        grade = db.get(Grade, attempt_id)
-        if grade is None:
-            raise IdentityError("RESOURCE_NOT_FOUND", 404)
-        return GradeView.model_validate(grade.result)
+    def grade(self, db: Session, attempt_id: UUID) -> AttemptGrade:
+        return outcome(self.identity, db, attempt_id)
 
     def result(
         self, token: str, attempt_id: UUID, solution: bool = False
-    ) -> GradeView | SolutionView:
+    ) -> AttemptGrade | SolutionView:
         with Session(self.identity.engine) as db, db.begin():
             actor = self.authorize(db, token)
             attempt = db.scalar(
@@ -649,6 +685,9 @@ class AssessmentService:
                     item_version_id=version.id,
                     worked_solution=DraftDocument.model_validate(version.document).worked_solution,
                 )
+            if attempt.response and attempt.response.get("type") == "SHORT_TEXT":
+                if not self.identity.rate(db, "short-text-feedback:" + str(actor), 120, 60):
+                    raise IdentityError("USAGE_LIMIT_REACHED", 429)
             return self.grade(db, attempt.id)
 
     def abandon(self, token: str, session_id: UUID, request: UUID) -> SessionView | DiagnosticView:

@@ -15,10 +15,17 @@ const categories: Record<Schema["FlagInput"]["category"], string> = {
   OTHER: "Other question issue",
 };
 const api = () => apiClient("", crypto.randomUUID());
-export function FlagForm({ attemptId }: { attemptId: string }) {
+export function FlagForm({
+  attemptId,
+  reviewRequest = false,
+}: {
+  attemptId: string;
+  reviewRequest?: boolean;
+}) {
   const [open, setOpen] = useState(false);
-  const [category, setCategory] =
-    useState<Schema["FlagInput"]["category"]>("QUESTION_ERROR");
+  const [category, setCategory] = useState<Schema["FlagInput"]["category"]>(
+    reviewRequest ? "GRADE_DISPUTE" : "QUESTION_ERROR",
+  );
   const [comment, setComment] = useState("");
   const [reports, setReports] = useState<Schema["FlagReceipt"][]>([]);
   const [busy, setBusy] = useState(false);
@@ -92,7 +99,9 @@ export function FlagForm({ attemptId }: { attemptId: string }) {
       setPending(null);
       setComment("");
       setStatus(
-        "Report recorded. Your saved answer and grade have not changed.",
+        reviewRequest
+          ? "Review requested. Your saved answer is retained; no grade has been assigned."
+          : "Report recorded. Your saved answer and grade have not changed.",
       );
     } catch {
       fail();
@@ -110,19 +119,25 @@ export function FlagForm({ attemptId }: { attemptId: string }) {
           void load();
         }}
       >
-        Report question or grade
+        {reviewRequest ? "Request grading review" : "Report question or grade"}
       </button>
     );
   return (
     <section
-      aria-label="Report question or grade"
+      aria-label={
+        reviewRequest ? "Request grading review" : "Report question or grade"
+      }
       className="space-y-3 rounded border border-slate-300 p-4"
     >
-      <h3 className="font-semibold">Report question or grade</h3>
+      <h3 className="font-semibold">
+        {reviewRequest ? "Request grading review" : "Report question or grade"}
+      </h3>
       <p>
-        Describe the question issue only. Do not include names, contact details
-        or other personal information. This development queue is not a live
-        support service.
+        {reviewRequest
+          ? "Describe the grading review you are requesting."
+          : "Describe the question issue only."}{" "}
+        Do not include names, contact details or other personal information.
+        This development queue is not a live support service.
       </p>
       <p role="status" aria-live="polite">
         {status}

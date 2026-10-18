@@ -45,6 +45,7 @@ export default function Diagnostic() {
   const [choice, setChoice] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [number, setNumber] = useState("");
+  const [shortText, setShortText] = useState("");
   const [unit, setUnit] = useState("");
   const [busy, setBusy] = useState(true);
   const [status, setStatus] = useState("Loading diagnostic options…");
@@ -85,7 +86,7 @@ export default function Diagnostic() {
     );
     setSession(state);
     window.history.replaceState(null, "", `/diagnostic?session=${state.id}`);
-    if (state.status === "ACTIVE") {
+    if (state.status === "ACTIVE" && state.answered_count < state.item_count) {
       const next = value(
         await client().GET("/api/v1/sessions/{session_id}/next-item", {
           params: { path: { session_id: id } },
@@ -94,6 +95,7 @@ export default function Diagnostic() {
       setChoice("");
       setSelectedIds([]);
       setNumber("");
+      setShortText("");
       setUnit(
         next.response_spec.type === "NUMERIC"
           ? (next.response_spec.unit_options[0] ?? "")
@@ -209,6 +211,26 @@ export default function Diagnostic() {
           total={session.item_count}
         />
       )}
+      {session?.status === "ACTIVE" &&
+        session.answered_count === session.item_count && (
+          <section
+            className="space-y-3"
+            aria-live="polite"
+            aria-label="Diagnostic feedback pending"
+          >
+            <p>
+              All your answers are saved. Feedback is still being prepared.
+              Diagnostic grades stay hidden until processing is complete.
+            </p>
+            <button
+              className="ui-button ui-button-secondary"
+              disabled={busy}
+              onClick={() => void run(() => load(session.id))}
+            >
+              Check diagnostic results
+            </button>
+          </section>
+        )}
       {item && session && (
         <form
           onSubmit={(event) => {
@@ -217,11 +239,13 @@ export default function Diagnostic() {
               const body: Schema["SubmitAnswer"] = {
                 session_item_id: item.session_item_id,
                 response:
-                  item.response_spec.type === "NUMERIC"
-                    ? { type: "NUMERIC", value: number, unit }
-                    : item.response_spec.type === "MULTIPLE_CHOICE"
-                      ? { type: "MULTIPLE_CHOICE", choice_ids: selectedIds }
-                      : { type: "SINGLE_CHOICE", choice_id: choice },
+                  item.response_spec.type === "SHORT_TEXT"
+                    ? { type: "SHORT_TEXT", text: shortText }
+                    : item.response_spec.type === "NUMERIC"
+                      ? { type: "NUMERIC", value: number, unit }
+                      : item.response_spec.type === "MULTIPLE_CHOICE"
+                        ? { type: "MULTIPLE_CHOICE", choice_ids: selectedIds }
+                        : { type: "SINGLE_CHOICE", choice_id: choice },
               };
               const saved = value(
                 await client().POST("/api/v1/sessions/{session_id}/attempts", {
@@ -248,7 +272,26 @@ export default function Diagnostic() {
                 and no others.
               </p>
             )}
-            {item.response_spec.type !== "NUMERIC" ? (
+            {item.response_spec.type === "SHORT_TEXT" ? (
+              <>
+                <label htmlFor="diagnostic-written-answer">
+                  Your written answer
+                </label>
+                <textarea
+                  id="diagnostic-written-answer"
+                  className={field}
+                  required
+                  value={shortText}
+                  rows={5}
+                  maxLength={4000}
+                  onChange={(event) => setShortText(event.target.value)}
+                  aria-describedby="diagnostic-text-help"
+                />
+                <span id="diagnostic-text-help">
+                  {Array.from(shortText).length} of 2000 characters.
+                </span>
+              </>
+            ) : item.response_spec.type !== "NUMERIC" ? (
               item.response_spec.choices.map((option) => (
                 <label key={option.id} className="answer-choice">
                   <input
@@ -316,8 +359,10 @@ export default function Diagnostic() {
             <button
               className="ui-button ui-button-primary"
               disabled={
-                item.response_spec.type === "MULTIPLE_CHOICE" &&
-                selectedIds.length === 0
+                (item.response_spec.type === "MULTIPLE_CHOICE" &&
+                  selectedIds.length === 0) ||
+                (item.response_spec.type === "SHORT_TEXT" &&
+                  (!shortText.trim() || Array.from(shortText).length > 2000))
               }
             >
               Save answer and continue

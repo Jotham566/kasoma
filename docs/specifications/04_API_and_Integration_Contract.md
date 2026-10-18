@@ -648,3 +648,22 @@ Owned export groups `grading_publications` and `grading_audit_assignments` conta
 attempt reference/publication time and assignment reference/attempt reference/assignment
 time respectively. Diagnostic sealing applies; band IDs, ordinals and sampling flags
 are excluded. These groups do not disclose model grades or authorize learner scoring.
+
+### Short-text learner flow candidate (ADR-050; not accepted yet)
+
+Draft `SubmitAnswer.response` adds bounded nonblank SHORT_TEXT with exact preserved text.
+Learner item response specs provide only type and 2000-character ceiling, never rubrics,
+solutions or calibration metadata. The existing attempt submit/grade routes and session
+answers distinguish PENDING, LOW_CONFIDENCE and definitive rubric GRADED results.
+Pending/neutral projections contain no points, confidence or grading judgment. A pending
+poll URL is relative and attempt-bound; LOW_CONFIDENCE offers an explicit review action.
+A replay returns the same attempt's current outcome without re-enqueueing its work.
+
+Rubric grades identify their pinned rubric and validated criterion evidence/feedback.
+Owned exports decrypt only authorized answer/result material; internal ciphertext and
+calibration band identifiers are excluded. Diagnostic feedback remains sealed until all
+saved attempts have terminal outcomes; neutral attempts add no mastery evidence.
+The candidate is installed in the local synthetic review stack with normal short-text
+selection disabled; it is not approved for real data. Owned short-text grade reads are
+limited to 120 per account per minute. The web permits twelve automatic polls at
+three-second intervals with one in flight, followed by manual retry; 429 creates no grade.

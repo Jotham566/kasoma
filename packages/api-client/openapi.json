@@ -38,7 +38,21 @@
         "additionalProperties": false,
         "properties": {
           "grade": {
-            "$ref": "#/components/schemas/GradeView"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GradeView"
+              },
+              {
+                "$ref": "#/components/schemas/RubricGradeView"
+              },
+              {
+                "$ref": "#/components/schemas/PendingShortTextGrade"
+              },
+              {
+                "$ref": "#/components/schemas/LowConfidenceShortTextGrade"
+              }
+            ],
+            "title": "Grade"
           },
           "position": {
             "title": "Position",
@@ -56,6 +70,44 @@
           "grade"
         ],
         "title": "AnsweredItem",
+        "type": "object"
+      },
+      "CandidateFeedback": {
+        "additionalProperties": false,
+        "properties": {
+          "correct_elements": {
+            "items": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Correct Elements",
+            "type": "array"
+          },
+          "missing_elements": {
+            "items": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Missing Elements",
+            "type": "array"
+          },
+          "next_action": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Next Action",
+            "type": "string"
+          }
+        },
+        "required": [
+          "correct_elements",
+          "missing_elements",
+          "next_action"
+        ],
+        "title": "CandidateFeedback",
         "type": "object"
       },
       "CatalogEntry": {
@@ -501,6 +553,44 @@
           "refresh_token"
         ],
         "title": "Credentials",
+        "type": "object"
+      },
+      "CriterionResult": {
+        "additionalProperties": false,
+        "properties": {
+          "criterion_id": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+            "title": "Criterion Id",
+            "type": "string"
+          },
+          "evidence_excerpt": {
+            "maxLength": 2000,
+            "title": "Evidence Excerpt",
+            "type": "string"
+          },
+          "justification_code": {
+            "enum": [
+              "SUPPORTED",
+              "MISSING",
+              "CONTRADICTED"
+            ],
+            "title": "Justification Code",
+            "type": "string"
+          },
+          "points_awarded": {
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Points Awarded",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "criterion_id",
+          "points_awarded",
+          "evidence_excerpt",
+          "justification_code"
+        ],
+        "title": "CriterionResult",
         "type": "object"
       },
       "DataExportBundle": {
@@ -2604,6 +2694,9 @@
               },
               {
                 "$ref": "#/components/schemas/NumericResponseSpec"
+              },
+              {
+                "$ref": "#/components/schemas/ShortTextResponseSpec"
               }
             ],
             "title": "Response Spec"
@@ -2672,6 +2765,64 @@
           }
         },
         "title": "Live",
+        "type": "object"
+      },
+      "LowConfidenceShortTextGrade": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "fallback": {
+            "discriminator": {
+              "mapping": {
+                "OBJECTIVE_EQUIVALENT": "#/components/schemas/ObjectiveEquivalentFallback",
+                "REQUEST_REVIEW": "#/components/schemas/RequestReviewFallback"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ObjectiveEquivalentFallback"
+              },
+              {
+                "$ref": "#/components/schemas/RequestReviewFallback"
+              }
+            ],
+            "title": "Fallback"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "mastery_update_status": {
+            "const": "NOT_APPLICABLE",
+            "default": "NOT_APPLICABLE",
+            "title": "Mastery Update Status",
+            "type": "string"
+          },
+          "message_code": {
+            "const": "GRADE_LOW_CONFIDENCE",
+            "default": "GRADE_LOW_CONFIDENCE",
+            "title": "Message Code",
+            "type": "string"
+          },
+          "status": {
+            "const": "LOW_CONFIDENCE",
+            "default": "LOW_CONFIDENCE",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attempt_id",
+          "item_version_id",
+          "fallback"
+        ],
+        "title": "LowConfidenceShortTextGrade",
         "type": "object"
       },
       "Mapping": {
@@ -3028,6 +3179,27 @@
         "title": "OTPVerify",
         "type": "object"
       },
+      "ObjectiveEquivalentFallback": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "OBJECTIVE_EQUIVALENT",
+            "title": "Kind",
+            "type": "string"
+          },
+          "session_id": {
+            "format": "uuid",
+            "title": "Session Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "session_id"
+        ],
+        "title": "ObjectiveEquivalentFallback",
+        "type": "object"
+      },
       "OperationAlert": {
         "additionalProperties": false,
         "properties": {
@@ -3304,6 +3476,50 @@
           "alerts"
         ],
         "title": "OperationsView",
+        "type": "object"
+      },
+      "PendingShortTextGrade": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "mastery_update_status": {
+            "const": "NOT_APPLICABLE",
+            "default": "NOT_APPLICABLE",
+            "title": "Mastery Update Status",
+            "type": "string"
+          },
+          "message_code": {
+            "const": "GRADE_PENDING",
+            "default": "GRADE_PENDING",
+            "title": "Message Code",
+            "type": "string"
+          },
+          "poll_url": {
+            "default": "",
+            "title": "Poll Url",
+            "type": "string"
+          },
+          "status": {
+            "const": "PENDING",
+            "default": "PENDING",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attempt_id",
+          "item_version_id"
+        ],
+        "title": "PendingShortTextGrade",
         "type": "object"
       },
       "ProfilePatch": {
@@ -3733,6 +3949,21 @@
         "title": "Refresh",
         "type": "object"
       },
+      "RequestReviewFallback": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "REQUEST_REVIEW",
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "RequestReviewFallback",
+        "type": "object"
+      },
       "RequestTiming": {
         "additionalProperties": false,
         "properties": {
@@ -4040,6 +4271,126 @@
         "title": "RubricDraft",
         "type": "object"
       },
+      "RubricGradeView": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt_id": {
+            "format": "uuid",
+            "title": "Attempt Id",
+            "type": "string"
+          },
+          "confidence": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Confidence",
+            "type": "number"
+          },
+          "criterion_results": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionResult"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Criterion Results",
+            "type": "array"
+          },
+          "detected_misconception_ids": {
+            "items": {
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Detected Misconception Ids",
+            "type": "array"
+          },
+          "feedback": {
+            "$ref": "#/components/schemas/CandidateFeedback"
+          },
+          "grader_version": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+            "title": "Grader Version",
+            "type": "string"
+          },
+          "highest_hint_level": {
+            "default": 0,
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Highest Hint Level",
+            "type": "integer"
+          },
+          "hint_count": {
+            "default": 0,
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Hint Count",
+            "type": "integer"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "mastery_update_status": {
+            "default": "NOT_IMPLEMENTED",
+            "enum": [
+              "NOT_IMPLEMENTED",
+              "COMPLETED"
+            ],
+            "title": "Mastery Update Status",
+            "type": "string"
+          },
+          "method": {
+            "const": "RUBRIC_MODEL",
+            "default": "RUBRIC_MODEL",
+            "title": "Method",
+            "type": "string"
+          },
+          "points_awarded": {
+            "maximum": 20.0,
+            "minimum": 0.0,
+            "title": "Points Awarded",
+            "type": "integer"
+          },
+          "points_possible": {
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Points Possible",
+            "type": "integer"
+          },
+          "rubric_version_id": {
+            "format": "uuid",
+            "title": "Rubric Version Id",
+            "type": "string"
+          },
+          "score": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "type": "number"
+          },
+          "status": {
+            "const": "GRADED",
+            "default": "GRADED",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attempt_id",
+          "item_version_id",
+          "rubric_version_id",
+          "score",
+          "points_awarded",
+          "points_possible",
+          "confidence",
+          "grader_version",
+          "criterion_results",
+          "detected_misconception_ids",
+          "feedback"
+        ],
+        "title": "RubricGradeView",
+        "type": "object"
+      },
       "SessionHistoryEntry": {
         "additionalProperties": false,
         "properties": {
@@ -4280,6 +4631,47 @@
         "title": "SessionView",
         "type": "object"
       },
+      "ShortTextResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "SHORT_TEXT",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "ShortTextResponse",
+        "type": "object"
+      },
+      "ShortTextResponseSpec": {
+        "additionalProperties": false,
+        "properties": {
+          "maximum_characters": {
+            "const": 2000,
+            "default": 2000,
+            "title": "Maximum Characters",
+            "type": "integer"
+          },
+          "type": {
+            "const": "SHORT_TEXT",
+            "default": "SHORT_TEXT",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "title": "ShortTextResponseSpec",
+        "type": "object"
+      },
       "SkillSummary": {
         "additionalProperties": false,
         "properties": {
@@ -4470,6 +4862,9 @@
               },
               {
                 "$ref": "#/components/schemas/NumericResponse"
+              },
+              {
+                "$ref": "#/components/schemas/ShortTextResponse"
               }
             ],
             "title": "Response"
@@ -7396,7 +7791,21 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GradeView"
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/GradeView"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RubricGradeView"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PendingShortTextGrade"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LowConfidenceShortTextGrade"
+                    }
+                  ],
+                  "title": "Response Grade Api V1 Attempts  Attempt Id  Grade Get"
                 }
               }
             },
@@ -10515,6 +10924,15 @@
                   "anyOf": [
                     {
                       "$ref": "#/components/schemas/GradeView"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RubricGradeView"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PendingShortTextGrade"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LowConfidenceShortTextGrade"
                     },
                     {
                       "$ref": "#/components/schemas/DiagnosticReceipt"

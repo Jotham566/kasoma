@@ -32,6 +32,7 @@ from services.request_metrics_collector import (
     create_collector,
     record_timing,
 )
+from services.short_text_policy import ShortTextPolicy
 from services.whatsapp_ingress import WebhookRejected
 
 
@@ -44,12 +45,16 @@ def create_app(
     identity: IdentityService | None = None,
     channel_wakeup: Callable[[Settings, str], None] | None = None,
     metrics_factory: Callable[[Settings], RequestMetricCollector] | None = None,
+    short_text_policy: ShortTextPolicy | None = None,
+    grading_wakeup: Callable[[Settings, str], None] | None = None,
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        from services.short_text_wakeup import wake as wake_grading
         from services.whatsapp_wakeup import wake
 
         app.state.channel_wakeup = channel_wakeup or wake
+        app.state.grading_wakeup = grading_wakeup or wake_grading
         app.state.settings = settings or Settings()
         config = app.state.settings
         engine = engine_for(config)
@@ -61,6 +66,7 @@ def create_app(
         app.state.identity = identity or IdentityService(
             engine, config, email, FakeMessagingProvider()
         )
+        app.state.short_text_policy = short_text_policy or ShortTextPolicy(app.state.identity)
         collector = (metrics_factory or create_collector)(config)
         app.state.request_metrics = collector.metrics
         try:

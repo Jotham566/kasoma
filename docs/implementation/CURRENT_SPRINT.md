@@ -1,7 +1,7 @@
 # Current sprint: short-text grading integration
 
 Updated 18 October 2026. This header supersedes the historical slice notes below.
-Main is `46a0f8a`; current candidate branch is `codex/grading-band-state`.
+Main is `bd00c49`; current candidate branch is `codex/short-text-learner-flow`.
 
 ## Current verification and promotion state
 
@@ -11,18 +11,32 @@ Main is `46a0f8a`; current candidate branch is `codex/grading-band-state`.
   This resolves the earlier transport/registry acceptance failures for that source.
 - Calibration-band commit `46a0f8a` passes hosted verification in run
   [38034913518](https://github.com/Jotham566/kasoma/actions/runs/38034913518).
-- Publication/audit assignment migrations 0030/0031 and privacy integration are uncommitted.
+- Publication/audit assignment migrations 0030/0031 and privacy integration are merged.
   Twelve focused SQL cases, 19 existing hold cases, restricted-login verification,
   six privacy browser executions, populated recovery, lint/types/contracts, rebuilt-image
   scans and eight-service export/metrics smoke pass. Full backend regression passes 780 unit/contract, 35 tooling and
   291 integration cases, supplemented by the final focused assertions. Security
-  retry passes after a PyPI network timeout. New hosted verification remains required.
+  retry passes after a PyPI network timeout. Exact-source hosted run
+  [39137945443](https://github.com/Jotham566/kasoma/actions/runs/39137945443) passes;
+  the verified commit was promoted to main and merged branches were removed.
   See [publication evidence](E4_PUBLICATION_VERIFICATION.md).
+- Candidate migration 0032 and the synthetic learner flow are under verification:
+  encrypted submissions/results, durable one-claim processing, pending/neutral UI,
+  diagnostic sealing, owned exports and restricted-login execution. The ordinary
+  application has neither report nor safety authority and defaults to disabled.
+  See [current checklist](E4_SHORT_TEXT_FLOW_IMPLEMENTATION.md).
+- Latest candidate evidence: 99 stable browser executions, 18 focused flow cases,
+  actual restricted-login encrypted publication, 831 unit/contract and 35 tooling
+  cases, lint/types/contracts, source/dependency security, populated encrypted logical
+  recovery and rebuilt eight-service export/metrics smoke pass. The broad backend
+  passes 307 integration cases (later additions pass in focused runs).
+  Current container vulnerability scanning and hosted verification remain pending.
+  Normal runtime is disabled;
+  independent expert review and rolling disablement are the next implementation.
 
 ## Immediate implementation sequence
 
-Finish publication acceptance and promote only verified source with synchronized ADR/
-documentation status. Then integrate independent blinded expert review and atomic band
+Finish learner-flow regression and recovery acceptance, independent blinded expert review and atomic band
 disablement with the short-text worker, grade/mastery transaction and learner fallback.
 No short-text learner assignment, real model call or genuine calibration approval is
 implied by the storage fixtures. External academic/privacy/provider/pilot gates remain
@@ -308,3 +322,46 @@ scope/replay rejection and populated upgrade counter backfill. Rebuilt container
 eight-service export/metrics smoke and source checks pass. Full backend/security
 regression remains running; the [publication report](E4_PUBLICATION_VERIFICATION.md)
 consolidates final evidence and the resolved initial test/browser failures.
+
+## Learner short-text flow in progress — 18 October 2026
+
+Requirements: FR-GRD-003/004/005, FR-MST-001 and FR-ID-006. The next cohesive
+slice connects encrypted submission, bounded worker execution, authorized outcomes,
+mastery, audit and learner resume/poll/fallback. Current rubric results now have a strict
+partial-credit contract with matching rubric/item version, unique criteria, coherent
+score/totals, finite confidence and minimized representations. Candidate projection
+rechecks answer evidence and authored feedback. This formatter grants no eligibility,
+publication or disclosure authority. Its evidence excerpts require encrypted persistence
+and current owner authorization before learner projection.
+
+`make format lint test-unit openapi-check` passes 808 unit/contract and 35 tooling
+checks. The 28 new result cases reject forged evidence/feedback, invalid/mismatched
+rubrics, duplicate criteria, inconsistent scores and unsupported fields. HTTP schemas,
+assignment guards and learner delivery remain unchanged at this intermediate point.
+No short-text feature completion is claimed; see the flow implementation checklist.
+
+## Cohesive short-text candidate under verification — 18 October 2026
+
+FR-GRD-003/004/005, FR-MST-001, FR-ID-003/006 and NFR-SEC-002: the working
+branch now includes draft migration 0032, encrypted result storage/projection, pinned
+assignment bands, atomic encrypted attempt/receipt/work submission, owned pending and
+neutral result retrieval, and a finite-lease processor. The processor releases locks
+for model work, rechecks current consent/content/report/band before each dispatch and
+publication, and commits grade/mastery/audit together. The default report and safety
+authorities are unavailable, runtime enablement defaults false, and only deterministic
+fake providers are implemented in this candidate. No real report or safety approval
+has been created. Trusted isolated fixtures supply synthetic authorities for tests.
+
+The intermediate API/worker suites pass 10 cases, including a complete synthetic
+pending-to-grade-to-mastery/audit/export path and before-second-pass withdrawal,
+disablement and lease-expiry barriers. The result encryption suite passes 828 unit/
+contract and 35 tooling cases. Existing rubric/band checks pass after fixing an ORM
+foreign-key registration regression; the reproduced objective failure is retained in
+`.local/short-text-objective-regression.log` and its passing test remains in the suite.
+
+Newer additions (diagnostic terminal/sealing coordination, queue wake-up/scheduler,
+learner pending/poll/fallback UI and reassessment guards) are under verification.
+Migration 0032 has only run in isolated test schemas; the persistent Docker review
+stack remains on the verified 0031 images. Full regressions, database grants/recovery,
+independent blinded expert audit/rolling disablement and browser acceptance remain
+required. No learner-flow completion or main promotion is claimed.

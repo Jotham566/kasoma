@@ -2,6 +2,33 @@
 
 ## Work in progress — short-text learner integration
 
+- Verify nine synthetic short-text browser journeys across Chromium, Firefox and
+  WebKit, including mobile neutral fallback, review requests and sealed diagnostics.
+  Fix the textarea accessible label and distinct report/hint React keys. Add duplicate
+  worker, publication crash, revoked-report, broker failure and SQL atomicity coverage;
+  extend isolated logical recovery with encrypted rubric evidence. Full regression and
+  independent expert-review integration remain pending; normal scoring stays disabled.
+
+- Route durable short-text work through the specified separate grading queue and
+  retain periodic recovery after wake-up failure. Bound owned feedback reads and
+  automatic client polling. Add a documented Trivy database-source override while
+  preserving scanner version, freshness checks and HIGH/CRITICAL failure thresholds.
+
+- Build the candidate encrypted submission/receipt/work flow, owned pending/fallback
+  outcomes, finite-lease fake processor, atomic rubric grade/mastery/audit publication,
+  schema/client changes, draft learner polling UI and diagnostic sealing coordination.
+  Runtime enablement defaults false; genuine report/safety authorities remain unavailable.
+  Ten intermediate PostgreSQL/API cases and 828 unit/contract plus 35 tooling cases pass;
+  the full feature, audit review, browser, role and recovery gates remain under implementation.
+
+
+- Begin the cohesive learner short-text flow with strict pinned rubric-result and
+  partial-credit projection contracts. Revalidate exact answer evidence and reviewed
+  feedback; reject inconsistent scores and hidden/unsupported fields. All 808
+  unit/contract and 35 tooling cases pass with lint/types and unchanged HTTP contracts.
+  Persistence, worker, ownership, polling/fallback and expert audit integration remain open.
+
+
 - Add the publication/audit assignment ledger with band-locked ordinals, atomic sampling,
   immutable records, owned minimized exports, deletion inventory and exact-record holds.
   Generated contracts and staff hold controls include both types. Verification passes 12 focused SQL cases, 19 existing hold cases, restricted login,

@@ -23,6 +23,7 @@ def seed_assessment(
     hints: bool = False,
     reassessment: bool = False,
     multiple_choice: bool = False,
+    short_text: bool = False,
 ) -> None:
     if identity.settings.app_env not in {"development", "test"}:
         raise ValueError("Synthetic fixtures only")
@@ -35,6 +36,10 @@ def seed_assessment(
         prefix = "Synthetic reassessment fixture"
     if multiple_choice:
         prefix += " multiple choice"
+    if short_text:
+        if numeric or multiple_choice or reassessment:
+            raise ValueError("Short-text fixture modes cannot be combined")
+        prefix = "Synthetic short-text fixture"
     expected_count = (
         (45 if mathematics_only else 90)
         if diagnostic
@@ -72,6 +77,8 @@ def seed_assessment(
         )
         if multiple_choice:
             namespace += "multiple-"
+        if short_text:
+            namespace += "short-text-"
         email = f"fixture-{namespace}{role.lower()}@example.invalid"
         challenge = service.request_otp(OTPRequest(identifier=email, device_id=uuid4()), role, None)
         credentials = service.verify(
@@ -191,6 +198,32 @@ def seed_assessment(
                     "Compare each part of the prompt with the response you are considering.",
                     "Check your response carefully against the question's conditions.",
                 ]
+            if short_text:
+                doc.update(
+                    {
+                        "response_type": "SHORT_TEXT",
+                        "choices": [],
+                        "correct_choice_id": "",
+                        "partial_credit": "CRITERION_SUM",
+                        "prompt": f"Synthetic written answer check {index + 1}: write Alpha.",
+                        "worked_solution": "The requested synthetic label is Alpha.",
+                        "remediation": "Compare your answer with the requested synthetic label.",
+                        "rubric": {
+                            "criteria": [
+                                {
+                                    "criterion_id": "R1",
+                                    "maximum_points": 1,
+                                    "criterion_text": "Write the requested synthetic label.",
+                                    "acceptable_evidence": ["Alpha"],
+                                    "common_errors": ["Beta"],
+                                    "prohibited_inferences": [
+                                        "Do not infer a label from omitted words."
+                                    ],
+                                }
+                            ]
+                        },
+                    }
+                )
             version = content.create(
                 tokens[0],
                 CreateDraft(

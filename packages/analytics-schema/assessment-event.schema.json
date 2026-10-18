@@ -30,6 +30,8 @@
         "session.started",
         "item.served",
         "attempt.graded",
+        "attempt.saved",
+        "attempt.grade_unavailable",
         "session.completed",
         "session.abandoned",
         "diagnostic.started",

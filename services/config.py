@@ -35,6 +35,17 @@ class Settings(BaseSettings):
     consent_policy_version: str = "synthetic-development-v1"
     assessment_session_days: int = Field(default=7, ge=1, le=30)
     assessment_repetition_days: int = Field(default=7, ge=1, le=90)
+    short_text_enabled: bool = False
+    short_text_model_version: str = Field(
+        default="fixture-v1", pattern=r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    )
+    short_text_prompt_version: str = Field(
+        default="synthetic-short-text-dual-pass-v2",
+        pattern=r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+    )
+    short_text_configuration_version: str = Field(
+        default="short-text-runtime-v1", pattern=r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    )
     ops_failed_import_threshold: int = Field(default=1, ge=1, le=10000)
     ops_request_p95_ms: int = Field(default=500, ge=1, le=60000)
     ops_request_min_samples: int = Field(default=20, ge=1, le=10000)

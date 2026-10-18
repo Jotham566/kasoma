@@ -401,3 +401,26 @@ DATA_REQUEST_REVIEW targets data_request_reviews.request_id and follows data_sub
 Neither uses the staff actor as the requester ownership link. Migration 0024 extends the existing
 registry/SQL ownership validation and adds DELETE guards; existing immutable rows/updates remain
 protected. A hold does not cascade to the parent/siblings or clear erasure/retention gates.
+
+## Candidate encrypted short-text persistence (ADR-050)
+
+Migration 0032 is an additive, disabled-runtime integration candidate. Session items
+pin an immutable grading_band_id; objective assignments cannot carry one. Encrypted
+SHORT_TEXT attempt responses contain only type, ciphertext and the pinned rubric UUID.
+Generated rubric foreign keys equal the item-version UUID. At commit, every such
+attempt must have its immutable receipt and durable grading work.
+
+Definitive rubric grades retain a bounded authenticated encrypted result plus a
+confidential quote-free points/confidence/criterion/version summary. SQL checks every
+pinned criterion and the total/score, then defers the work-terminal/publication/mastery
+consistency check to commit. Pending and neutral work are not zero-point grades.
+`attempt.saved` records durable intake; the first neutral terminal transition emits
+`attempt.grade_unavailable` once, using the original correlation ID. Neither event
+contains answer text or model output. Existing whole-record attempt/grade holds preserve
+encrypted payloads; owned exports decrypt only after current authorization and sealing.
+
+Normal startup has no report or safety authority and defaults to disabled. The reviewed
+rubric alone cannot enable assignment. The candidate's SQL replacement in synthetic tests,
+engineering verification and remaining expert-review gates are described in
+[ADR-050](../decisions/ADR/050-short-text-pending-and-eligibility.md) and
+[the flow checklist](../implementation/E4_SHORT_TEXT_FLOW_IMPLEMENTATION.md).

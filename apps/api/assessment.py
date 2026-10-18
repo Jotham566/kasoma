@@ -8,9 +8,9 @@ from fastapi import APIRouter, Header, Query, Request
 from apps.api.identity import bearer
 from services.assessment import AssessmentService
 from services.assessment_contracts import (
+    AttemptGrade,
     DiagnosticReceipt,
     DiagnosticView,
-    GradeView,
     HintRequest,
     HintState,
     LearnerItem,
@@ -23,7 +23,9 @@ from services.assessment_contracts import (
     TopicView,
 )
 from services.content_contracts import ErrorEnvelope
+from services.observability import emit
 from services.progress_contracts import ProgressView, SessionHistoryPage
+from services.short_text_contracts import ShortTextResponse
 
 router = APIRouter(
     prefix="/api/v1",
@@ -33,7 +35,7 @@ Key = Annotated[UUID, Header(alias="Idempotency-Key")]
 
 
 def service(request: Request) -> AssessmentService:
-    return AssessmentService(request.app.state.identity)
+    return AssessmentService(request.app.state.identity, request.app.state.short_text_policy)
 
 
 @router.get("/curriculum/subjects/{subject_id}/topics", response_model=list[TopicView])
@@ -55,7 +57,7 @@ def active(request: Request) -> list[SessionView]:
 
 @router.get("/sessions/{session_id}", response_model=SessionView | DiagnosticView)
 def get(session_id: UUID, request: Request) -> SessionView | DiagnosticView:
-    return service(request).get(bearer(request), session_id)
+    return service(request).get(bearer(request), session_id, UUID(request.state.request_id))
 
 
 @router.get("/sessions/{session_id}/next-item", response_model=LearnerItem)
@@ -63,13 +65,19 @@ def next_item(session_id: UUID, request: Request) -> LearnerItem:
     return service(request).next_item(bearer(request), session_id, UUID(request.state.request_id))
 
 
-@router.post("/sessions/{session_id}/attempts", response_model=GradeView | DiagnosticReceipt)
+@router.post("/sessions/{session_id}/attempts", response_model=AttemptGrade | DiagnosticReceipt)
 def submit(
     session_id: UUID, body: SubmitAnswer, request: Request, idempotency_key: Key
-) -> GradeView | DiagnosticReceipt:
-    return service(request).submit(
+) -> AttemptGrade | DiagnosticReceipt:
+    result = service(request).submit(
         bearer(request), session_id, body, idempotency_key, UUID(request.state.request_id)
     )
+    if isinstance(body.response, ShortTextResponse) and result.status in {"PENDING", "SAVED"}:
+        try:
+            request.app.state.grading_wakeup(request.app.state.settings, request.state.request_id)
+        except Exception:
+            emit("grading.wakeup_failed", request.state.request_id, "WEB", 503)
+    return result
 
 
 @router.post("/sessions/{session_id}/abandon", response_model=SessionView | DiagnosticView)
@@ -77,13 +85,13 @@ def abandon(session_id: UUID, request: Request) -> SessionView | DiagnosticView:
     return service(request).abandon(bearer(request), session_id, UUID(request.state.request_id))
 
 
-@router.get("/attempts/{attempt_id}/grade", response_model=GradeView)
-def grade(attempt_id: UUID, request: Request) -> GradeView | SolutionView:
+@router.get("/attempts/{attempt_id}/grade", response_model=AttemptGrade)
+def grade(attempt_id: UUID, request: Request) -> AttemptGrade | SolutionView:
     return service(request).result(bearer(request), attempt_id)
 
 
 @router.get("/attempts/{attempt_id}/solution", response_model=SolutionView)
-def solution(attempt_id: UUID, request: Request) -> GradeView | SolutionView:
+def solution(attempt_id: UUID, request: Request) -> AttemptGrade | SolutionView:
     return service(request).result(bearer(request), attempt_id, solution=True)
 
 
@@ -100,7 +108,7 @@ def diagnostic_start(
 def diagnostic_get(session_id: UUID, request: Request) -> DiagnosticView:
     from services.identity import IdentityError
 
-    result = service(request).get(bearer(request), session_id)
+    result = service(request).get(bearer(request), session_id, UUID(request.state.request_id))
     if not isinstance(result, DiagnosticView):
         raise IdentityError("RESOURCE_NOT_FOUND", 404)
     return result

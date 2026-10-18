@@ -994,3 +994,31 @@ atomic audit selection, rollback, replay and privacy controls using real Postgre
 `make test-runtime-role` checks the actual restricted login. Run `make migrate` for
 additive migrations 0030/0031; do not reset the developer database. This preparation
 provides no activation command, production approval or learner short-text delivery.
+
+### Candidate short-text flow verification
+
+If the default Trivy database mirror stalls, use
+`make security-containers TRIVY_DB_REPOSITORY=ghcr.io/aquasecurity/trivy-db:2`.
+This is the scanner's alternative official database source; scan version, severity
+threshold, failure exit code and finite timeout are unchanged. Progress bars are
+suppressed in logs. Do not skip database refresh or ignore findings to pass a check.
+
+`make test-short-text-flow` runs isolated PostgreSQL/API/worker cases, using actual
+content review, encrypted answers, deterministic fake model results and fixture-only
+report/safety authorities. Normal startup supplies neither authority, and
+`SHORT_TEXT_ENABLED` defaults false. Do not enable actual learner scoring or substitute
+plausible UUIDs/counts for real report approval. Draft migration 0032 remains on its
+working branch until full acceptance; no developer-database reset is required.
+
+The owned short-text feedback endpoint permits 120 reads per account per minute;
+the web makes at most 12 automatic polls, three seconds apart, with one in flight.
+Manual retry remains available. Rate limits never create a score or restart grading.
+
+Finish `make build` before starting browser verification. Do not rebuild the native
+web output while an E2E server is using it: replacing `.next` during a journey can
+invalidate its route manifests. Docker builds use their own filesystem output.
+
+The review stack can be kept running with the documented
+`docker compose --profile application up -d --wait api worker export-worker web`.
+`make container-smoke` restores the running/stopped state it found; start the review
+stack first when it must remain available after the smoke check.
