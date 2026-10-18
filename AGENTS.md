@@ -128,7 +128,9 @@ completion cap are merged after hosted verification. Configurable existing runti
 budgets and bounded local model observations are merged after complete hosted
 verification. Exact terminal channel receipt holds are merged after complete hosted verification, with new
 creation default-disabled; live channel preservation remains unsupported. The four
-legacy hold DELETE clocks and bounded ADMIN audit activity are under verification.
+legacy hold DELETE clocks and bounded ADMIN audit activity are merged after complete
+hosted verification at 5d95f9d. Guarded disposable CI storage preparation is verified;
+it never authorizes developer SDK or application-volume cleanup.
 The minimized mutable-channel preservation proposal requires explicit owner approval.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See

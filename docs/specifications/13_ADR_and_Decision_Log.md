@@ -362,7 +362,7 @@ stays disabled for staged rollout; live-state preservation and full coverage sta
 Source 397f562 passes complete hosted run 39165896953 and is merged.
 
 
-### ADR-056 — wall-clock hold DELETE evaluation (proposed)
+### ADR-056 — wall-clock hold DELETE evaluation
 
 See [ADR-056](../decisions/ADR/056-wall-clock-hold-delete-guards.md). Four legacy
 wrappers must observe a committed hold when DELETE executes, even if its transaction
@@ -378,14 +378,19 @@ approval. No new preservation meaning, raw-data retention or erasure is authoriz
 
 ## ADR-058: Bounded ADMIN audit activity
 
-**Status:** Proposed; verification pending. See
+**Status:** Accepted for bounded synthetic ADMIN activity; complete hosted 39171302022
+passes at 5d95f9d. See
 [ADR-058](../decisions/ADR/058-bounded-admin-audit-activity.md). Implement the approved
 audit endpoint/navigation as a bounded fixed-category ADMIN aggregate, preserving
 individual-record support boundaries, immutable evidence and finite sample reporting.
 
 ## ADR-059: Disposable CI runner storage
 
-**Status:** Proposed; hosted verification pending. See
+**Status:** Accepted for the disposable hosted profile; complete hosted 39171302022
+passes at 5d95f9d. See
 [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md). A measured runner
 disk failure motivates hosted-only fixed SDK preparation, capacity checks and
 diagnostics. No local/application data cleanup or acceptance reduction is permitted.
+
+ADR-056 is also accepted through the same complete integrated run at 5d95f9d. The
+older standalone disk-exhaustion run remains failed; no real-data/erasure approval.

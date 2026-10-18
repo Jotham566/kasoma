@@ -1,7 +1,7 @@
 # ADR-058: Bounded ADMIN audit activity summary
 
 Date: 19 October 2026
-Status: Proposed; complete local verification passes, hosted acceptance pending
+Status: Accepted for bounded synthetic ADMIN activity; no individual support access
 Requirements: FR-OPS-003, NFR-SEC-002, NFR-ACC-001, NFR-PERF-001, NFR-MNT-001
 
 ## Context and decision
@@ -47,3 +47,13 @@ browser refresh and denied/empty/offline/capped states, keyboard/axe, 320-pixel 
 Rollback can hide the new route/navigation while preserving audit evidence and its
 existing immutable guards. Index removal is optional and does not delete records.
 No real learner, legal, provider or production release approval follows from this slice.
+
+## Complete hosted acceptance
+
+Integrated source `5d95f9d7cc2fe37a9a2f8624ea6b6960f8e5f497` passes complete
+[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022): 940 unit/contract, 378 integration,
+35 tooling, 105 ordinary browser executions, three UI harness cases and three native
+WebKit transport-control cases, migrations/restore/restricted login, source/dependency/
+image security and container smoke. It is promoted to main with a documentation-only
+closeout; merged branches are removed. The older standalone clock disk failure remains
+failed evidence. No real-data, academic, provider or production approval is inferred.

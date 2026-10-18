@@ -1173,7 +1173,7 @@ application-profile startup and `make container-smoke`; confirm all eight servic
 healthy before relying on the dashboard. Never reset volumes to restore a metric.
 
 
-### Terminal channel receipt holds (candidate rollout)
+### Terminal channel receipt holds (verified, creation disabled)
 
 `make test-channel-receipt-holds` uses isolated synthetic schemas, including clean0034
 and0033-upgrade/replay, SQL guards, clock/race cases and real signed local fake-delivery
@@ -1197,7 +1197,7 @@ metadata. Keep creation disabled through this upgrade; clean and existing-menu-h
 upgrade/replay tests must pass before activation. Do not edit/revert an applied migration.
 
 
-### Legacy hold clock verification (candidate)
+### Legacy hold clock verification (verified)
 
 `make test-hold-delete-clock` exercises actual wrappers with valid owned synthetic holds
 created after a probe transaction begins, isolating timing on temporary rows without
@@ -1206,7 +1206,7 @@ arguments; keep historical predicate semantics and all preservation evidence. Co
 clean/0035-upgrade, replay, existing holds, restricted-login, recovery/security and hosted
 checks before promotion. This does not authorize or implement account erasure.
 
-### Bounded ADMIN audit activity (candidate)
+### Bounded ADMIN audit activity (verified synthetic scope)
 
 Open `/admin/audit` from the staff workspace and explicitly refresh after synthetic
 ADMIN sign-in. This shows the newest at most 10,000 audited actions in the last

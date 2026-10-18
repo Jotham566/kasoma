@@ -1,6 +1,18 @@
 # Changelog
 
-## Work in progress — disposable CI storage and navigation regression
+## Accepted engineering checkpoint — 19 October 2026
+
+- Source 5d95f9d passes complete hosted [39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022)
+  and is on main with a documentation-only closeout. Merged branches are removed.
+- Accept ADR-056/058/059 within their bounded engineering scope: wall-clock hold
+  guards, aggregate ADMIN audit activity and disposable hosted storage safeguards.
+  All 940 unit/contract, 378 integration, 35 tooling and full browser/security/restore/
+  image/service checks pass. Historical failed/cancelled runs remain recorded below.
+- Keep receipt creation and normal learner short-text delivery disabled. ADR-057
+  remains an owner-review proposal; full preservation, erasure and real release gates
+  remain incomplete. This acceptance supersedes older pending engineering status.
+
+## Verified — disposable CI storage and navigation regression
 
 - Preserve the failed hold-clock hosted run as failed disk-capacity evidence. Add
   ADR-059 hosted-only fixed SDK preparation, initial/phase capacity gates and read-only
@@ -9,7 +21,7 @@
   All 105 ordinary browser executions, 22 storage safety and 940 unit/contract cases
   pass locally; corrected full-source hosted acceptance remains required.
 
-## Work in progress — bounded ADMIN audit activity
+## Verified — bounded ADMIN audit activity
 
 - Implement the approved audit endpoint and navigation as fixed-category last-24-hour
   activity sampling under ADR-058, with live ADMIN checks, bounded reads and honest
@@ -26,7 +38,7 @@
 - Prepare ADR-057 for explicit owner review of bounded minimized link/conversation
   snapshots. No runtime behavior, new data retention or erasure authority is introduced.
 
-## Work in progress — legacy hold DELETE clock
+## Verified — legacy hold DELETE clock
 
 - Reproduce transaction-start time missing a later committed hold in all four legacy
   DELETE wrappers, using temporary probe rows while original evidence stays protected.

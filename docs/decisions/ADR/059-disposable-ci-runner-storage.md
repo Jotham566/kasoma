@@ -1,7 +1,7 @@
 # ADR-059: Disposable CI runner storage preflight
 
 Date: 19 October 2026
-Status: Proposed; 22 safety tests and complete local checks pass, hosted verification pending
+Status: Accepted for disposable hosted CI profile only; no developer/application cleanup
 Requirements: NFR-MNT-001; supports existing security/release verification
 
 ## Observed failure and decision
@@ -55,3 +55,13 @@ uses /usr/share/dotnet. The
 distinguishes hosted/self-hosted execution. These are verified fixed locations, not
 permission to remove similarly named paths elsewhere. No new cloud application service,
 production approval or authority over developer data is introduced.
+
+## Complete hosted acceptance
+
+Integrated source `5d95f9d7cc2fe37a9a2f8624ea6b6960f8e5f497` passes complete
+[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022): 940 unit/contract, 378 integration,
+35 tooling, 105 ordinary browser executions, three UI harness cases and three native
+WebKit transport-control cases, migrations/restore/restricted login, source/dependency/
+image security and container smoke. It is promoted to main with a documentation-only
+closeout; merged branches are removed. The older standalone clock disk failure remains
+failed evidence. No real-data, academic, provider or production approval is inferred.

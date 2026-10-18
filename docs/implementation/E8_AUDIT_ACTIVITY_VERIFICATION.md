@@ -1,4 +1,4 @@
-# ADMIN audit activity verification — candidate
+# ADMIN audit activity verification — verified and merged
 
 19 October 2026. FR-OPS-003, NFR-SEC-002, NFR-ACC-001, NFR-PERF-001, NFR-MNT-001.
 See [readiness](E8_AUDIT_ACTIVITY_READINESS.md) and
@@ -37,8 +37,8 @@ See [readiness](E8_AUDIT_ACTIVITY_READINESS.md) and
 918 unit/contract cases, 35 tooling cases, all 378 integration cases, a separate actual
 restricted-login check, dependency/source scans with no findings, and isolated populated
 logical recovery of 65 tables/648 rows (287 ms), including the restored audit index.
-No cleanup failure is reported. Complete exact-source hosted acceptance remains required
-before main promotion. This index/summary changes no retained record or retention policy and
+No cleanup failure is reported. Complete exact-source hosted acceptance subsequently passes at 5d95f9d in
+39171302022; the source is on main and merged branches are removed. This index/summary changes no retained record or retention policy and
 provides no learner-level support permission, full audit coverage or production approval.
 
 Logs: `.local/audit-activity-*.log`. The stack remains available at localhost:3000;
@@ -79,3 +79,14 @@ completed acceptance gate. The bounded CI profile correction is recorded in
 [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) and
 [CI evidence](E0_CI_STORAGE_VERIFICATION.md). Existing local application gates pass;
 complete corrected-source hosted verification remains required.
+
+## Exact-source hosted acceptance
+
+Source `5d95f9d7cc2fe37a9a2f8624ea6b6960f8e5f497` passes the complete
+[39171302022 pipeline](https://github.com/Jotham566/kasoma/actions/runs/39171302022). It includes 940 unit/contract,
+378 integration, 35 tooling, 105 ordinary browser executions, three UI harness and
+three native WebKit transport-control cases, setup/migrations/restricted login/restore,
+source/dependency/image security and owned service smoke. The full Chromium target
+additionally passes 31 cases locally. This supersedes candidate/pending status above;
+failed/cancelled runs retain their original status. Main contains the source and merged
+branches are removed. No real-data, full audit coverage or production approval.

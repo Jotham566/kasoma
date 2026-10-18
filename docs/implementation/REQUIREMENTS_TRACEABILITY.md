@@ -1,5 +1,17 @@
 # Requirements Traceability
 
+## Current accepted checkpoint — 19 October 2026
+
+Application source `5d95f9d` passes complete
+[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022) and is on main; the closeout changes only
+documentation. ADR-056/058/059 are accepted for their bounded local/hosted engineering
+scope. Full 940 unit/contract, 378 integration, 35 tooling, 105 ordinary browser and
+UI/transport/security/recovery/image/service gates pass. This supersedes older
+candidate/pending engineering status below, without changing any production, academic,
+privacy, preservation/erasure or physical-device release gate. ADR-057 remains proposed
+and awaits owner approval. [Checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
+
+
 NFR-MNT-001 candidate: [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md)
 and [CI storage evidence](E0_CI_STORAGE_VERIFICATION.md) address the observed hosted
 disk failure without reducing tests or touching developer data. Hosted-only SDK
@@ -143,7 +155,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; channel code/link/unlink/STOP events and safe correlated processing logs are implemented; remaining dispatch pending |
 | FR-OPS-002 | ADMIN snapshot/dashboard, bounded imports/flags/channel/exports and response-start histograms; grading queue and verified local model observations | [Operations evidence](E8_OPERATIONS_VERIFICATION.md); [grading candidate](E8_GRADING_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs and browser checks | Partial: existing local visibility merged; grading queue/lease/fallback and bounded local model observations merged; model spend, academic/technical error-rate distinctions, SMS/email/mastery/provider telemetry and production alerting remain pending |
-| FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
+| FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; bounded aggregate ADMIN audit activity verified at 5d95f9d; individual support access and retention processing remain gated |
 | FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; configurable shared short-text per-job request/token/time ceiling with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); [runtime-budget candidate](E4_RUNTIME_BUDGET_VERIFICATION.md); actual fake exhaustion and exact replay | Local channel controls merged; typed runtime budget passes local and complete hosted checks; actual provider usage/billing and production acceptance remain gated. No unspecified learner/day/fleet quota is invented |
 | NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); hosted regression passes; representative deployment/history/provider acceptance pending |
 | NFR-PERF-002 | Objective answer response includes deterministic feedback; bounded channel wake-up | [Historical objective load evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md); [channel evidence](E7_CONVERSATION_VERIFICATION.md) | Historical isolated objective baseline: ANSWER p95 27.221 ms across 2,500 complete JSON responses. This is not a current-source/deployment rerun; representative histories, numeric/AI/provider and WhatsApp end-to-end acceptance remain pending |

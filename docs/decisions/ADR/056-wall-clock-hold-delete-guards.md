@@ -1,7 +1,7 @@
 # ADR-056: Wall-clock evaluation of existing hold DELETE guards
 
 Date: 19 October 2026
-Status: Proposed; local reproduction and verification pass, hosted acceptance pending
+Status: Accepted for local synthetic hold-clock correction; no erasure authority
 Requirements: FR-ID-006, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Scope and decision
@@ -39,3 +39,13 @@ future erasure clearance still require their own review; this fixes one measured
 
 Forward migration only; preserve applied migrations and all registered evidence. A
 rollback must retain protection and use a forward correction, never drop holds/guards.
+
+## Complete hosted acceptance
+
+Integrated source `5d95f9d7cc2fe37a9a2f8624ea6b6960f8e5f497` passes complete
+[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022): 940 unit/contract, 378 integration,
+35 tooling, 105 ordinary browser executions, three UI harness cases and three native
+WebKit transport-control cases, migrations/restore/restricted login, source/dependency/
+image security and container smoke. It is promoted to main with a documentation-only
+closeout; merged branches are removed. The older standalone clock disk failure remains
+failed evidence. No real-data, academic, provider or production approval is inferred.

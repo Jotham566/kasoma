@@ -1,4 +1,4 @@
-# Disposable CI storage verification — candidate
+# Disposable CI storage verification — verified hosted profile
 
 19 October 2026. NFR-MNT-001; supporting the existing security and release checks.
 [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) records the bounded profile.
@@ -44,3 +44,14 @@ Hosted acceptance on the complete corrected source remains required. The failed 
 is retained at `.local/hold-delete-clock-hosted-full.log`; SDK guard/suite evidence is
 in `.local/ci-runner-storage-*.log`. Physical/branded browser, production recovery,
 academic/privacy/provider approval and complete preservation gates remain separate.
+
+## Complete hosted acceptance
+
+Source `5d95f9d7cc2fe37a9a2f8624ea6b6960f8e5f497` passes full
+[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022) and is promoted to main. Actual hosted
+preparation removes only DOTNET and ANDROID. Free root space rises from 14,066,016,256
+to 32,071,061,504 bytes; phase checks report 22,722,289,664 and 22,646,132,736 bytes,
+and final diagnostics report 19,436,679,168 bytes. Both 24/8 GiB gates pass and the
+whole backend/browser/security/image/smoke pipeline completes. This measures the new
+profile; it does not identify the exact consumer in the old failed run or guarantee
+capacity for future workloads. No local SDK, test schema or volume is removed.

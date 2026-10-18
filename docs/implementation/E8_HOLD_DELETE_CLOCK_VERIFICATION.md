@@ -1,4 +1,4 @@
-# Legacy hold DELETE clock verification — candidate
+# Legacy hold DELETE clock verification — verified integrated source
 
 19 October 2026. FR-ID-006, BR-010, NFR-SEC-002, NFR-MNT-001.
 [ADR-056](../decisions/ADR/056-wall-clock-hold-delete-guards.md) and
@@ -33,7 +33,7 @@ Local verification passes:
   deterministic fake model observation pass. API/web scans report no HIGH/CRITICAL
   findings. Existing volumes are retained.
 
-Complete exact-source hosted acceptance remains required before main promotion.
+Complete corrected-source hosted run 39171302022 passes; source 5d95f9d is on main.
 No frontend or provider-call behavior changes; this slice does not infer browser
 acceptance from static checks. Prior receipt UI acceptance remains separate evidence.
 
@@ -48,3 +48,11 @@ Run [39167600610](https://github.com/Jotham566/kasoma/actions/runs/39167600610) 
 then the disposable runner runs out of disk. The pipeline fails and this source is
 not promoted. [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) records
 the capacity correction; require a complete corrected-source run before acceptance.
+
+## Integrated acceptance
+
+Complete [39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022) passes at source
+`5d95f9d7cc2fe37a9a2f8624ea6b6960f8e5f497`, including all 940 unit/contract and 378 integration
+cases plus browser/security/recovery/image/service gates. This is a single full passing
+run after the capacity correction, not combined partial acceptance. The source is on
+main; its merged branches are removed. Full preservation/erasure remains incomplete.

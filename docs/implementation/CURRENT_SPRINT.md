@@ -1,135 +1,88 @@
-# Current sprint: legacy hold-clock verification
+# Current sprint: verified checkpoint and preservation decision
 
-Updated 19 October 2026. Earlier checkpoints remain in
-[the preserved history](SPRINT_HISTORY_2026_10_18.md).
+Updated 19 October 2026. Earlier context is preserved in
+[sprint history](SPRINT_HISTORY_2026_10_18.md) and the
+[implementation checkpoint](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
+This is not a completed MVP or production-release declaration.
 
-## Verified application source
+## Verified source on main
 
-Application source on main is `397f562`; complete hosted
-[39165896953](https://github.com/Jotham566/kasoma/actions/runs/39165896953) passes.
-Its merged receipt-hold branch is removed locally/remotely. The hold-clock and audit
-candidates remain separate unmerged work.
+Application source is `5d95f9d`; complete hosted
+[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022) passes. The documentation-only closeout
+preserves that exact application tree. All merged implementation/review branches are
+removed locally/remotely. See [checkpoint](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
 
-- `397f562`: exact already-minimized terminal receipt holds, staged capability/UI,
-  hold-aware cleanup and forward JSON no-op correction; 918 unit/contract and 368
-  integration cases plus complete browser/recovery/security/container gates pass.
-  See [receipt verification](E8_CHANNEL_RECEIPT_HOLD_VERIFICATION.md).
-- `0c73c45`: bounded local worker model counters, truthful unknown usage, private
-  five-minute Redis intervals, ADMIN snapshot/card and fake worker smoke. See
-  [model verification](E8_MODEL_USAGE_VERIFICATION.md) and accepted ADR-054.
-- `f5f408e`: configurable existing three-request/16,384-token/five-second envelope;
+Terminal receipt source 397f562 also passes complete hosted 39165896953. Receipt
+creation remains false; live-state preservation and erasure remain incomplete.
+
+Earlier merged checkpoints:
+
+- `0c73c45`: bounded private local model observations, truthful unknown usage and
+  ADMIN visibility; [hosted 39160113771](https://github.com/Jotham566/kasoma/actions/runs/39160113771)
+  and [model evidence](E8_MODEL_USAGE_VERIFICATION.md) pass under ADR-054.
+- `f5f408e`: typed existing per-job request/token/time ceilings;
   [hosted 39157127637](https://github.com/Jotham566/kasoma/actions/runs/39157127637)
-  and [runtime evidence](E4_RUNTIME_BUDGET_VERIFICATION.md) pass.
-- `a357222`: bounded grading queue/lease/outcome/audit visibility and database-clock
-  review completion cap; [hosted 39155326659](https://github.com/Jotham566/kasoma/actions/runs/39155326659)
+  and [budget evidence](E4_RUNTIME_BUDGET_VERIFICATION.md) pass.
+- `a357222`: bounded grading operations and database-clock review completion cap;
+  [hosted 39155326659](https://github.com/Jotham566/kasoma/actions/runs/39155326659)
   and [grading evidence](E8_GRADING_OPERATIONS_VERIFICATION.md) pass.
-- Earlier independent review, staff navigation and offline report comparison remain
-  verified through 2164209/17abb2d and hosted 39150319607/39151730479.
+- Independent blinded review, rolling controls, staff navigation and offline report
+  comparison are merged; genuine reviewer/model/academic approval remains separate.
 
-Local model-slice evidence includes 916 unit/contract and 35 tooling cases, 345 broad
-integration cases plus two later dispatch-boundary cases, 110 browser executions across
-serial runs, restricted login, source/dependency/image security and populated logical
-restore. Full hosted acceptance is separate evidence, not inferred from local checks.
+## Verified integrated changes
 
-## Active unmerged hold-clock slice
+Source `5d95f9d` passes every step of the complete hosted pipeline, including actual
+24/8 GiB capacity checks, full backend/browser suites, security/images and service smoke.
 
-`codex/hold-delete-clock`: FR-ID-006, BR-010, NFR-SEC-002 and NFR-MNT-001.
-[ADR-056](../decisions/ADR/056-wall-clock-hold-delete-guards.md),
-[readiness](E8_HOLD_DELETE_CLOCK_READINESS.md) and
-[verification](E8_HOLD_DELETE_CLOCK_VERIFICATION.md) cover the measured boundary.
-All four legacy wrappers reproduce a missed hold committed after transaction start;
-forward migration 0036 changes only DELETE evaluation time. Four focused cases pass after the
-fix; the upgrade/replay supplement and related suites total 57 passing cases.
-918 unit/contract and 35 tooling cases, restricted logins, security, populated recovery
-and rebuilt 0036 image/service smoke pass. Hosted 39167600610 fails on runner disk exhaustion after successful backend
-and five browser batches; no promotion. ADR-059 records the capacity correction.
-Original append-only protections remain; no original row is erased for reproduction.
+- ADR-056: four legacy DELETE wrappers evaluate holds at wall clock, preserving
+  historical predicates and original immutable guards. Five focused cases plus
+  related suites pass; [clock evidence](E8_HOLD_DELETE_CLOCK_VERIFICATION.md).
+- ADR-058: fixed-category ADMIN audit activity, newest-10,000 cap, strict generated
+  contract and time-window index; [audit evidence](E8_AUDIT_ACTIVITY_VERIFICATION.md).
+  No individual audit field, new learner support permission or retention change.
+- ADR-059: hosted-only fixed SDK preparation, capacity gates and diagnostics after
+  runner disk exhaustion; [CI evidence](E0_CI_STORAGE_VERIFICATION.md). No developer
+  SDK cleanup, Docker prune or application-volume reset.
 
-## Merged terminal receipt slice
+Local verification passes 940 unit/contract, 35 tooling and 378 integration cases,
+actual restricted logins, 65-table/648-row populated logical recovery (287 ms), source/
+dependency/image security, rebuilt Docker smoke, 105 ordinary browser executions,
+three UI harness/navigation cases and 31 full-Chromium executions. These are named
+runs with overlapping cases. No real model or messaging provider is exercised.
 
-`397f562` passes complete [hosted 39165896953](https://github.com/Jotham566/kasoma/actions/runs/39165896953)
-on `codex/channel-receipt-holds`, including 368 full integration cases. It is on main; its merged branch is removed.
-Its 21 focused receipt/clock/race/JSON-upgrade and privacy-login cases,918 unit/contract,
-364 broad integration plus final supplements,102 full browser executions, final privacy
-reflow and recovery/security/image/service checks pass locally. The stack is on 0036
-with creation disabled. The source is merged; later clock/audit verification remains independent.
-
-## Receipt scope and continuing safeguards
-
-See [ADR-055](../decisions/ADR/055-terminal-channel-receipt-holds.md),
-[receipt readiness](E8_CHANNEL_RECEIPT_HOLD_READINESS.md) and
-[verification](E8_CHANNEL_RECEIPT_HOLD_VERIFICATION.md). Source guards, hold-aware
-cleanup, staged capabilities/UI and synthetic recovery are implemented. Final 21-case
-receipt/clock/race/JSON-upgrade and restricted privacy-login verification passes;918 unit/contract,
-364 broad integration and 102 full browser executions pass with final focused
-supplements. Applied0034 is preserved; forward migration 0035 fixes a reproduced held-menu JSON no-op
-comparison. Final 0035 images/migration/service checks pass with creation disabled; hosted
-acceptance passes in run 39165896953.
-
-The receipt candidate addresses FR-ID-006, FR-WA-006, FR-OPS-003, BR-010,
-NFR-SEC-002 and NFR-MNT-001 with exact original-record holds on owned terminal
-receipts only after transient material is cleared. STOP/unlink, delivery lifecycle
-and unrelated bounded cleanup remain operational. Creation defaults disabled for
-staged reader compatibility. See [channel readiness](E8_CHANNEL_HOLD_READINESS.md);
-live-state preservation still requires a separately recorded design. Full hold
-coverage and erasure are not complete.
-
-## Independent audit activity candidate
-
-FR-OPS-003 and NFR-SEC/ACC/PERF/MNT-001: the approved audit endpoint/navigation is
-implemented as bounded fixed-category ADMIN sampling under
-[ADR-058](../decisions/ADR/058-bounded-admin-audit-activity.md). SQL transfers only
-category literals; no individual audit field or learner support access. Five real
-role/rate/revocation/window/cap/empty/upgrade cases pass. Full local verification passes
-918 unit/contract, 35 tooling and 378 integration cases, restricted login, populated
-recovery, security, rebuilt Docker smoke and six browser/UI cases. Initial client-factory
-and proxy-route mistakes were caught and fixed; final readable mobile layout was
-visually inspected. Complete hosted acceptance remains required. See
-[audit readiness](E8_AUDIT_ACTIVITY_READINESS.md) and
-[verification](E8_AUDIT_ACTIVITY_VERIFICATION.md).
+The old standalone clock run 39167600610 fails on runner disk exhaustion after backend
+and five browser batches; it is not accepted. Initial missing proxy/client/staging and
+obsolete navigation expectations were caught and corrected. Failed/cancelled evidence
+is retained; no timeout, authorization or academic threshold is relaxed.
 
 ## Next preservation decision
 
-[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) is a concrete
-proposal, not implementation: bounded encrypted evidence for an exact owned link or
-conversation version, excluding contact/message/authentication material. It compares
-continuous version history, defines ownership, atomic capture, finite retention and
-access/rollout tests, and leaves full coverage/erasure disabled. Explicit owner approval
-has been requested under the source-of-truth change protocol; no reply is approval.
-Unaffected verification continues. A nondestructive post-power-interruption procedure
-is now recorded in [local recovery](../runbooks/LOCAL_DEVELOPMENT.md).
+[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) proposes
+bounded encrypted evidence for an exact owned link/conversation version, excluding
+contacts, message bodies and authentication material. It compares version history,
+sets finite lifecycle/access boundaries and defines atomic capture/race/recovery tests.
+Explicit owner approval was requested under the source-of-truth change protocol and
+is not recorded. No answer or elapsed time grants approval; dependent implementation
+has not started. Full coverage, erasure/anonymization and accountability expiry remain
+incomplete even if this first bounded proposal is approved.
 
 ## Review stack and remaining gates
 
-All eight Compose services are kept running for review at http://localhost:3000;
-Mailpit is http://localhost:8025. Existing volumes are retained. Local candidate UI
-visibility alone does not establish main or production acceptance. Use fictional data.
-Native Playwright commands run sequentially; do not rebuild native .next during a
-browser server run. Docker builds have a separate filesystem.
+All eight Compose services remain running healthy at http://localhost:3000;
+Mailpit is http://localhost:8025. The preview is on schema 0037 with receipt
+creation false and normal learner short-text scoring disabled. Existing volumes are
+retained. See [nondestructive local recovery](../runbooks/LOCAL_DEVELOPMENT.md).
+Native Playwright runs are serial; do not rebuild native .next during an active server.
+Docker builds have a separate filesystem. Use fictional data only.
 
-Normal learner short-text scoring stays disabled. Synthetic fixtures/fake agreement
-are not academic, legal, safeguarding, licensing or provider approval. Gemini remains
-manual and owner opt-in; no external provider or real learner data is used here.
+Recent screenshots of learner home, practice, progress and audit were visually reviewed;
+large-text audit spacing was improved and reverified. Full Chromium is additional
+engineering evidence, not physical-device or all branded-browser acceptance.
 
-The MVP is not complete. Genuine inventory/benchmark/calibration, privacy/DPIA/PDPO,
-provider/pilot approvals, full preservation, erasure/anonymization/accountability expiry,
-production PITR/RPO/RTO and branded/physical-device evidence remain in
-[release gates](RELEASE_GATES.md) and [requirements traceability](REQUIREMENTS_TRACEABILITY.md).
-
-## Acceptance record correction
-
-The NFR-PERF-002 row now links the existing October 9 objective load baseline rather
-than incorrectly suggesting no deterministic feedback measurement exists. ANSWER
-includes decoded feedback JSON and its historical p95 is 27.221 ms for 2,500 responses.
-No new benchmark, current-source performance claim, AI/provider acceptance or additional
-response-format scope is inferred. Existing broader performance gates remain.
-
-## Hosted capacity correction
-
-NFR-MNT-001: [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) and
-[CI evidence](E0_CI_STORAGE_VERIFICATION.md) record the observed disposable-runner
-disk failure, hosted-only fixed-SDK preparation, capacity gates and diagnostics.
-22 safety cases, 940 unit/contract and 35 tooling cases, static/contracts/security
-checks pass locally. No real SDK cleanup is performed locally. Corrected navigation
-expectations pass all 105 browser executions; the full Chromium target also passes 31 cases. Complete hosted acceptance
-remains pending. All eight local Docker services remain running on candidate schema 0037.
+Genuine academic inventory/rights/benchmark/calibration, privacy/DPIA/PDPO and guardian
+procedures, Week 8 production provider/budget approval, complete preservation and
+reviewed erasure authority, production PITR/RPO/RTO and pilot/device sign-offs remain in
+[release gates](RELEASE_GATES.md) and [traceability](REQUIREMENTS_TRACEABILITY.md).
+Gemini remains manual and explicitly opt-in; it was not run. No production cloud
+application dependency is introduced. Historical objective ANSWER p95 27.221 ms is
+recorded accurately; no current-source/provider/long-history performance is inferred.
