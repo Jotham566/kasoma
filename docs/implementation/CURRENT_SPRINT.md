@@ -1,4 +1,4 @@
-# Current sprint: verified model observations and terminal receipt follow-up
+# Current sprint: legacy hold-clock verification
 
 Updated 19 October 2026. Earlier checkpoints remain in
 [the preserved history](SPRINT_HISTORY_2026_10_18.md).
@@ -21,12 +21,33 @@ passes. All merged implementation branches are removed locally/remotely.
 - Earlier independent review, staff navigation and offline report comparison remain
   verified through 2164209/17abb2d and hosted 39150319607/39151730479.
 
-Local model-slice evidence includes916 unit/contract and 35 tooling cases, 345 broad
-integration cases plus two later dispatch-boundary cases,110 browser executions across
+Local model-slice evidence includes 916 unit/contract and 35 tooling cases, 345 broad
+integration cases plus two later dispatch-boundary cases, 110 browser executions across
 serial runs, restricted login, source/dependency/image security and populated logical
 restore. Full hosted acceptance is separate evidence, not inferred from local checks.
 
-## Active unmerged work
+## Active unmerged hold-clock slice
+
+`codex/hold-delete-clock`: FR-ID-006, BR-010, NFR-SEC-002 and NFR-MNT-001.
+[ADR-056](../decisions/ADR/056-wall-clock-hold-delete-guards.md),
+[readiness](E8_HOLD_DELETE_CLOCK_READINESS.md) and
+[verification](E8_HOLD_DELETE_CLOCK_VERIFICATION.md) cover the measured boundary.
+All four legacy wrappers reproduce a missed hold committed after transaction start;
+forward migration 0036 changes only DELETE evaluation time. Four focused cases pass after the
+fix; the upgrade/replay supplement and related suites total 57 passing cases.
+918 unit/contract and 35 tooling cases, restricted logins, security, populated recovery
+and rebuilt 0036 image/service smoke pass. Complete hosted acceptance remains pending.
+Original append-only protections remain; no original row is erased for reproduction.
+
+## Underlying receipt candidate
+
+`397f562` is pushed on `codex/channel-receipt-holds` for hosted run 39165896953.
+Its 21 focused receipt/clock/race/JSON-upgrade and privacy-login cases,918 unit/contract,
+364 broad integration plus final supplements,102 full browser executions, final privacy
+reflow and recovery/security/image/service checks pass locally. The stack is on 0036
+with creation disabled. This candidate remains unmerged until hosted acceptance.
+
+## Receipt scope and continuing safeguards
 
 See [ADR-055](../decisions/ADR/055-terminal-channel-receipt-holds.md),
 [receipt readiness](E8_CHANNEL_RECEIPT_HOLD_READINESS.md) and
@@ -39,13 +60,13 @@ comparison. Final 0035 images/migration/service checks pass with creation disabl
 acceptance remains pending.
 
 
-`codex/channel-receipt-holds` is the next engineering slice, not merged application
-behavior. FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002 and NFR-MNT-001:
-assess exact original-record holds on owned terminal receipts only after transient
-material has been cleared. Preserve STOP/unlink, delivery lifecycle and unrelated
-bounded cleanup. New creation must default disabled for staged reader compatibility.
-See [channel readiness](E8_CHANNEL_HOLD_READINESS.md); live-state preservation still
-requires a separately recorded design. Do not claim full hold coverage or erasure.
+The receipt candidate addresses FR-ID-006, FR-WA-006, FR-OPS-003, BR-010,
+NFR-SEC-002 and NFR-MNT-001 with exact original-record holds on owned terminal
+receipts only after transient material is cleared. STOP/unlink, delivery lifecycle
+and unrelated bounded cleanup remain operational. Creation defaults disabled for
+staged reader compatibility. See [channel readiness](E8_CHANNEL_HOLD_READINESS.md);
+live-state preservation still requires a separately recorded design. Full hold
+coverage and erasure are not complete.
 
 ## Review stack and remaining gates
 

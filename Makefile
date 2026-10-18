@@ -366,3 +366,7 @@ test-web-operations:
 .PHONY: test-channel-receipt-holds
 test-channel-receipt-holds:
 	$(UV) pytest tests/integration/test_channel_receipt_holds.py tests/integration/test_channel_receipt_runtime_role.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-hold-delete-clock
+test-hold-delete-clock:
+	$(UV) pytest tests/integration/test_hold_delete_clock.py --allow-hosts=localhost,127.0.0.1,::1

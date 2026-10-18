@@ -128,3 +128,7 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-055: Terminal channel receipt holds](055-terminal-channel-receipt-holds.md)
   proposes scoped original-record guards after message minimization, preserving opt-out.
+
+
+- [ADR-056: Wall-clock hold DELETE guards](056-wall-clock-hold-delete-guards.md)
+  proposes correction of four legacy evaluation clocks without granting erasure.

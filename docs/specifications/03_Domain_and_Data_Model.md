@@ -474,3 +474,12 @@ incomplete deletion/preservation coverage remain unchanged. See ADR-055/evidence
 Forward migration 0035 corrects no-op comparison through canonical to_jsonb rows, supporting the
 existing JSON menu column without transforming it. Menu array order remains significant,
 core rewrites stay forbidden and registered0034 holds/replay survive the upgrade.
+
+
+### Legacy hold evaluation clock (ADR-056 candidate)
+
+Forward0036 changes four existing DELETE wrappers to evaluate record_is_held at database
+wall clock, covering generic id, grade attempt_id, request-review request_id and
+publication attempt_id. The explicit at_time predicate remains unchanged for historical
+queries. No enum, source data, retention policy, permission or append-only guard changes.
+This corrects a measured old-transaction boundary and does not enable erasure.

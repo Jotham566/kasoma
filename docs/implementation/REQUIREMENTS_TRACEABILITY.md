@@ -1,5 +1,14 @@
 # Requirements Traceability
 
+FR-ID-006 / BR-010 / NFR-SEC-002 / NFR-MNT-001 candidate: forward migration 0036 corrects
+four legacy DELETE wrappers using transaction-start time. Four real-trigger probe
+reproductions fail before the change and pass after it; original records/append-only
+protections remain. Upgrade/replay, 57 related integration cases, 918 unit/contract,
+35 tooling cases, restricted logins, recovery, security and 0036 Docker smoke pass
+locally; complete hosted acceptance remains pending. See
+[clock verification](E8_HOLD_DELETE_CLOCK_VERIFICATION.md). No erasure authority,
+retention change, API/data transform or complete preservation claim.
+
 FR-ID-006 / FR-WA-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
 [terminal receipt readiness](E8_CHANNEL_RECEIPT_HOLD_READINESS.md) and
 [ADR-055 proposal](../decisions/ADR/055-terminal-channel-receipt-holds.md) define the

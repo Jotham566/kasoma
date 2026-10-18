@@ -346,3 +346,10 @@ No learner content, billing authority, complete fleet accounting or quota policy
 See [ADR-055](../decisions/ADR/055-terminal-channel-receipt-holds.md). Extend existing
 exact-record holds only to owned already-minimized terminal receipts. New creation
 stays disabled for staged rollout; live-state preservation and full coverage stay open.
+
+
+### ADR-056 — wall-clock hold DELETE evaluation (proposed)
+
+See [ADR-056](../decisions/ADR/056-wall-clock-hold-delete-guards.md). Four legacy
+wrappers must observe a committed hold when DELETE executes, even if its transaction
+began earlier. Historical queries, source evidence and immutable guards remain unchanged.

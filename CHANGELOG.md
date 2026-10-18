@@ -1,5 +1,15 @@
 # Changelog
 
+## Work in progress — legacy hold DELETE clock
+
+- Reproduce transaction-start time missing a later committed hold in all four legacy
+  DELETE wrappers, using temporary probe rows while original evidence stays protected.
+- Add forward migration 0036 to use database wall clock only in those wrappers, preserving the
+  explicit historical predicate, source data, permissions, finite scope and independent
+  immutable guards. Local verification passes 57 related integration cases, 918
+  unit/contract and 35 tooling cases, restricted logins, populated recovery, security
+  and rebuilt 0036 Docker smoke. Complete hosted acceptance remains pending.
+
 ## Work in progress — terminal channel receipt holds
 
 - Preserve applied 0034 and add forward migration 0035 after a final real-menu regression catches

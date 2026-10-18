@@ -1159,3 +1159,13 @@ The applied 0034 receipt guard has a json equality edge case on held menu no-ops
 Forward migration 0035 compares canonical JSONB rows without changing stored menu data or hold
 metadata. Keep creation disabled through this upgrade; clean and existing-menu-hold
 upgrade/replay tests must pass before activation. Do not edit/revert an applied migration.
+
+
+### Legacy hold clock verification (candidate)
+
+`make test-hold-delete-clock` exercises actual wrappers with valid owned synthetic holds
+created after a probe transaction begins, isolating timing on temporary rows without
+disabling original append-only protection. Forward0036 replaces only DELETE clock
+arguments; keep historical predicate semantics and all preservation evidence. Complete
+clean/0035-upgrade, replay, existing holds, restricted-login, recovery/security and hosted
+checks before promotion. This does not authorize or implement account erasure.
