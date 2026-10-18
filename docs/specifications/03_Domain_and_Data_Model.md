@@ -424,3 +424,26 @@ rubric alone cannot enable assignment. The candidate's SQL replacement in synthe
 engineering verification and remaining expert-review gates are described in
 [ADR-050](../decisions/ADR/050-short-text-pending-and-eligibility.md) and
 [the flow checklist](../implementation/E4_SHORT_TEXT_FLOW_IMPLEMENTATION.md).
+
+
+## Independent expert review candidate (ADR-051, migration 0033)
+
+Publication rows retain immutable global ordinals and original global-publication-v1
+policy. New RUBRIC_MODEL publications use short-text-audit-release-unit-v1 with a
+session/band ordinal; audit assignment is the union of first/every-tenth global and
+session publication. Counters allow additional sampling while retaining the global
+minimum. Old rows/ordinals are not rewritten.
+
+`grading_audit_reviews` binds one immutable completion to its assignment, current
+independent reviewer, exact pinned criterion-point map and closed critical category.
+SQL derives agreement, allocates a per-band completion ordinal and atomically advances
+`grading_review_counters`. Last 100 completed reviews (ordered by completion ordinal)
+control sticky disablement; pending tasks are not successful reviews. Any critical
+error or exact*10 < completed*9 disables the band under the publication lock. Good
+later reviews cannot re-enable it. Completion time cannot predate its assignment,
+band update or prior completed review, or exceed database time.
+
+The nonpersonal completion aggregate cannot reset. Personal reviews are inventoried,
+owned exports are minimized/sealed and exact holds derive ownership through attempts.
+No destructive retention transform is introduced; answer text stays in the original
+encrypted attempt. Normal short-text selection remains disabled pending release gates.

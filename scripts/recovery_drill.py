@@ -6,6 +6,7 @@ import os
 import re
 import subprocess
 import tempfile
+import traceback
 from pathlib import Path
 from time import monotonic
 from uuid import uuid4
@@ -23,12 +24,14 @@ from services.domain.content import ItemVersion
 from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.grading_audits import (
     GradingAuditAssignment,
+    GradingAuditReview,
     GradingPublication,
     GradingPublicationCounter,
+    GradingReviewCounter,
 )
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence
-from services.identity import IdentityService
+from services.identity import IdentityError, IdentityService
 from services.providers import FakeMessagingProvider
 
 
@@ -75,6 +78,8 @@ def check_guards(engine: Engine) -> None:
         "UPDATE grading_band_history SET snapshot=snapshot",
         "UPDATE grading_publications SET ordinal=ordinal",
         "UPDATE grading_audit_assignments SET assigned_at=assigned_at",
+        "UPDATE grading_audit_reviews SET criterion_points=criterion_points",
+        "UPDATE grading_review_counters SET completed_audits=0",
         "UPDATE grading_publication_counters SET returned_grades=0,assigned_audits=0",
         "UPDATE topics t SET subject_id=(SELECT id FROM subjects WHERE id<>t.subject_id LIMIT 1) "
         "WHERE t.id IN (SELECT topic_id FROM grading_bands)",
@@ -146,7 +151,9 @@ def drill(settings: Settings) -> dict[str, object]:
             ExportGeneration,
             GradingPublication,
             GradingAuditAssignment,
+            GradingAuditReview,
             GradingPublicationCounter,
+            GradingReviewCounter,
         ):
             if before.get(model.__tablename__, (0, ""))[0] == 0:
                 raise RuntimeError("Synthetic evidence fixture is incomplete")
@@ -235,9 +242,24 @@ def drill(settings: Settings) -> dict[str, object]:
             object_storage_recovery_verified=False,
             production_rpo_rto_verified=False,
         )
-    except Exception:
+    except Exception as error:
         # Do not print connection strings, child output, fixture records or DB diagnostics.
         result.update(status="FAILED", failed_stage=stage)
+        result["failure_kind"] = (
+            "IDENTITY_POLICY"
+            if isinstance(error, IdentityError)
+            else "DATABASE_INVARIANT"
+            if isinstance(error, DBAPIError)
+            else "FIXTURE_CONTRACT"
+            if isinstance(error, ValueError)
+            else "UNEXPECTED"
+        )
+        root = Path(__file__).resolve().parents[1]
+        result["failure_sites"] = [
+            f"{Path(frame.filename).name}:{frame.lineno}"
+            for frame in traceback.extract_tb(error.__traceback__)
+            if Path(frame.filename).resolve().is_relative_to(root)
+        ][-3:]
     finally:
         for engine in engines:
             engine.dispose()

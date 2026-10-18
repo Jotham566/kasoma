@@ -177,6 +177,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/grading-audits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Queue */
+        get: operations["queue_api_v1_admin_grading_audits_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/grading-audits/{audit_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Task */
+        get: operations["task_api_v1_admin_grading_audits__audit_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/grading-audits/{audit_id}/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Complete */
+        post: operations["complete_api_v1_admin_grading_audits__audit_id__review_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/item-versions/{version_id}": {
         parameters: {
             query?: never;
@@ -963,6 +1014,79 @@ export interface components {
              * Format: uuid
              */
             session_item_id: string;
+        };
+        /** AuditQueueEntry */
+        AuditQueueEntry: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+        };
+        /** AuditQueuePage */
+        AuditQueuePage: {
+            /** Data */
+            data: components["schemas"]["AuditQueueEntry"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** AuditReviewInput */
+        AuditReviewInput: {
+            /**
+             * Affirmative
+             * @constant
+             */
+            affirmative: true;
+            /** Criterion Points */
+            criterion_points: components["schemas"]["ReviewPoints"][];
+            /**
+             * Critical Error
+             * @enum {string}
+             */
+            critical_error: "NONE" | "ACADEMIC_INTEGRITY" | "SAFEGUARDING" | "PRIVACY";
+        };
+        /** AuditReviewReceipt */
+        AuditReviewReceipt: {
+            /**
+             * Completed At
+             * Format: date-time
+             */
+            completed_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Status
+             * @default COMPLETED
+             * @constant
+             */
+            status: "COMPLETED";
+        };
+        /** BlindedReviewTask */
+        BlindedReviewTask: {
+            /** Criteria */
+            criteria: components["schemas"]["RubricCriterion"][];
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Item Version Id
+             * Format: uuid
+             */
+            item_version_id: string;
+            /** Prompt */
+            prompt: string;
+            /** Response */
+            response: string;
+            /**
+             * Rubric Version Id
+             * Format: uuid
+             */
+            rubric_version_id: string;
         };
         /** CandidateFeedback */
         CandidateFeedback: {
@@ -1894,7 +2018,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW";
         };
         /** HoldPage */
         HoldPage: {
@@ -1952,7 +2076,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW";
             /** Release Reference */
             release_reference: string | null;
             /** Released At */
@@ -2714,6 +2838,13 @@ export interface components {
              * @default false
              */
             require_second_review: boolean;
+        };
+        /** ReviewPoints */
+        ReviewPoints: {
+            /** Criterion Id */
+            criterion_id: string;
+            /** Points Awarded */
+            points_awarded: number;
         };
         /** ReviewView */
         ReviewView: {
@@ -4261,6 +4392,241 @@ export interface operations {
             };
             /** @description Gone */
             410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    queue_api_v1_admin_grading_audits_get: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditQueuePage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    task_api_v1_admin_grading_audits__audit_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                audit_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlindedReviewTask"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    complete_api_v1_admin_grading_audits__audit_id__review_post: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                audit_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuditReviewInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditReviewReceipt"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

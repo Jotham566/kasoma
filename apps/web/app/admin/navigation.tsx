@@ -7,6 +7,7 @@ const destinations = [
   ["/admin/content", "Content & review"],
   ["/admin/content/imports", "Imports"],
   ["/admin/flags", "Flags"],
+  ["/admin/grading", "Grading review"],
   ["/admin/data-requests", "Privacy review"],
   ["/admin/operations", "Operations"],
 ] as const;

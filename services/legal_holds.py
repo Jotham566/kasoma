@@ -15,7 +15,11 @@ from services.domain.data_requests import (
     LegalHoldReceipt,
 )
 from services.domain.flags import ContentFlag, FlagHistory
-from services.domain.grading_audits import GradingAuditAssignment, GradingPublication
+from services.domain.grading_audits import (
+    GradingAuditAssignment,
+    GradingAuditReview,
+    GradingPublication,
+)
 from services.domain.grading_work import GradingHistory
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence, MasteryHistory
@@ -157,6 +161,13 @@ class LegalHoldService:
                 .join(Attempt, Attempt.id == GradingAuditAssignment.attempt_id)
                 .where(
                     GradingAuditAssignment.id == body.record_id,
+                    Attempt.learner_id == request.user_id,
+                ),
+                "GRADING_REVIEW": select(GradingAuditReview.id)
+                .join(GradingAuditAssignment, GradingAuditAssignment.id == GradingAuditReview.id)
+                .join(Attempt, Attempt.id == GradingAuditAssignment.attempt_id)
+                .where(
+                    GradingAuditReview.id == body.record_id,
                     Attempt.learner_id == request.user_id,
                 ),
                 "GRADING_HISTORY": select(GradingHistory.id)

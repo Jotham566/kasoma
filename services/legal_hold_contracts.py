@@ -21,6 +21,7 @@ RecordType = Literal[
     "GRADING_HISTORY",
     "GRADING_PUBLICATION",
     "GRADING_AUDIT",
+    "GRADING_REVIEW",
 ]
 HoldReason = Literal["LEGAL_OBLIGATION", "SECURITY_INVESTIGATION"]
 

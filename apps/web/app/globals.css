@@ -719,6 +719,16 @@ body {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+.grading-review-page .ui-select {
+  appearance: none;
+  min-height: 48px;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7 5 5 5-5' fill='none' stroke='%2351635d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  background-position: right 0.75rem center;
+}
 @media (max-width: 640px) {
   .content-editor {
     padding: 1rem;

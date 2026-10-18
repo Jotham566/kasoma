@@ -1,5 +1,11 @@
 # Short-text learner flow implementation
 
+Current checkpoint, 18 October: the disabled synthetic learner-flow source `853f80a`
+is merged after complete hosted verification. The historical checklist below records
+its development; independent review is now the separate ADR-051 candidate, with
+[its own acceptance evidence](E4_EXPERT_REVIEW_VERIFICATION.md). Real scoring remains
+disabled and genuine academic/provider/privacy approvals are still missing.
+
 Started 18 October 2026. Requirements: FR-GRD-003/004/005, FR-MST-001, FR-ID-003/006,
 NFR-SEC-002. Decision: [ADR-050 proposal](../decisions/ADR/050-short-text-pending-and-eligibility.md).
 

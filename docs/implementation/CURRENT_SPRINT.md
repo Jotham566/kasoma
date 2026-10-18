@@ -47,8 +47,12 @@ and interruption are not reported as passing evidence; the hosted source gate pa
 The [expert review readiness assessment](E4_EXPERT_REVIEW_READINESS.md) identifies
 completed-review storage/access, exact privacy coverage and a release-subset sampling
 gap. [ADR-051](../decisions/ADR/051-blinded-review-and-release-unit-sampling.md) proposes
-additional within-session/band sampling without rewriting global ordinals. Draft
-migration 0033 and blinded contracts are under implementation; no acceptance is claimed.
+additional within-session/band sampling without rewriting global ordinals. Candidate migration 0033, staff API/UI, privacy coverage and atomic runtime disablement
+are implemented and pass local verification: 844 unit/contract, 35 tooling, 324 broad
+integration cases plus final 32-case review/18-case encrypted-flow checks, 102 browser
+executions, restricted login, repeat populated restore and rebuilt container scans/smoke.
+See [expert-review evidence](E4_EXPERT_REVIEW_VERIFICATION.md). Exact-source hosted
+verification remains required before promotion; real grading remains disabled.
 
 Finish learner-flow regression and recovery acceptance, independent blinded expert review and atomic band
 disablement with the short-text worker, grade/mastery transaction and learner fallback.
@@ -57,6 +61,10 @@ implied by the storage fixtures. External academic/privacy/provider/pilot gates 
 in [the release register](RELEASE_GATES.md).
 
 ## Local review stack
+
+The local review stack now runs additive migration 0033 and rebuilt expert-review
+candidate images; health, synthetic scheduled export and scoped metrics smoke pass.
+Normal learner short-text scoring remains disabled. Current vulnerability scans pass.
 
 All eight Compose services are running and healthy: web, API, ordinary worker, dedicated export
 worker, PostgreSQL/pgvector, Redis, private MinIO and Mailpit. Keep them running for user review.

@@ -34,6 +34,11 @@ reviewer/request provenance; determine agreement from stored criterion points, n
 reviewer's declaration that the model was correct. Duplicate same-input completion is
 idempotent and conflicting completion fails safely. No grade override is implied.
 
+Before confidential projection or completion, lock reviewer and learner accounts in
+stable UUID order and recheck current authentication/roles/consent. Role revocation
+already uses the reviewer account lock. Take the band lock afterwards, matching worker
+ordering; do not grant role-table write privileges merely to obtain row locks.
+
 Complete reviews and any disablement under the same refreshed exclusive band lock used
 by publication. Order the latest 100 completed reviews deterministically; pending
 assignments do not count as completed. Preserve aggregate completion counts through

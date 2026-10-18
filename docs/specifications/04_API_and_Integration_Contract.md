@@ -667,3 +667,37 @@ The candidate is installed in the local synthetic review stack with normal short
 selection disabled; it is not approved for real data. Owned short-text grade reads are
 limited to 120 per account per minute. The web permits twelve automatic polls at
 three-second intervals with one in flight, followed by manual retry; 429 creates no grade.
+
+
+### Independent synthetic grading review (candidate ADR-051)
+
+Recent-authenticated ACADEMIC_REVIEWER only; ADMIN alone grants no access:
+
+| Method/path | Contract |
+| --- | --- |
+| GET `/api/v1/admin/grading-audits` | UUID cursor, limit 1–50 (default 20), UUID-only entries and optional next cursor; 60 reads/account/minute |
+| GET `/api/v1/admin/grading-audits/{audit_id}` | Blinded pinned question, exact owned encrypted response projection and complete rubric criteria; 120 reads/account/minute |
+| POST `/api/v1/admin/grading-audits/{audit_id}/review` | Required Idempotency-Key, complete distinct criterion-point set, closed critical-error category, affirmative independent completion; 30 new completions/account/minute |
+
+Task access/completion excludes the learner and item/version authors and rechecks
+current roles, recent authentication and learner consent/enrollment under stable account
+locks. Diagnostic tasks remain sealed until completion. Staff sees no learner identity,
+model points/confidence/feedback, band IDs, sampling ordinals or previous reviews.
+The queue is UUID-ordered and bounded; confidential task projection has its own current
+checks. The web proxy forwards only approved cursor/limit parameters for this route.
+
+Review categories are NONE, ACADEMIC_INTEGRITY, SAFEGUARDING and PRIVACY. All rubric
+criteria require explicit integer points within their pinned maxima. SQL calculates
+agreement; the client cannot submit agreement, model scores or completion ordinals.
+A 201 receipt contains only id, COMPLETED status and completed_at. Exact same-actor,
+same-key/body retry returns that receipt; changed input/key binding conflicts. A second
+completion cannot replace the immutable first review. No grade/mastery override occurs.
+Read/completion audit records retain the original correlation ID without response text
+or points. GET of an already completed task returns REVIEW_ALREADY_COMPLETED.
+
+Owned export group `grading_audit_reviews` contains review ID, attempt ID, criterion
+points, completion time and `overrides_original_grade:false`; diagnostic sealing applies.
+It excludes reviewer identity, agreement/critical classification, request provenance,
+ordinals and band IDs. Exact hold type GRADING_REVIEW uses the completed review UUID
+(equal to its assignment UUID); requester ownership derives through the attempt.
+Deletion remains disabled; releasing a hold does not permit immutable-record mutation.

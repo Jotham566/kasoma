@@ -30,6 +30,7 @@ const allowed: Record<string, string[]> = {
   "admin/items": ["GET", "POST"],
   "admin/content-imports": ["GET", "POST"],
   "admin/content-flags": ["GET"],
+  "admin/grading-audits": ["GET"],
 };
 
 async function gateway(
@@ -83,43 +84,48 @@ async function gateway(
     `^admin/data-requests/${uuid}/holds/${uuid}/release$`,
   ).test(path);
   const importRead = new RegExp(`^admin/content-imports/${uuid}$`).test(path);
-  let methods = importRead
-    ? ["GET"]
-    : holdList
-      ? ["GET", "POST"]
-      : holdRelease
-        ? ["POST"]
-        : new RegExp(
-              `^(?:me/data-requests/${uuid}|admin/data-requests/${uuid}/deletion-preview)$`,
-            ).test(path)
-          ? ["GET"]
-          : dataExport ||
-              new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
-            ? ["POST"]
-            : flagReport
-              ? ["GET", "POST"]
-              : flagTriage
-                ? ["GET", "PATCH"]
-                : reassessment
-                  ? ["GET", "POST"]
-                  : hintWrite
-                    ? ["POST"]
-                    : learning
-                      ? [
-                          learning[1] === "attempts" ||
-                          learning[1] === "abandon"
-                            ? "POST"
-                            : "GET",
-                        ]
-                      : learningRead
-                        ? ["GET"]
-                        : staffVersion
-                          ? staffVersion[1] === "reviews"
-                            ? ["GET"]
-                            : staffVersion[1]
-                              ? ["POST"]
-                              : ["GET", "PATCH"]
-                          : allowed[path];
+  const gradingAudit = new RegExp(
+    `^admin/grading-audits/${uuid}(/review)?$`,
+  ).exec(path);
+  let methods = gradingAudit
+    ? [gradingAudit[1] ? "POST" : "GET"]
+    : importRead
+      ? ["GET"]
+      : holdList
+        ? ["GET", "POST"]
+        : holdRelease
+          ? ["POST"]
+          : new RegExp(
+                `^(?:me/data-requests/${uuid}|admin/data-requests/${uuid}/deletion-preview)$`,
+              ).test(path)
+            ? ["GET"]
+            : dataExport ||
+                new RegExp(`^admin/data-requests/${uuid}/claim$`).test(path)
+              ? ["POST"]
+              : flagReport
+                ? ["GET", "POST"]
+                : flagTriage
+                  ? ["GET", "PATCH"]
+                  : reassessment
+                    ? ["GET", "POST"]
+                    : hintWrite
+                      ? ["POST"]
+                      : learning
+                        ? [
+                            learning[1] === "attempts" ||
+                            learning[1] === "abandon"
+                              ? "POST"
+                              : "GET",
+                          ]
+                        : learningRead
+                          ? ["GET"]
+                          : staffVersion
+                            ? staffVersion[1] === "reviews"
+                              ? ["GET"]
+                              : staffVersion[1]
+                                ? ["POST"]
+                                : ["GET", "PATCH"]
+                            : allowed[path];
   if (exportJob) methods = ["GET", "POST"];
   if (exportFile) methods = ["GET"];
   if (!methods?.includes(request.method))
@@ -197,6 +203,7 @@ async function gateway(
         "admin/items",
         "admin/content-imports",
         "admin/content-flags",
+        "admin/grading-audits",
         "me/session-history",
         "me/data-requests",
         "admin/data-requests",

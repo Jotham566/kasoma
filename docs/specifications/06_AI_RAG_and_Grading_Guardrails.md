@@ -238,3 +238,19 @@ The offline rehearsal emits closed per-call and final-outcome telemetry under
 labels, elapsed time, reported usage and per-rehearsal keyed fingerprints. Unknown usage is null,
 unregistered provider strings are not logged, and no raw material or stable answer hash is retained.
 This does not establish durable production metering, cost, aggregate alerts or calibration.
+
+
+### Candidate independent review wiring (ADR-051)
+
+The synthetic reviewer workspace now collects complete pinned expert criterion points
+without exposing model outcomes or learner identity. Persisted agreement is calculated
+from the stored model criterion points. Completion and rolling disablement share the
+exclusive publication band lock, and the worker reloads completed audit state before
+each pass and final publication. The window is the last 100 completed reviews; pending
+assignments never count as correct. A critical error or below-90% agreement is sticky.
+
+Versioned union sampling additionally covers released session/band publication prefixes
+and completed diagnostic units while preserving global ordinals. It can oversample and
+does not claim statistical randomness. Academic approval of the sampling/window policy,
+genuine calibrated benchmarks and real safety/provider authorities remain release gates.
+The developer synthetic fixtures do not supply those approvals or enable learner scoring.

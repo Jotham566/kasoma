@@ -27,7 +27,11 @@ from services.domain.curriculum import Competency, Concept, Subject, Topic
 from services.domain.data_requests import DataRequest
 from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag
-from services.domain.grading_audits import GradingAuditAssignment, GradingPublication
+from services.domain.grading_audits import (
+    GradingAuditAssignment,
+    GradingAuditReview,
+    GradingPublication,
+)
 from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import Consent, Identifier, IdentityEvent, LearnerSubject, User
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
@@ -252,6 +256,19 @@ def _records(
         .order_by(GradingAuditAssignment.id)
     ):
         yield ("grading_audit_assignments", fields(audit, "id attempt_id assigned_at"))
+    yield ("grading_audit_reviews", None)
+    for review, attempt_id in rows(
+        select(GradingAuditReview, GradingAuditAssignment.attempt_id)
+        .join(GradingAuditAssignment, GradingAuditAssignment.id == GradingAuditReview.id)
+        .where(GradingAuditAssignment.attempt_id.in_(visible))
+        .order_by(GradingAuditReview.id),
+        scalar=False,
+    ):
+        yield (
+            "grading_audit_reviews",
+            fields(review, "id criterion_points completed_at")
+            | {"attempt_id": str(attempt_id), "overrides_original_grade": False},
+        )
     yield ("grading_work", None)
     for work in rows(
         select(GradingWorkRow)

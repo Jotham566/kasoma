@@ -22,11 +22,14 @@ from services.domain.assessment import (
     Grade,
     SessionItem,
 )
+from services.domain.content import AuditLog
 from services.domain.curriculum import Topic
 from services.domain.grading_audits import (
     GradingAuditAssignment,
+    GradingAuditReview,
     GradingPublication,
     GradingPublicationCounter,
+    GradingReviewCounter,
 )
 from services.domain.grading_bands import GradingBandHistory
 from services.domain.grading_work import GradingHistory, GradingWorkRow
@@ -124,7 +127,10 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                     (GradingBandHistory, "INSERT"),
                     (GradingPublication, "INSERT"),
                     (GradingAuditAssignment, "INSERT"),
+                    (GradingAuditReview, "INSERT"),
                     (GradingPublicationCounter, "UPDATE"),
+                    (GradingReviewCounter, "UPDATE"),
+                    (AuditLog, "INSERT"),
                     (MasteryEvidence, "INSERT"),
                     (MasteryEstimate, "INSERT, UPDATE"),
                     (MasteryHistory, "INSERT"),
@@ -213,6 +219,11 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
             f"DELETE FROM {quoted_schema}.grading_publications",
             f"UPDATE {quoted_schema}.grading_audit_assignments SET assigned_at=assigned_at",
             f"DELETE FROM {quoted_schema}.grading_audit_assignments",
+            f"UPDATE {quoted_schema}.grading_audit_reviews SET criterion_points=criterion_points",
+            f"DELETE FROM {quoted_schema}.grading_audit_reviews",
+            f"DELETE FROM {quoted_schema}.grading_review_counters",
+            f"UPDATE {quoted_schema}.audit_log SET reason='tampered'",
+            f"DELETE FROM {quoted_schema}.audit_log",
             f"DELETE FROM {quoted_schema}.grading_publication_counters",
             f"ALTER TABLE {quoted_schema}.attempts DISABLE TRIGGER ALL",
             f"DROP TABLE {quoted_schema}.grades",

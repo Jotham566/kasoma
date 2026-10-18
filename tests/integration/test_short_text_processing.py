@@ -112,6 +112,29 @@ def exercise_restricted_short_text_flow(assessment, identity):
     result = service.result(token, pending.attempt_id)
     assert result.method == "RUBRIC_MODEL" and result.points_awarded == 1
     assert len(gateway.calls) == 2
+    from services.grading_review_contracts import AuditReviewInput
+    from services.grading_reviews import GradingReviewService
+
+    with Session(identity.engine) as db:
+        audit = db.scalar(
+            select(GradingAuditAssignment).where(
+                GradingAuditAssignment.attempt_id == pending.attempt_id
+            )
+        )
+        target = audit.id
+    reviewer = actors["reviewer"]["Authorization"].removeprefix("Bearer ")
+    reviews = GradingReviewService(identity)
+    assert reviews.get(reviewer, target).response == "Alpha"
+    body = AuditReviewInput.model_validate_json(
+        json.dumps(
+            {
+                "criterion_points": [{"criterion_id": "R1", "points_awarded": 1}],
+                "critical_error": "NONE",
+                "affirmative": True,
+            }
+        )
+    )
+    assert reviews.complete(reviewer, target, body, uuid4(), uuid4()).status == "COMPLETED"
 
 
 def candidate_results(source, item):
@@ -227,9 +250,9 @@ def test_rechecks_before_each_pass_and_after_model_work(short_text, change):
                         "/api/v1/me/consents",
                         headers=actors["learner"] | {"Idempotency-Key": str(uuid4())},
                         json={
-                            "consent_type": "SELF",
+                            "consent_type": "WITHDRAW",
                             "policy_version": identity.settings.consent_policy_version,
-                            "affirmative": False,
+                            "affirmative": True,
                         },
                     )
                     assert withdrawn.status_code == 200, withdrawn.text
@@ -249,6 +272,11 @@ def test_rechecks_before_each_pass_and_after_model_work(short_text, change):
     )
     assert processor.process_one()
     assert len(gateway.calls) == 1
+    if change == "WITHDRAWAL":
+        # Assert outside the provider callback: model failures also fall back safely,
+        # so a malformed withdrawal inside that callback must not masquerade as success.
+        denied = client.get(f"/api/v1/sessions/{session}/next-item", headers=actors["learner"])
+        assert denied.status_code == 403 and denied.json()["error"]["code"] == "CONSENT_REQUIRED"
     with Session(identity.engine) as db:
         assert db.get(Grade, UUID(pending["attempt_id"])) is None
         assert db.get(GradingWorkRow, UUID(pending["attempt_id"])).status == "LOW_CONFIDENCE"

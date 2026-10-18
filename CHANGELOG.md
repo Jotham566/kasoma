@@ -2,11 +2,22 @@
 
 ## Work in progress — independent grading review
 
-- Propose ADR-051 for blinded review and release-unit sampling. Begin additive review
-  evidence, completion counters and atomic sticky disablement, retaining encrypted
-  answer references and old publication ordinals. This candidate is unverified;
-  staff/runtime integration, exact holds, exports and full acceptance remain pending.
-  No real learner grading or academic approval is enabled.
+- Implement ADR-051 candidate migration 0033, blinded academic-review API and responsive
+  staff workspace. Validate every pinned criterion, calculate exact agreement in SQL,
+  retain immutable completions and disable affected bands atomically on critical error
+  or rolling agreement below 90%. Existing grades and mastery are never overridden.
+- Preserve global publication ordinals and add versioned session/band sampling so
+  permanently sealed diagnostic grades cannot consume released revision coverage.
+- Add minimized owned exports, diagnostic sealing, exact review holds, deletion-impact
+  inventory, correlated read/completion audit, restricted-login and populated recovery
+  coverage. Recheck current consent, role and audit state at confidential access and
+  each model pass/publication. Normal short-text scoring remains disabled.
+- Verify the new accessible desktop/mobile journey across Chromium, Firefox and WebKit,
+  including bounded pagination, explicit rubric inputs and exact retry after a lost
+  acknowledgement. Thirty-two focused review cases, 844 unit/contract cases, restricted
+  login, repeat populated recovery, 324 broad integration cases and rebuilt container
+  checks pass. Exact-source hosted verification remains pending;
+  see the expert-review verification register. No real academic approval is implied.
 
 ## Work in progress — short-text learner integration
 

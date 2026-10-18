@@ -86,6 +86,11 @@ def test_create_failure_never_drops_uncreated_database(settings, monkeypatch):
     assert len(executed) == 1
     assert "CREATE DATABASE" in str(executed[0].args[0])
     assert "secret" not in str(result)
+    assert result["failure_kind"] == "UNEXPECTED"
+    assert 1 <= len(result["failure_sites"]) <= 3
+    assert all(
+        "/" not in site and site.rsplit(":", 1)[-1].isdigit() for site in result["failure_sites"]
+    )
 
 
 def test_partial_creation_cleans_only_the_owned_source(settings, monkeypatch):

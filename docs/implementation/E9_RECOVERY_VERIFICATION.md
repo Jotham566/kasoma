@@ -81,3 +81,12 @@ criterion excerpt and points coherently without changing evidence. Latest passin
 63 tables, 602 rows, 1,510 ms, no cleanup failures; log
 `.local/short-text-final-verification.log`. This remains local synthetic logical evidence,
 not production PITR/RPO/RTO or object-storage recovery.
+
+
+18 October independent-review candidate: the populated source includes an immutable
+expert completion and per-band completion aggregate, alongside original encrypted
+answer/result and frozen export. Restored ownership, points, exact agreement and
+review/counter guards pass across 65 tables/616 rows (repeat restore 1,085 ms, no
+cleanup failure). The first population failure and subsequent passing repeats remain
+recorded in [expert-review verification](E4_EXPERT_REVIEW_VERIFICATION.md); no root
+cause is asserted. Production PITR/RPO/RTO and object-storage recovery remain open.

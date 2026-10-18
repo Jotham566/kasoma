@@ -183,3 +183,141 @@ test("FR-DIAG-004: written diagnostic hides grades until all terminal outcomes",
   await expect(page.getByText("1 of 1 points", { exact: true })).toHaveCount(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
+
+test("FR-GRD-003/FR-ID-006: blinded independent review, mobile reflow and exact retry", async ({
+  page,
+  browser,
+}) => {
+  await onboard(page, "short-text-independent-review@example.invalid");
+  await start(page);
+  await page.getByLabel("Your written answer", { exact: true }).fill("Alpha");
+  await page
+    .getByRole("button", { name: "Submit answer", exact: true })
+    .click();
+  await expect(page.getByText("1 of 1 points", { exact: true })).toBeVisible({
+    timeout: 15000,
+  });
+  expect(
+    (await page.request.get("/api/v1/admin/grading-audits")).status(),
+  ).toBe(403);
+  const context = await browser.newContext();
+  const staff = await context.newPage();
+  try {
+    await staff.goto("/onboarding");
+    await staff
+      .getByLabel("Email or mobile number", { exact: true })
+      .fill("fixture-diagnostic-short-text-academic_reviewer@example.invalid");
+    await staff.getByRole("button", { name: "Send code", exact: true }).click();
+    await staff.getByLabel("Verification code", { exact: true }).fill("246810");
+    await staff.getByRole("button", { name: "Verify and continue" }).click();
+    await expect(
+      staff.getByRole("button", { name: "Save profile" }),
+    ).toBeVisible();
+    await staff.goto("/admin/grading");
+    const firstPage = await (
+      await staff.request.get("/api/v1/admin/grading-audits?limit=1")
+    ).json();
+    expect(firstPage.data).toHaveLength(1);
+    expect(firstPage.next_cursor).toBeTruthy();
+    const secondPage = await (
+      await staff.request.get(
+        `/api/v1/admin/grading-audits?limit=1&cursor=${firstPage.next_cursor}`,
+      )
+    ).json();
+    expect(secondPage.data).toHaveLength(1);
+    expect(secondPage.data[0].id).not.toBe(firstPage.data[0].id);
+    await staff
+      .getByRole("button", { name: "Load review queue", exact: true })
+      .click();
+    await staff
+      .getByRole("button", { name: "Review answer 1", exact: true })
+      .click();
+    const review = staff.getByRole("form", {
+      name: "Independent rubric review",
+    });
+    await expect(review.locator("blockquote")).toContainText("Alpha");
+    await expect(staff.getByText("1 of 1 points", { exact: true })).toHaveCount(
+      0,
+    );
+    await expect(
+      review.getByRole("button", {
+        name: "Save independent review",
+        exact: true,
+      }),
+    ).toBeDisabled();
+    expect(
+      (await new AxeBuilder({ page: staff }).analyze()).violations,
+    ).toEqual([]);
+    await staff.screenshot({
+      path: ".local/ui-review/expert-review-desktop.png",
+      fullPage: true,
+    });
+    await staff.setViewportSize({ width: 320, height: 860 });
+    await expect(
+      staff.getByRole("region", { name: "Review queue" }),
+    ).toHaveCount(0);
+    for (const label of ["Points for R1", "Critical issue"]) {
+      const bounds = await review
+        .getByLabel(label, { exact: true })
+        .boundingBox();
+      expect(bounds?.height).toBeGreaterThanOrEqual(44);
+    }
+    await review.getByLabel("Points for R1", { exact: true }).selectOption("1");
+    await review
+      .getByLabel("Critical issue", { exact: true })
+      .selectOption("NONE");
+    await review
+      .getByLabel("I have independently reviewed every criterion.", {
+        exact: true,
+      })
+      .check();
+    expect(
+      await staff.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+    expect(
+      (await new AxeBuilder({ page: staff }).analyze()).violations,
+    ).toEqual([]);
+    await staff.screenshot({
+      path: ".local/ui-review/expert-review-mobile.png",
+      fullPage: true,
+    });
+    await staff.route(
+      "**/api/v1/admin/grading-audits/*/review",
+      async (route) => {
+        const response = await route.fetch();
+        expect(response.status()).toBe(201);
+        expect(Object.keys(await response.json()).sort()).toEqual([
+          "completed_at",
+          "id",
+          "status",
+        ]);
+        await route.abort();
+      },
+      { times: 1 },
+    );
+    await review
+      .getByRole("button", { name: "Save independent review", exact: true })
+      .click();
+    await expect(staff.getByRole("status")).toContainText("Could not confirm");
+    await expect(
+      review.getByLabel("Points for R1", { exact: true }),
+    ).toBeDisabled();
+    await review
+      .getByRole("button", { name: "Retry same review", exact: true })
+      .click();
+    await expect(
+      staff.getByRole("region", { name: "Review confirmation" }),
+    ).toContainText("Review saved");
+    expect(
+      (await new AxeBuilder({ page: staff }).analyze()).violations,
+    ).toEqual([]);
+    await page.reload();
+    await expect(
+      page.getByText("1 of 1 points", { exact: true }),
+    ).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});

@@ -212,6 +212,9 @@ export function LegalHolds({
                   <option value="GRADING_AUDIT">
                     Grading audit assignment
                   </option>
+                  <option value="GRADING_REVIEW">
+                    Completed grading review
+                  </option>
                   <option value="DATA_REQUEST_REVIEW">
                     Data request review (request reference)
                   </option>

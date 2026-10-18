@@ -327,6 +327,10 @@ test-grading-publications:
 test-short-text-flow:
 	$(UV) pytest tests/integration/test_short_text_flow.py tests/integration/test_short_text_processing.py --allow-hosts=localhost,127.0.0.1,::1
 
+.PHONY: test-grading-reviews
+test-grading-reviews:
+	$(UV) pytest tests/contract/test_grading_review_contracts.py tests/integration/test_grading_reviews.py --allow-hosts=localhost,127.0.0.1,::1
+
 .PHONY: test-web-short-text
 test-web-short-text:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --config playwright.short-text.config.ts

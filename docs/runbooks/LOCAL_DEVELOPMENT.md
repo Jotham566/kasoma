@@ -1022,3 +1022,26 @@ The review stack can be kept running with the documented
 `docker compose --profile application up -d --wait api worker export-worker web`.
 `make container-smoke` restores the running/stopped state it found; start the review
 stack first when it must remain available after the smoke check.
+
+
+## Independent grading review candidate
+
+Use `make test-grading-reviews` for strict contracts and isolated PostgreSQL review,
+privacy, sampling and disablement cases. `make test-runtime-role` exercises the encrypted
+flow and expert completion under a real temporary restricted login. `make test-web-short-text`
+uses disposable synthetic schemas and FakeModelProvider across all three engines; it
+includes the staff `/admin/grading` workspace, 320-pixel controls, accessibility,
+pagination and lost-acknowledgement retry. Its screenshots are local artifacts only.
+Do not run `make build` while the native browser server is using the same `.next` build.
+
+The persistent stack retains normal short-text scoring disabled. A staff queue may be
+empty until synthetic audit assignments exist; no fabricated reviews should be created
+in the ordinary UI. Tests create their own authorized fixture and never call Ollama,
+Gemini, email, messaging or cloud providers. Populated `make recovery-drill` verifies
+review/counter data, original encrypted answer/result and immutable guards in disposable
+owned databases. It is logical recovery, not production PITR or object-storage restore.
+
+After interruption, inspect Git and `docker compose --profile application ps`; use
+`make services` and the documented application profile start command to restore existing
+containers/volumes. Never reset volumes to make checks pass. Preserve failed-run evidence
+and rerun affected checks before reporting success.

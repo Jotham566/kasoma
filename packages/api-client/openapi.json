@@ -72,6 +72,164 @@
         "title": "AnsweredItem",
         "type": "object"
       },
+      "AuditQueueEntry": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "AuditQueueEntry",
+        "type": "object"
+      },
+      "AuditQueuePage": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/AuditQueueEntry"
+            },
+            "maxItems": 50,
+            "title": "Data",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data",
+          "next_cursor"
+        ],
+        "title": "AuditQueuePage",
+        "type": "object"
+      },
+      "AuditReviewInput": {
+        "additionalProperties": false,
+        "properties": {
+          "affirmative": {
+            "const": true,
+            "title": "Affirmative",
+            "type": "boolean"
+          },
+          "criterion_points": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewPoints"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Criterion Points",
+            "type": "array"
+          },
+          "critical_error": {
+            "enum": [
+              "NONE",
+              "ACADEMIC_INTEGRITY",
+              "SAFEGUARDING",
+              "PRIVACY"
+            ],
+            "title": "Critical Error",
+            "type": "string"
+          }
+        },
+        "required": [
+          "criterion_points",
+          "critical_error",
+          "affirmative"
+        ],
+        "title": "AuditReviewInput",
+        "type": "object"
+      },
+      "AuditReviewReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "completed_at": {
+            "format": "date-time",
+            "title": "Completed At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "status": {
+            "const": "COMPLETED",
+            "default": "COMPLETED",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "completed_at"
+        ],
+        "title": "AuditReviewReceipt",
+        "type": "object"
+      },
+      "BlindedReviewTask": {
+        "additionalProperties": false,
+        "properties": {
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/RubricCriterion"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Criteria",
+            "type": "array"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "item_version_id": {
+            "format": "uuid",
+            "title": "Item Version Id",
+            "type": "string"
+          },
+          "prompt": {
+            "title": "Prompt",
+            "type": "string"
+          },
+          "response": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Response",
+            "type": "string"
+          },
+          "rubric_version_id": {
+            "format": "uuid",
+            "title": "Rubric Version Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "item_version_id",
+          "rubric_version_id",
+          "prompt",
+          "response",
+          "criteria"
+        ],
+        "title": "BlindedReviewTask",
+        "type": "object"
+      },
       "CandidateFeedback": {
         "additionalProperties": false,
         "properties": {
@@ -2244,7 +2402,8 @@
               "DATA_REQUEST_REVIEW",
               "GRADING_HISTORY",
               "GRADING_PUBLICATION",
-              "GRADING_AUDIT"
+              "GRADING_AUDIT",
+              "GRADING_REVIEW"
             ],
             "title": "Record Type",
             "type": "string"
@@ -2361,7 +2520,8 @@
               "DATA_REQUEST_REVIEW",
               "GRADING_HISTORY",
               "GRADING_PUBLICATION",
-              "GRADING_AUDIT"
+              "GRADING_AUDIT",
+              "GRADING_REVIEW"
             ],
             "title": "Record Type",
             "type": "string"
@@ -4148,6 +4308,28 @@
           "decision"
         ],
         "title": "ReviewInput",
+        "type": "object"
+      },
+      "ReviewPoints": {
+        "additionalProperties": false,
+        "properties": {
+          "criterion_id": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$",
+            "title": "Criterion Id",
+            "type": "string"
+          },
+          "points_awarded": {
+            "maximum": 20.0,
+            "minimum": 0.0,
+            "title": "Points Awarded",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "criterion_id",
+          "points_awarded"
+        ],
+        "title": "ReviewPoints",
         "type": "object"
       },
       "ReviewView": {
@@ -6610,6 +6792,315 @@
           }
         },
         "summary": "Release Hold"
+      }
+    },
+    "/api/v1/admin/grading-audits": {
+      "get": {
+        "operationId": "queue_api_v1_admin_grading_audits_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditQueuePage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Queue"
+      }
+    },
+    "/api/v1/admin/grading-audits/{audit_id}": {
+      "get": {
+        "operationId": "task_api_v1_admin_grading_audits__audit_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "audit_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Audit Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlindedReviewTask"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Task"
+      }
+    },
+    "/api/v1/admin/grading-audits/{audit_id}/review": {
+      "post": {
+        "operationId": "complete_api_v1_admin_grading_audits__audit_id__review_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "audit_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Audit Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditReviewInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditReviewReceipt"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Complete"
       }
     },
     "/api/v1/admin/item-versions/{version_id}": {

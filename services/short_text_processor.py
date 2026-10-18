@@ -12,18 +12,18 @@ from services.assessment import AssessmentService
 from services.assessment_outcomes import response_projection, result_binding
 from services.domain.assessment import AssessmentSession, Attempt, Grade, SessionItem
 from services.domain.content import ItemVersion
-from services.domain.grading_audits import GradingPublicationCounter
 from services.domain.grading_work import GradingWorkRow
 from services.grading_band_store import locked
 from services.grading_band_store import snapshot as band_snapshot
 from services.grading_publications import publish
+from services.grading_reviews import audit_state
 from services.grading_work_store import apply, claim_next, expire_due, finish_neutral, snapshot
 from services.identity import IdentityError
 from services.mastery import reconcile
 from services.providers import FakeModelProvider, ModelGateway, ModelResult, ModelTask
 from services.rubric_grade_projection import project_candidate
 from services.rubric_grade_protection import protect_result
-from services.short_text_eligibility import AuditState, eligibility
+from services.short_text_eligibility import eligibility
 from services.short_text_orchestration import RehearsalBudget, rehearse_short_text
 from services.short_text_validation import ShortTextCandidate, SyntheticRubricContext
 from services.short_text_workflow import expire_work, finish_work
@@ -103,17 +103,7 @@ class ShortTextProcessor:
         response = response_projection(self.identity, attempt)["text"]
         if not isinstance(response, str):
             return None
-        counter = db.get(GradingPublicationCounter, band.id, populate_existing=True)
-        if counter is None:
-            return None
-        # There is no completed-review table in this intermediate implementation.
-        # Pending assignments are counted only as assigned, never completed/correct.
-        audit = AuditState(
-            band_id=band.id,
-            returned_grades=counter.returned_grades,
-            assigned_audits=counter.assigned_audits,
-            disabled=not band.enabled,
-        )
+        audit = audit_state(db, band.id, disabled=not band.enabled, now=self.identity.clock())
         if (
             eligibility(
                 band=band_snapshot(band),

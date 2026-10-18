@@ -13,8 +13,12 @@ from services.assessment import AssessmentService
 from services.assessment_contracts import StartRevision, SubmitAnswer
 from services.assessment_outcomes import grade_projection, response_projection
 from services.domain.assessment import Attempt, Grade
+from services.domain.grading_audits import GradingAuditAssignment, GradingAuditReview
 from services.grading_band_store import register
+from services.grading_review_contracts import AuditReviewInput
+from services.grading_reviews import GradingReviewService
 from services.identity import IdentityService
+from services.identity_contracts import OTPRequest, OTPVerify
 from services.rubric_grade_contracts import RubricGradeView
 from services.short_text_contracts import ShortTextResponse
 from services.short_text_eligibility import GradingScope
@@ -85,6 +89,36 @@ def populate_short_text(identity: IdentityService, token: str, subject: UUID, to
             or len(gateway.calls) != 2
         ):
             raise RuntimeError("Synthetic encrypted publication is incomplete")
+        challenge = identity.request_otp(
+            OTPRequest(
+                identifier="fixture-short-text-academic_reviewer@example.invalid", device_id=uuid4()
+            ),
+            "synthetic-recovery-reviewer",
+            None,
+        )
+        reviewer = identity.verify(
+            OTPVerify(challenge_id=challenge.challenge_id, code="246810"), None, str(uuid4())
+        ).access_token
+        with Session(identity.engine) as db:
+            audit = db.scalar(
+                select(GradingAuditAssignment).where(
+                    GradingAuditAssignment.attempt_id == pending.attempt_id
+                )
+            )
+            if audit is None:
+                raise RuntimeError("Synthetic expert assignment missing")
+            target = audit.id
+        reviews = GradingReviewService(identity)
+        reviews.get(reviewer, target)
+        reviews.complete(
+            reviewer,
+            target,
+            AuditReviewInput.model_validate_json(
+                '{"criterion_points":[{"criterion_id":"R1","points_awarded":1}],"critical_error":"NONE","affirmative":true}'
+            ),
+            uuid4(),
+            uuid4(),
+        )
     finally:
         config.short_text_enabled = original_enabled
 
@@ -109,3 +143,10 @@ def verify_short_text(identity: IdentityService) -> None:
             or result.criterion_results[0].evidence_excerpt != "Alpha"
         ):
             raise RuntimeError("Restored encrypted evidence did not decrypt coherently")
+        review = db.scalar(
+            select(GradingAuditReview)
+            .join(GradingAuditAssignment, GradingAuditAssignment.id == GradingAuditReview.id)
+            .where(GradingAuditAssignment.attempt_id == attempt.id)
+        )
+        if review is None or review.criterion_points != {"R1": 1} or not review.exact_agreement:
+            raise RuntimeError("Restored independent expert evidence is incomplete")

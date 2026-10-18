@@ -41,7 +41,11 @@ from services.domain.data_requests import (
 )
 from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag, FlagHistory, FlagMutationReceipt
-from services.domain.grading_audits import GradingAuditAssignment, GradingPublication
+from services.domain.grading_audits import (
+    GradingAuditAssignment,
+    GradingAuditReview,
+    GradingPublication,
+)
 from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import (
     AuthSession,
@@ -144,6 +148,14 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
         (Grade, Grade.attempt_id.in_(attempts)),
         (GradingPublication, GradingPublication.attempt_id.in_(attempts)),
         (GradingAuditAssignment, GradingAuditAssignment.attempt_id.in_(attempts)),
+        (
+            GradingAuditReview,
+            GradingAuditReview.id.in_(
+                select(GradingAuditAssignment.id).where(
+                    GradingAuditAssignment.attempt_id.in_(attempts)
+                )
+            ),
+        ),
         (GradingWorkRow, GradingWorkRow.attempt_id.in_(attempts)),
         (GradingHistory, GradingHistory.attempt_id.in_(attempts)),
         (AssessmentReceipt, AssessmentReceipt.learner_id == user),
@@ -185,6 +197,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     for model, condition in [
         (UserRole, UserRole.user_id == user),
         (ContentImport, ContentImport.actor_id == user),
+        (GradingAuditReview, GradingAuditReview.reviewer_id == user),
         (DataRequestReview, DataRequestReview.actor_id == user),
         (LegalHold, or_(LegalHold.created_by == user, LegalHold.released_by == user)),
         (LegalHoldReceipt, LegalHoldReceipt.actor_id == user),
@@ -221,6 +234,11 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
             AuditLog.target_id.in_(flags),
             AuditLog.target_id.in_(authored),
             AuditLog.target_id.in_(versions),
+            AuditLog.target_id.in_(
+                select(GradingAuditReview.id)
+                .join(GradingAuditAssignment, GradingAuditAssignment.id == GradingAuditReview.id)
+                .where(GradingAuditAssignment.attempt_id.in_(attempts))
+            ),
         ),
         "SIX_YEARS_AFTER_CLOSURE_OR_WITHDRAWAL",
     )
