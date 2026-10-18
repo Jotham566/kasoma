@@ -448,3 +448,42 @@ def test_sql_refuses_grade_without_atomic_publication_and_mastery(short_text, mo
         assert db.get(GradingWorkRow, UUID(pending["attempt_id"])).status == "RUNNING"
         for model in (MasteryEvidence, GradingPublication, GradingAuditAssignment):
             assert db.scalar(select(func.count()).select_from(model)) == 0
+
+
+@pytest.mark.parametrize("limit", ["REQUESTS", "TOKENS", "DEADLINE"])
+def test_configured_runtime_budget_exhaustion_saves_neutral_and_never_repeats(
+    short_text, limit, monkeypatch
+):
+    identity, client, actors, _, policy, _ = short_text
+    session, item = start_short(short_text)
+    key = str(uuid4())
+    pending = save_short(short_text, session, item, key).json()
+    good = candidate_results(short_text, item)
+    fixtures = good
+    if limit == "REQUESTS":
+        identity.settings.short_text_max_requests = 2
+        fixtures = [good[0].model_copy(update={"raw_output": "{}"}), *good]
+    elif limit == "TOKENS":
+        identity.settings.short_text_max_tokens = 2
+    else:
+        identity.settings.short_text_timeout_ms = 10
+        ticks = iter([0.0, 0.02])
+        monkeypatch.setattr("services.short_text_processor.monotonic", lambda: next(ticks))
+    gateway = FakeModelProvider(fixtures)
+    processor = ShortTextProcessor(
+        AssessmentService(identity, policy), gateway, safety=lambda context, response: True
+    )
+    assert processor.process_one()
+    assert len(gateway.calls) == (2 if limit == "REQUESTS" else 0)
+    result = client.get(pending["poll_url"], headers=actors["learner"])
+    assert result.status_code == 200 and result.json()["status"] == "LOW_CONFIDENCE"
+    assert "points_awarded" not in result.text and "score" not in result.json()
+    assert save_short(short_text, session, item, key).json() == result.json()
+    assert not processor.process_one()
+    assert len(gateway.calls) == (2 if limit == "REQUESTS" else 0)
+    with Session(identity.engine) as db:
+        attempt = UUID(pending["attempt_id"])
+        assert db.get(Attempt, attempt) is not None
+        assert db.get(Grade, attempt) is None
+        assert db.get(GradingWorkRow, attempt).status == "LOW_CONFIDENCE"
+        assert db.scalar(select(func.count()).select_from(MasteryEvidence)) == 0

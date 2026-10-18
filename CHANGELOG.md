@@ -1,5 +1,18 @@
 # Changelog
 
+## Work in progress — configurable per-job grading budgets
+
+- Expose the existing shared request/token/deadline ceilings through typed server
+  settings while preserving defaults and hard maxima of three requests, 16,384 tokens
+  and five seconds. Both independent passes and the optional repair share one snapshot.
+  The pre-dispatch deadline uses the same configured timeout.
+- Verify stricter request, token and deadline exhaustion preserves the encrypted saved
+  attempt, neutral no-score/no-mastery outcome and idempotent replay. No new quota
+  policy, inference profile, approval, API, provider or persistence changes. Local
+  verification passes 891 unit/contract, 21 flow and 33 review cases, restricted login,
+  security, populated recovery and rebuilt image/service smoke; hosted acceptance
+  remains pending.
+
 ## Work in progress — grading queue operations
 
 - Promote verified independent review, responsive navigation and offline report comparison

@@ -1094,3 +1094,21 @@ Processing fallback includes expected provider refusal and validation/budget fal
 it is not an academic error rate. Pending audits can be sealed, and a historical
 post-activation disabled-band count does not create a permanent alert. Model spend,
 academic error rate, genuine approval and production telemetry remain separate gates.
+
+
+## Runtime short-text resource ceilings
+
+The worker snapshots `SHORT_TEXT_MAX_REQUESTS` (default 3, range 2–3),
+`SHORT_TEXT_MAX_TOKENS` (default 16384, range 2–16384) and `SHORT_TEXT_TIMEOUT_MS`
+(default 5000, range 1–5000) once per claimed job. These are shared by both independent
+passes and the single optional repair; they cannot enlarge the previous hard envelope.
+The dispatch wrapper and rehearsal use the same deadline. Very small ceilings can
+prevent all dispatch or a second required pass: the saved attempt becomes neutral,
+with no grade/mastery, and exact retries do not repeat work.
+
+These server-only limits are not a new learner/day/fleet quota, a billed-provider budget,
+a latency SLO or academic approval. Normal startup remains disabled without genuine
+report/safety authority. Resource settings do not turn plausible approval UUIDs into
+trusted configuration/report evidence. Future genuine evaluation/approval must cover its
+actual model/prompt/configuration and relevant resource settings. No actual evaluation,
+Ollama or Gemini inference is run by this change; tests use FakeModelProvider only.

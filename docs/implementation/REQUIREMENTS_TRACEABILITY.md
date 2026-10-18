@@ -1,5 +1,13 @@
 # Requirements Traceability
 
+Runtime-budget candidate: FR-OPS-004/FR-GRD-004 and NFR-SEC/MNT-001 expose only
+existing per-job resource ceilings through Settings, keeping the same default/hard
+maxima. Local 891 unit/contract, 21 actual flow, 33 review and restricted-login cases,
+security, populated recovery and rebuilt-image/service smoke pass; hosted acceptance
+is pending. See
+[runtime-budget evidence](E4_RUNTIME_BUDGET_VERIFICATION.md).
+No new daily/fleet quota or inference approval policy is inferred.
+
 Grading-operations candidate: FR-OPS-002, NFR-OBS-001, NFR-SEC-002 and NFR-ACC/COMP-001 add bounded
 ADMIN queue/lease/terminal/pending-audit/disabled-band counts and a typed stale-age
 alert under ADR-053. Actual encrypted synthetic transitions and authorization/boundary
@@ -85,7 +93,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; channel code/link/unlink/STOP events and safe correlated processing logs are implemented; remaining dispatch pending |
 | FR-OPS-002 | ADMIN snapshot/dashboard, bounded imports/flags/channel/exports and response-start histograms; grading queue candidate | [Operations evidence](E8_OPERATIONS_VERIFICATION.md); [grading candidate](E8_GRADING_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs and browser checks | Partial: existing local visibility merged; grading queue/lease/fallback observation under acceptance; model spend, academic/technical error-rate distinctions, SMS/email/mastery/provider telemetry and production alerting remain pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
-| FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; short-text per-rehearsal request/token/time/repair budget with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); fake short-text orchestration/worker budget tests | Channel limits and fixed synthetic per-job budget verified; configurable runtime-wide model ceilings and production usage telemetry need assessment before additional policy |
+| FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; configurable shared short-text per-job request/token/time ceiling with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); [runtime-budget candidate](E4_RUNTIME_BUDGET_VERIFICATION.md); actual fake exhaustion and exact replay | Local channel controls merged; typed runtime budget candidate passes local checks; actual provider usage/billing and production acceptance remain gated. No unspecified learner/day/fleet quota is invented |
 | NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); hosted regression passes; representative deployment/history/provider acceptance pending |
 | NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
 | NFR-REL-001 | — | — | Not started |

@@ -1,4 +1,4 @@
-# Current sprint: grading operations and acceptance
+# Current sprint: runtime grading budgets and acceptance
 
 Updated 18 October 2026. This file supersedes the preserved
 [historical checkpoints](SPRINT_HISTORY_2026_10_18.md).
@@ -6,7 +6,8 @@ Updated 18 October 2026. This file supersedes the preserved
 ## Verified main
 
 Main/origin main is `17abb2d`. All merged source branches are removed locally/remotely.
-Only the active unmerged `codex/grading-operations` branch remains.
+Grading operations `a357222` is pushed for hosted acceptance; active follow-up is
+`codex/runtime-grading-budgets`. These are unmerged work, not abandoned branches.
 
 - `2164209`: independent blinded expert review, versioned released-session sampling,
   immutable exact rubric completion and sticky rolling disablement pass complete hosted
@@ -22,7 +23,24 @@ Only the active unmerged `codex/grading-operations` branch remains.
 Normal learner short-text scoring remains disabled. Synthetic report/role fixtures and
 matching fake passes are not academic, safeguarding, licensing or provider approval.
 
-## Active vertical slice
+## Active vertical slice: configurable per-job budgets
+
+FR-OPS-004, FR-GRD-004, NFR-SEC-002, NFR-MNT-001: expose existing shared runtime
+request/token/time ceilings as typed settings, preserving current defaults/hard maxima.
+Both independent passes and optional repair share one budget; the dispatch wrapper uses
+the same timeout. Tighter limits must yield neutral no-score/no-mastery with saved
+attempt/replay intact. See [readiness](E4_RUNTIME_BUDGET_READINESS.md). No new quota
+policy, inference profile, approval, API, data or architecture is introduced.
+
+Local lint/types/contracts and 891 unit/contract plus 35 tooling cases pass, alongside
+21 encrypted flow cases, 33 review cases, restricted login, security and populated
+recovery (65 tables/616 rows, 310 ms). Final rebuilt image/security/service smoke pass;
+hosted acceptance remains required; see [verification](E4_RUNTIME_BUDGET_VERIFICATION.md). The underlying operational source
+is committed at `a357222` for
+[hosted acceptance](https://github.com/Jotham566/kasoma/actions/runs/39155326659);
+do not promote either candidate ahead of verification.
+
+## Underlying grading operations candidate
 
 FR-OPS-002, NFR-OBS-001, NFR-SEC-002: add bounded ADMIN grading queue/lease age,
 terminal/processing-fallback counts, pending audits and post-activation disablement,

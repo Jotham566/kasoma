@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     assessment_session_days: int = Field(default=7, ge=1, le=30)
     assessment_repetition_days: int = Field(default=7, ge=1, le=90)
     short_text_enabled: bool = False
+    short_text_max_requests: int = Field(default=3, ge=2, le=3)
+    short_text_max_tokens: int = Field(default=16384, ge=2, le=16384)
+    short_text_timeout_ms: int = Field(default=5000, ge=1, le=5000)
     short_text_model_version: str = Field(
         default="fixture-v1", pattern=r"^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
     )

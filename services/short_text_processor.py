@@ -143,6 +143,12 @@ class ShortTextProcessor:
         candidate: ShortTextCandidate | None = None
         failed = False
         try:
+            settings = self.identity.settings
+            budget = RehearsalBudget(
+                max_requests=settings.short_text_max_requests,
+                max_tokens=settings.short_text_max_tokens,
+                timeout_ms=settings.short_text_timeout_ms,
+            )
             with Session(self.identity.engine) as db, db.begin():
                 material = self.material(db, work.attempt_id, work.claim_id)
             # Immutable input has been captured; all DB locks are released before inference.
@@ -167,12 +173,12 @@ class ShortTextProcessor:
                         self.gateway,
                         self.identity.settings.short_text_model_version,
                         authorize_dispatch,
-                        monotonic() + 5,
+                        monotonic() + budget.timeout_ms / 1000,
                     ),
                     context=material.context,
                     response=material.response,
                     flagged=False,
-                    budget=RehearsalBudget(),
+                    budget=budget,
                     request_id=correlation,
                 )
                 candidate = result.candidate

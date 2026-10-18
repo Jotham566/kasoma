@@ -254,3 +254,17 @@ and completed diagnostic units while preserving global ordinals. It can oversamp
 does not claim statistical randomness. Academic approval of the sampling/window policy,
 genuine calibrated benchmarks and real safety/provider authorities remain release gates.
 The developer synthetic fixtures do not supply those approvals or enable learner scoring.
+
+
+### Typed runtime budget configuration
+
+The existing shared short-text job budget now has server Settings controls, bounded by
+the unchanged runtime envelope: at most three requests, 16,384 total reported tokens
+and five seconds. Both independent passes and optional repair share one snapshot; the
+wrapper rechecks its configured remaining deadline before provider execution. Requests
+above a tighter configured ceiling produce the existing neutral fallback without a
+partial score or mastery. Exact attempt/poll replay cannot enqueue another job.
+
+This exposes existing controls rather than approving a new inference profile, quota
+policy, provider or band. No genuine report/safety authority exists in normal startup.
+Cost remains zero-only and actual scoring/evaluation approval gates remain effective.

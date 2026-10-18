@@ -244,3 +244,35 @@ def test_repair_respects_request_ceiling(context):
     gateway = FakeModelProvider([invalid, candidate(), candidate()])
     assert run(gateway, context, budget=RehearsalBudget(max_requests=2)).reason == "BUDGET"
     assert len(gateway.calls) == 2
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("short_text_max_requests", 1),
+        ("short_text_max_requests", 4),
+        ("short_text_max_tokens", 1),
+        ("short_text_max_tokens", 16385),
+        ("short_text_timeout_ms", 0),
+        ("short_text_timeout_ms", 5001),
+    ],
+)
+def test_runtime_budget_configuration_cannot_expand_existing_envelope(field, value):
+    from pydantic import ValidationError
+
+    from services.config import Settings
+
+    with pytest.raises(ValidationError):
+        Settings(**{field: value})
+
+
+def test_runtime_defaults_match_existing_shared_budget():
+    from services.config import Settings
+
+    settings = Settings()
+    budget = RehearsalBudget()
+    assert (
+        settings.short_text_max_requests,
+        settings.short_text_max_tokens,
+        settings.short_text_timeout_ms,
+    ) == (budget.max_requests, budget.max_tokens, budget.timeout_ms)
