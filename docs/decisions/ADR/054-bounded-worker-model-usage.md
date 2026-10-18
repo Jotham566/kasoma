@@ -1,7 +1,7 @@
 # ADR-054: Bounded local worker model-usage observations
 
 Date: 18 October 2026
-Status: Proposed; implementation and acceptance pending
+Status: Accepted for local synthetic engineering; hosted 39160113771 passes at 0c73c45
 Requirements: FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-ACC-001, NFR-MNT-001
 
 Extend the approved OTel/local Redis architecture with six static, attribute-free delta

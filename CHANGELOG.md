@@ -1,6 +1,6 @@
 # Changelog
 
-## Work in progress — bounded local model observations
+## Verified — bounded local model observations
 
 - Add six private, attribute-free worker counters and bounded five-minute Redis
   aggregation under proposed ADR-054. Observe actual provider-port attempts after
@@ -11,10 +11,11 @@
   worker publishes freshness; fixed fake probes verify the running stack.
 - Preserve the existing request histogram wire format while sharing its finite byte
   transport. Add SDK, real Redis, role/lifecycle, alert and accessible presentation
-  regressions. Verification is in progress; learner scoring remains disabled.
+  regressions. Complete hosted run 39160113771 passes at 0c73c45; promote to main and remove
+  the merged source branch. Learner scoring remains disabled.
 
 
-## Work in progress — configurable per-job grading budgets
+## Verified — configurable per-job grading budgets
 
 - Expose the existing shared request/token/deadline ceilings through typed server
   settings while preserving defaults and hard maxima of three requests, 16,384 tokens
@@ -24,8 +25,8 @@
   attempt, neutral no-score/no-mastery outcome and idempotent replay. No new quota
   policy, inference profile, approval, API, provider or persistence changes. Local
   verification passes 891 unit/contract, 21 flow and 33 review cases, restricted login,
-  security, populated recovery and rebuilt image/service smoke; hosted acceptance
-  remains pending.
+  security, populated recovery and rebuilt image/service smoke; complete hosted acceptance
+  passes at f5f408e (39157127637); the merged source branch is removed.
 
 ## Verified — grading queue operations
 

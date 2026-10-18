@@ -34,3 +34,10 @@ unproved. Final rebuilt API/web images pass current HIGH/CRITICAL scans; all eig
 services, scheduled synthetic private export/frozen retry and scoped metrics smoke pass.
 Exact-source hosted acceptance remains required before promotion.
 No browser/API/schema/migration change is made; default browser behavior is unchanged.
+
+
+## Hosted acceptance
+
+Complete hosted run [39157127637](https://github.com/Jotham566/kasoma/actions/runs/39157127637)
+passes for exact source `f5f408e`. The source is on main and its merged branch is removed locally/remotely. All external academic/provider/privacy and actual scoring gates
+remain; this verified engineering setting does not establish approval or billing truth.

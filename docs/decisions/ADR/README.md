@@ -113,10 +113,14 @@ This directory location follows the user-requested repository organization. It d
   accepts the verified disabled synthetic path and retains actual learner-enablement gates.
 
 - [ADR-051: Blinded review and release-unit sampling](051-blinded-review-and-release-unit-sampling.md)
-  proposes independent review and audit coverage when diagnostic grades remain sealed.
+  records verified independent review and audit coverage when diagnostic grades remain sealed.
 
 - [ADR-052: Offline evaluation-report comparison](052-offline-evaluation-report-comparison.md)
-  proposes strict payload-free synthetic report comparison without inference or approval.
+  records verified payload-free synthetic report comparison without inference or approval.
 
 - [ADR-053: Bounded grading operations](053-bounded-grading-operations.md)
-  proposes minimized durable queue observation without academic-error-rate claims.
+  records verified durable queue observation without academic-error-rate claims.
+
+
+- [ADR-054: Bounded worker model usage](054-bounded-worker-model-usage.md)
+  records verified private local SDK counters and finite ADMIN aggregation.

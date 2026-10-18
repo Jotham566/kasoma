@@ -1,100 +1,54 @@
-# Current sprint: bounded local model observations
+# Current sprint: verified model observations and terminal receipt follow-up
 
-Updated 18 October 2026. This file supersedes the preserved
-[historical checkpoints](SPRINT_HISTORY_2026_10_18.md).
+Updated 18 October 2026. Earlier checkpoints remain in
+[the preserved history](SPRINT_HISTORY_2026_10_18.md).
 
-## Verified main
+## Verified application source
 
-Main/origin main is `a357222`, with hosted run 39155326659 passing. The merged
-grading-operations branch is removed locally/remotely. Runtime budgets `f5f408e`
-await hosted run 39157127637. Active follow-up is `codex/model-usage-observation`.
-These two active unmerged branches are retained until exact-source verification.
+Application source on main is `0c73c45`; documentation-only checkpoints may follow it.
+Complete hosted [39160113771](https://github.com/Jotham566/kasoma/actions/runs/39160113771)
+passes. All merged implementation branches are removed locally/remotely.
 
-- `2164209`: independent blinded expert review, versioned released-session sampling,
-  immutable exact rubric completion and sticky rolling disablement pass complete hosted
-  [39150319607](https://github.com/Jotham566/kasoma/actions/runs/39150319607).
-- `3775ae1` / `17abb2d`: responsive staff navigation and payload-free offline report
-  comparison pass complete hosted
-  [39151730479](https://github.com/Jotham566/kasoma/actions/runs/39151730479).
-  This includes the ancestor UI and preserves all genuine approval gates.
-- The earlier navigation-only run 39151218081 failed a diagnostic test that read before
-  POST acknowledgement. The active follow-up now binds its assertion to the actual
-  successful save receipt, retaining sealing checks. It is not reported as a passing run.
+- `0c73c45`: bounded local worker model counters, truthful unknown usage, private
+  five-minute Redis intervals, ADMIN snapshot/card and fake worker smoke. See
+  [model verification](E8_MODEL_USAGE_VERIFICATION.md) and accepted ADR-054.
+- `f5f408e`: configurable existing three-request/16,384-token/five-second envelope;
+  [hosted39157127637](https://github.com/Jotham566/kasoma/actions/runs/39157127637)
+  and [runtime evidence](E4_RUNTIME_BUDGET_VERIFICATION.md) pass.
+- `a357222`: bounded grading queue/lease/outcome/audit visibility and database-clock
+  review completion cap; [hosted39155326659](https://github.com/Jotham566/kasoma/actions/runs/39155326659)
+  and [grading evidence](E8_GRADING_OPERATIONS_VERIFICATION.md) pass.
+- Earlier independent review, staff navigation and offline report comparison remain
+  verified through2164209/17abb2d and hosted39150319607/39151730479.
 
-Normal learner short-text scoring remains disabled. Synthetic report/role fixtures and
-matching fake passes are not academic, safeguarding, licensing or provider approval.
+Local model-slice evidence includes916 unit/contract and35 tooling cases,345 broad
+integration cases plus two later dispatch-boundary cases,110 browser executions across
+serial runs, restricted login, source/dependency/image security and populated logical
+restore. Full hosted acceptance is separate evidence, not inferred from local checks.
 
-## Active vertical slice: bounded worker model observations
+## Active unmerged work
 
-FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001:
-implement proposed [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md)
-with six fixed SDK counters, off-call bounded Redis export, truthful missing usage,
-ADMIN aggregate/volume warning and accessible dashboard. Only the ordinary local
-worker publishes freshness. No content, identity or provider/model labels enter the
-aggregate. See [readiness](E8_MODEL_USAGE_READINESS.md) and
-[verification](E8_MODEL_USAGE_VERIFICATION.md). Final acceptance is in progress.
+`codex/channel-receipt-holds` is the next engineering slice, not merged application
+behavior. FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002 and NFR-MNT-001:
+assess exact original-record holds on owned terminal receipts only after transient
+material has been cleared. Preserve STOP/unlink, delivery lifecycle and unrelated
+bounded cleanup. New creation must default disabled for staged reader compatibility.
+See [channel readiness](E8_CHANNEL_HOLD_READINESS.md); live-state preservation still
+requires a separately recorded design. Do not claim full hold coverage or erasure.
 
-The underlying runtime-budget candidate preserves the existing hard ceilings/defaults
-of three requests, 16,384 tokens and five seconds; tighter request/token/deadline cases
-pass locally. See [runtime evidence](E4_RUNTIME_BUDGET_VERIFICATION.md). Complete
-hosted acceptance remains required before promotion.
+## Review stack and remaining gates
 
-## Verified grading operations
+All eight Compose services are kept running for review at http://localhost:3000;
+Mailpit is http://localhost:8025. Existing volumes are retained. Local candidate UI
+visibility alone does not establish main or production acceptance. Use fictional data.
+Native Playwright commands run sequentially; do not rebuild native .next during a
+browser server run. Docker builds have a separate filesystem.
 
-FR-OPS-002, NFR-OBS-001, NFR-SEC-002: add bounded ADMIN grading queue/lease age,
-terminal/processing-fallback counts, pending audits and post-activation disablement,
-with a typed local stale-queue alert. See
-[readiness](E8_GRADING_OPERATIONS_READINESS.md),
-[ADR-053](../decisions/ADR/053-bounded-grading-operations.md) and
-[verification](E8_GRADING_OPERATIONS_VERIFICATION.md).
+Normal learner short-text scoring stays disabled. Synthetic fixtures/fake agreement
+are not academic, legal, safeguarding, licensing or provider approval. Gemini remains
+manual and owner opt-in; no external provider or real learner data is used here.
 
-GRADING_FAILED includes expected provider refusal, budget and validation fallback.
-It is labeled processing fallback and does not establish academic error rate or an
-incident. Academic error-rate metrics stay unavailable; local model observations are the active follow-up. No schema migration, provider,
-retention or learner policy changes.
-
-A broader browser run exposed an independent review-clock issue: a host clock slightly
-ahead of Docker failed the SQL nonfuture guard. The active source caps completion at
-database time under existing locks without weakening SQL constraints. Rollback-only
-reproduction changes from nine failures in ten to ten successes; a thirty-second
-ahead-clock regression passes in the 33-case focused review suite.
-
-## Current acceptance
-
-- 26 focused operational contract/API/PostgreSQL cases pass, including actual encrypted
-  queue/claim/expiry/neutral/fake-grade/review transitions and exact 24-hour boundaries.
-- Lint/types/generated contracts and 884 unit/contract cases pass. The first broad unit
-  run caught an omitted analytics-alert enum; schema alignment is fixed and the strict
-  test is retained. Broad backend passes 333 integration cases; the clock cap is
-  additionally covered by the final 33-case review suite and restricted-login rerun.
-- 90 existing browser executions pass. An initial short-text profile had a delayed
-  diagnostic and review HTTP 500; clock/root-cause evidence is retained. A later profile
-  passes all 12 cases. Final acknowledgement-bound full serial acceptance passes
-  104 executions including 200% text and the shared staff layout correction.
-- Source/dependency security and populated logical recovery pass (65 tables/616 rows,
-  322 ms initially, then 290 ms after the clock cap). Final clock-aware recovery,
-  rebuilt images/smoke/security and restricted login pass. Exact-source hosted run 39155326659 passes and the source is merged at `a357222`.
-
-## Review stack and safeguards
-
-All eight Compose services remain running: web, API, worker/Beat, export worker,
-PostgreSQL/pgvector, Redis, private MinIO and Mailpit. Candidate operational images are
-running, including the completion-clock cap. Final scans/smoke pass. No volumes are reset.
-
-- UI: http://localhost:3000
-- Local email capture: http://localhost:8025
-- Fictional details only. No real learner/guardian data or external model/provider calls.
-- Run native Playwright commands sequentially (shared test-results); do not rebuild the
-  native .next while a browser server uses it. Docker builds use their own filesystem.
-
-## Remaining work
-
-Do not claim the full MVP complete. Genuine academic inventory/benchmark/calibration,
-report/safety/model authority, privacy/DPIA/PDPO/provider/pilot approval, full preservation
-coverage, deletion/anonymization/retention execution and production PITR/device evidence
-remain in [the release register](RELEASE_GATES.md) and
-[requirements traceability](REQUIREMENTS_TRACEABILITY.md).
-
-Current follow-up: complete local model-observation verification and hosted acceptance.
-Do not infer missing daily/fleet limits or production approval. Actual model evaluation remains separately gated and Gemini is
-not to be run without the owner's explicit request.
+The MVP is not complete. Genuine inventory/benchmark/calibration, privacy/DPIA/PDPO,
+provider/pilot approvals, full preservation, erasure/anonymization/accountability expiry,
+production PITR/RPO/RTO and branded/physical-device evidence remain in
+[release gates](RELEASE_GATES.md) and [requirements traceability](REQUIREMENTS_TRACEABILITY.md).

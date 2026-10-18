@@ -1,8 +1,9 @@
-# Local model observation verification — candidate
+# Local model observation verification
 
 18 October 2026. FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001.
 Source: [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md) and
-[readiness](E8_MODEL_USAGE_READINESS.md). Hosted acceptance and promotion remain pending.
+[readiness](E8_MODEL_USAGE_READINESS.md). Complete hosted run 39160113771 passes for exact source0c73c45, now on main;
+the merged source branch is removed locally/remotely.
 
 ## Implementation boundary
 
@@ -56,9 +57,12 @@ width. No database migration, cloud provider, model inference or learner enablem
   button and exact saved count before the same report assertions. Cause beyond the
   observed overlap is not claimed. Final serial operations/flags pass all six three-engine executions, including
   320-pixel reflow, 200% text and axe; the mobile card was visually inspected.
-  Final WebKit full-suite rerun passes30 journeys. Short-text profiles remain in progress. No assertion, timeout or privacy control is reduced.
+  Final WebKit full-suite rerun passes30 journeys. All12 short-text executions and two UI harness cases also pass, for110 successful
+  final/unchanged-source browser executions across these serial runs. No assertion, timeout or privacy control is reduced.
 - `make test`:914 unit/contract cases pass before two additional contract cases;
-  broad PostgreSQL regression remains in progress. Do not infer it has passed.
+  broad PostgreSQL regression passes345 cases. The later916-unit and two actual
+  dispatch-boundary reruns cover additions after that broad collection. Complete
+  hosted acceptance separately passes at 0c73c45 (39160113771).
 
 Local logs: `.local/model-usage-*.log`; screenshots `.local/ui-review/model-usage-*`.
 No real learner/corpus or external model, Gemini, email or messaging calls were used.

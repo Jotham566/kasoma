@@ -333,8 +333,9 @@ See [ADR-053](../decisions/ADR/053-bounded-grading-operations.md). Bounded ADMIN
 queue/lease/outcome/audit visibility and local stale-age alerts pass hosted run
 39155326659 at `a357222`. Processing fallback does not establish academic error rate.
 
-### ADR-054 — bounded worker model usage (proposed)
+### ADR-054 — bounded worker model usage
 
 See [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md). Six private local
-SDK counters, bounded Redis aggregation and ADMIN visibility are under verification.
+SDK counters, bounded Redis aggregation and ADMIN visibility pass complete
+hosted 39160113771 at 0c73c45 and are merged.
 No learner content, billing authority, complete fleet accounting or quota policy.
