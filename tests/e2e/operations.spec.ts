@@ -36,6 +36,20 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
   await expect(
     page.getByRole("heading", { name: "Local channel delivery" }),
   ).toBeVisible();
+  const grading = page.getByRole("region", {
+    name: "Grading queue operations",
+  });
+  await expect(grading).toBeVisible();
+  await expect(
+    grading.getByText("Queued grading work", { exact: true }),
+  ).toBeVisible();
+  await expect(grading).toContainText(
+    "Oldest pending grading work: 0 seconds.",
+  );
+  await expect(grading).toContainText("they do not measure academic errors");
+  await expect(grading).toContainText(
+    "Pending audits include sealed assignments",
+  );
   const exports = page.getByRole("region", {
     name: "Personal export operations",
   });
@@ -75,6 +89,22 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
     fullPage: true,
   });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.screenshot({
+    path: ".local/ui-review/operations-mobile-large-text.png",
+    fullPage: true,
+  });
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "100%";
+  });
   // Deterministic presentation states supplement the real authorized snapshot;
   // backend aggregation/authorization is exercised by local Redis integration tests.
   for (const state of [

@@ -523,3 +523,31 @@ def test_upgrade_preserves_existing_publication_and_initializes_review_counter(p
         assert row.session_ordinal is None
         assert db.get(GradingReviewCounter, band.id).completed_audits == 0
         assert publish(db, band.id, attempt, identity.clock()).ordinal == 1
+
+
+def test_completion_preserves_future_timestamp_guard_under_host_database_clock_skew(published):
+    from services.identity_contracts import OTPRequest, OTPVerify
+
+    source, target, _, _ = published
+    identity = source[0]
+    with Session(identity.engine) as db:
+        database_now = db.scalar(select(func.clock_timestamp()))
+    # A frozen ahead-of-database host clock makes the original INSERT fail, without
+    # relying on submillisecond native timing luck. Renew synthetic auth under that clock.
+    ahead = database_now + timedelta(seconds=30)
+    identity.clock = lambda: ahead
+    challenge = identity.request_otp(
+        OTPRequest(identifier="reviewer@example.invalid", device_id=uuid4()), "synthetic-skew", None
+    )
+    token = identity.verify(
+        OTPVerify(challenge_id=challenge.challenge_id, code="246810"), None, str(uuid4())
+    ).access_token
+    receipt = GradingReviewService(identity).complete(
+        token, target, input_points(), uuid4(), uuid4()
+    )
+    with Session(identity.engine) as db:
+        row = db.get(GradingAuditReview, target)
+        assert row.completed_at == receipt.completed_at
+        assert row.completed_at <= db.scalar(select(func.clock_timestamp()))
+        assert row.completed_at < ahead
+        assert row.exact_agreement

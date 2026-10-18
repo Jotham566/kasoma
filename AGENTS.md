@@ -120,9 +120,12 @@ Incremental export encoding and ADR-047 private artifact format are verified; as
 publication and delivery are locally verified and merged under ADR-048. Production release
 gates remain. Calibration eligibility, immutable bands and bounded grading work are
 merged; per-grade publication/audit assignment and privacy coverage are merged after
-hosted verification. The encrypted synthetic learner-flow slice is merged after local and hosted verification;
-normal learner short-text delivery remains disabled, and independent blinded review and
-rolling disablement remain pending. See
+hosted verification. The encrypted synthetic learner flow and independent blinded review/rolling disablement
+are merged after local and hosted verification; normal learner short-text delivery remains
+disabled. Responsive staff navigation and payload-free offline report comparison are
+merged after hosted verification. The local grading queue snapshot and database-clock
+completion cap are under verification. Genuine academic/report/safety/provider authority,
+complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

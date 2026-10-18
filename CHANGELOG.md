@@ -1,5 +1,25 @@
 # Changelog
 
+## Work in progress — grading queue operations
+
+- Promote verified independent review, responsive navigation and offline report comparison
+  through `17abb2d` to main after hosted runs 39150319607/39151730479 pass; remove all
+  three merged source branches. Keep the current unmerged operations work separate.
+- Fix host/VM completion-clock skew by capping at database time while retaining SQL
+  guards. A rollback-only reproduction changes from nine failures in ten to ten successes.
+  Await each diagnostic POST acknowledgement before checking its exact saved attempt.
+
+- Propose ADR-053 and extend the existing ADMIN snapshot/dashboard with bounded
+  grading queue/lease age, terminal outcomes, pending audits and post-activation
+  disablement counts. Add a typed local stale-queue threshold and alert.
+- Label GRADING_FAILED outcomes processing fallbacks because they include expected
+  provider refusals and budget/validation outcomes. Do not infer academic error rate,
+  model cost or an incident from those counts; existing unavailable metrics stay honest.
+  Local verification passes 884 unit/contract and 333 broad integration cases, supplemented
+  by 33 review/26 operational cases, restricted login, 104 browser executions, populated
+  recovery and rebuilt image/security/smoke checks. Hosted acceptance remains pending.
+  No grading policy, provider, persistence or retention changes.
+
 ## Work in progress — offline evaluation reports
 
 - Propose ADR-052 and implement a strict payload-free synthetic short-text report

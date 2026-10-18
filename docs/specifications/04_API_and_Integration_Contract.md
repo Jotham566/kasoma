@@ -701,3 +701,25 @@ It excludes reviewer identity, agreement/critical classification, request proven
 ordinals and band IDs. Exact hold type GRADING_REVIEW uses the completed review UUID
 (equal to its assignment UUID); requester ownership derives through the attempt.
 Deletion remains disabled; releasing a hold does not permit immutable-record mutation.
+
+
+### Grading operations projection (candidate ADR-053)
+
+The existing ADMIN-only rate-limited operations snapshot adds optional `counts.grading`:
+queued/running, expired_running_leases, oldest_pending_seconds, graded_finished_24h,
+neutral_finished_24h, processing_fallback_finished_24h, pending_audits and disabled_bands.
+Counts are capped at 10,000 with the existing lower-bound marker. The terminal window
+is inclusive `[now-24h,now]`; future completions are excluded. Age starts at original
+queue time, spans queued/running work, and clamps future timestamps to zero. Lease
+expiry is observed at `lease_until<=now`; it does not itself execute cleanup.
+
+Processing fallback means LOW_CONFIDENCE with stored GRADING_FAILED reason, including
+provider refusal and budget/validation failure. It is neither academic incorrectness
+nor proof of an unexpected incident. Pending audits include sealed assignments, and
+disabled bands require both activation and disablement timestamps. No record, reviewer
+or band identifiers/scope are disclosed. These are read-only current-state samples.
+
+`thresholds.grading_age_seconds` drives GRADING_STALLED at exact age equality or above;
+there is no new processing-fallback or historical-disablement alert. AI_USAGE and
+GRADING_FAILURE_RATE remain unavailable. Missing grading metrics are unavailable, not
+zero. Existing authorization, error, monitoring and safe alert logging remain unchanged.

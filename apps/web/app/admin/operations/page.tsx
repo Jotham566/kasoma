@@ -24,6 +24,7 @@ const messages: Record<
   CHANNEL_STALLED: "Pending channel messages exceeded the age threshold",
   CHANNEL_DISPATCH_SLOW:
     "Local feedback dispatch exceeded its timing threshold",
+  GRADING_STALLED: "Pending grading work exceeded the age threshold",
   EXPORT_FAILED: "Failed personal exports need investigation",
   EXPORT_STALLED: "Pending personal exports exceeded the age threshold",
 };
@@ -69,6 +70,7 @@ export default function Operations() {
     : [];
   const channel = view?.counts?.channel;
   const exports = view?.counts?.exports;
+  const grading = view?.counts?.grading;
   const channelCounters = channel
     ? ([
         ["Queued incoming messages", channel.queued_inbound],
@@ -263,6 +265,70 @@ export default function Operations() {
             ) : (
               <p>
                 Channel metrics unavailable. Missing values do not mean zero.
+              </p>
+            )}
+          </section>
+          <section
+            aria-label="Grading queue operations"
+            className="surface-card operations-section"
+          >
+            <h2 className="text-xl font-semibold">Grading queue</h2>
+            {grading ? (
+              <>
+                <dl>
+                  {(
+                    [
+                      ["Queued grading work", grading.queued],
+                      ["Running grading work", grading.running],
+                      [
+                        "Expired running leases",
+                        grading.expired_running_leases,
+                      ],
+                      [
+                        "Graded in the last 24 hours",
+                        grading.graded_finished_24h,
+                      ],
+                      [
+                        "Neutral outcomes in the last 24 hours",
+                        grading.neutral_finished_24h,
+                      ],
+                      [
+                        "Processing fallbacks in the last 24 hours",
+                        grading.processing_fallback_finished_24h,
+                      ],
+                      ["Pending audit assignments", grading.pending_audits],
+                      [
+                        "Bands disabled after activation",
+                        grading.disabled_bands,
+                      ],
+                    ] as const
+                  ).map(([label, count]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>
+                        {count.at_least ? "At least " : ""}
+                        {count.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <p>
+                  Oldest pending grading work: {grading.oldest_pending_seconds}{" "}
+                  seconds. Alert threshold:{" "}
+                  {view.thresholds.grading_age_seconds} seconds.
+                </p>
+                <p>
+                  Processing fallbacks include provider refusals, budget and
+                  validation failures; they do not measure academic errors.
+                  Pending audits include sealed assignments that are not yet
+                  available for expert review. Counts do not establish grading
+                  accuracy, model spend or release latency acceptance.
+                </p>
+              </>
+            ) : (
+              <p>
+                Grading queue metrics unavailable. Missing values do not mean
+                zero.
               </p>
             )}
           </section>

@@ -1,5 +1,9 @@
 # Offline evaluation comparison readiness
 
+Historical readiness assessment before implementation. The slice is now merged after
+hosted verification; see [current evidence](E4_EVALUATION_REPORT_VERIFICATION.md). Present-tense inventory below
+records the assessment baseline and does not override CURRENT_SPRINT.md or acceptance.
+
 Requirements: FR-GRD-003/004, FR-OPS-002 and NFR-MNT-001; evaluation profile 18 sections
 5–7. The required `make eval-compare` command currently always exits unavailable.
 Existing fake rehearsal/calibration metadata does not provide a versioned portable

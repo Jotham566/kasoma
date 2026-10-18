@@ -66,3 +66,15 @@ Genuine academic benchmark/calibration approval, reviewer qualification, samplin
 approval, production safety/model providers, privacy/provider/pilot approval, destructive
 retention approval and physical-device/PITR evidence remain in
 [the release register](RELEASE_GATES.md). Synthetic agreement is not academic accuracy.
+
+
+## Hosted promotion and clock follow-up
+
+Complete [39150319607](https://github.com/Jotham566/kasoma/actions/runs/39150319607)
+passes at `2164209`; source is on main and its merged branch is removed. Actual scoring
+remains disabled. Subsequent native browser verification exposed millisecond host/VM
+clock skew at the SQL nonfuture completion guard. The identical rollback-only review
+failed nine of ten times before capping completion at database time; ten of ten succeed
+after the cap, with no commit or weakened guard. A thirty-second ahead-clock integration
+regression passes in the current 33-case review suite. Final follow-up acceptance is
+tracked with [grading operations](E8_GRADING_OPERATIONS_VERIFICATION.md).

@@ -42,6 +42,7 @@ def thresholds(identity: IdentityService) -> OperationThresholds:
         channel_queue_age_seconds=settings.ops_channel_queue_age_seconds,
         channel_dispatch_p95_ms=settings.ops_channel_dispatch_p95_ms,
         channel_dispatch_min_samples=settings.ops_channel_dispatch_min_samples,
+        grading_age_seconds=settings.ops_grading_age_seconds,
         export_failures=settings.ops_export_failure_threshold,
         export_age_seconds=settings.ops_export_age_seconds,
     )
@@ -54,6 +55,7 @@ def bounded_count(db: Session, query: Select[tuple[int]]) -> Count:
 
 def counts(db: Session, now: datetime) -> OperationCounts:
     from services.channel_operations import channel_counts
+    from services.grading_operations import grading_counts
 
     pending = select(1).select_from(ContentImport).where(ContentImport.status == "QUEUED")
     flags = select(1).select_from(ContentFlag).where(ContentFlag.status.in_(["OPEN", "IN_REVIEW"]))
@@ -77,6 +79,7 @@ def counts(db: Session, now: datetime) -> OperationCounts:
         high_priority_flags=bounded_count(db, flags.where(ContentFlag.priority == "HIGH")),
         channel=channel_counts(db, now),
         exports=export_counts(db, now),
+        grading=grading_counts(db, now),
     )
 
 
@@ -190,6 +193,21 @@ def evaluate(
         for code, observed, threshold in [
             ("EXPORT_FAILED", values.exports.failed_finished_24h.value, limits.export_failures),
             ("EXPORT_STALLED", values.exports.oldest_pending_seconds, limits.export_age_seconds),
+        ]:
+            if observed >= threshold:
+                alerts.append(
+                    OperationAlert.model_validate(
+                        {
+                            "code": code,
+                            "severity": "WARNING",
+                            "observed": observed,
+                            "threshold": threshold,
+                        }
+                    )
+                )
+    if values and values.grading:
+        for code, observed, threshold in [
+            ("GRADING_STALLED", values.grading.oldest_pending_seconds, limits.grading_age_seconds),
         ]:
             if observed >= threshold:
                 alerts.append(

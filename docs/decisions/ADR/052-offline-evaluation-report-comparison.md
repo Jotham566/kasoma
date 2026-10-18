@@ -1,7 +1,7 @@
 # ADR-052: Bounded offline evaluation-report comparison
 
 Date: 18 October 2026
-Status: Proposed for synthetic engineering; acceptance pending
+Status: Accepted for payload-free synthetic comparison; no inference/approval authority
 Requirements: FR-GRD-003/004, FR-OPS-002, NFR-MNT-001
 
 ## Decision and boundary
@@ -43,3 +43,9 @@ usage; malformed/duplicate/oversized/special-file/privacy-canary rejection; safe
 errors and deterministic actual Make invocation on controlled synthetic files. Run
 lint/types/unit/source-security/docs and retain full hosted acceptance before promotion.
 See [readiness](../../implementation/E4_EVALUATION_REPORT_READINESS.md).
+
+
+Source `17abb2d` passes complete hosted run
+[39151730479](https://github.com/Jotham566/kasoma/actions/runs/39151730479) and is on main.
+This verifies report engineering and the ancestor responsive UI. It does not establish
+academic truth, sanitation, model licensing or actual scoring/evaluation approval.

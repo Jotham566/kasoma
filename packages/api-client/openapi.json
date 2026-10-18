@@ -2260,6 +2260,53 @@
         "title": "GradeView",
         "type": "object"
       },
+      "GradingCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "disabled_bands": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "expired_running_leases": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "graded_finished_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "neutral_finished_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "oldest_pending_seconds": {
+            "minimum": 0.0,
+            "title": "Oldest Pending Seconds",
+            "type": "integer"
+          },
+          "pending_audits": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "processing_fallback_finished_24h": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "queued": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "running": {
+            "$ref": "#/components/schemas/Count"
+          }
+        },
+        "required": [
+          "queued",
+          "running",
+          "expired_running_leases",
+          "oldest_pending_seconds",
+          "graded_finished_24h",
+          "neutral_finished_24h",
+          "processing_fallback_finished_24h",
+          "pending_audits",
+          "disabled_bands"
+        ],
+        "title": "GradingCounts",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -3377,6 +3424,7 @@
               "CHANNEL_OUTBOUND_FAILED",
               "CHANNEL_STALLED",
               "CHANNEL_DISPATCH_SLOW",
+              "GRADING_STALLED",
               "EXPORT_FAILED",
               "EXPORT_STALLED"
             ],
@@ -3436,6 +3484,16 @@
           },
           "failed_imports_24h": {
             "$ref": "#/components/schemas/Count"
+          },
+          "grading": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GradingCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "high_priority_flags": {
             "$ref": "#/components/schemas/Count"
@@ -3511,6 +3569,13 @@
             "maximum": 10000.0,
             "minimum": 1.0,
             "title": "Failed Imports",
+            "type": "integer"
+          },
+          "grading_age_seconds": {
+            "default": 60,
+            "maximum": 86400.0,
+            "minimum": 1.0,
+            "title": "Grading Age Seconds",
             "type": "integer"
           },
           "import_age_seconds": {

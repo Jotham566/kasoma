@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from services.assessment import AssessmentService
@@ -227,7 +227,13 @@ class GradingReviewService:
                 or any(points[row.criterion_id] > row.maximum_points for row in rubric.criteria)
             ):
                 raise IdentityError("VALIDATION_FAILED", 422)
-            now = self.identity.clock()
+            # PostgreSQL enforces a nonfuture completion. Host/VM wall clocks can
+            # differ by milliseconds; cap the domain clock at authoritative DB time
+            # without relaxing the constraint or advancing injected test clocks.
+            database_now = db.scalar(select(func.clock_timestamp()))
+            if database_now is None:
+                raise ValueError("Grading clock authority unavailable")
+            now = min(self.identity.clock(), database_now)
             review = GradingAuditReview(
                 id=assignment.id,
                 band_id=publication.band_id,

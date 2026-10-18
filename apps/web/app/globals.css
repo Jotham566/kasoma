@@ -681,6 +681,8 @@ body {
 }
 
 .staff-page {
+  grid-template-columns: minmax(0, 1fr);
+  overflow-wrap: anywhere;
   max-width: 960px;
   margin: auto;
   padding: 2rem;
@@ -749,10 +751,6 @@ body {
   overflow-wrap: anywhere;
 }
 
-.grading-review-page {
-  grid-template-columns: minmax(0, 1fr);
-  overflow-wrap: anywhere;
-}
 .grading-review-page .ui-select {
   appearance: none;
   min-height: 48px;

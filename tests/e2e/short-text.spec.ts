@@ -152,9 +152,20 @@ test("FR-DIAG-004: written diagnostic hides grades until all terminal outcomes",
     await page
       .getByLabel("Your written answer", { exact: true })
       .fill(index === 14 ? "Beta" : "Alpha");
+    const savedResponse = page.waitForResponse(
+      (response) =>
+        response.request().method() === "POST" &&
+        /\/api\/v1\/sessions\/[^/]+\/attempts$/.test(
+          new URL(response.url()).pathname,
+        ),
+    );
     await page
       .getByRole("button", { name: "Save answer and continue" })
       .click();
+    const acknowledgement = await savedResponse;
+    expect(acknowledgement.status()).toBe(200);
+    const receipt = await acknowledgement.json();
+    expect(receipt.attempt_id).toBeTruthy();
     if (index === 0) {
       const id = new URL(page.url()).searchParams.get("session");
       const state = await (
@@ -162,6 +173,7 @@ test("FR-DIAG-004: written diagnostic hides grades until all terminal outcomes",
       ).json();
       expect(state.status).toBe("ACTIVE");
       const first = state.answered_attempts[0].attempt_id;
+      expect(first).toBe(receipt.attempt_id);
       expect(
         (await page.request.get(`/api/v1/attempts/${first}/grade`)).status(),
       ).toBe(403);

@@ -1,25 +1,34 @@
 # Requirements Traceability
 
-Offline-report candidate: FR-GRD-003/004, FR-OPS-002 and NFR-MNT-001 add a
+Grading-operations candidate: FR-OPS-002, NFR-OBS-001, NFR-SEC-002 and NFR-ACC/COMP-001 add bounded
+ADMIN queue/lease/terminal/pending-audit/disabled-band counts and a typed stale-age
+alert under ADR-053. Actual encrypted synthetic transitions and authorization/boundary
+checks pass: 26 operational and 33 review cases, 884 unit/contract plus 333 broad
+integration cases, 104 browser executions, restricted login/recovery/security/containers.
+See [grading evidence](E8_GRADING_OPERATIONS_VERIFICATION.md); hosted acceptance is
+pending. Model usage and academic error rate remain unavailable.
+
+Offline reports merged at `17abb2d`: FR-GRD-003/004, FR-OPS-002 and NFR-MNT-001 add a
 strict versioned payload-free report reader/comparator and the required `make eval-compare`
 command under ADR-052. Thirty-seven new cases, 881 total unit/contract and 35 tooling
 cases, lint/types/contracts/security and actual Make invocation pass; see
-[report evidence](E4_EVALUATION_REPORT_VERIFICATION.md). Hosted acceptance is pending. It does not run
+[report evidence](E4_EVALUATION_REPORT_VERIFICATION.md). Complete hosted run 39151730479 passes. It does not run
 inference, establish benchmark truth/approval or enable a learner grading band.
 
-Staff mobile-navigation candidate: NFR-ACC-001/NFR-COMP-001 uses the existing
+Staff mobile navigation merged at `17abb2d`: NFR-ACC-001/NFR-COMP-001 uses the existing
 staff destinations with an explicit narrow-screen disclosure, keyboard activation,
 active destination, >=44-pixel controls and close-on-navigation. Desktop navigation
 remains visible. Lint/build/contracts, two UI harness and 102 three-engine executions,
 including 200% text, pass; final rebuilt container/source checks pass. See
-[navigation evidence](E6_STAFF_NAVIGATION_VERIFICATION.md). Hosted acceptance is pending.
+[navigation evidence](E6_STAFF_NAVIGATION_VERIFICATION.md). The complete later report-source hosted run passes; the navigation-only diagnostic save-ack race is retained and corrected in the active follow-up.
 
-18 October candidate: FR-GRD-003/004/005, FR-ID-003/006 and NFR-SEC-002 are
+Independent review merged at `2164209`: FR-GRD-003/004/005, FR-ID-003/006 and NFR-SEC-002 are
 addressed by migration 0033, `services/grading_reviews.py`, blinded staff routes/UI,
 release-unit sampling, immutable complete-rubric reviews, sticky rolling disablement,
 owned export/inventory/hold integration and per-pass processor rechecks. See
 [expert-review verification](E4_EXPERT_REVIEW_VERIFICATION.md) for executed evidence
-and outstanding acceptance. This does not replace academic/provider/privacy release
+and complete hosted run 39150319607. The completion-clock cap is a separate active follow-up.
+This does not replace academic/provider/privacy release
 approval or enable ordinary learner short-text scoring.
 
 Live implementation evidence for every requirement in the [SRD](../specifications/01_SRD.md). The [specification matrix](../specifications/14_Requirements_Traceability_Matrix.md) defines required coverage and evidence. Update this register with each implementation slice; completion requires passing acceptance evidence.
@@ -34,7 +43,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout | Local implemented |
-| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy under acceptance; erasure/anonymization, full hold coverage and accountability expiry pending |
+| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -48,8 +57,8 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-REV-006 | Versioned reasons, home target/time card, per-item selection reasons and diagnostic action | API safe projection, sparse text, accessible browser practice | Local synthetic implemented |
 | FR-GRD-001 | Pinned single-choice and canonical exact-set multiple-choice graders, reviewed keys and checkbox delivery | Exhaustive subset/permutation tests, publication/API/DB/retry/replay/diagnostic/reassessment and browser checks; [verification](E4_MULTIPLE_CHOICE_VERIFICATION.md) | Local deterministic implementation; synthetic evidence is not academic benchmark approval |
 | FR-GRD-002 | Reviewed numeric contracts, exact rational grading, unit conversions, inclusive tolerances, precision and accepted forms | `tests/contract/test_numeric.py`, `tests/integration/test_numeric_workflow.py`, `tests/e2e/numeric.spec.ts` | Local deterministic implementation; synthetic regression/property cases are not expert academic benchmark approval |
-| FR-GRD-003 | Version-pinned encrypted rubric grades, bounded fake dual-pass processor and disabled synthetic learner flow (ADR-050); independent review candidate (ADR-051) | Flow/API/SQL/role/browser/recovery tests; [review evidence](E4_EXPERT_REVIEW_VERIFICATION.md) | Synthetic learner path merged; independent review candidate under acceptance; genuine calibration/provider/academic approval and actual scoring remain gated |
-| FR-GRD-004 | Distinct pending/neutral outcomes, finite work leases and global request/time/token/repair budget; current consent/band checks and candidate atomic sticky review disablement | Rehearsal, worker rollback/revocation, pending/fallback/retry browser and review window tests | Disabled synthetic fallback merged; independent review candidate verified locally; hosted acceptance and actual scoring approval pending |
+| FR-GRD-003 | Version-pinned encrypted rubric grades, bounded fake dual-pass processor and disabled synthetic learner flow (ADR-050); independent review candidate (ADR-051) | Flow/API/SQL/role/browser/recovery tests; [review evidence](E4_EXPERT_REVIEW_VERIFICATION.md) | Synthetic learner path, independent review and offline reports merged after hosted acceptance; genuine calibration/provider/academic approval and actual scoring remain gated |
+| FR-GRD-004 | Distinct pending/neutral outcomes, finite work leases and global request/time/token/repair budget; current consent/band checks and candidate atomic sticky review disablement | Rehearsal, worker rollback/revocation, pending/fallback/retry browser and review window tests | Disabled synthetic fallback and independent review merged after hosted verification; clock-skew follow-up under acceptance and actual scoring approval pending |
 | FR-GRD-005 | Authored-feedback allowlists, exact pinned criterion evidence, encrypted result projection and owned rubric feedback; blinded independent review keeps model outcomes hidden | Strict candidate/result contracts, learner and reviewer browser/API cases | Synthetic learner feedback merged; real academic calibration and scoring approval pending |
 | FR-GRD-006 | Reviewed versioned hints, append-only usage and frozen pre-answer count/highest level; independence weighting with unchanged points | `tests/contract/test_hint_contract.py`, `tests/integration/test_hints.py`, `tests/e2e/hints.spec.ts`; [verification](E4_HINTS_VERIFICATION.md) | Local synthetic verified (235 Python tests / 12 browser tests); production hint academic review pending |
 | FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision gating and permanent diagnostic solution block implemented |
@@ -74,9 +83,9 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single/multiple-choice and numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; channel code/link/unlink/STOP events and safe correlated processing logs are implemented; remaining dispatch pending |
-| FR-OPS-002 | ADMIN snapshot/dashboard, bounded import/flag/channel cohorts, fake-dispatch p95, monitoring heartbeat and configurable local alerts | [Operations verification](E8_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs, Redis/worker and browser tests | Partial: local visibility verified and merged; AI/SMS/email/grade-failure/HTTP-latency/mastery/pre-intake telemetry and production alerting pending |
+| FR-OPS-002 | ADMIN snapshot/dashboard, bounded imports/flags/channel/exports and response-start histograms; grading queue candidate | [Operations evidence](E8_OPERATIONS_VERIFICATION.md); [grading candidate](E8_GRADING_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs and browser checks | Partial: existing local visibility merged; grading queue/lease/fallback observation under acceptance; model spend, academic/technical error-rate distinctions, SMS/email/mastery/provider telemetry and production alerting remain pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
-| FR-OPS-004 | Typed channel attempt/outbound limits, bounded failures and feature flag | [E7 evidence](E7_LINKING_READINESS.md); configuration/rate/failure tests | Local channel limits verified; AI limits and production usage telemetry pending |
+| FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; short-text per-rehearsal request/token/time/repair budget with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); fake short-text orchestration/worker budget tests | Channel limits and fixed synthetic per-job budget verified; configurable runtime-wide model ceilings and production usage telemetry need assessment before additional policy |
 | NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); hosted regression passes; representative deployment/history/provider acceptance pending |
 | NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
 | NFR-REL-001 | — | — | Not started |

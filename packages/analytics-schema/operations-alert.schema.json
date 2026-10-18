@@ -42,7 +42,8 @@
         "CHANNEL_DISPATCH_SLOW",
         "EXPORT_FAILED",
         "EXPORT_STALLED",
-        "REQUEST_RESPONSE_START_SLOW"
+        "REQUEST_RESPONSE_START_SLOW",
+        "GRADING_STALLED"
       ]
     },
     "severity": {

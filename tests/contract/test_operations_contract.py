@@ -99,6 +99,8 @@ def test_operational_alerts_are_allowlisted_metadata(caplog):
         ("ops_failed_import_threshold", 0),
         ("ops_import_age_seconds", 59),
         ("ops_flag_backlog_threshold", 10001),
+        ("ops_grading_age_seconds", 0),
+        ("ops_grading_age_seconds", 86401),
         ("ops_export_failure_threshold", 0),
         ("ops_export_age_seconds", 59),
     ],
@@ -181,3 +183,28 @@ def test_worker_tasks_keep_their_own_application_settings(monkeypatch, task_name
     finally:
         first.close()
         second.close()
+
+
+def test_grading_age_alert_uses_exact_threshold_and_no_historical_disable_alert():
+    from services.operations_contracts import GradingCounts
+
+    zero = Count(value=0)
+    grading = GradingCounts(
+        queued=Count(value=1),
+        running=zero,
+        expired_running_leases=zero,
+        oldest_pending_seconds=59,
+        graded_finished_24h=zero,
+        neutral_finished_24h=zero,
+        processing_fallback_finished_24h=Count(value=100),
+        pending_audits=Count(value=20),
+        disabled_bands=Count(value=3),
+    )
+    health = Health(status="ok", database="up", redis="up")
+    limits = OperationThresholds(failed_imports=1, import_age_seconds=300, unresolved_flags=20)
+    assert evaluate(health, "up", values(grading=grading), limits) == []
+    at = grading.model_copy(update={"oldest_pending_seconds": 60})
+    assert {row.code for row in evaluate(health, "up", values(grading=at), limits)} == {
+        "GRADING_STALLED"
+    }
+    assert evaluate(health, "up", values(grading=grading), limits) == []

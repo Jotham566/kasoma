@@ -1,7 +1,7 @@
 # ADR-051: Blinded expert review and release-unit audit coverage
 
 Date: 18 October 2026
-Status: Proposed; implementation and acceptance pending
+Status: Accepted for disabled synthetic engineering; actual scoring remains gated
 Requirements: FR-GRD-003/004/005, FR-ID-003/006, NFR-SEC-002
 
 ## Context
@@ -45,6 +45,11 @@ assignments do not count as completed. Preserve aggregate completion counts thro
 future permitted retention, and recheck current audit state before dispatch/publication.
 Later good outcomes never re-enable a disabled band.
 
+Completion uses the earlier of the current domain clock and PostgreSQL clock_timestamp()
+under the existing band lock. This preserves frozen test clocks and the SQL nonfuture
+constraint while tolerating a host clock slightly ahead of Docker. It does not weaken
+authorization, assignment/band/prior-completion lower bounds or the database guard.
+
 New review records require minimized owned export, sealed diagnostic handling,
 deletion-impact inventory, exact-record holds, restricted-role verification and
 populated logical recovery. Keep answers in their original encrypted record. No new
@@ -66,3 +71,12 @@ Sources: [readiness assessment](../../implementation/E4_EXPERT_REVIEW_READINESS.
 [ADR-050](050-short-text-pending-and-eligibility.md),
 [AI controls](../../specifications/06_AI_RAG_and_Grading_Guardrails.md),
 [production rules](../../specifications/16_Production_Pilot_Decisions.md).
+
+
+## Verified acceptance and follow-up
+
+Source `2164209` passes complete hosted run
+[39150319607](https://github.com/Jotham566/kasoma/actions/runs/39150319607) and is on
+main. A later native run exposed host/VM completion-clock skew; the database-time cap
+and ahead-clock regression above are a follow-up under verification, without relaxing
+SQL guards. Genuine academic/sampling/provider/production approvals remain missing.

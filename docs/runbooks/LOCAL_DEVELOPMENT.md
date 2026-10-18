@@ -1080,3 +1080,17 @@ The report's SYNTHETIC_PAYLOAD_FREE marker is declared metadata; the comparison 
 not perform or certify dataset sanitation. It cannot establish trusted benchmark/report
 provenance or academic, licensing or processor approval. Actual evaluation must retain
 its separate sanitizer and frozen academic authority gates.
+
+
+## Local grading queue observation
+
+`make test-grading-operations` checks contracts and real isolated PostgreSQL queue,
+lease, neutral/fake-grade, independent review, 24-hour boundary, authorization and alert
+states. `/admin/operations` shows aggregate grading work with no learner/attempt/band
+identifiers. `OPS_GRADING_AGE_SECONDS` defaults to 60 (allowed 1–86400); it is a local
+stale-work investigation threshold, not the eight-second AI feedback SLO. Expired leases
+are counted without mutating work. Normal worker recovery remains responsible for them.
+Processing fallback includes expected provider refusal and validation/budget fallback;
+it is not an academic error rate. Pending audits can be sealed, and a historical
+post-activation disabled-band count does not create a permanent alert. Model spend,
+academic error rate, genuine approval and production telemetry remain separate gates.

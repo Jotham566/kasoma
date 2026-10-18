@@ -1,5 +1,9 @@
 # Independent grading review readiness
 
+Historical readiness assessment before implementation. The slice is now merged after
+hosted verification; see [current evidence](E4_EXPERT_REVIEW_VERIFICATION.md). Present-tense inventory below
+records the assessment baseline and does not override CURRENT_SPRINT.md or acceptance.
+
 18 October 2026. Requirements: FR-GRD-003/004/005, FR-ID-003/006, NFR-SEC-002.
 Current learner-flow candidate: `853f80a`; hosted run
 [39143803289](https://github.com/Jotham566/kasoma/actions/runs/39143803289).

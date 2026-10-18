@@ -1941,6 +1941,19 @@ export interface components {
              */
             status: "GRADED";
         };
+        /** GradingCounts */
+        GradingCounts: {
+            disabled_bands: components["schemas"]["Count"];
+            expired_running_leases: components["schemas"]["Count"];
+            graded_finished_24h: components["schemas"]["Count"];
+            neutral_finished_24h: components["schemas"]["Count"];
+            /** Oldest Pending Seconds */
+            oldest_pending_seconds: number;
+            pending_audits: components["schemas"]["Count"];
+            processing_fallback_finished_24h: components["schemas"]["Count"];
+            queued: components["schemas"]["Count"];
+            running: components["schemas"]["Count"];
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -2443,7 +2456,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "EXPORT_FAILED" | "EXPORT_STALLED";
+            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "EXPORT_FAILED" | "EXPORT_STALLED";
             /** Observed */
             observed: number;
             /**
@@ -2459,6 +2472,7 @@ export interface components {
             channel?: components["schemas"]["ChannelCounts"] | null;
             exports?: components["schemas"]["ExportCounts"] | null;
             failed_imports_24h: components["schemas"]["Count"];
+            grading?: components["schemas"]["GradingCounts"] | null;
             high_priority_flags: components["schemas"]["Count"];
             /** Oldest Import Seconds */
             oldest_import_seconds: number;
@@ -2499,6 +2513,11 @@ export interface components {
             export_failures: number;
             /** Failed Imports */
             failed_imports: number;
+            /**
+             * Grading Age Seconds
+             * @default 60
+             */
+            grading_age_seconds: number;
             /** Import Age Seconds */
             import_age_seconds: number;
             /**

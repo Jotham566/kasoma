@@ -346,3 +346,7 @@ test-web-privacy:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/data-requests.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/data-requests.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/data-requests.spec.ts
+
+.PHONY: test-grading-operations
+test-grading-operations:
+	$(UV) pytest tests/contract/test_operations_contract.py tests/integration/test_operations.py tests/integration/test_grading_operations.py --allow-hosts=localhost,127.0.0.1,::1

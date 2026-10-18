@@ -48,3 +48,13 @@ with ENOENT for trace artifacts. A concurrent UI harness had cleaned the shared
 `test-results` directory. No assertion or timeout was relaxed. All native Playwright
 commands are now rerun serially, and the runbook records this shared-directory hazard.
 Final acceptance must come from that serial run, not the interrupted artifact run.
+
+
+## Hosted promotion
+
+The navigation-only run 39151218081 failed the diagnostic test's read-before-save-ack
+assumption, not a menu assertion. The later complete report-source run
+[39151730479](https://github.com/Jotham566/kasoma/actions/runs/39151730479) passes at
+`17abb2d`, including this unchanged UI. That source is promoted to main; merged branches
+are removed. The diagnostic test now awaits actual POST acknowledgements in the active
+follow-up candidate, retaining the exact attempt binding and sealed-feedback assertions.

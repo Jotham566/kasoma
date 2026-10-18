@@ -117,3 +117,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-052: Offline evaluation-report comparison](052-offline-evaluation-report-comparison.md)
   proposes strict payload-free synthetic report comparison without inference or approval.
+
+- [ADR-053: Bounded grading operations](053-bounded-grading-operations.md)
+  proposes minimized durable queue observation without academic-error-rate claims.

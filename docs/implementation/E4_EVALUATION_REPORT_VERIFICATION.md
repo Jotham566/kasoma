@@ -43,3 +43,10 @@ acceptance remains required before promotion. No migrations, browser regression 
 service changes are applicable to this pure offline slice; prior API/worker/UI evidence
 remains separately recorded. Local and Gemini evaluation still fail closed pending their
 complete benchmark/provider implementation; Gemini evaluation has not been run.
+
+
+## Hosted promotion
+
+Complete run [39151730479](https://github.com/Jotham566/kasoma/actions/runs/39151730479)
+passes at `17abb2d`; source is promoted to main and both report/navigation branches are
+removed locally/remotely. This does not change the separate genuine release gates.
