@@ -1,5 +1,14 @@
 # Requirements Traceability
 
+FR-OPS-003 / NFR-SEC-002 / NFR-ACC-001 / NFR-PERF-001 / NFR-MNT-001 candidate:
+[ADR-058](../decisions/ADR/058-bounded-admin-audit-activity.md) and
+[audit readiness](E8_AUDIT_ACTIVITY_READINESS.md) and
+[verification](E8_AUDIT_ACTIVITY_VERIFICATION.md) define an aggregate-only ADMIN audit
+activity page, fixed categories and newest-10,000 sampling. No individual audit read
+permission or retention change. Five focused and all 378 integration cases, 918 unit/contract, 35 tooling,
+restricted login, recovery, security, rebuilt Docker and six browser/UI cases pass
+locally; complete hosted acceptance remains required. No application acceptance or full audit-coverage claim.
+
 FR-ID-006 / FR-WA-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
 [ADR-057 proposal](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
 records exact source/version, field allowlists, atomic encrypted capture, independent
@@ -24,7 +33,9 @@ FR-ID-006 / FR-WA-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
 next bounded hold slice: original owned already-minimized receipts, no live payload/
 capability preservation, staged creation and incomplete coverage. Isolated migration/
 SQL/API/race/upgrade, restricted login and populated recovery pass; final acceptance
-remains in progress. See [candidate evidence](E8_CHANNEL_RECEIPT_HOLD_VERIFICATION.md).
+passes in complete hosted run 39165896953 at source 397f562 (918 unit/contract,
+368 integration). The source is on main and its merged branch is removed. See
+[receipt evidence](E8_CHANNEL_RECEIPT_HOLD_VERIFICATION.md).
 
 FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-ACC-001 / NFR-MNT-001 merged at `0c73c45`:
 [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md) adds six fixed private
@@ -118,11 +129,11 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-WA-004 | Signed bounded intake, durable message-ID hashes, atomic replay/conflict handling, monotonic status callbacks | [E7 evidence](E7_LINKING_READINESS.md); signature, duplicate/conflict, callback and rollback tests | Local transport and answer/mastery replay invariants verified |
 | FR-WA-005 | Bounded question/feedback formatters and authenticated web fallback | `test_whatsapp_format.py`, `test_whatsapp_feedback.py`; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Formatting and authorized fake delivery verified; production pending |
 | FR-WA-006 | Immediate STOP barrier, owner unlink, fake outbound rechecks | [E7 evidence](E7_LINKING_READINESS.md); STOP before worker/delivery, stale code and retry tests | Local opt-out and transient practice invalidation verified; learning evidence retained |
-| FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor; bounded JSON import API/UI and transactional worker | Content tests; import contract/API/browser regressions; [import evidence](E2_IMPORTS_VERIFICATION.md) | Partial: create/edit verified; structured synthetic JSON import verified; other formats and academic release pending |
+| FR-CNT-001 | `services/content.py`, strict draft DTO, staff editor; bounded JSON import API/UI and transactional worker | Content tests; import contract/API/browser regressions; [import evidence](E2_IMPORTS_VERIFICATION.md) | Create/edit and bounded synthetic JSON import verified under ADR-032; real academic inventory/rights release remains gated. Other file formats are outside that accepted slice |
 | FR-CNT-002 | Role checks and immutable author ownership; self-review blocked even with both roles | API self-review denial; SQL review guard; disabled author approval in browser | Local implemented |
 | FR-CNT-003 | Return, approval, high-risk/disputed second review, retirement and append-only reviews | Full API/browser workflow; two-reviewer and retired-selection tests | Local implemented with synthetic content |
-| FR-CNT-004 | Immutable approved versions, explicit successor drafts, normalized frozen mappings and version-pinned reviewed rubrics | API mutation rejection; direct SQL history/mapping/attempt/rubric tests; retired-version grades/solutions remain unchanged | Choice/numeric provenance and ADR-044 rubric authoring verified; short-text learner attempt integration remains pending |
-| FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single/multiple-choice and numeric publication validation implemented; other formats and academic evidence pending |
+| FR-CNT-004 | Immutable approved versions, explicit successor drafts, normalized frozen mappings and version-pinned reviewed rubrics | API mutation rejection; direct SQL history/mapping/attempt/rubric tests; retired-version grades/solutions remain unchanged | Choice/numeric provenance, ADR-044 rubric authoring and ADR-050 disabled synthetic learner-attempt integration verified; real academic release remains gated |
+| FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single/multiple-choice/numeric validation and version-pinned short-text rubric authoring verified; real academic evidence and short-text enablement remain gated |
 | FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; channel code/link/unlink/STOP events and safe correlated processing logs are implemented; remaining dispatch pending |
 | FR-OPS-002 | ADMIN snapshot/dashboard, bounded imports/flags/channel/exports and response-start histograms; grading queue and verified local model observations | [Operations evidence](E8_OPERATIONS_VERIFICATION.md); [grading candidate](E8_GRADING_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs and browser checks | Partial: existing local visibility merged; grading queue/lease/fallback and bounded local model observations merged; model spend, academic/technical error-rate distinctions, SMS/email/mastery/provider telemetry and production alerting remain pending |

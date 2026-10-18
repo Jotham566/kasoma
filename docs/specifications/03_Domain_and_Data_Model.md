@@ -483,3 +483,10 @@ wall clock, covering generic id, grade attempt_id, request-review request_id and
 publication attempt_id. The explicit at_time predicate remains unchanged for historical
 queries. No enum, source data, retention policy, permission or append-only guard changes.
 This corrects a measured old-transaction boundary and does not enable erasure.
+
+## Audit activity sampling (ADR-058 candidate)
+
+Forward migration 0037 adds `ix_audit_activity_window(created_at,id)` to audit_log
+for newest bounded time-window sampling. It changes no row, audit trigger, source
+identity, lifecycle or retention. Only fixed SQL-classified category literals cross
+the service read boundary; no individual audit fields are projected to the API.

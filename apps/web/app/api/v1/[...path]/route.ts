@@ -26,6 +26,7 @@ const allowed: Record<string, string[]> = {
   diagnostics: ["POST"],
   "sessions/active": ["GET"],
   "admin/operations": ["GET"],
+  "admin/audit": ["GET"],
   "admin/content-context": ["GET"],
   "admin/items": ["GET", "POST"],
   "admin/content-imports": ["GET", "POST"],

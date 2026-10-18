@@ -762,3 +762,21 @@ return409 HOLD_TARGET_UNAVAILABLE; listing and releasing registered holds still 
 No new route, body upload, broad account hold, data-copy artifact or deletion permission.
 Delivery callbacks may advance only the existing monotonic lifecycle; held receipt core
 fields cannot be rewritten/requeued. The preview remains advisory/incomplete.
+
+## Bounded audit activity (ADR-058 candidate)
+
+`GET /api/v1/admin/audit` requires ADMIN on every read; no learner/support/reviewer-only
+access, object search, arbitrary filter or individual-record payload is provided. Limit
+twenty reads per administrator per minute. Return `AuditActivity` with `window_start`,
+`window_end` (last 24 hours, inclusive bounds), `sampled_count`, `capped`, fixed
+`sample_limit=10000`, `measure=AUDIT_ACTIVITY_SAMPLE` and seven `counts` entries.
+Categories are CONTENT, FLAGS, IMPORTS, PRIVACY, ROLES, GRADING_REVIEW and OTHER.
+Counts sum to the newest sampled rows, ordered by created_at then UUID descending;
+future rows are excluded. A cap means older actions in this window may be omitted,
+including from any category. Zero means no matching audited actions in this window,
+not absence of incidents or proof of complete auditing.
+
+SQL maps known action prefixes to fixed labels before transfer; unknown action text,
+actor/target/request identifiers, reasons and hashes never enter this response. No
+read-self audit row or record decryption occurs. Existing authorization and audit
+immutability/retention remain; aggregate access does not grant learner-level support.

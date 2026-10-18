@@ -1,7 +1,7 @@
 # ADR-055: Exact terminal channel receipt holds
 
 Date: 18 October 2026
-Status: Proposed; implementation and acceptance pending
+Status: Accepted for local synthetic terminal receipts; real-data/privacy release remains gated
 Requirements: FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Decision and scope
@@ -104,3 +104,10 @@ comparison. Preserve that applied migration and add forward migration 0035, comp
 through to_jsonb before accepting no-ops. Canonical JSONB preserves array order, and
 held menu/core rewrites remain rejected. No row transform or policy change. Clean and
 0034-upgrade/replay tests must verify the correction before acceptance.
+
+## Hosted engineering acceptance
+
+Source `397f5625d0f823ff6b9f2c47744103651303023b` passes complete hosted
+[run 39165896953](https://github.com/Jotham566/kasoma/actions/runs/39165896953),
+including 918 unit/contract and 368 integration cases, three-engine browser journeys,
+recovery, restricted login, security and container smoke. The source is on main and its merged branch is removed; no real-data/legal approval or complete preservation is inferred.

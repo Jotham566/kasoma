@@ -11,6 +11,7 @@ const destinations = [
   ["/admin/grading", "Grading review"],
   ["/admin/data-requests", "Privacy review"],
   ["/admin/operations", "Operations"],
+  ["/admin/audit", "Audit"],
 ] as const;
 
 export function StaffNavigation() {

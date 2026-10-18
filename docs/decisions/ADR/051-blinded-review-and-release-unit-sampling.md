@@ -80,3 +80,11 @@ Source `2164209` passes complete hosted run
 main. A later native run exposed host/VM completion-clock skew; the database-time cap
 and ahead-clock regression above are a follow-up under verification, without relaxing
 SQL guards. Genuine academic/sampling/provider/production approvals remain missing.
+
+
+## Completion-clock follow-up accepted
+
+The later database-clock completion cap passes complete hosted
+[39155326659](https://github.com/Jotham566/kasoma/actions/runs/39155326659) at
+`a357222`, which is on main. This supersedes the pending-follow-up status above;
+SQL guards and the disabled synthetic/real-approval boundary remain unchanged.

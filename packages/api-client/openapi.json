@@ -72,6 +72,91 @@
         "title": "AnsweredItem",
         "type": "object"
       },
+      "AuditActivity": {
+        "additionalProperties": false,
+        "properties": {
+          "capped": {
+            "title": "Capped",
+            "type": "boolean"
+          },
+          "counts": {
+            "items": {
+              "$ref": "#/components/schemas/AuditActivityCount"
+            },
+            "maxItems": 7,
+            "minItems": 7,
+            "title": "Counts",
+            "type": "array"
+          },
+          "measure": {
+            "const": "AUDIT_ACTIVITY_SAMPLE",
+            "default": "AUDIT_ACTIVITY_SAMPLE",
+            "title": "Measure",
+            "type": "string"
+          },
+          "sample_limit": {
+            "const": 10000,
+            "default": 10000,
+            "title": "Sample Limit",
+            "type": "integer"
+          },
+          "sampled_count": {
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Sampled Count",
+            "type": "integer"
+          },
+          "window_end": {
+            "format": "date-time",
+            "title": "Window End",
+            "type": "string"
+          },
+          "window_start": {
+            "format": "date-time",
+            "title": "Window Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "window_start",
+          "window_end",
+          "sampled_count",
+          "capped",
+          "counts"
+        ],
+        "title": "AuditActivity",
+        "type": "object"
+      },
+      "AuditActivityCount": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "CONTENT",
+              "FLAGS",
+              "IMPORTS",
+              "PRIVACY",
+              "ROLES",
+              "GRADING_REVIEW",
+              "OTHER"
+            ],
+            "title": "Category",
+            "type": "string"
+          },
+          "count": {
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "category",
+          "count"
+        ],
+        "title": "AuditActivityCount",
+        "type": "object"
+      },
       "AuditQueueEntry": {
         "additionalProperties": false,
         "properties": {
@@ -5551,6 +5636,54 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/admin/audit": {
+      "get": {
+        "operationId": "audit_api_v1_admin_audit_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditActivity"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          }
+        },
+        "summary": "Audit"
+      }
+    },
     "/api/v1/admin/content-context": {
       "get": {
         "operationId": "context_api_v1_admin_content_context_get",

@@ -1,8 +1,8 @@
-# Terminal channel receipt holds — candidate verification
+# Terminal channel receipt holds — verified and merged
 
 18–19 October 2026. FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001.
 See [ADR-055](../decisions/ADR/055-terminal-channel-receipt-holds.md) and
-[readiness](E8_CHANNEL_RECEIPT_HOLD_READINESS.md). This candidate is not merged.
+[readiness](E8_CHANNEL_RECEIPT_HOLD_READINESS.md). Complete hosted acceptance passes at source `397f562`; the source is on main and its merged branch is removed locally/remotely.
 
 ## Changes and limits
 
@@ -23,7 +23,7 @@ pages advertise supported kinds; UI options depend on that advertisement. Disabl
 blocks creation/replay but keeps registered evidence readable/releasable. Enable only
 after all API/worker readers support the new enum, preserving staged deployment safety.
 
-## Executed evidence and pending gates
+## Executed evidence
 
 - `make format lint openapi-check`: passes for the initial implementation. Generated
   HoldInput/HoldView enums and HoldPage.supported_record_types match the API/client.
@@ -40,7 +40,7 @@ after all API/worker readers support the new enum, preserving staged deployment 
   type, guard, consent, sender barrier or code-expiry rule is weakened.
 - `make test-unit`:918 Python unit/contract and 35 tooling cases pass, including explicit
   default-disabled capability checks. Broad PostgreSQL regression passes 364 cases; final focused supplements cover
-  additions after collection. Complete hosted acceptance remains required.
+  additions after collection. Complete hosted acceptance subsequently passes with 368 integration cases.
 - `make test-web-privacy`: the first expanded run catches 320-pixel/200% text form
   overflow. Scoped fieldset/control bounds and account-grid sizing fix it; all six
   three-engine journeys then pass, including advertised/disabled presentation and axe.
@@ -60,9 +60,18 @@ after all API/worker readers support the new enum, preserving staged deployment 
  no-op updates. Preserve applied 0034 and add forward migration 0035 using canonical JSONB
  comparison; fresh and upgrade/replay tests pass. Final 0035 rebuild, migration, eight-service health, fake worker/export/request
  smoke and application image security scans pass. Runtime API inspection confirms
- schema 0035 and new creation disabled. Hosted acceptance remains pending. No volume reset or row transform.
+ schema 0035 and new creation disabled. Complete hosted acceptance subsequently passes. No volume reset or row transform.
 
 Local logs `.local/channel-receipt-hold-*.log`; original overflow trace is retained.
 No real learner data or external model/Gemini/messaging/email/cloud calls are used.
 These engineering tests do not establish a genuine legal decision or production
 privacy/academic approval. Full preservation and erasure/anonymization remain open.
+
+## Exact-source hosted acceptance
+
+Source `397f5625d0f823ff6b9f2c47744103651303023b` passes the complete
+[39165896953 pipeline](https://github.com/Jotham566/kasoma/actions/runs/39165896953).
+The full source run includes 918 unit/contract and 368 integration cases, 35 tooling
+cases, 90 standard plus 12 short-text browser executions, UI harnesses, real restricted
+login, populated recovery, dependency/source/image security and owned Docker smoke.
+This closes the candidate engineering gate only; rollout creation remains disabled.

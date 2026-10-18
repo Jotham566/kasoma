@@ -220,6 +220,12 @@ def drill(settings: Settings) -> dict[str, object]:
             source_vector = original.scalar(extension)
             if not source_vector or restored.scalar(extension) != source_vector:
                 raise RuntimeError("Restored pgvector extension mismatch")
+        with restored_engine.connect() as restored:
+            if (
+                restored.scalar(text("SELECT to_regclass('public.ix_audit_activity_window')"))
+                is None
+            ):
+                raise RuntimeError("Restored audit activity index is missing")
         check_guards(restored_engine)
         stage = "VERIFY_RESTORED_EXPORT"
         fake = FakeMessagingProvider()

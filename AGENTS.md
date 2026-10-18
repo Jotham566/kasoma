@@ -126,8 +126,10 @@ disabled. Responsive staff navigation and payload-free offline report comparison
 merged after hosted verification. The local grading queue snapshot and database-clock
 completion cap are merged after hosted verification. Configurable existing runtime
 budgets and bounded local model observations are merged after complete hosted
-verification. Exact terminal channel receipt holds are under verification with new
-creation default-disabled; live channel preservation remains unsupported.
+verification. Exact terminal channel receipt holds are merged after complete hosted verification, with new
+creation default-disabled; live channel preservation remains unsupported. The four
+legacy hold DELETE clocks and bounded ADMIN audit activity are under verification.
+The minimized mutable-channel preservation proposal requires explicit owner approval.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

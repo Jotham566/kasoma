@@ -1,5 +1,15 @@
 # Changelog
 
+## Work in progress — bounded ADMIN audit activity
+
+- Implement the approved audit endpoint and navigation as fixed-category last-24-hour
+  activity sampling under ADR-058, with live ADMIN checks, bounded reads and honest
+  sample-cap reporting. No individual audit fields or extra support permission.
+- Add an audit time-window index, strict generated contracts, real API/window/upgrade
+  tests and accessible staff UI/browser coverage. Full local verification passes 918
+  unit/contract, 35 tooling and 378 integration cases, restricted login, recovery,
+  security and rebuilt Docker/browser smoke; complete hosted acceptance remains pending.
+
 ## Documentation — recovery and preservation review
 
 - Record a nondestructive eight-service restart after a power interruption, preserving
@@ -17,14 +27,15 @@
   unit/contract and 35 tooling cases, restricted logins, populated recovery, security
   and rebuilt 0036 Docker smoke. Complete hosted acceptance remains pending.
 
-## Work in progress — terminal channel receipt holds
+## Verified — terminal channel receipt holds
 
 - Preserve applied 0034 and add forward migration 0035 after a final real-menu regression catches
   PostgreSQL json equality failure on held no-op updates. Canonical JSONB comparison
   preserves menu order/core protection; clean and existing-hold upgrade/replay pass.
 - Final 21-case receipt/clock/race/restricted-login verification passes alongside 918
   unit/contract,364 broad integration and 102 full browser executions. New creation
-  remains disabled; the 0035 stack passes smoke/security/health with creation disabled. Hosted acceptance remains pending.
+  remains disabled; the 0035 stack passes smoke/security/health with creation disabled. Complete hosted
+  run 39165896953 passes at 397f562; it is on main and its merged branch is removed.
 
 - Assess exact-record holds for already-minimized owned terminal inbound/outbound
   receipts under proposed ADR-055. Preserve normal callbacks, STOP/unlink and bounded

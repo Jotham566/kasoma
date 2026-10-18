@@ -370,3 +370,13 @@ test-channel-receipt-holds:
 .PHONY: test-hold-delete-clock
 test-hold-delete-clock:
 	$(UV) pytest tests/integration/test_hold_delete_clock.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-audit-activity
+test-audit-activity:
+	$(UV) pytest tests/integration/test_audit_activity.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-web-audit
+test-web-audit:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/audit.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/audit.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/audit.spec.ts

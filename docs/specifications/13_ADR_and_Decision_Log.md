@@ -314,18 +314,31 @@ See [ADR-048](../decisions/ADR/048-asynchronous-owned-export-delivery.md).
 Local lifecycle/transport verification is recorded; final-head hosted acceptance and
 promotion remain pending. This proposal does not authorize deletion or change retention.
 
-### ADR-049 — bounded local request histograms (proposed)
+### ADR-049 — bounded local request histograms
 
-See [ADR-049](../decisions/ADR/049-local-request-histograms.md). Attribute-free OTel
-histograms and bounded local Redis aggregation are in progress. Runtime latency
-aggregation remains unavailable until integration and acceptance pass.
+See [ADR-049](../decisions/ADR/049-local-request-histograms.md). Accepted for local
+synthetic implementation at 46a0f8a after hosted 38034913518; production approval
+remains gated. Attribute-free API response-start histograms and bounded Redis
+projection are merged; they do not measure complete-response latency or release SLOs.
 
-### ADR-050 — short-text pending outcomes and eligibility (proposed)
+### ADR-050 — short-text pending outcomes and eligibility
 
-See [ADR-050](../decisions/ADR/050-short-text-pending-and-eligibility.md). Internal
-pending/neutral contracts are being implemented; no learner route, scoring band or
-assignment is enabled. Complete asynchronous/privacy/academic gates remain required.
+See [ADR-050](../decisions/ADR/050-short-text-pending-and-eligibility.md). Disabled
+synthetic learner flow passes hosted 39143803289 at 853f80a and is merged. Genuine
+academic/calibration/privacy/provider approval and normal learner enablement remain gated.
 
+### ADR-051 — blinded review and release-unit sampling
+
+See [ADR-051](../decisions/ADR/051-blinded-review-and-release-unit-sampling.md).
+Disabled synthetic independent review/rolling controls pass hosted 39150319607 at
+2164209; the later database-clock completion cap passes 39155326659 at a357222.
+These engineering decisions do not approve real reviewers, calibration or scoring bands.
+
+### ADR-052 — offline evaluation report comparison
+
+See [ADR-052](../decisions/ADR/052-offline-evaluation-report-comparison.md). Payload-free
+synthetic report comparison passes hosted 39151730479 at 17abb2d and is merged.
+No inference call, academic truth, sanitation, license or real evaluation approval follows.
 
 ### ADR-053 — bounded grading operations
 
@@ -341,11 +354,12 @@ run 39160113771 at `0c73c45` and are merged.
 No learner content, billing authority, complete fleet accounting or quota policy.
 
 
-### ADR-055 — exact terminal channel receipt holds (proposed)
+### ADR-055 — exact terminal channel receipt holds
 
 See [ADR-055](../decisions/ADR/055-terminal-channel-receipt-holds.md). Extend existing
 exact-record holds only to owned already-minimized terminal receipts. New creation
 stays disabled for staged rollout; live-state preservation and full coverage stay open.
+Source 397f562 passes complete hosted run 39165896953 and is merged.
 
 
 ### ADR-056 — wall-clock hold DELETE evaluation (proposed)
@@ -361,3 +375,10 @@ began earlier. Historical queries, source evidence and immutable guards remain u
 Bounded encrypted link/conversation-version evidence is proposed independently of
 mutable operational state; source identity, allowed fields and finite lifecycle need
 approval. No new preservation meaning, raw-data retention or erasure is authorized.
+
+## ADR-058: Bounded ADMIN audit activity
+
+**Status:** Proposed; verification pending. See
+[ADR-058](../decisions/ADR/058-bounded-admin-audit-activity.md). Implement the approved
+audit endpoint/navigation as a bounded fixed-category ADMIN aggregate, preserving
+individual-record support boundaries, immutable evidence and finite sample reporting.

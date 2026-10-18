@@ -128,7 +128,7 @@ test("NFR-ACC-001/NFR-COMP-001: staff mobile navigation is explicit and keyboard
   await menu.focus();
   await page.keyboard.press("Enter");
   await expect(menu).toHaveAttribute("aria-expanded", "true");
-  await expect(navigation.getByRole("link")).toHaveCount(6);
+  await expect(navigation.getByRole("link")).toHaveCount(7);
   await expect(
     navigation.getByRole("link", { name: "Grading review", exact: true }),
   ).toHaveAttribute("aria-current", "page");

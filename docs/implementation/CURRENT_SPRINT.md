@@ -5,10 +5,15 @@ Updated 19 October 2026. Earlier checkpoints remain in
 
 ## Verified application source
 
-Application source on main is `0c73c45`; documentation-only checkpoints may follow it.
-Complete hosted [39160113771](https://github.com/Jotham566/kasoma/actions/runs/39160113771)
-passes. All merged implementation branches are removed locally/remotely.
+Application source on main is `397f562`; complete hosted
+[39165896953](https://github.com/Jotham566/kasoma/actions/runs/39165896953) passes.
+Its merged receipt-hold branch is removed locally/remotely. The hold-clock and audit
+candidates remain separate unmerged work.
 
+- `397f562`: exact already-minimized terminal receipt holds, staged capability/UI,
+  hold-aware cleanup and forward JSON no-op correction; 918 unit/contract and 368
+  integration cases plus complete browser/recovery/security/container gates pass.
+  See [receipt verification](E8_CHANNEL_RECEIPT_HOLD_VERIFICATION.md).
 - `0c73c45`: bounded local worker model counters, truthful unknown usage, private
   five-minute Redis intervals, ADMIN snapshot/card and fake worker smoke. See
   [model verification](E8_MODEL_USAGE_VERIFICATION.md) and accepted ADR-054.
@@ -39,13 +44,14 @@ fix; the upgrade/replay supplement and related suites total 57 passing cases.
 and rebuilt 0036 image/service smoke pass. Complete hosted acceptance remains pending.
 Original append-only protections remain; no original row is erased for reproduction.
 
-## Underlying receipt candidate
+## Merged terminal receipt slice
 
-`397f562` is pushed on `codex/channel-receipt-holds` for hosted run 39165896953.
+`397f562` passes complete [hosted 39165896953](https://github.com/Jotham566/kasoma/actions/runs/39165896953)
+on `codex/channel-receipt-holds`, including 368 full integration cases. It is on main; its merged branch is removed.
 Its 21 focused receipt/clock/race/JSON-upgrade and privacy-login cases,918 unit/contract,
 364 broad integration plus final supplements,102 full browser executions, final privacy
 reflow and recovery/security/image/service checks pass locally. The stack is on 0036
-with creation disabled. This candidate remains unmerged until hosted acceptance.
+with creation disabled. The source is merged; later clock/audit verification remains independent.
 
 ## Receipt scope and continuing safeguards
 
@@ -57,8 +63,7 @@ receipt/clock/race/JSON-upgrade and restricted privacy-login verification passes
 364 broad integration and 102 full browser executions pass with final focused
 supplements. Applied0034 is preserved; forward migration 0035 fixes a reproduced held-menu JSON no-op
 comparison. Final 0035 images/migration/service checks pass with creation disabled; hosted
-acceptance remains pending.
-
+acceptance passes in run 39165896953.
 
 The receipt candidate addresses FR-ID-006, FR-WA-006, FR-OPS-003, BR-010,
 NFR-SEC-002 and NFR-MNT-001 with exact original-record holds on owned terminal
@@ -67,6 +72,20 @@ and unrelated bounded cleanup remain operational. Creation defaults disabled for
 staged reader compatibility. See [channel readiness](E8_CHANNEL_HOLD_READINESS.md);
 live-state preservation still requires a separately recorded design. Full hold
 coverage and erasure are not complete.
+
+## Independent audit activity candidate
+
+FR-OPS-003 and NFR-SEC/ACC/PERF/MNT-001: the approved audit endpoint/navigation is
+implemented as bounded fixed-category ADMIN sampling under
+[ADR-058](../decisions/ADR/058-bounded-admin-audit-activity.md). SQL transfers only
+category literals; no individual audit field or learner support access. Five real
+role/rate/revocation/window/cap/empty/upgrade cases pass. Full local verification passes
+918 unit/contract, 35 tooling and 378 integration cases, restricted login, populated
+recovery, security, rebuilt Docker smoke and six browser/UI cases. Initial client-factory
+and proxy-route mistakes were caught and fixed; final readable mobile layout was
+visually inspected. Complete hosted acceptance remains required. See
+[audit readiness](E8_AUDIT_ACTIVITY_READINESS.md) and
+[verification](E8_AUDIT_ACTIVITY_VERIFICATION.md).
 
 ## Next preservation decision
 

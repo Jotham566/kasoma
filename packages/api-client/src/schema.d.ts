@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/api/v1/admin/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Audit */
+        get: operations["audit_api_v1_admin_audit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/content-context": {
         parameters: {
             query?: never;
@@ -1014,6 +1031,47 @@ export interface components {
              * Format: uuid
              */
             session_item_id: string;
+        };
+        /** AuditActivity */
+        AuditActivity: {
+            /** Capped */
+            capped: boolean;
+            /** Counts */
+            counts: components["schemas"]["AuditActivityCount"][];
+            /**
+             * Measure
+             * @default AUDIT_ACTIVITY_SAMPLE
+             * @constant
+             */
+            measure: "AUDIT_ACTIVITY_SAMPLE";
+            /**
+             * Sample Limit
+             * @default 10000
+             * @constant
+             */
+            sample_limit: 10000;
+            /** Sampled Count */
+            sampled_count: number;
+            /**
+             * Window End
+             * Format: date-time
+             */
+            window_end: string;
+            /**
+             * Window Start
+             * Format: date-time
+             */
+            window_start: string;
+        };
+        /** AuditActivityCount */
+        AuditActivityCount: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "CONTENT" | "FLAGS" | "IMPORTS" | "PRIVACY" | "ROLES" | "GRADING_REVIEW" | "OTHER";
+            /** Count */
+            count: number;
         };
         /** AuditQueueEntry */
         AuditQueueEntry: {
@@ -3368,6 +3426,53 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    audit_api_v1_admin_audit_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditActivity"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     context_api_v1_admin_content_context_get: {
         parameters: {
             query?: never;

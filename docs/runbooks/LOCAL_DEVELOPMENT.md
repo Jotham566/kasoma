@@ -1205,3 +1205,16 @@ disabling original append-only protection. Forward0036 replaces only DELETE cloc
 arguments; keep historical predicate semantics and all preservation evidence. Complete
 clean/0035-upgrade, replay, existing holds, restricted-login, recovery/security and hosted
 checks before promotion. This does not authorize or implement account erasure.
+
+### Bounded ADMIN audit activity (candidate)
+
+Open `/admin/audit` from the staff workspace and explicitly refresh after synthetic
+ADMIN sign-in. This shows the newest at most 10,000 audited actions in the last
+24 hours, grouped into fixed categories; it does not expose individual records or
+establish retention compliance. A cap warning means counts omit older matching
+activity. No current result is shown after a failed refresh.
+
+`make test-audit-activity` checks real role/rate/revocation, window/cap and SQL evidence
+controls; `make test-web-audit test-web-content` covers real authenticated browser
+access and isolated empty/capped/error UI harnesses. Migration 0037 adds an index
+without rewriting evidence. Preserve the source audit rows/guards during rollback.
