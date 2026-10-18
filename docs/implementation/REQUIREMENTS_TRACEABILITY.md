@@ -1,5 +1,12 @@
 # Requirements Traceability
 
+Staff mobile-navigation candidate: NFR-ACC-001/NFR-COMP-001 uses the existing
+staff destinations with an explicit narrow-screen disclosure, keyboard activation,
+active destination, >=44-pixel controls and close-on-navigation. Desktop navigation
+remains visible. Lint/build/contracts, two UI harness and 102 three-engine executions,
+including 200% text, pass; final rebuilt container/source checks pass. See
+[navigation evidence](E6_STAFF_NAVIGATION_VERIFICATION.md). Hosted acceptance is pending.
+
 18 October candidate: FR-GRD-003/004/005, FR-ID-003/006 and NFR-SEC-002 are
 addressed by migration 0033, `services/grading_reviews.py`, blinded staff routes/UI,
 release-unit sampling, immutable complete-rubric reviews, sticky rolling disablement,

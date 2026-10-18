@@ -84,6 +84,22 @@ for (const width of [320, 1280]) {
     const staffNavigation = page.getByRole("navigation", {
       name: "Workspace navigation",
     });
+    const staffMenu = page.getByRole("button", {
+      name: "Workspace menu",
+      exact: true,
+    });
+    if (width === 320) {
+      await expect(staffNavigation).toHaveCount(0);
+      await expect(staffMenu).toHaveAttribute("aria-expanded", "false");
+      expect((await staffMenu.boundingBox())?.height).toBeGreaterThanOrEqual(
+        44,
+      );
+      await staffMenu.focus();
+      await page.keyboard.press("Enter");
+      await expect(staffMenu).toHaveAttribute("aria-expanded", "true");
+    } else {
+      await expect(staffMenu).toBeHidden();
+    }
     await expect(staffNavigation).toBeVisible();
     await expect(
       staffNavigation.getByRole("link", { name: "Operations", exact: true }),

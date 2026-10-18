@@ -7,6 +7,19 @@ promoted to main. Its merged branch is removed locally and remotely.
 Current next-slice branch: `codex/grading-expert-review`, based on that candidate.
 Do not promote the next branch ahead of its verification.
 
+## Active follow-up: compact staff navigation
+
+Expert-review candidate `2164209` is committed/pushed and undergoing exact-source
+[hosted verification](https://github.com/Jotham566/kasoma/actions/runs/39150319607).
+The next UI-only slice is on `codex/staff-mobile-navigation`, based on that candidate:
+NFR-ACC-001/NFR-COMP-001, an explicit keyboard-accessible mobile workspace menu,
+unchanged desktop destinations and close-on-navigation behavior. It addresses the
+excessive header height observed in review screenshots. No API/schema or architectural
+change is needed. See [navigation evidence](E6_STAFF_NAVIGATION_VERIFICATION.md).
+Local lint/build/contracts and serial acceptance pass (104 browser executions including
+200% text). Final rebuilt images, service/export/metrics smoke and vulnerability/source
+scans pass. Exact-source hosted verification remains required before promotion.
+
 ## Current verification and promotion state
 
 - Export/UI/request-aggregation candidate `5f959ef` passes the complete hosted pipeline

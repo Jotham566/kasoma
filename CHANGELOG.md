@@ -1,5 +1,19 @@
 # Changelog
 
+## Work in progress — staff mobile navigation
+
+- Replace the always-expanded narrow-screen staff links with an explicit accessible
+  workspace menu; retain visible desktop navigation and the current destination.
+  Close the menu on navigation, keep sign-in touch-accessible and preserve the
+  synthetic-data notice. No route permissions or learner workflows change.
+- Verify keyboard disclosure, active links, navigation reset, 320-pixel reflow and
+  reviewer-form state across browser engines before acceptance. Fix real 200% text
+  overflow in the review grid using scoped wrapping and zero-minimum grid sizing;
+  preserve content rather than clipping it. Record shared Playwright artifact collisions
+  and require sequential native browser commands. Final serial acceptance passes 104
+  browser executions, lint/build/contracts and rebuilt-image/service/security checks;
+  exact-source hosted verification remains pending.
+
 ## Work in progress — independent grading review
 
 - Implement ADR-051 candidate migration 0033, blinded academic-review API and responsive

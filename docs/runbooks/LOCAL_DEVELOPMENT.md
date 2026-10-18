@@ -1045,3 +1045,10 @@ After interruption, inspect Git and `docker compose --profile application ps`; u
 `make services` and the documented application profile start command to restore existing
 containers/volumes. Never reset volumes to make checks pass. Preserve failed-run evidence
 and rerun affected checks before reporting success.
+
+
+Run native Playwright commands sequentially: their default `test-results` directory
+is shared even when web-server ports differ. Starting the UI harness while a full
+engine run is active can delete the other run's trace files during context closure.
+This is a harness collision, not passing application evidence; preserve the failure
+and rerun serially. Never rebuild `.next` while a native browser server uses it.

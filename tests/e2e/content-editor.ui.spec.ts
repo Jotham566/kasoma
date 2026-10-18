@@ -102,3 +102,71 @@ test("FR-CNT-003: controlled rubric survives save and explicit reload", async ({
     page.getByLabel("Acceptable evidence 1", { exact: true }),
   ).toHaveValue("Alpha\non its own line");
 });
+
+test("NFR-ACC-001/NFR-COMP-001: staff mobile navigation is explicit and keyboard accessible", async ({
+  page,
+}) => {
+  await page.route("**/api/v1/**", (route) =>
+    route.fulfill({
+      status: 401,
+      json: { error: { code: "AUTH_REQUIRED", message: "Sign in required." } },
+    }),
+  );
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto("/admin/grading");
+  const menu = page.getByRole("button", {
+    name: "Workspace menu",
+    exact: true,
+  });
+  const navigation = page.getByRole("navigation", {
+    name: "Workspace navigation",
+  });
+  await expect(menu).toHaveAttribute("aria-expanded", "false");
+  await expect(navigation).toHaveCount(0);
+  const bounds = await menu.boundingBox();
+  expect(bounds?.height).toBeGreaterThanOrEqual(44);
+  await menu.focus();
+  await page.keyboard.press("Enter");
+  await expect(menu).toHaveAttribute("aria-expanded", "true");
+  await expect(navigation.getByRole("link")).toHaveCount(6);
+  await expect(
+    navigation.getByRole("link", { name: "Grading review", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.screenshot({
+    path: ".local/ui-review/staff-menu-mobile.png",
+    fullPage: true,
+  });
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await navigation
+    .getByRole("link", { name: "Privacy review", exact: true })
+    .focus();
+  await page.keyboard.press("Enter");
+  await expect(menu).toHaveAttribute("aria-expanded", "false");
+  await expect(navigation).toHaveCount(0);
+  await expect(page).toHaveURL(/\/admin\/data-requests$/);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "100%";
+  });
+  await page.setViewportSize({ width: 1200, height: 800 });
+  await expect(menu).toBeHidden();
+  await expect(
+    navigation.getByRole("link", { name: "Privacy review", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  await page.screenshot({
+    path: ".local/ui-review/staff-menu-desktop.png",
+    fullPage: true,
+  });
+});

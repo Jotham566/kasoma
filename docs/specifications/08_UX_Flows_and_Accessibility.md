@@ -169,3 +169,14 @@ At minimum, E2E tests cover:
 8. consent-required block;
 9. offline/retry without duplicate attempt;
 10. keyboard-only completion of a revision session.
+
+
+### Staff navigation presentation
+
+At widths up to 640 CSS pixels, the staff workspace uses an explicit Workspace menu
+button with aria-expanded/aria-controls. Hidden destinations leave the accessibility
+and keyboard tree until opened. Enter/Space operate the disclosure; following a link
+closes it, and aria-current identifies the exact destination. Desktop links remain
+visible. This is responsive presentation within the existing staff information
+architecture, not a permission change or an additional product feature. Sign-in and
+menu targets remain at least 44 pixels high, without remote fonts/assets or animation.

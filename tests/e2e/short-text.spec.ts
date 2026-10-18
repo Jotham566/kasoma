@@ -253,6 +253,25 @@ test("FR-GRD-003/FR-ID-006: blinded independent review, mobile reflow and exact 
       fullPage: true,
     });
     await staff.setViewportSize({ width: 320, height: 860 });
+    const workspaceMenu = staff.getByRole("button", {
+      name: "Workspace menu",
+      exact: true,
+    });
+    const workspaceNavigation = staff.getByRole("navigation", {
+      name: "Workspace navigation",
+    });
+    await expect(workspaceMenu).toHaveAttribute("aria-expanded", "false");
+    await expect(workspaceNavigation).toHaveCount(0);
+    await workspaceMenu.focus();
+    await staff.keyboard.press("Space");
+    await expect(
+      workspaceNavigation.getByRole("link", {
+        name: "Grading review",
+        exact: true,
+      }),
+    ).toHaveAttribute("aria-current", "page");
+    await staff.keyboard.press("Space");
+    await expect(workspaceNavigation).toHaveCount(0);
     await expect(
       staff.getByRole("region", { name: "Review queue" }),
     ).toHaveCount(0);
