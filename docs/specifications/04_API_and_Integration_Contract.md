@@ -780,3 +780,11 @@ SQL maps known action prefixes to fixed labels before transfer; unknown action t
 actor/target/request identifiers, reasons and hashes never enter this response. No
 read-self audit row or record decryption occurs. Existing authorization and audit
 immutability/retention remain; aggregate access does not grant learner-level support.
+
+## Channel preservation format boundary (ADR-057 first increment)
+
+The approved synthetic private-format increment introduces no API, generated schema,
+reader permission or supported hold kind. In particular, internal integrity decoding
+is not a payload-reading/export endpoint. No client may submit snapshot kinds through
+the existing original-record hold contract. Capture/capability/version-selection
+contracts remain pending and must ship with authorization, SQL/lifecycle and UI tests.

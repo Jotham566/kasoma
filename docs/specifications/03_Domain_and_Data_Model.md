@@ -490,3 +490,20 @@ Forward migration 0037 adds `ix_audit_activity_window(created_at,id)` to audit_l
 for newest bounded time-window sampling. It changes no row, audit trigger, source
 identity, lifecycle or retention. Only fixed SQL-classified category literals cross
 the service read boundary; no individual audit fields are projected to the API.
+
+## Private channel evidence format (ADR-057 first increment)
+
+Explicit approval covers bounded synthetic implementation. The offline format in
+`services/channel_preservation_format.py` permits exactly the ADR-057 link and
+conversation evidence allowlists. A separate binding contains snapshot/request/owner,
+source kind/link/revision and an opaque observed-version value. Canonical UTC JSON
+is authenticated with purpose- and binding-separated Fernet encryption using the
+existing identity key and HKDF-SHA256. Bounds are 2,048 plaintext and 4,096 ciphertext
+bytes. Private models are strict/frozen and representations omit their fields.
+
+This increment adds no table or migration and persists nothing. The format does not
+establish source ownership, freshness, observed-version generation or permission to
+capture/decrypt. Those belong to the next atomic authorized transaction, independent
+SQL guards and finite cleanup. No operational channel row is frozen or copied yet;
+STOP/unlink and ordinary expiry retain their existing behavior. See
+[verification](../implementation/E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md).

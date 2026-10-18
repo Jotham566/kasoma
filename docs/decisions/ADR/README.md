@@ -133,8 +133,8 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-056: Wall-clock hold DELETE guards](056-wall-clock-hold-delete-guards.md)
   records verified correction of four legacy evaluation clocks without granting erasure.
 
-- [ADR-057: Minimized channel preservation snapshots — proposal](057-minimized-channel-preservation-proposal.md)
-  compares bounded capture and version history; explicit owner approval is pending.
+- [ADR-057: Minimized channel preservation snapshots](057-minimized-channel-preservation-proposal.md)
+  has explicit approval for bounded synthetic implementation; full application acceptance is pending.
 
 - [ADR-058: Bounded ADMIN audit activity](058-bounded-admin-audit-activity.md)
   records aggregate-only audit navigation, finite sampling and no individual disclosure.

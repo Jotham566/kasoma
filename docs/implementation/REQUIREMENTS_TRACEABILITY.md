@@ -8,8 +8,9 @@ documentation. ADR-056/058/059 are accepted for their bounded local/hosted engin
 scope. Full 940 unit/contract, 378 integration, 35 tooling, 105 ordinary browser and
 UI/transport/security/recovery/image/service gates pass. This supersedes older
 candidate/pending engineering status below, without changing any production, academic,
-privacy, preservation/erasure or physical-device release gate. ADR-057 remains proposed
-and awaits owner approval. [Checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
+privacy, preservation/erasure or physical-device release gate. ADR-057 now has explicit
+bounded synthetic implementation approval; application acceptance remains pending.
+[Checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
 
 
 NFR-MNT-001 candidate: [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md)
@@ -28,10 +29,15 @@ restricted login, recovery, security, rebuilt Docker and six browser/UI cases pa
 locally; complete hosted acceptance remains required. No application acceptance or full audit-coverage claim.
 
 FR-ID-006 / FR-WA-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
-[ADR-057 proposal](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
+[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
 records exact source/version, field allowlists, atomic encrypted capture, independent
 authorization, finite expiry, export boundaries and tests before further mutable-channel
-preservation. Explicit owner approval is pending; no code or acceptance is claimed.
+preservation. Explicit user approval on 19 October permits the bounded synthetic
+implementation. The first private-format increment adds strict allowlists, UTC
+canonicalization, bounded independently derived authenticated encryption and 82
+socket-disabled format/binding/tampering tests; see
+[verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md). Capture, SQL/lifecycle,
+access/API/UI and full application acceptance remain pending. No real-data/erasure authority.
 NFR-REL-002 local recovery instructions now include nondestructive power-interruption
 restart; this does not replace the separately required production recovery evidence.
 

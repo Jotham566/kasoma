@@ -131,7 +131,8 @@ creation default-disabled; live channel preservation remains unsupported. The fo
 legacy hold DELETE clocks and bounded ADMIN audit activity are merged after complete
 hosted verification at 5d95f9d. Guarded disposable CI storage preparation is verified;
 it never authorizes developer SDK or application-volume cleanup.
-The minimized mutable-channel preservation proposal requires explicit owner approval.
+ADR-057 has explicit user approval for the bounded synthetic implementation only;
+its private evidence format is the first increment, with capture/lifecycle acceptance pending.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

@@ -1,5 +1,15 @@
 # Changelog
 
+## In progress — approved synthetic channel preservation
+
+- Record the user's explicit bounded ADR-057 implementation approval. Real-data
+  processing, account erasure and production privacy/release gates remain separate.
+- Add a private, bounded, strict link/conversation evidence format with purpose- and
+  snapshot-bound authenticated encryption, UTC canonicalization and closed diagnostics.
+  No runtime capture, storage, endpoint, permission or retention change is enabled.
+- Add 82 offline format/tampering/allowlist/binding cases and the prescribed
+  `make test-channel-preservation-format` command. Full ADR-057 acceptance remains pending.
+
 ## Accepted engineering checkpoint — 19 October 2026
 
 - Source 5d95f9d passes complete hosted [39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022)

@@ -1,4 +1,4 @@
-# Current sprint: verified checkpoint and preservation decision
+# Current sprint: approved synthetic preservation implementation
 
 Updated 19 October 2026. Earlier context is preserved in
 [sprint history](SPRINT_HISTORY_2026_10_18.md) and the
@@ -55,16 +55,21 @@ and five browser batches; it is not accepted. Initial missing proxy/client/stagi
 obsolete navigation expectations were caught and corrected. Failed/cancelled evidence
 is retained; no timeout, authorization or academic threshold is relaxed.
 
-## Next preservation decision
+## Current preservation increment
 
-[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) proposes
+[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) defines
 bounded encrypted evidence for an exact owned link/conversation version, excluding
 contacts, message bodies and authentication material. It compares version history,
 sets finite lifecycle/access boundaries and defines atomic capture/race/recovery tests.
-Explicit owner approval was requested under the source-of-truth change protocol and
-is not recorded. No answer or elapsed time grants approval; dependent implementation
-has not started. Full coverage, erasure/anonymization and accountability expiry remain
-incomplete even if this first bounded proposal is approved.
+On 19 October the user explicitly approved this bounded synthetic implementation.
+Real-data processing and erasure were excluded in the approval request and remain
+unauthorized. The first increment is an offline strict evidence format and independently
+derived Fernet encryption bound to snapshot/request/owner/source/revision/version.
+All 82 focused socket-disabled tests pass. See
+[increment verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md).
+Capture transactions, SQL guards, exact observed-version generation, finite cleanup,
+authorization, API/capabilities, preview, UI and recovery are next; no capture is enabled.
+Full coverage, erasure/anonymization and accountability expiry remain incomplete.
 
 ## Review stack and remaining gates
 

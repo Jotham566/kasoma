@@ -77,10 +77,13 @@ and corrects that boundary with local verification, pending full hosted acceptan
 Review any remaining clock-anomalous metadata before a future erasure processor. Existing append-only protections remain,
 account erasure is disabled and this terminal subset does not claim universal clearance.
 
-## Concrete proposal awaiting approval
+## Approved bounded synthetic implementation
 
 [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) now compares
 bounded encrypted capture with continuous immutable versions and specifies the proposed
-first link/conversation slice, field exclusions, finite lifecycle and acceptance. It is
-not accepted; implementation changing preservation meaning waits for explicit approval.
-Terminal original-record holds and unaffected engineering verification can continue.
+first link/conversation slice, field exclusions, finite lifecycle and acceptance.
+The user explicitly approved the bounded synthetic implementation on 19 October.
+Its first increment is the private evidence format only; see
+[verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md). Atomic authorized
+capture, SQL/lifecycle/API/UI/recovery and full acceptance remain pending. Approval
+does not permit real-data processing, raw-message preservation or account erasure.

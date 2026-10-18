@@ -1,8 +1,8 @@
-# ADR-057: Minimized channel preservation snapshots — proposal
+# ADR-057: Minimized channel preservation snapshots
 
 Date: 19 October 2026
-Status: Proposed; explicit privacy/product approval required before implementation
-Owners: Product, privacy/safeguarding and technical owners; approval not recorded
+Status: Approved for bounded synthetic implementation; application acceptance pending
+Owners: Product, privacy/safeguarding and technical owners; bounded user approval recorded below
 Requirements: FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Context
@@ -20,9 +20,9 @@ data or learner-visible behavior. A snapshot changes the meaning of preservation
 an original-row guard to a captured evidence object, even if implementation is additive.
 An engineering ADR cannot decide legal sufficiency or authorize extra personal data.
 
-## Proposed first slice
+## Approved first slice
 
-OPEN-QUESTION PRESERVATION-01: approve or revise a narrowly minimized, encrypted,
+OPEN-QUESTION PRESERVATION-01 (resolved for bounded synthetic implementation): a narrowly minimized, encrypted,
 immutable snapshot captured only for an already-authorized exact-record preservation
 decision. Recommend this over continuous version history because it copies nothing
 until a specific decision exists. This is a proposal for engineering implementation
@@ -36,7 +36,7 @@ link_revision and exact state version, never treat that composite as a global re
 The new snapshot gets its own UUID after validated capture. It is visibly a snapshot,
 not a replacement CHANNEL_INBOUND_RECEIPT or original-record hold.
 
-Proposed encrypted field allowlists, subject to owner review:
+Approved encrypted field allowlists for this bounded synthetic implementation:
 
 | Source | Captured evidence | Explicitly excluded |
 | --- | --- | --- |
@@ -128,9 +128,40 @@ before code; do not silently derive a new period from the raw-webhook upper boun
 
 ## Approval and migration
 
-Approval is not recorded. No migration, schema/API/UI behavior or runtime flag is added
-by this proposal. Product/privacy/safeguarding owners must confirm source identities,
-field allowlists, finite lifecycle and the fact that omitted raw material remains a gap.
-Only then prepare the smallest additive synthetic implementation and record approval
-here. Destructive erasure/anonymization still requires a separate exact transform,
+On 19 October 2026 the human user answered the explicit ADR-057 review request:
+“Approve this bounded synthetic implementation”. The request named this document,
+exact owned link/conversation versions, excluded contacts/message bodies/codes/tokens,
+preserved STOP/unlink, and explicitly excluded real-data processing and account erasure.
+This approves engineering implementation of the defined scope. It does not stand in
+for formal production privacy/legal/safeguarding approval or acceptance-test evidence.
+
+Destructive erasure/anonymization still requires a separate exact transform,
 full hold coverage, tested recovery and explicit human approval under the coding contract.
+
+## First implementation increment: private format
+
+`services/channel_preservation_format.py` implements only the offline evidence format.
+Frozen strict models accept exactly the approved evidence fields; separate capture
+binding contains snapshot/request/owner/source identities, revision and an opaque
+64-hex observed-version value. The future capture transaction must generate and
+revalidate that version under lock; this format does not invent a source-version counter
+or authenticate its caller. No migration, endpoint, capture, reader permission, runtime
+flag or storage is introduced by this increment.
+
+Use the existing Fernet authenticated-encryption primitive with HKDF-SHA256 deriving
+a separate key from the existing identity encryption key. HKDF info is the fixed
+`kasoma-channel-preservation-v1` purpose, a zero separator and canonical full binding.
+The authenticated plaintext repeats format/binding and contains only the allowlisted
+evidence. Different snapshots, requests, owners, sources, revisions, observed versions
+and source kinds have different derived keys. This is local key separation, not a
+new provider, key-rotation system or production key-management approval.
+
+UTC canonical JSON preserves microseconds. Plaintext is bounded to 2,048 bytes and
+ciphertext to 4,096 bytes; noncanonical/duplicate/extra/missing fields fail closed.
+Private value representations omit fields, ciphertext is a SecretStr, and codec
+failures contain only fixed codes. Internal decoding exists for integrity/recovery
+tests, not an application retrieval endpoint. Fernet time is not retention authority;
+the pending database lifecycle must enforce finite decisions, release and disposal.
+
+No full ADR-057 acceptance is claimed until the transaction, SQL guards, lifecycle,
+authorization, API/capability discovery, preview, UI and recovery criteria above pass.
