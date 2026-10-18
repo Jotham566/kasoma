@@ -325,3 +325,16 @@ aggregation remains unavailable until integration and acceptance pass.
 See [ADR-050](../decisions/ADR/050-short-text-pending-and-eligibility.md). Internal
 pending/neutral contracts are being implemented; no learner route, scoring band or
 assignment is enabled. Complete asynchronous/privacy/academic gates remain required.
+
+
+### ADR-053 — bounded grading operations
+
+See [ADR-053](../decisions/ADR/053-bounded-grading-operations.md). Bounded ADMIN
+queue/lease/outcome/audit visibility and local stale-age alerts pass hosted run
+39155326659 at `a357222`. Processing fallback does not establish academic error rate.
+
+### ADR-054 — bounded worker model usage (proposed)
+
+See [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md). Six private local
+SDK counters, bounded Redis aggregation and ADMIN visibility are under verification.
+No learner content, billing authority, complete fleet accounting or quota policy.

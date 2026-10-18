@@ -69,7 +69,8 @@ is rerun after rebuilding the native bundle; no concurrent native browser comman
   request-metrics smoke pass. Persistent stack is updated and left running.
 
 No destructive migration, external inference/Gemini, real learner data or production
-approval. Exact-source hosted acceptance remains required before promotion. The
+approval. Exact-source hosted run 39155326659 passes at `a357222`, now on main; the merged
+source branch is removed locally/remotely. The
 current sprint is now concise; earlier detailed checkpoints are preserved verbatim in
 [the historical snapshot](SPRINT_HISTORY_2026_10_18.md), with their status explicitly
 superseded to avoid treating old candidate notes as current instructions.

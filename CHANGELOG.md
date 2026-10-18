@@ -1,5 +1,19 @@
 # Changelog
 
+## Work in progress — bounded local model observations
+
+- Add six private, attribute-free worker counters and bounded five-minute Redis
+  aggregation under proposed ADR-054. Observe actual provider-port attempts after
+  authorization; omitted usage stays unknown, explicit reported zero stays zero.
+- Extend the ADMIN snapshot/dashboard with local attempt counts, known token
+  subtotals, unavailable totals and a typed volume warning. No billing, fleet ledger,
+  grading accuracy or quota enforcement claim. Only the ordinary development/test
+  worker publishes freshness; fixed fake probes verify the running stack.
+- Preserve the existing request histogram wire format while sharing its finite byte
+  transport. Add SDK, real Redis, role/lifecycle, alert and accessible presentation
+  regressions. Verification is in progress; learner scoring remains disabled.
+
+
 ## Work in progress — configurable per-job grading budgets
 
 - Expose the existing shared request/token/deadline ceilings through typed server
@@ -13,8 +27,10 @@
   security, populated recovery and rebuilt image/service smoke; hosted acceptance
   remains pending.
 
-## Work in progress — grading queue operations
+## Verified — grading queue operations
 
+- Hosted run 39155326659 passes for `a357222`; promote to main and remove the merged
+  grading-operations branch locally/remotely.
 - Promote verified independent review, responsive navigation and offline report comparison
   through `17abb2d` to main after hosted runs 39150319607/39151730479 pass; remove all
   three merged source branches. Keep the current unmerged operations work separate.

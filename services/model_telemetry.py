@@ -13,6 +13,7 @@ from uuid import UUID, uuid4
 from pydantic import BaseModel, ConfigDict, Field
 
 from services.observability import logger
+from services.observed_model_gateway import reported_usage
 from services.providers import ModelGateway, ModelResult, ModelTask
 
 PromptVersion = Literal[
@@ -122,6 +123,7 @@ class RehearsalTelemetry:
                 )
             )
             raise RuntimeError("Model call failed") from None
+        incoming, outgoing = reported_usage(output)
         self.emit(
             ModelCallEvent.model_validate(
                 base
@@ -132,9 +134,9 @@ class RehearsalTelemetry:
                     if output.provider == "fake" and output.model == "fixture-v1"
                     else "UNREGISTERED",
                     "status": "FLAGGED" if output.flagged else output.status,
-                    "input_tokens": output.input_tokens,
-                    "output_tokens": output.output_tokens,
-                    "usage_source": "PROVIDER_REPORTED",
+                    "input_tokens": incoming,
+                    "output_tokens": outgoing,
+                    "usage_source": "PROVIDER_REPORTED" if incoming is not None else "UNAVAILABLE",
                     "output_fingerprint": self.fingerprint(output.raw_output)
                     if output.raw_output is not None
                     else None,

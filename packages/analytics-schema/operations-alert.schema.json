@@ -43,7 +43,8 @@
         "EXPORT_FAILED",
         "EXPORT_STALLED",
         "REQUEST_RESPONSE_START_SLOW",
-        "GRADING_STALLED"
+        "GRADING_STALLED",
+        "MODEL_GATEWAY_VOLUME"
       ]
     },
     "severity": {

@@ -19,6 +19,7 @@ from services.observability import logger
 from services.operations_contracts import (
     Count,
     ExportCounts,
+    ModelUsage,
     OperationAlert,
     OperationCounts,
     OperationsView,
@@ -43,6 +44,7 @@ def thresholds(identity: IdentityService) -> OperationThresholds:
         channel_dispatch_p95_ms=settings.ops_channel_dispatch_p95_ms,
         channel_dispatch_min_samples=settings.ops_channel_dispatch_min_samples,
         grading_age_seconds=settings.ops_grading_age_seconds,
+        model_gateway_attempts=settings.ops_model_gateway_attempts_threshold,
         export_failures=settings.ops_export_failure_threshold,
         export_age_seconds=settings.ops_export_age_seconds,
     )
@@ -109,8 +111,18 @@ def evaluate(
     values: OperationCounts | None,
     limits: OperationThresholds,
     request_metric: RequestTiming | None = None,
+    model_metric: ModelUsage | None = None,
 ) -> list[OperationAlert]:
     alerts: list[OperationAlert] = []
+    if model_metric is not None and model_metric.observed_attempts >= limits.model_gateway_attempts:
+        alerts.append(
+            OperationAlert(
+                code="MODEL_GATEWAY_VOLUME",
+                severity="WARNING",
+                observed=model_metric.observed_attempts,
+                threshold=limits.model_gateway_attempts,
+            )
+        )
     if request_metric is not None and request_metric.sample_size >= limits.request_min_samples:
         lower = request_metric.p95_lower_exclusive_ms
         # Integer-ms measurements make lower + 1 a proven inclusive lower bound.
@@ -265,15 +277,19 @@ def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> Opera
     worker = heartbeat(identity, write=worker_sample)
     limits = thresholds(identity)
     timing = request_timing(identity)
+    usage = model_usage(identity)
     view = OperationsView(
         generated_at=identity.clock(),
         health=health,
         worker=worker,
         counts=values,
         thresholds=limits,
-        alerts=evaluate(health, worker, values, limits, timing),
+        alerts=evaluate(health, worker, values, limits, timing, usage),
+        model_usage=usage,
         request_timing=timing,
     )
+    if usage is not None:
+        view.unavailable_metrics = [m for m in view.unavailable_metrics if m != "AI_USAGE"]
     if timing is not None:
         view.unavailable_metrics = [m for m in view.unavailable_metrics if m != "REQUEST_LATENCY"]
     return view
@@ -289,6 +305,34 @@ def request_timing(identity: IdentityService) -> RequestTiming | None:
             sample_size=value.estimate.sample_size,
             p95_lower_exclusive_ms=value.estimate.p95_lower_exclusive_ms,
             p95_upper_inclusive_ms=value.estimate.p95_upper_inclusive_ms,
+            interval_count=value.interval_count,
+            capped=value.capped,
+        )
+    except Exception:
+        return None
+
+
+def model_usage(identity: IdentityService) -> ModelUsage | None:
+    from services.model_metric_store import ModelMetricStore
+
+    try:
+        with metric_cache(identity.settings) as cache:
+            value = ModelMetricStore(
+                cache, metric_scope(identity.settings, purpose="model-metrics")
+            ).read()
+        if value is None:
+            return None
+        candidate, fallback, unavailable, unknown, incoming, outgoing = value.counts
+        return ModelUsage(
+            observed_attempts=candidate + fallback + unavailable,
+            candidate_responses=candidate,
+            fallback_responses=fallback,
+            no_result_attempts=unavailable,
+            usage_unknown_attempts=unknown,
+            reported_input_tokens=incoming,
+            reported_output_tokens=outgoing,
+            total_input_tokens=incoming if unknown == 0 else None,
+            total_output_tokens=outgoing if unknown == 0 else None,
             interval_count=value.interval_count,
             capped=value.capped,
         )

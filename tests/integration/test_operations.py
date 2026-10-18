@@ -247,3 +247,43 @@ def test_operations_flag_counts_exclude_resolved_without_disclosing_reports(
     assert resolved.status_code == 200, resolved.text
     view = snapshot(service)
     assert view.counts.unresolved_flags.value == 0 and view.counts.high_priority_flags.value == 0
+
+
+def test_model_usage_is_admin_only_unknown_not_zero_and_corruption_unavailable(content):
+    from uuid import uuid4
+
+    from services.model_metric_store import ModelMetricStore
+    from services.model_metrics import ModelInterval
+    from services.request_metrics_collector import metric_cache, metric_scope
+
+    service, client, actors, _ = content
+    with metric_cache(service.settings) as cache:
+        store = ModelMetricStore(cache, metric_scope(service.settings, purpose="model-metrics"))
+        seconds, micros = cache.time()
+        end = (seconds * 1_000_000 + micros - 10000) * 1000
+        frame = ModelInterval(end - 1_000_000_000, end, (99, 0, 1, 1, 100, 20))
+        source = uuid4()
+        try:
+            assert store.write(source, frame)
+            response = client.get("/api/v1/admin/operations", headers=actors["admin"])
+            assert response.status_code == 200
+            usage = response.json()["model_usage"]
+            assert usage["observed_attempts"] == 100
+            assert usage["reported_input_tokens"] == 100
+            assert usage["total_input_tokens"] is usage["total_output_tokens"] is None
+            assert "AI_USAGE" not in response.json()["unavailable_metrics"]
+            assert "GRADING_FAILURE_RATE" in response.json()["unavailable_metrics"]
+            assert "MODEL_GATEWAY_VOLUME" in {a["code"] for a in response.json()["alerts"]}
+            assert str(source) not in response.text
+            for role in ["learner", "author", "support"]:
+                assert (
+                    client.get("/api/v1/admin/operations", headers=actors[role]).status_code == 403
+                )
+            cache.set(store.interval_key(source, frame), b"invalid", keepttl=True)
+            result = client.get("/api/v1/admin/operations", headers=actors["admin"]).json()
+            assert result["model_usage"] is None and "AI_USAGE" in result["unavailable_metrics"]
+            assert "MODEL_GATEWAY_VOLUME" not in {a["code"] for a in result["alerts"]}
+        finally:
+            keys = list(cache.scan_iter(match=store.prefix + "*", count=300))
+            if keys:
+                cache.delete(*keys)

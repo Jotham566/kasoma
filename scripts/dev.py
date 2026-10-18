@@ -26,6 +26,7 @@ commands = [
         "-A",
         "apps.worker.entrypoint:app",
         "worker",
+        "--include=apps.worker.model_metrics",
         "--loglevel=INFO",
         "--pool=solo",
         "--concurrency=1",
@@ -39,7 +40,12 @@ commands = [
 processes = []
 try:
     for command in commands:
-        processes.append(subprocess.Popen(command, start_new_session=True))
+        process_env = os.environ | {
+            "MODEL_OBSERVATION_ENABLED": "true"
+            if "--include=apps.worker.model_metrics" in command
+            else "false"
+        }
+        processes.append(subprocess.Popen(command, start_new_session=True, env=process_env))
     while all(process.poll() is None for process in processes):
         time.sleep(0.5)
     raise SystemExit("A development process exited; shutting down the group.")

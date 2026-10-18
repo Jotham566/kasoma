@@ -350,3 +350,15 @@ test-web-privacy:
 .PHONY: test-grading-operations
 test-grading-operations:
 	$(UV) pytest tests/contract/test_operations_contract.py tests/integration/test_operations.py tests/integration/test_grading_operations.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-model-metrics smoke-model-metrics
+test-model-metrics:
+	$(UV) pytest tests/contract/test_model_metrics.py tests/contract/test_model_telemetry.py tests/integration/test_model_metric_store.py --allow-hosts=localhost,127.0.0.1,::1
+smoke-model-metrics:
+	$(UV) python -m scripts.model_metrics_smoke
+
+.PHONY: test-web-operations
+test-web-operations:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/operations.spec.ts tests/e2e/flags.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/operations.spec.ts tests/e2e/flags.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/operations.spec.ts tests/e2e/flags.spec.ts

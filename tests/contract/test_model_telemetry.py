@@ -128,7 +128,8 @@ def test_fallback_and_flag_metadata_do_not_claim_validated_grades(context, caplo
     run(FakeModelProvider([output]), context)
     call, outcome = events(caplog)
     assert call["status"] == status
-    assert call["usage_source"] == "PROVIDER_REPORTED"
+    assert call["usage_source"] == "UNAVAILABLE"
+    assert call["input_tokens"] is call["output_tokens"] is None
     assert call["output_fingerprint"] is None
     assert outcome["automatic_scoring_enabled"] is False
 
@@ -155,3 +156,17 @@ def test_wrong_task_is_rejected_before_provider_dispatch(caplog):
     with pytest.raises(ValueError, match="Telemetry requires"):
         RehearsalTelemetry().execute(gateway, wrong, 1)
     assert not gateway.calls and not events(caplog)
+
+
+def test_explicit_reported_zero_is_distinct_from_missing_usage(caplog):
+    output = ModelResult(
+        status="LOW_CONFIDENCE",
+        provider="fake",
+        model="fixture-v1",
+        input_tokens=0,
+        output_tokens=0,
+    )
+    RehearsalTelemetry().execute(FakeModelProvider([output]), task(), 1)
+    call = events(caplog)[0]
+    assert call["usage_source"] == "PROVIDER_REPORTED"
+    assert call["input_tokens"] == call["output_tokens"] == 0

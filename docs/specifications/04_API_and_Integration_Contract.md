@@ -723,3 +723,25 @@ or band identifiers/scope are disclosed. These are read-only current-state sampl
 there is no new processing-fallback or historical-disablement alert. AI_USAGE and
 GRADING_FAILURE_RATE remain unavailable. Missing grading metrics are unavailable, not
 zero. Existing authorization, error, monitoring and safe alert logging remain unchanged.
+
+
+### Local worker model observations (ADR-054 candidate)
+
+The existing ADMIN-only `GET /api/v1/admin/operations` adds optional `model_usage`.
+Null means unavailable, expired, corrupt or unobserved instrumentation. A fresh empty
+SDK collection may report zero. The closed measure is `LOCAL_WORKER_GATEWAY_ATTEMPTS`;
+`retention_seconds=300`, `best_effort=true`, at most 256 intervals and explicit capping.
+Only the ordinary local worker collects actual provider-port outcomes, after dispatch
+barriers, including fixed fake development probes. Candidates precede validation.
+
+`observed_attempts` equals candidate/fallback/no-result observations. Unknown token
+attempts include failed calls and returned results without both explicitly supplied
+usage fields. `reported_input_tokens`/`reported_output_tokens` are known subtotals;
+`total_input_tokens`/`total_output_tokens` are null whenever any retained attempt has
+unknown usage. Explicit provider-reported zero remains zero. Aggregates contain no
+actor/request/attempt/model/provider identifiers, content or fingerprints.
+
+`MODEL_GATEWAY_VOLUME` is a WARNING at `thresholds.model_gateway_attempts`, default100,
+configurable 1–10,000. It does not enforce quotas. AI_USAGE leaves unavailable_metrics
+only while this local aggregate is available; this does not imply fleet completeness,
+billing or academic error-rate measurement. Existing authorization/rate limits remain.

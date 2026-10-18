@@ -1,7 +1,7 @@
 # ADR-053: Bounded local grading operations
 
 Date: 18 October 2026
-Status: Proposed; implementation and acceptance pending
+Status: Accepted; local and hosted verification pass at a357222 (39155326659)
 Requirements: FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-ACC-001, NFR-COMP-001
 
 Extend the existing ADMIN snapshot with additive optional grading counts from durable

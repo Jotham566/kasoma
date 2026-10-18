@@ -1112,3 +1112,26 @@ report/safety authority. Resource settings do not turn plausible approval UUIDs 
 trusted configuration/report evidence. Future genuine evaluation/approval must cover its
 actual model/prompt/configuration and relevant resource settings. No actual evaluation,
 Ollama or Gemini inference is run by this change; tests use FakeModelProvider only.
+
+
+### Local model observation verification
+
+`make test-model-metrics` verifies the owned SDK and real Redis namespaces with only
+synthetic fake-provider outcomes. `make smoke-model-metrics` sends one fixed fake
+probe to the running ordinary worker and waits at most30 seconds for a new private
+aggregate interval. `make container-smoke` includes this probe. No real inference,
+learner data, cloud, email or messaging delivery is involved.
+
+The ordinary Compose/native worker explicitly imports `apps.worker.model_metrics` and
+sets `MODEL_OBSERVATION_ENABLED=true`. Export workers explicitly set false; API and
+other process defaults are false. Only development/test worker roles initialize the
+collector. Source/SDK metadata never enter Redis. Collection every five seconds is
+best effort, with 15-second freshness and absolute five-minute expiry from the earliest
+observed outcome, not retry time. A stale/failed collector is unavailable; costs and
+unknown token totals remain unavailable. The ADMIN card explains capping/loss limits.
+`OPS_MODEL_GATEWAY_ATTEMPTS_THRESHOLD` defaults100 (1–10,000) and warns on retained
+observed volume; it neither rejects work nor represents a production budget policy.
+
+After a power interruption, preserve volumes, run `make services`, then the documented
+application-profile startup and `make container-smoke`; confirm all eight services are
+healthy before relying on the dashboard. Never reset volumes to restore a metric.

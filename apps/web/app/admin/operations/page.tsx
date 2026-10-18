@@ -24,6 +24,8 @@ const messages: Record<
   CHANNEL_STALLED: "Pending channel messages exceeded the age threshold",
   CHANNEL_DISPATCH_SLOW:
     "Local feedback dispatch exceeded its timing threshold",
+  MODEL_GATEWAY_VOLUME:
+    "Observed local model attempts reached the volume threshold",
   GRADING_STALLED: "Pending grading work exceeded the age threshold",
   EXPORT_FAILED: "Failed personal exports need investigation",
   EXPORT_STALLED: "Pending personal exports exceeded the age threshold",
@@ -71,6 +73,7 @@ export default function Operations() {
   const channel = view?.counts?.channel;
   const exports = view?.counts?.exports;
   const grading = view?.counts?.grading;
+  const usage = view?.model_usage;
   const channelCounters = channel
     ? ([
         ["Queued incoming messages", channel.queued_inbound],
@@ -265,6 +268,73 @@ export default function Operations() {
             ) : (
               <p>
                 Channel metrics unavailable. Missing values do not mean zero.
+              </p>
+            )}
+          </section>
+          <section
+            aria-label="Local model observations"
+            className="surface-card operations-section"
+          >
+            <h2 className="text-xl font-semibold">Local model activity</h2>
+            {usage ? (
+              <>
+                <dl>
+                  {(
+                    [
+                      ["Observed provider attempts", usage.observed_attempts],
+                      ["Returned candidates", usage.candidate_responses],
+                      ["Returned fallbacks", usage.fallback_responses],
+                      ["Attempts without a result", usage.no_result_attempts],
+                      [
+                        "Attempts with unknown token usage",
+                        usage.usage_unknown_attempts,
+                      ],
+                      [
+                        "Reported input-token subtotal",
+                        usage.reported_input_tokens,
+                      ],
+                      [
+                        "Reported output-token subtotal",
+                        usage.reported_output_tokens,
+                      ],
+                      [
+                        "Total input tokens",
+                        usage.total_input_tokens ?? "Unknown",
+                      ],
+                      [
+                        "Total output tokens",
+                        usage.total_output_tokens ?? "Unknown",
+                      ],
+                    ] as const
+                  ).map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p>
+                  Best-effort observations retained for up to five minutes
+                  across {usage.interval_count} intervals.
+                  {usage.capped
+                    ? " The interval limit was reached; some observations were dropped."
+                    : ""}
+                </p>
+                <p>
+                  Includes development fake-provider probes. Candidates are
+                  awaiting validation. Missing token usage remains unknown;
+                  reported subtotals exclude it. Billing and costs are
+                  unavailable.
+                </p>
+                <p>
+                  Local volume warning: {view.thresholds.model_gateway_attempts}{" "}
+                  observed attempts. This does not enforce a quota or establish
+                  grading accuracy, complete fleet usage or release acceptance.
+                </p>
+              </>
+            ) : (
+              <p>
+                Model observations unavailable. Missing values do not mean zero.
               </p>
             )}
           </section>

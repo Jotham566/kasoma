@@ -487,3 +487,33 @@ def test_configured_runtime_budget_exhaustion_saves_neutral_and_never_repeats(
         assert db.get(Grade, attempt) is None
         assert db.get(GradingWorkRow, attempt).status == "LOW_CONFIDENCE"
         assert db.scalar(select(func.count()).select_from(MasteryEvidence)) == 0
+
+
+@pytest.mark.parametrize("safe", [True, False])
+def test_worker_observation_counts_actual_authorized_dispatches_only(short_text, safe):
+    from services.metric_reader import DeltaReader
+    from services.model_metrics import ModelMetrics, activate
+
+    identity, _, _, _, policy, _ = short_text
+    session, item = start_short(short_text)
+    save_short(short_text, session, item)
+    gateway = FakeModelProvider(candidate_results(short_text, item))
+    reader = DeltaReader()
+    metrics = ModelMetrics(reader)
+    activate(metrics)
+    try:
+        worker = ShortTextProcessor(
+            AssessmentService(identity, policy), gateway, safety=lambda context, response: safe
+        )
+        assert worker.process_one()
+        observed = metrics.take(reader)
+        if safe:
+            assert observed.counts == (2, 0, 0, 0, 200, 200)
+        else:
+            assert observed is None
+        assert not worker.process_one()
+        assert metrics.take(reader) is None
+        assert len(gateway.calls) == (2 if safe else 0)
+    finally:
+        activate(None)
+        metrics.shutdown()

@@ -4,28 +4,30 @@ import hashlib
 import hmac
 import json
 from threading import Event, Thread
+from typing import Literal
 from uuid import uuid4
 
-from opentelemetry.sdk.metrics import Histogram
-from opentelemetry.sdk.metrics.export import AggregationTemporality, MetricReader, MetricsData
 from redis import Redis
 from redis.backoff import NoBackoff
 from redis.retry import Retry
 from sqlalchemy.engine import make_url
 
 from services.config import Settings
+from services.metric_reader import DeltaReader as DeltaReader
 from services.request_metrics import RequestMetrics, project
 from services.request_metrics_store import RequestMetricStore
 
 
-def metric_scope(settings: Settings) -> str:
+def metric_scope(
+    settings: Settings, *, purpose: Literal["request-metrics", "model-metrics"] = "request-metrics"
+) -> str:
     url = make_url(settings.database_url.get_secret_value())
     scope = json.dumps(
         {"database": url.database, "options": url.query.get("options", "")}, sort_keys=True
     )
     return hmac.new(
         settings.identity_lookup_key.get_secret_value().encode(),
-        ("request-metrics:" + scope).encode(),
+        (purpose + ":" + scope).encode(),
         hashlib.sha256,
     ).hexdigest()
 
@@ -54,26 +56,6 @@ def record_timing(metrics: RequestMetrics | None, duration_ms: int) -> bool:
         return True
     except Exception:
         return False
-
-
-class DeltaReader(MetricReader):
-    def __init__(self) -> None:
-        super().__init__(preferred_temporality={Histogram: AggregationTemporality.DELTA})
-        self.batch: MetricsData | None = None
-
-    def _receive_metrics(
-        self, metrics_data: MetricsData, timeout_millis: float = 1000, **kwargs: object
-    ) -> None:
-        self.batch = metrics_data
-
-    def take(self) -> MetricsData | None:
-        self.batch = None
-        self.collect(timeout_millis=1000)
-        result, self.batch = self.batch, None
-        return result
-
-    def shutdown(self, timeout_millis: float = 2000, **kwargs: object) -> None:
-        self.batch = None
 
 
 class RequestMetricCollector:

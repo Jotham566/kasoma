@@ -34,6 +34,14 @@ test("FR-GRD-009/FR-CNT-006: lost report acknowledgement and independent audited
   await page
     .getByRole("button", { name: "Submit answer", exact: true })
     .click();
+  // The save response precedes its authoritative session refresh. Wait for the
+  // existing ready signal before exercising the report interaction.
+  await expect(
+    page.getByRole("button", { name: "Reload saved progress" }),
+  ).toBeEnabled();
+  await expect(
+    page.getByText("1 of 5 answers saved", { exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Report question or grade" }).click();
   const form = page.getByRole("region", { name: "Report question or grade" });
   await expect(form.getByRole("status")).toContainText("No reports recorded");

@@ -2299,6 +2299,49 @@ export interface components {
             /** Weight */
             weight: number;
         };
+        /** ModelUsage */
+        ModelUsage: {
+            /**
+             * Best Effort
+             * @default true
+             * @constant
+             */
+            best_effort: true;
+            /** Candidate Responses */
+            candidate_responses: number;
+            /** Capped */
+            capped: boolean;
+            /** Fallback Responses */
+            fallback_responses: number;
+            /** Interval Count */
+            interval_count: number;
+            /**
+             * Measure
+             * @default LOCAL_WORKER_GATEWAY_ATTEMPTS
+             * @constant
+             */
+            measure: "LOCAL_WORKER_GATEWAY_ATTEMPTS";
+            /** No Result Attempts */
+            no_result_attempts: number;
+            /** Observed Attempts */
+            observed_attempts: number;
+            /** Reported Input Tokens */
+            reported_input_tokens: number;
+            /** Reported Output Tokens */
+            reported_output_tokens: number;
+            /**
+             * Retention Seconds
+             * @default 300
+             * @constant
+             */
+            retention_seconds: 300;
+            /** Total Input Tokens */
+            total_input_tokens: number | null;
+            /** Total Output Tokens */
+            total_output_tokens: number | null;
+            /** Usage Unknown Attempts */
+            usage_unknown_attempts: number;
+        };
         /** MultipleChoiceResponse */
         MultipleChoiceResponse: {
             /** Choice Ids */
@@ -2456,7 +2499,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "EXPORT_FAILED" | "EXPORT_STALLED";
+            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "MODEL_GATEWAY_VOLUME" | "EXPORT_FAILED" | "EXPORT_STALLED";
             /** Observed */
             observed: number;
             /**
@@ -2521,6 +2564,11 @@ export interface components {
             /** Import Age Seconds */
             import_age_seconds: number;
             /**
+             * Model Gateway Attempts
+             * @default 100
+             */
+            model_gateway_attempts: number;
+            /**
              * Request Min Samples
              * @default 20
              */
@@ -2544,6 +2592,7 @@ export interface components {
              */
             generated_at: string;
             health: components["schemas"]["Health"];
+            model_usage?: components["schemas"]["ModelUsage"] | null;
             request_timing?: components["schemas"]["RequestTiming"] | null;
             /**
              * Schema Version

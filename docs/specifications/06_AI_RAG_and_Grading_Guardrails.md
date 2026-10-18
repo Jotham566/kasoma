@@ -268,3 +268,15 @@ partial score or mastery. Exact attempt/poll replay cannot enqueue another job.
 This exposes existing controls rather than approving a new inference profile, quota
 policy, provider or band. No genuine report/safety authority exists in normal startup.
 Cost remains zero-only and actual scoring/evaluation approval gates remain effective.
+
+
+### Local usage observation boundary (ADR-054 candidate)
+
+Actual local worker gateway attempts emit only six fixed attribute-free SDK counters,
+exported off-call to finite private Redis intervals. Omitted provider usage is unknown,
+not reported zero. Existing per-call logs follow the same distinction. Aggregate
+observations do not establish cost, complete fleet usage, evaluation truth, provider
+approval or grading correctness. Failures to record/export never change grading work.
+The development-only probe uses a fixed FakeModelProvider fallback with explicit one
+input/output token; it cannot perform inference or access learner/corpus records.
+Normal learner short-text delivery remains disabled and all authority gates remain.

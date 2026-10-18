@@ -151,6 +151,58 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
       await expect(timing).toContainText("some intervals were removed");
     await page.unroute("**/api/v1/admin/operations");
   }
+  const model = page.getByRole("region", { name: "Local model observations" });
+  for (const unknown of [false, true]) {
+    await page.route("**/api/v1/admin/operations", (route) =>
+      route.fulfill({
+        json: {
+          ...baseline,
+          model_usage: {
+            observed_attempts: unknown ? 1 : 0,
+            candidate_responses: 0,
+            fallback_responses: unknown ? 1 : 0,
+            no_result_attempts: 0,
+            usage_unknown_attempts: unknown ? 1 : 0,
+            reported_input_tokens: 0,
+            reported_output_tokens: 0,
+            total_input_tokens: unknown ? null : 0,
+            total_output_tokens: unknown ? null : 0,
+            interval_count: unknown ? 1 : 0,
+            capped: unknown,
+            retention_seconds: 300,
+            measure: "LOCAL_WORKER_GATEWAY_ATTEMPTS",
+            best_effort: true,
+          },
+        },
+      }),
+    );
+    await page.getByRole("button", { name: "Refresh operations" }).click();
+    await expect(model).toContainText("Billing and costs are unavailable");
+    await expect(model.getByText("Unknown", { exact: true })).toHaveCount(
+      unknown ? 2 : 0,
+    );
+    if (unknown)
+      await expect(model).toContainText("some observations were dropped");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    await page.screenshot({
+      path: `.local/ui-review/model-usage-${unknown ? "unknown" : "zero"}.png`,
+      fullPage: true,
+    });
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "100%";
+    });
+    if (unknown)
+      await model.screenshot({ path: ".local/ui-review/model-usage-card.png" });
+    await page.unroute("**/api/v1/admin/operations");
+  }
   await page.route("**/api/v1/admin/operations", (route) =>
     route.abort("failed"),
   );

@@ -3054,6 +3054,122 @@
         "title": "Mapping",
         "type": "object"
       },
+      "ModelUsage": {
+        "additionalProperties": false,
+        "properties": {
+          "best_effort": {
+            "const": true,
+            "default": true,
+            "title": "Best Effort",
+            "type": "boolean"
+          },
+          "candidate_responses": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Candidate Responses",
+            "type": "integer"
+          },
+          "capped": {
+            "title": "Capped",
+            "type": "boolean"
+          },
+          "fallback_responses": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Fallback Responses",
+            "type": "integer"
+          },
+          "interval_count": {
+            "maximum": 256.0,
+            "minimum": 0.0,
+            "title": "Interval Count",
+            "type": "integer"
+          },
+          "measure": {
+            "const": "LOCAL_WORKER_GATEWAY_ATTEMPTS",
+            "default": "LOCAL_WORKER_GATEWAY_ATTEMPTS",
+            "title": "Measure",
+            "type": "string"
+          },
+          "no_result_attempts": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "No Result Attempts",
+            "type": "integer"
+          },
+          "observed_attempts": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Observed Attempts",
+            "type": "integer"
+          },
+          "reported_input_tokens": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Reported Input Tokens",
+            "type": "integer"
+          },
+          "reported_output_tokens": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Reported Output Tokens",
+            "type": "integer"
+          },
+          "retention_seconds": {
+            "const": 300,
+            "default": 300,
+            "title": "Retention Seconds",
+            "type": "integer"
+          },
+          "total_input_tokens": {
+            "anyOf": [
+              {
+                "maximum": 9007199254740991.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Input Tokens"
+          },
+          "total_output_tokens": {
+            "anyOf": [
+              {
+                "maximum": 9007199254740991.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Output Tokens"
+          },
+          "usage_unknown_attempts": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Usage Unknown Attempts",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "observed_attempts",
+          "candidate_responses",
+          "fallback_responses",
+          "no_result_attempts",
+          "usage_unknown_attempts",
+          "reported_input_tokens",
+          "reported_output_tokens",
+          "total_input_tokens",
+          "total_output_tokens",
+          "interval_count",
+          "capped"
+        ],
+        "title": "ModelUsage",
+        "type": "object"
+      },
       "MultipleChoiceResponse": {
         "additionalProperties": false,
         "properties": {
@@ -3425,6 +3541,7 @@
               "CHANNEL_STALLED",
               "CHANNEL_DISPATCH_SLOW",
               "GRADING_STALLED",
+              "MODEL_GATEWAY_VOLUME",
               "EXPORT_FAILED",
               "EXPORT_STALLED"
             ],
@@ -3584,6 +3701,13 @@
             "title": "Import Age Seconds",
             "type": "integer"
           },
+          "model_gateway_attempts": {
+            "default": 100,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Model Gateway Attempts",
+            "type": "integer"
+          },
           "request_min_samples": {
             "default": 20,
             "maximum": 10000.0,
@@ -3640,6 +3764,16 @@
           },
           "health": {
             "$ref": "#/components/schemas/Health"
+          },
+          "model_usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ModelUsage"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "request_timing": {
             "anyOf": [

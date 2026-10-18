@@ -60,3 +60,13 @@ rubric/telemetry branches were deleted locally and remotely.
 This successful run supersedes the pending/failure observations above. Native service setup is
 separate: Docker now responds and approved image builds are running; native application checks
 are not yet accepted.
+
+
+## 18 October follow-up: truthful omitted usage
+
+The ADR-054 candidate distinguishes omitted ModelResult token fields from explicitly
+reported zero. Per-call events now emit null/UNAVAILABLE unless both usage fields were
+supplied. Existing schema stays unchanged and strict; fallback/flag and explicit-zero
+regressions pass. Aggregate dashboard status in the earlier checkpoint is historical:
+local worker observations are now under [separate acceptance](E8_MODEL_USAGE_VERIFICATION.md).
+This does not provide billing or complete fleet usage evidence or enable scoring.

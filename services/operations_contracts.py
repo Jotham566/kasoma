@@ -32,6 +32,23 @@ class RequestTiming(Contract):
     best_effort: Literal[True] = True
 
 
+class ModelUsage(Contract):
+    observed_attempts: int = Field(ge=0, le=2**53 - 1)
+    candidate_responses: int = Field(ge=0, le=2**53 - 1)
+    fallback_responses: int = Field(ge=0, le=2**53 - 1)
+    no_result_attempts: int = Field(ge=0, le=2**53 - 1)
+    usage_unknown_attempts: int = Field(ge=0, le=2**53 - 1)
+    reported_input_tokens: int = Field(ge=0, le=2**53 - 1)
+    reported_output_tokens: int = Field(ge=0, le=2**53 - 1)
+    total_input_tokens: int | None = Field(ge=0, le=2**53 - 1)
+    total_output_tokens: int | None = Field(ge=0, le=2**53 - 1)
+    interval_count: int = Field(ge=0, le=256)
+    capped: bool
+    retention_seconds: Literal[300] = 300
+    measure: Literal["LOCAL_WORKER_GATEWAY_ATTEMPTS"] = "LOCAL_WORKER_GATEWAY_ATTEMPTS"
+    best_effort: Literal[True] = True
+
+
 class ChannelCounts(Contract):
     queued_inbound: Count
     queued_outbound: Count
@@ -88,6 +105,7 @@ AlertCode = Literal[
     "CHANNEL_STALLED",
     "CHANNEL_DISPATCH_SLOW",
     "GRADING_STALLED",
+    "MODEL_GATEWAY_VOLUME",
     "EXPORT_FAILED",
     "EXPORT_STALLED",
 ]
@@ -110,6 +128,7 @@ class OperationThresholds(Contract):
     channel_queue_age_seconds: int = Field(default=60, ge=1, le=86400)
     channel_dispatch_p95_ms: int = Field(default=1500, ge=1, le=60000)
     channel_dispatch_min_samples: int = Field(default=20, ge=1, le=1000)
+    model_gateway_attempts: int = Field(default=100, ge=1, le=10000)
     grading_age_seconds: int = Field(default=60, ge=1, le=86400)
     export_failures: int = Field(default=1, ge=1, le=10000)
     export_age_seconds: int = Field(default=300, ge=60, le=86400)
@@ -124,6 +143,7 @@ class OperationsView(Contract):
     thresholds: OperationThresholds
     alerts: list[OperationAlert]
     request_timing: RequestTiming | None = None
+    model_usage: ModelUsage | None = None
     unavailable_metrics: list[
         Literal[
             "AI_USAGE",

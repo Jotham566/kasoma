@@ -1,13 +1,14 @@
-# Current sprint: runtime grading budgets and acceptance
+# Current sprint: bounded local model observations
 
 Updated 18 October 2026. This file supersedes the preserved
 [historical checkpoints](SPRINT_HISTORY_2026_10_18.md).
 
 ## Verified main
 
-Main/origin main is `17abb2d`. All merged source branches are removed locally/remotely.
-Grading operations `a357222` is pushed for hosted acceptance; active follow-up is
-`codex/runtime-grading-budgets`. These are unmerged work, not abandoned branches.
+Main/origin main is `a357222`, with hosted run 39155326659 passing. The merged
+grading-operations branch is removed locally/remotely. Runtime budgets `f5f408e`
+await hosted run 39157127637. Active follow-up is `codex/model-usage-observation`.
+These two active unmerged branches are retained until exact-source verification.
 
 - `2164209`: independent blinded expert review, versioned released-session sampling,
   immutable exact rubric completion and sticky rolling disablement pass complete hosted
@@ -23,24 +24,22 @@ Grading operations `a357222` is pushed for hosted acceptance; active follow-up i
 Normal learner short-text scoring remains disabled. Synthetic report/role fixtures and
 matching fake passes are not academic, safeguarding, licensing or provider approval.
 
-## Active vertical slice: configurable per-job budgets
+## Active vertical slice: bounded worker model observations
 
-FR-OPS-004, FR-GRD-004, NFR-SEC-002, NFR-MNT-001: expose existing shared runtime
-request/token/time ceilings as typed settings, preserving current defaults/hard maxima.
-Both independent passes and optional repair share one budget; the dispatch wrapper uses
-the same timeout. Tighter limits must yield neutral no-score/no-mastery with saved
-attempt/replay intact. See [readiness](E4_RUNTIME_BUDGET_READINESS.md). No new quota
-policy, inference profile, approval, API, data or architecture is introduced.
+FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-ACC-001 and NFR-MNT-001:
+implement proposed [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md)
+with six fixed SDK counters, off-call bounded Redis export, truthful missing usage,
+ADMIN aggregate/volume warning and accessible dashboard. Only the ordinary local
+worker publishes freshness. No content, identity or provider/model labels enter the
+aggregate. See [readiness](E8_MODEL_USAGE_READINESS.md) and
+[verification](E8_MODEL_USAGE_VERIFICATION.md). Final acceptance is in progress.
 
-Local lint/types/contracts and 891 unit/contract plus 35 tooling cases pass, alongside
-21 encrypted flow cases, 33 review cases, restricted login, security and populated
-recovery (65 tables/616 rows, 310 ms). Final rebuilt image/security/service smoke pass;
-hosted acceptance remains required; see [verification](E4_RUNTIME_BUDGET_VERIFICATION.md). The underlying operational source
-is committed at `a357222` for
-[hosted acceptance](https://github.com/Jotham566/kasoma/actions/runs/39155326659);
-do not promote either candidate ahead of verification.
+The underlying runtime-budget candidate preserves the existing hard ceilings/defaults
+of three requests, 16,384 tokens and five seconds; tighter request/token/deadline cases
+pass locally. See [runtime evidence](E4_RUNTIME_BUDGET_VERIFICATION.md). Complete
+hosted acceptance remains required before promotion.
 
-## Underlying grading operations candidate
+## Verified grading operations
 
 FR-OPS-002, NFR-OBS-001, NFR-SEC-002: add bounded ADMIN grading queue/lease age,
 terminal/processing-fallback counts, pending audits and post-activation disablement,
@@ -51,7 +50,7 @@ with a typed local stale-queue alert. See
 
 GRADING_FAILED includes expected provider refusal, budget and validation fallback.
 It is labeled processing fallback and does not establish academic error rate or an
-incident. AI usage/error-rate metrics stay unavailable. No schema migration, provider,
+incident. Academic error-rate metrics stay unavailable; local model observations are the active follow-up. No schema migration, provider,
 retention or learner policy changes.
 
 A broader browser run exposed an independent review-clock issue: a host clock slightly
@@ -74,8 +73,7 @@ ahead-clock regression passes in the 33-case focused review suite.
   104 executions including 200% text and the shared staff layout correction.
 - Source/dependency security and populated logical recovery pass (65 tables/616 rows,
   322 ms initially, then 290 ms after the clock cap). Final clock-aware recovery,
-  rebuilt images/smoke/security and restricted login pass. Exact-source hosted acceptance
-  remains required before promotion; do not infer it from prior runs.
+  rebuilt images/smoke/security and restricted login pass. Exact-source hosted run 39155326659 passes and the source is merged at `a357222`.
 
 ## Review stack and safeguards
 
@@ -97,8 +95,6 @@ coverage, deletion/anonymization/retention execution and production PITR/device 
 remain in [the release register](RELEASE_GATES.md) and
 [requirements traceability](REQUIREMENTS_TRACEABILITY.md).
 
-Next safe engineering assessment: FR-OPS-004 configurable model usage ceilings across
-runtime dispatches. Inspect the existing per-rehearsal request/token/time budget and
-rate-bucket expiry before proposing additional controls; do not infer missing limits or
-production approval. Actual model evaluation remains separately gated and Gemini is
+Current follow-up: complete local model-observation verification and hosted acceptance.
+Do not infer missing daily/fleet limits or production approval. Actual model evaluation remains separately gated and Gemini is
 not to be run without the owner's explicit request.

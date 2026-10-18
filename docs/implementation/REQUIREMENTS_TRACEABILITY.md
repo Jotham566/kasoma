@@ -1,5 +1,13 @@
 # Requirements Traceability
 
+FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-ACC-001 / NFR-MNT-001 candidate:
+[ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md) adds six fixed private
+worker SDK counters, separate bounded Redis intervals and an ADMIN aggregate/volume
+warning. Missing usage is unknown; subtotals and explicit zero remain distinct.
+No identities/content/provider labels, billing or accuracy claim. See
+[readiness](E8_MODEL_USAGE_READINESS.md) and
+[verification](E8_MODEL_USAGE_VERIFICATION.md); final acceptance remains in progress.
+
 Runtime-budget candidate: FR-OPS-004/FR-GRD-004 and NFR-SEC/MNT-001 expose only
 existing per-job resource ceilings through Settings, keeping the same default/hard
 maxima. Local 891 unit/contract, 21 actual flow, 33 review and restricted-login cases,
@@ -8,13 +16,13 @@ is pending. See
 [runtime-budget evidence](E4_RUNTIME_BUDGET_VERIFICATION.md).
 No new daily/fleet quota or inference approval policy is inferred.
 
-Grading-operations candidate: FR-OPS-002, NFR-OBS-001, NFR-SEC-002 and NFR-ACC/COMP-001 add bounded
+Grading operations merged at `a357222`: FR-OPS-002, NFR-OBS-001, NFR-SEC-002 and NFR-ACC/COMP-001 add bounded
 ADMIN queue/lease/terminal/pending-audit/disabled-band counts and a typed stale-age
 alert under ADR-053. Actual encrypted synthetic transitions and authorization/boundary
 checks pass: 26 operational and 33 review cases, 884 unit/contract plus 333 broad
 integration cases, 104 browser executions, restricted login/recovery/security/containers.
-See [grading evidence](E8_GRADING_OPERATIONS_VERIFICATION.md); hosted acceptance is
-pending. Model usage and academic error rate remain unavailable.
+See [grading evidence](E8_GRADING_OPERATIONS_VERIFICATION.md); hosted run
+39155326659 passes and the merged branch is removed. Model usage and academic error rate remain unavailable.
 
 Offline reports merged at `17abb2d`: FR-GRD-003/004, FR-OPS-002 and NFR-MNT-001 add a
 strict versioned payload-free report reader/comparator and the required `make eval-compare`

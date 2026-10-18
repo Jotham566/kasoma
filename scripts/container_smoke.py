@@ -36,6 +36,9 @@ try:
     subprocess.run(
         ["uv", "run", "--frozen", "python", "-m", "scripts.request_metrics_smoke"], check=True
     )
+    subprocess.run(
+        ["uv", "run", "--frozen", "python", "-m", "scripts.model_metrics_smoke"], check=True
+    )
     print("Container smoke passed: service health and owned export through worker/storage/web.")
 finally:
     started_here = [

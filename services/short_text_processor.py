@@ -20,6 +20,7 @@ from services.grading_reviews import audit_state
 from services.grading_work_store import apply, claim_next, expire_due, finish_neutral, snapshot
 from services.identity import IdentityError
 from services.mastery import reconcile
+from services.observed_model_gateway import ObservedModelGateway
 from services.providers import FakeModelProvider, ModelGateway, ModelResult, ModelTask
 from services.rubric_grade_projection import project_candidate
 from services.rubric_grade_protection import protect_result
@@ -170,7 +171,7 @@ class ShortTextProcessor:
 
                 result = rehearse_short_text(
                     VersionedGateway(
-                        self.gateway,
+                        ObservedModelGateway(self.gateway),
                         self.identity.settings.short_text_model_version,
                         authorize_dispatch,
                         monotonic() + budget.timeout_ms / 1000,
