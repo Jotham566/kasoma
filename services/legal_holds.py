@@ -23,8 +23,17 @@ from services.domain.grading_audits import (
 from services.domain.grading_work import GradingHistory
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence, MasteryHistory
+from services.domain.messaging import InboundMessage, OutboundMessage
 from services.identity import IdentityError, IdentityService
-from services.legal_hold_contracts import HoldInput, HoldPage, HoldRelease, HoldView, RecordType
+from services.legal_hold_contracts import (
+    CHANNEL_RECEIPT_TYPES,
+    HoldInput,
+    HoldPage,
+    HoldRelease,
+    HoldView,
+    RecordType,
+    supported_record_types,
+)
 from services.staff import authorize
 
 
@@ -122,13 +131,43 @@ class LegalHoldService:
         digest = self.identity.digest("legal-hold", f"create:{target}:{body.model_dump_json()}")
         with self.identity.transaction() as db:
             actor, request = self.access(db, token, target)
+            channel_receipt = body.record_type in CHANNEL_RECEIPT_TYPES
+            if channel_receipt and not self.identity.settings.channel_receipt_holds_enabled:
+                raise IdentityError("HOLD_TARGET_UNAVAILABLE", 409)
+            if channel_receipt:
+                from services.whatsapp_linking import channel_lock
+
+                channel_lock(self.identity, db)
             old = self.replay(db, actor, key, digest)
             if old:
                 return self.view(old)
             at = self.identity.clock()
+            if channel_receipt:
+                database_now = db.scalar(select(func.clock_timestamp()))
+                if database_now is None:
+                    raise IdentityError("HOLD_TARGET_UNAVAILABLE", 503)
+                at = min(at, database_now)
+                review = db.get(DataRequestReview, target)
+                if review is None or review.created_at > at:
+                    raise IdentityError("HOLD_TARGET_UNAVAILABLE", 503)
             if body.expires_at <= at:
                 raise IdentityError("HOLD_END_REQUIRED", 422)
             query = {
+                "CHANNEL_INBOUND_RECEIPT": select(InboundMessage.id).where(
+                    InboundMessage.id == body.record_id,
+                    InboundMessage.actor_id == request.user_id,
+                    InboundMessage.status != "QUEUED",
+                    InboundMessage.processed_at.is_not(None),
+                    InboundMessage.sender_encrypted.is_(None),
+                    InboundMessage.code_hash.is_(None),
+                    InboundMessage.reply_encrypted.is_(None),
+                ),
+                "CHANNEL_OUTBOUND_RECEIPT": select(OutboundMessage.id).where(
+                    OutboundMessage.id == body.record_id,
+                    OutboundMessage.actor_id == request.user_id,
+                    OutboundMessage.status != "PENDING",
+                    OutboundMessage.recipient_encrypted.is_(None),
+                ),
                 "CONSENT": select(Consent.id).where(
                     Consent.id == body.record_id, Consent.user_id == request.user_id
                 ),
@@ -254,4 +293,7 @@ class LegalHoldService:
             return HoldPage(
                 data=[self.view(r) for r in rows[:limit]],
                 next_cursor=rows[limit - 1].id if len(rows) > limit else None,
+                supported_record_types=supported_record_types(
+                    self.identity.settings.channel_receipt_holds_enabled
+                ),
             )

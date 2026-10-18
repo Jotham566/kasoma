@@ -336,6 +336,13 @@ queue/lease/outcome/audit visibility and local stale-age alerts pass hosted run
 ### ADR-054 — bounded worker model usage
 
 See [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md). Six private local
-SDK counters, bounded Redis aggregation and ADMIN visibility pass complete
-hosted 39160113771 at 0c73c45 and are merged.
+SDK counters, bounded Redis aggregation and ADMIN visibility pass complete hosted
+run 39160113771 at `0c73c45` and are merged.
 No learner content, billing authority, complete fleet accounting or quota policy.
+
+
+### ADR-055 — exact terminal channel receipt holds (proposed)
+
+See [ADR-055](../decisions/ADR/055-terminal-channel-receipt-holds.md). Extend existing
+exact-record holds only to owned already-minimized terminal receipts. New creation
+stays disabled for staged rollout; live-state preservation and full coverage stay open.

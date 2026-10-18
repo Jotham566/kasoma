@@ -2031,7 +2031,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT";
         };
         /** HoldPage */
         HoldPage: {
@@ -2039,6 +2039,8 @@ export interface components {
             data: components["schemas"]["HoldView"][];
             /** Next Cursor */
             next_cursor: string | null;
+            /** Supported Record Types */
+            supported_record_types?: ("CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT")[];
         };
         /** HoldRelease */
         HoldRelease: {
@@ -2089,7 +2091,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT";
             /** Release Reference */
             release_reference: string | null;
             /** Released At */

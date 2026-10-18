@@ -362,3 +362,7 @@ test-web-operations:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/operations.spec.ts tests/e2e/flags.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/operations.spec.ts tests/e2e/flags.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/operations.spec.ts tests/e2e/flags.spec.ts
+
+.PHONY: test-channel-receipt-holds
+test-channel-receipt-holds:
+	$(UV) pytest tests/integration/test_channel_receipt_holds.py tests/integration/test_channel_receipt_runtime_role.py --allow-hosts=localhost,127.0.0.1,::1

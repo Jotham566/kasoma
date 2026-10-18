@@ -1,10 +1,10 @@
 """Strict metadata only; no free-text legal details or personal record bodies."""
 
 from datetime import datetime
-from typing import Literal
+from typing import Literal, get_args
 from uuid import UUID
 
-from pydantic import AwareDatetime
+from pydantic import AwareDatetime, Field
 
 from services.identity_contracts import Contract
 
@@ -22,7 +22,20 @@ RecordType = Literal[
     "GRADING_PUBLICATION",
     "GRADING_AUDIT",
     "GRADING_REVIEW",
+    "CHANNEL_INBOUND_RECEIPT",
+    "CHANNEL_OUTBOUND_RECEIPT",
 ]
+CHANNEL_RECEIPT_TYPES = frozenset({"CHANNEL_INBOUND_RECEIPT", "CHANNEL_OUTBOUND_RECEIPT"})
+
+
+def supported_record_types(channel_receipts: bool) -> list[RecordType]:
+    return [
+        kind
+        for kind in get_args(RecordType)
+        if channel_receipts or kind not in CHANNEL_RECEIPT_TYPES
+    ]
+
+
 HoldReason = Literal["LEGAL_OBLIGATION", "SECURITY_INVESTIGATION"]
 
 
@@ -60,3 +73,4 @@ class HoldView(Contract):
 class HoldPage(Contract):
     data: list[HoldView]
     next_cursor: UUID | None
+    supported_record_types: list[RecordType] = Field(default_factory=list)

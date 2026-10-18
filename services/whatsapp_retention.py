@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from sqlalchemy import delete, select, update
+from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session
 
 from services.domain.messaging import (
@@ -80,7 +80,13 @@ def expire(identity: IdentityService) -> int:
         horizon = now - timedelta(days=30)
         outgoing = (
             select(OutboundMessage.id)
-            .where(OutboundMessage.status != "PENDING", OutboundMessage.created_at <= horizon)
+            .where(
+                OutboundMessage.status != "PENDING",
+                OutboundMessage.created_at <= horizon,
+                ~func.record_is_held(
+                    "CHANNEL_OUTBOUND_RECEIPT", OutboundMessage.id, func.clock_timestamp()
+                ),
+            )
             .limit(100)
         )
         db.execute(delete(OutboundMessage).where(OutboundMessage.id.in_(outgoing)))
@@ -89,6 +95,9 @@ def expire(identity: IdentityService) -> int:
             .where(
                 InboundMessage.status != "QUEUED",
                 InboundMessage.received_at <= horizon,
+                ~func.record_is_held(
+                    "CHANNEL_INBOUND_RECEIPT", InboundMessage.id, func.clock_timestamp()
+                ),
                 ~select(OutboundMessage.id)
                 .where(OutboundMessage.inbound_id == InboundMessage.id)
                 .exists(),

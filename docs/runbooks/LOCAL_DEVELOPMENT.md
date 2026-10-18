@@ -1135,3 +1135,27 @@ observed volume; it neither rejects work nor represents a production budget poli
 After a power interruption, preserve volumes, run `make services`, then the documented
 application-profile startup and `make container-smoke`; confirm all eight services are
 healthy before relying on the dashboard. Never reset volumes to restore a metric.
+
+
+### Terminal channel receipt holds (candidate rollout)
+
+`make test-channel-receipt-holds` uses isolated synthetic schemas, including clean0034
+and0033-upgrade/replay, SQL guards, clock/race cases and real signed local fake-delivery
+opt-out. `make test-legal-holds test-whatsapp` protects existing behavior. Creation is
+false by default in `.env.example`; tests explicitly opt in through typed settings.
+
+Before enabling CHANNEL_RECEIPT_HOLDS_ENABLED, verify0034/0035 and deploy all API/worker
+readers supporting both new kinds. The UI takes available types from the authorized
+hold page. With the flag disabled, evidence stays readable/releasable. After new kinds
+exist, rollback keeps the new reader/guards and disables creation; use a forward fix.
+Never downgrade/drop holds or reset volumes. No real-data or legal approval is inferred.
+
+Only already-minimized terminal owned receipts qualify. A pending message or unbound
+sender is not made eligible by guessing ownership or clearing data solely to create a
+hold. Do not freeze live STOP/unlink/code expiry. Other channel state and deletion
+execution remain separately gated; see ADR-055 and its verification register.
+
+The applied 0034 receipt guard has a json equality edge case on held menu no-ops.
+Forward migration 0035 compares canonical JSONB rows without changing stored menu data or hold
+metadata. Keep creation disabled through this upgrade; clean and existing-menu-hold
+upgrade/replay tests must pass before activation. Do not edit/revert an applied migration.

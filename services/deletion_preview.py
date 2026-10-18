@@ -77,7 +77,8 @@ LIMITATIONS = [
     "Advisory counts may change; this is not an execution plan or legal-hold clearance.",
     "Shared rate buckets, operational logs, backups and arbitrary embedded references "
     "need separate review.",
-    "Channel inventory excludes unbound sender history; channel legal-hold coverage is pending.",
+    "Channel inventory excludes unbound sender history; terminal receipt holds do not cover "
+    "live channel state, links, conversations or authentication capabilities.",
     "Related staff records may also concern other people and are not account-owned data.",
 ]
 

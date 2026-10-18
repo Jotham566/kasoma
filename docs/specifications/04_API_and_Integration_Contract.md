@@ -745,3 +745,20 @@ actor/request/attempt/model/provider identifiers, content or fingerprints.
 configurable 1–10,000. It does not enforce quotas. AI_USAGE leaves unavailable_metrics
 only while this local aggregate is available; this does not imply fleet completeness,
 billing or academic error-rate measurement. Existing authorization/rate limits remain.
+
+
+### Terminal receipt hold extension (ADR-055 candidate)
+
+Existing ADMIN hold routes accept CHANNEL_INBOUND_RECEIPT and
+CHANNEL_OUTBOUND_RECEIPT only when the typed staged-creation flag is enabled. They
+refer to original owned message UUIDs after terminal processing has cleared transient
+sender/recipient/code/reply material. Queued, unbound and cross-owner targets remain
+not found. No receipt body or plaintext is returned. Ownership, independent claimant,
+recent auth, finite expiry, exact replay/rates and audit remain required.
+
+HoldPage adds supported_record_types. UI clients show new choices only when advertised;
+older responses may omit that field. With creation disabled, new-kind creates/replays
+return409 HOLD_TARGET_UNAVAILABLE; listing and releasing registered holds still work.
+No new route, body upload, broad account hold, data-copy artifact or deletion permission.
+Delivery callbacks may advance only the existing monotonic lifecycle; held receipt core
+fields cannot be rewritten/requeued. The preview remains advisory/incomplete.

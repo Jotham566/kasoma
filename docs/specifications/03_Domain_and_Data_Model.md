@@ -447,3 +447,30 @@ The nonpersonal completion aggregate cannot reset. Personal reviews are inventor
 owned exports are minimized/sealed and exact holds derive ownership through attempts.
 No destructive retention transform is introduced; answer text stays in the original
 encrypted attempt. Normal short-text selection remains disabled pending release gates.
+
+
+### Terminal channel receipt holds (ADR-055 candidate)
+
+Migration 0034 extends legal_holds.record_type with CHANNEL_INBOUND_RECEIPT and
+CHANNEL_OUTBOUND_RECEIPT, targeting original message UUIDs only after transient
+material has been cleared and explicit actor ownership is known. No new table,
+payload snapshot or data column. Existing record/receipt metadata and finite
+release/expiry remain. Live/queued/unbound state and other channel kinds are unsupported.
+
+Receipt UUIDs cannot change. While held, inbound terminal rows cannot be rewritten;
+outbound core fields/ownership stay fixed while existing monotonic delivery callbacks
+may update lifecycle status/time/reason. SQL independently validates and locks the
+eligible source. Hold creation is bounded by database time; an ahead-of-database claim
+fails closed until clock alignment permits a valid nonfuture hold.
+
+Source DELETE and retention predicates use database wall clock, including deleting
+transactions begun before a new hold. Active held IDs are excluded before batch LIMIT;
+existing FK dependencies remain while unrelated eligible receipts continue to expire.
+No active hold remains after all finite decisions end, so normal30-day cleanup resumes.
+New-kind creation defaults disabled until all readers support the extended enum; the
+existing ADMIN page advertises available kinds. Accountability metadata policy and
+incomplete deletion/preservation coverage remain unchanged. See ADR-055/evidence.
+
+Forward migration 0035 corrects no-op comparison through canonical to_jsonb rows, supporting the
+existing JSON menu column without transforming it. Menu array order remains significant,
+core rewrites stay forbidden and registered0034 holds/replay survive the upgrade.

@@ -1,6 +1,6 @@
 # Current sprint: verified model observations and terminal receipt follow-up
 
-Updated 18 October 2026. Earlier checkpoints remain in
+Updated 19 October 2026. Earlier checkpoints remain in
 [the preserved history](SPRINT_HISTORY_2026_10_18.md).
 
 ## Verified application source
@@ -13,20 +13,31 @@ passes. All merged implementation branches are removed locally/remotely.
   five-minute Redis intervals, ADMIN snapshot/card and fake worker smoke. See
   [model verification](E8_MODEL_USAGE_VERIFICATION.md) and accepted ADR-054.
 - `f5f408e`: configurable existing three-request/16,384-token/five-second envelope;
-  [hosted39157127637](https://github.com/Jotham566/kasoma/actions/runs/39157127637)
+  [hosted 39157127637](https://github.com/Jotham566/kasoma/actions/runs/39157127637)
   and [runtime evidence](E4_RUNTIME_BUDGET_VERIFICATION.md) pass.
 - `a357222`: bounded grading queue/lease/outcome/audit visibility and database-clock
-  review completion cap; [hosted39155326659](https://github.com/Jotham566/kasoma/actions/runs/39155326659)
+  review completion cap; [hosted 39155326659](https://github.com/Jotham566/kasoma/actions/runs/39155326659)
   and [grading evidence](E8_GRADING_OPERATIONS_VERIFICATION.md) pass.
 - Earlier independent review, staff navigation and offline report comparison remain
-  verified through2164209/17abb2d and hosted39150319607/39151730479.
+  verified through 2164209/17abb2d and hosted 39150319607/39151730479.
 
-Local model-slice evidence includes916 unit/contract and35 tooling cases,345 broad
+Local model-slice evidence includes916 unit/contract and 35 tooling cases, 345 broad
 integration cases plus two later dispatch-boundary cases,110 browser executions across
 serial runs, restricted login, source/dependency/image security and populated logical
 restore. Full hosted acceptance is separate evidence, not inferred from local checks.
 
 ## Active unmerged work
+
+See [ADR-055](../decisions/ADR/055-terminal-channel-receipt-holds.md),
+[receipt readiness](E8_CHANNEL_RECEIPT_HOLD_READINESS.md) and
+[verification](E8_CHANNEL_RECEIPT_HOLD_VERIFICATION.md). Source guards, hold-aware
+cleanup, staged capabilities/UI and synthetic recovery are implemented. Final 21-case
+receipt/clock/race/JSON-upgrade and restricted privacy-login verification passes;918 unit/contract,
+364 broad integration and 102 full browser executions pass with final focused
+supplements. Applied0034 is preserved; forward migration 0035 fixes a reproduced held-menu JSON no-op
+comparison. Final 0035 images/migration/service checks pass with creation disabled; hosted
+acceptance remains pending.
+
 
 `codex/channel-receipt-holds` is the next engineering slice, not merged application
 behavior. FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002 and NFR-MNT-001:

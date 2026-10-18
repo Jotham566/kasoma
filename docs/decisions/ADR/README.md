@@ -123,4 +123,8 @@ This directory location follows the user-requested repository organization. It d
 
 
 - [ADR-054: Bounded worker model usage](054-bounded-worker-model-usage.md)
-  records verified private local SDK counters and finite ADMIN aggregation.
+  records verified private local SDK counters, finite Redis aggregation and ADMIN visibility.
+
+
+- [ADR-055: Terminal channel receipt holds](055-terminal-channel-receipt-holds.md)
+  proposes scoped original-record guards after message minimization, preserving opt-out.

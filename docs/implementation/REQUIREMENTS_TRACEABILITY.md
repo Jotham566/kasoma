@@ -1,6 +1,14 @@
 # Requirements Traceability
 
-FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-ACC-001 / NFR-MNT-001 merged at 0c73c45:
+FR-ID-006 / FR-WA-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
+[terminal receipt readiness](E8_CHANNEL_RECEIPT_HOLD_READINESS.md) and
+[ADR-055 proposal](../decisions/ADR/055-terminal-channel-receipt-holds.md) define the
+next bounded hold slice: original owned already-minimized receipts, no live payload/
+capability preservation, staged creation and incomplete coverage. Isolated migration/
+SQL/API/race/upgrade, restricted login and populated recovery pass; final acceptance
+remains in progress. See [candidate evidence](E8_CHANNEL_RECEIPT_HOLD_VERIFICATION.md).
+
+FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-ACC-001 / NFR-MNT-001 merged at `0c73c45`:
 [ADR-054](../decisions/ADR/054-bounded-worker-model-usage.md) adds six fixed private
 worker SDK counters, separate bounded Redis intervals and an ADMIN aggregate/volume
 warning. Missing usage is unknown; subtotals and explicit zero remain distinct.
@@ -8,11 +16,11 @@ No identities/content/provider labels, billing or accuracy claim. See
 [readiness](E8_MODEL_USAGE_READINESS.md) and
 [verification](E8_MODEL_USAGE_VERIFICATION.md); complete hosted run 39160113771 passes.
 
-Runtime budgets merged at f5f408e: FR-OPS-004/FR-GRD-004 and NFR-SEC/MNT-001 expose only
+Runtime budgets merged at `f5f408e`: FR-OPS-004/FR-GRD-004 and NFR-SEC/MNT-001 expose only
 existing per-job resource ceilings through Settings, keeping the same default/hard
 maxima. Local 891 unit/contract, 21 actual flow, 33 review and restricted-login cases,
-security, populated recovery and rebuilt-image/service smoke pass; hosted run 39157127637
-passes; its merged source branch is removed. See
+security, populated recovery and rebuilt-image/service smoke pass; complete hosted
+run 39157127637 passes and the merged branch is removed. See
 [runtime-budget evidence](E4_RUNTIME_BUDGET_VERIFICATION.md).
 No new daily/fleet quota or inference approval policy is inferred.
 
@@ -74,7 +82,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-GRD-001 | Pinned single-choice and canonical exact-set multiple-choice graders, reviewed keys and checkbox delivery | Exhaustive subset/permutation tests, publication/API/DB/retry/replay/diagnostic/reassessment and browser checks; [verification](E4_MULTIPLE_CHOICE_VERIFICATION.md) | Local deterministic implementation; synthetic evidence is not academic benchmark approval |
 | FR-GRD-002 | Reviewed numeric contracts, exact rational grading, unit conversions, inclusive tolerances, precision and accepted forms | `tests/contract/test_numeric.py`, `tests/integration/test_numeric_workflow.py`, `tests/e2e/numeric.spec.ts` | Local deterministic implementation; synthetic regression/property cases are not expert academic benchmark approval |
 | FR-GRD-003 | Version-pinned encrypted rubric grades, bounded fake dual-pass processor and disabled synthetic learner flow (ADR-050); independent review candidate (ADR-051) | Flow/API/SQL/role/browser/recovery tests; [review evidence](E4_EXPERT_REVIEW_VERIFICATION.md) | Synthetic learner path, independent review and offline reports merged after hosted acceptance; genuine calibration/provider/academic approval and actual scoring remain gated |
-| FR-GRD-004 | Distinct pending/neutral outcomes, finite work leases and global request/time/token/repair budget; current consent/band checks and candidate atomic sticky review disablement | Rehearsal, worker rollback/revocation, pending/fallback/retry browser and review window tests | Disabled synthetic fallback and independent review merged after hosted verification; clock-skew follow-up merged after hosted verification and actual scoring approval pending |
+| FR-GRD-004 | Distinct pending/neutral outcomes, finite work leases and global request/time/token/repair budget; current consent/band checks and candidate atomic sticky review disablement | Rehearsal, worker rollback/revocation, pending/fallback/retry browser and review window tests | Disabled synthetic fallback and independent review merged after hosted verification; clock-skew follow-up merged after complete hosted acceptance and actual scoring approval pending |
 | FR-GRD-005 | Authored-feedback allowlists, exact pinned criterion evidence, encrypted result projection and owned rubric feedback; blinded independent review keeps model outcomes hidden | Strict candidate/result contracts, learner and reviewer browser/API cases | Synthetic learner feedback merged; real academic calibration and scoring approval pending |
 | FR-GRD-006 | Reviewed versioned hints, append-only usage and frozen pre-answer count/highest level; independence weighting with unchanged points | `tests/contract/test_hint_contract.py`, `tests/integration/test_hints.py`, `tests/e2e/hints.spec.ts`; [verification](E4_HINTS_VERIFICATION.md) | Local synthetic verified (235 Python tests / 12 browser tests); production hint academic review pending |
 | FR-GRD-007 | Owned submitted-attempt prerequisite for worked solution; safe learner DTO | Direct pre-attempt denial, IDOR and browser solution gate | Local revision gating and permanent diagnostic solution block implemented |
@@ -99,9 +107,9 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-CNT-005 | Submission and approval revalidate rights, mappings, weights, answer, solution and remediation | Field-specific 409 tests; approval revalidates changed curriculum references | Local single/multiple-choice and numeric publication validation implemented; other formats and academic evidence pending |
 | FR-CNT-006 | Reviewer/admin queue, independent claim, priority/status/resolution, immutable history and revision-checked retries | Triage API/browser, role/ownership, audit/rollback and disputed-successor tests | Local synthetic implementation; approved live support and retention jobs remain production gates |
 | FR-OPS-001 | `services/observability.py`, `packages/analytics-schema/` | `tests/contract/test_foundation.py`, `tests/contract/test_identity_contract.py`, identity integration outbox assertions: safe operational and identity-event shape | Registration/consent, assessment, diagnostic start/completion and mastery-update events persist atomically; hint-use and reassessment lifecycle events also persist atomically; flag lifecycle events use the content outbox; data-request intake/review and export completion events also use the identity outbox; channel code/link/unlink/STOP events and safe correlated processing logs are implemented; remaining dispatch pending |
-| FR-OPS-002 | ADMIN snapshot/dashboard, bounded imports/flags/channel/exports and response-start histograms; grading queue and local model observations | [Operations evidence](E8_OPERATIONS_VERIFICATION.md); [grading candidate](E8_GRADING_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs and browser checks | Partial: existing local visibility merged; grading queue/lease/fallback and bounded local model observations merged; model spend, academic/technical error-rate distinctions, SMS/email/mastery/provider telemetry and production alerting remain pending |
+| FR-OPS-002 | ADMIN snapshot/dashboard, bounded imports/flags/channel/exports and response-start histograms; grading queue and verified local model observations | [Operations evidence](E8_OPERATIONS_VERIFICATION.md); [grading candidate](E8_GRADING_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs and browser checks | Partial: existing local visibility merged; grading queue/lease/fallback and bounded local model observations merged; model spend, academic/technical error-rate distinctions, SMS/email/mastery/provider telemetry and production alerting remain pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
-| FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; configurable shared short-text per-job request/token/time ceiling with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); [runtime-budget candidate](E4_RUNTIME_BUDGET_VERIFICATION.md); actual fake exhaustion and exact replay | Local channel controls merged; typed runtime budget passes local and hosted checks; actual provider usage/billing and production acceptance remain gated. No unspecified learner/day/fleet quota is invented |
+| FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; configurable shared short-text per-job request/token/time ceiling with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); [runtime-budget candidate](E4_RUNTIME_BUDGET_VERIFICATION.md); actual fake exhaustion and exact replay | Local channel controls merged; typed runtime budget passes local and complete hosted checks; actual provider usage/billing and production acceptance remain gated. No unspecified learner/day/fleet quota is invented |
 | NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); hosted regression passes; representative deployment/history/provider acceptance pending |
 | NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
 | NFR-REL-001 | — | — | Not started |

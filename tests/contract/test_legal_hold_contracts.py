@@ -53,3 +53,13 @@ def test_learning_record_hold_uses_exact_uuid(kind):
         affirmative=True,
     )
     assert body.record_type == kind and body.record_id == record
+
+
+@pytest.mark.parametrize("kind", ["CHANNEL_INBOUND_RECEIPT", "CHANNEL_OUTBOUND_RECEIPT"])
+def test_channel_receipt_kind_is_explicitly_opted_in(kind):
+    from services.config import Settings
+    from services.legal_hold_contracts import supported_record_types
+
+    assert kind not in supported_record_types(False)
+    assert kind in supported_record_types(True)
+    assert Settings.model_fields["channel_receipt_holds_enabled"].default is False

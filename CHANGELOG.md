@@ -1,5 +1,22 @@
 # Changelog
 
+## Work in progress — terminal channel receipt holds
+
+- Preserve applied 0034 and add forward migration 0035 after a final real-menu regression catches
+  PostgreSQL json equality failure on held no-op updates. Canonical JSONB comparison
+  preserves menu order/core protection; clean and existing-hold upgrade/replay pass.
+- Final 21-case receipt/clock/race/restricted-login verification passes alongside 918
+  unit/contract,364 broad integration and 102 full browser executions. New creation
+  remains disabled; the 0035 stack passes smoke/security/health with creation disabled. Hosted acceptance remains pending.
+
+- Assess exact-record holds for already-minimized owned terminal inbound/outbound
+  receipts under proposed ADR-055. Preserve normal callbacks, STOP/unlink and bounded
+  unrelated cleanup, with database-clock guards and default-disabled staged creation.
+  Live messages, links, conversations and usable code preservation remain unsupported.
+  Add0034 guards, hold capabilities/UI, hold-aware cleanup and clean/upgrade/race/
+  opt-out regressions. Initial 16-case receipt verification, existing holds/channels and
+  restricted login/65-table/648-row recovery pass; final acceptance is in progress.
+
 ## Verified — bounded local model observations
 
 - Add six private, attribute-free worker counters and bounded five-minute Redis
@@ -11,8 +28,8 @@
   worker publishes freshness; fixed fake probes verify the running stack.
 - Preserve the existing request histogram wire format while sharing its finite byte
   transport. Add SDK, real Redis, role/lifecycle, alert and accessible presentation
-  regressions. Complete hosted run 39160113771 passes at 0c73c45; promote to main and remove
-  the merged source branch. Learner scoring remains disabled.
+  regressions. Complete hosted run 39160113771 passes at `0c73c45`; the source is on main
+  and its merged branch is removed. Learner scoring remains disabled.
 
 
 ## Verified — configurable per-job grading budgets
@@ -25,8 +42,9 @@
   attempt, neutral no-score/no-mastery outcome and idempotent replay. No new quota
   policy, inference profile, approval, API, provider or persistence changes. Local
   verification passes 891 unit/contract, 21 flow and 33 review cases, restricted login,
-  security, populated recovery and rebuilt image/service smoke; complete hosted acceptance
-  passes at f5f408e (39157127637); the merged source branch is removed.
+  security, populated recovery and rebuilt image/service smoke; hosted acceptance
+  passes at `f5f408e` in hosted run 39157127637. The source is on main and its merged
+  branch is removed locally/remotely.
 
 ## Verified — grading queue operations
 

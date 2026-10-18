@@ -8,8 +8,7 @@ type Operation = { key: string } & (
   | { kind: "create"; body: S["HoldInput"] }
   | { kind: "release"; hold: string; body: S["HoldRelease"] }
 );
-const button =
-  "min-h-11 rounded border border-slate-500 px-4 py-2 disabled:opacity-50";
+const button = "ui-button ui-button-secondary";
 const api = () => apiClient("", crypto.randomUUID());
 function check<T>(result: { data?: T; error?: S["ErrorEnvelope"] }): T {
   if (!result.data) throw new Error(result.error?.error.code ?? "UNAVAILABLE");
@@ -27,6 +26,9 @@ export function LegalHolds({
 }) {
   const [opened, setOpened] = useState(false);
   const [rows, setRows] = useState<S["HoldView"][]>([]);
+  const [supported, setSupported] = useState<S["HoldInput"]["record_type"][]>(
+    [],
+  );
   const [cursor, setCursor] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
@@ -41,6 +43,7 @@ export function LegalHolds({
     );
     setRows((old) => (next ? [...old, ...page.data] : page.data));
     setCursor(page.next_cursor);
+    setSupported(page.supported_record_types ?? []);
     setOpened(true);
   }
   async function run(action: () => Promise<void>) {
@@ -68,6 +71,7 @@ export function LegalHolds({
         );
       } else if (
         [
+          "HOLD_TARGET_UNAVAILABLE",
           "HOLD_NOT_ACTIVE",
           "HOLD_END_REQUIRED",
           "RESOURCE_NOT_FOUND",
@@ -126,7 +130,10 @@ export function LegalHolds({
     });
   }
   return (
-    <section aria-label="Record legal holds" className="space-y-3">
+    <section
+      aria-label="Record legal holds"
+      className="legal-hold-controls space-y-3"
+    >
       <button
         className={button}
         disabled={busy}
@@ -156,12 +163,14 @@ export function LegalHolds({
           <h3 className="font-semibold">Record legal holds</h3>
           <p>
             Record an already authorized preservation decision for one record.
-            Other record types still require review. Expiry or release does not
-            delete data. Decision references must be opaque UUIDs; do not enter
-            names or legal narratives. For a grade, use its attempt reference; a
-            grading publication also uses its attempt reference. For a data
-            request review, use its request reference. Other types use their own
-            record reference. Each hold covers only the named record.
+            Other record types still require review. Expiry or release ends this
+            hold. Existing retention rules can remove eligible records once no
+            active hold remains; account deletion remains disabled. Decision
+            references must be opaque UUIDs; do not enter names or legal
+            narratives. For a grade, use its attempt reference; a grading
+            publication also uses its attempt reference. For a data request
+            review, use its request reference. Other types use their own record
+            reference. Each hold covers only the named record.
           </p>
           <form
             key={formVersion}
@@ -195,7 +204,7 @@ export function LegalHolds({
                 <select
                   name="record_type"
                   defaultValue="DATA_REQUEST"
-                  className="block min-h-11 border"
+                  className="ui-select"
                 >
                   <option value="DATA_REQUEST">Data request</option>
                   <option value="CONSENT">Consent</option>
@@ -215,11 +224,29 @@ export function LegalHolds({
                   <option value="GRADING_REVIEW">
                     Completed grading review
                   </option>
+                  {supported.includes("CHANNEL_INBOUND_RECEIPT") && (
+                    <option value="CHANNEL_INBOUND_RECEIPT">
+                      Terminal channel inbound receipt
+                    </option>
+                  )}
+                  {supported.includes("CHANNEL_OUTBOUND_RECEIPT") && (
+                    <option value="CHANNEL_OUTBOUND_RECEIPT">
+                      Terminal channel outbound receipt
+                    </option>
+                  )}
                   <option value="DATA_REQUEST_REVIEW">
                     Data request review (request reference)
                   </option>
                 </select>
               </label>
+              {supported.includes("CHANNEL_INBOUND_RECEIPT") && (
+                <p>
+                  Channel holds require an owned, already-minimized terminal
+                  receipt. Queued messages, live contacts, link codes and
+                  conversations are not supported. Delivery callbacks and
+                  opt-out remain effective.
+                </p>
+              )}
               <label className="block">
                 Record reference
                 <input
@@ -227,7 +254,7 @@ export function LegalHolds({
                   defaultValue={target}
                   required
                   pattern="[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
-                  className="block min-h-11 w-full border"
+                  className="ui-input"
                 />
               </label>
               <label className="block">
@@ -236,12 +263,12 @@ export function LegalHolds({
                   name="decision_reference"
                   required
                   pattern="[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
-                  className="block min-h-11 w-full border"
+                  className="ui-input"
                 />
               </label>
               <label className="block">
                 Reason
-                <select name="reason" className="block min-h-11 border">
+                <select name="reason" className="ui-select">
                   <option value="LEGAL_OBLIGATION">Legal obligation</option>
                   <option value="SECURITY_INVESTIGATION">
                     Security investigation
@@ -254,14 +281,16 @@ export function LegalHolds({
                   name="expires_at"
                   type="datetime-local"
                   required
-                  className="block min-h-11 border"
+                  className="ui-input"
                 />
               </label>
               <label className="flex min-h-11 items-center gap-3">
                 <input type="checkbox" required />I confirm an authorized
                 preservation decision for this record and period.
               </label>
-              <button className={button}>Create hold</button>
+              <button className="ui-button ui-button-primary">
+                Create hold
+              </button>
             </fieldset>
           </form>
           {rows.length === 0 && <p>No registered holds for this request.</p>}
@@ -338,14 +367,16 @@ export function LegalHolds({
                     name="reference"
                     required
                     pattern="[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
-                    className="block min-h-11 w-full border"
+                    className="ui-input"
                   />
                 </label>
                 <label className="flex min-h-11 items-center gap-3">
                   <input type="checkbox" required />I confirm an authorized
                   release decision for this hold.
                 </label>
-                <button className={button}>Confirm release</button>
+                <button className="ui-button ui-button-primary">
+                  Confirm release
+                </button>
               </fieldset>
             </form>
           )}

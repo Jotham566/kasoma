@@ -2450,7 +2450,9 @@
               "GRADING_HISTORY",
               "GRADING_PUBLICATION",
               "GRADING_AUDIT",
-              "GRADING_REVIEW"
+              "GRADING_REVIEW",
+              "CHANNEL_INBOUND_RECEIPT",
+              "CHANNEL_OUTBOUND_RECEIPT"
             ],
             "title": "Record Type",
             "type": "string"
@@ -2488,6 +2490,30 @@
               }
             ],
             "title": "Next Cursor"
+          },
+          "supported_record_types": {
+            "items": {
+              "enum": [
+                "CONSENT",
+                "ATTEMPT",
+                "CONTENT_FLAG",
+                "DATA_REQUEST",
+                "GRADE",
+                "MASTERY_EVIDENCE",
+                "MASTERY_HISTORY",
+                "FLAG_HISTORY",
+                "DATA_REQUEST_REVIEW",
+                "GRADING_HISTORY",
+                "GRADING_PUBLICATION",
+                "GRADING_AUDIT",
+                "GRADING_REVIEW",
+                "CHANNEL_INBOUND_RECEIPT",
+                "CHANNEL_OUTBOUND_RECEIPT"
+              ],
+              "type": "string"
+            },
+            "title": "Supported Record Types",
+            "type": "array"
           }
         },
         "required": [
@@ -2568,7 +2594,9 @@
               "GRADING_HISTORY",
               "GRADING_PUBLICATION",
               "GRADING_AUDIT",
-              "GRADING_REVIEW"
+              "GRADING_REVIEW",
+              "CHANNEL_INBOUND_RECEIPT",
+              "CHANNEL_OUTBOUND_RECEIPT"
             ],
             "title": "Record Type",
             "type": "string"

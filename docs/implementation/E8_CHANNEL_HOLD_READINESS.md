@@ -66,3 +66,11 @@ investigation material merely because a preservation record exists.
 
 Pending full coverage also includes other personal-data logs, embedded references and backups.
 This channel assessment does not close those gaps or enable the account-erasure processor.
+
+
+## Pre-erasure clock review
+
+Terminal receipt DELETE/cleanup uses database wall clock under ADR-055. Legacy
+held-record guards still use transaction-start time; review long-transaction boundaries
+before enabling any future erasure processor. Existing append-only protections remain,
+account erasure is disabled and this terminal subset does not claim universal clearance.

@@ -384,6 +384,9 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     const holds = deletion.getByRole("region", { name: "Record legal holds" });
     await holds.getByRole("button", { name: "Manage record holds" }).click();
     await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await expect(holds).toContainText(
+      "Existing retention rules can remove eligible records",
+    );
     await expect(holds.getByLabel("Record type").locator("option")).toHaveText([
       "Data request",
       "Consent",
@@ -399,6 +402,72 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       "Completed grading review",
       "Data request review (request reference)",
     ]);
+    // Presentation-only advertised capability; real flag/ownership/SQL behavior is
+    // verified in PostgreSQL integration tests. This does not enable the API flag.
+    await admin.route(
+      "**/api/v1/admin/data-requests/*/holds?*",
+      async (route) => {
+        const response = await route.fetch();
+        const body = await response.json();
+        await route.fulfill({
+          response,
+          json: {
+            ...body,
+            supported_record_types: [
+              ...body.supported_record_types,
+              "CHANNEL_INBOUND_RECEIPT",
+              "CHANNEL_OUTBOUND_RECEIPT",
+            ],
+          },
+        });
+      },
+    );
+    await holds.getByRole("button", { name: "Reload holds" }).click();
+    await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await expect(
+      holds
+        .getByLabel("Record type")
+        .locator('option[value="CHANNEL_INBOUND_RECEIPT"]'),
+    ).toHaveCount(1);
+    await expect(
+      holds
+        .getByLabel("Record type")
+        .locator('option[value="CHANNEL_OUTBOUND_RECEIPT"]'),
+    ).toHaveCount(1);
+    await expect(holds).toContainText(
+      "Queued messages, live contacts, link codes and conversations are not supported",
+    );
+    const priorViewport = admin.viewportSize();
+    await admin.setViewportSize({ width: 320, height: 740 });
+    await admin.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    expect(
+      await admin.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    expect(
+      (await new AxeBuilder({ page: admin }).analyze()).violations,
+    ).toEqual([]);
+    await holds.screenshot({
+      path: ".local/ui-review/channel-receipt-hold-options-large-text.png",
+    });
+    await admin.evaluate(() => {
+      document.documentElement.style.fontSize = "100%";
+    });
+    await holds.screenshot({
+      path: ".local/ui-review/channel-receipt-hold-options.png",
+    });
+    if (priorViewport) await admin.setViewportSize(priorViewport);
+    await admin.unroute("**/api/v1/admin/data-requests/*/holds?*");
+    await holds.getByRole("button", { name: "Reload holds" }).click();
+    await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await expect(
+      holds
+        .getByLabel("Record type")
+        .locator('option[value="CHANNEL_INBOUND_RECEIPT"]'),
+    ).toHaveCount(0);
     await expect(
       holds.getByText(/For a grade, use its attempt reference/),
     ).toBeVisible();

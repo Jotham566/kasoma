@@ -784,3 +784,30 @@ body {
     font-weight: 600;
   }
 }
+
+.legal-hold-controls,
+.legal-hold-controls fieldset {
+  min-inline-size: 0;
+}
+.legal-hold-controls select,
+.legal-hold-controls input:not([type="checkbox"]) {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  inline-size: 100%;
+}
+.account-tools-page {
+  grid-template-columns: minmax(0, 1fr);
+  overflow-wrap: anywhere;
+}
+.privacy-request-card {
+  min-inline-size: 0;
+}
+
+@media (max-width: 400px) {
+  .account-tools-page {
+    padding-inline: 16px;
+  }
+  .account-tools-page .surface-card {
+    padding: 16px;
+  }
+}
