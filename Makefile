@@ -81,9 +81,13 @@ check-docs:
 	$(PYTHON) scripts/check_docs.py
 	git diff --check
 	git diff --cached --check
-eval-local eval-gemini-free eval-compare:
+eval-local eval-gemini-free:
 	@echo "$@: unavailable until frozen academic benchmark, task schemas and evaluation gates are implemented (E4). No inference performed." >&2
 	@exit 1
+
+export KASOMA_EVAL_BASELINE KASOMA_EVAL_CANDIDATE
+eval-compare:
+	$(UV) python -m scripts.compare_evaluations
 
 .PHONY: security-source security-containers ollama-check
 security-source:

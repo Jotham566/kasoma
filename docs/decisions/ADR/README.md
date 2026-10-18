@@ -114,3 +114,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-051: Blinded review and release-unit sampling](051-blinded-review-and-release-unit-sampling.md)
   proposes independent review and audit coverage when diagnostic grades remain sealed.
+
+- [ADR-052: Offline evaluation-report comparison](052-offline-evaluation-report-comparison.md)
+  proposes strict payload-free synthetic report comparison without inference or approval.

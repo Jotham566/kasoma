@@ -1,5 +1,12 @@
 # Requirements Traceability
 
+Offline-report candidate: FR-GRD-003/004, FR-OPS-002 and NFR-MNT-001 add a
+strict versioned payload-free report reader/comparator and the required `make eval-compare`
+command under ADR-052. Thirty-seven new cases, 881 total unit/contract and 35 tooling
+cases, lint/types/contracts/security and actual Make invocation pass; see
+[report evidence](E4_EVALUATION_REPORT_VERIFICATION.md). Hosted acceptance is pending. It does not run
+inference, establish benchmark truth/approval or enable a learner grading band.
+
 Staff mobile-navigation candidate: NFR-ACC-001/NFR-COMP-001 uses the existing
 staff destinations with an explicit narrow-screen disclosure, keyboard activation,
 active destination, >=44-pixel controls and close-on-navigation. Desktop navigation

@@ -76,3 +76,18 @@ Promoting a model requires the thresholds in document 06. A good Gemini result i
 - A fixture containing a canary email, phone number or learner ID is blocked before a Gemini request.
 - Gemini evaluation stops at its configured ceilings and reports `429` responses without retry storms.
 - Local and Gemini runs produce the same report schema and can be compared without changing domain code.
+
+
+## Implemented offline report-comparison boundary (candidate ADR-052)
+
+The candidate `make eval-compare` now reads two strict synthetic short-text report-v1
+artifacts using the [local runbook](../runbooks/LOCAL_DEVELOPMENT.md). Their frozen
+benchmark/version/case count and task/output-schema/metric policy must match. Model,
+prompt and configuration changes remain legitimate comparison subjects and are reported
+explicitly. Counts include every planned case; fallback/unrun cases never become correct
+by exclusion. Unknown usage is unavailable, and reports contain no prompts, answers,
+identifiers, credentials or raw output. Declared runtime/license/terms/quota metadata is
+not proof of approval. This command performs no inference and cannot activate grading.
+Other gateway-task reporting, actual benchmark execution, sanitizer evidence, genuine
+academic authority and provider conformance remain pending. Local and Gemini evaluation
+commands retain their fail-closed boundary; no Gemini evaluation is run by this slice.

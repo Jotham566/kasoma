@@ -1052,3 +1052,31 @@ is shared even when web-server ports differ. Starting the UI harness while a ful
 engine run is active can delete the other run's trace files during context closure.
 This is a harness collision, not passing application evidence; preserve the failure
 and rerun serially. Never rebuild `.next` while a native browser server uses it.
+
+
+## Offline synthetic evaluation report comparison
+
+`make eval-compare KASOMA_EVAL_BASELINE=/absolute/baseline.json KASOMA_EVAL_CANDIDATE=/absolute/candidate.json`
+reads existing synthetic, payload-free short-text report-v1 files only. The command
+makes no inference/provider call and imports no model adapter. It accepts at most
+512 KiB per regular local file, rejects final-path symlinks/special files/duplicate
+keys/unknown fields/inconsistent counters, and emits a closed error with exit 1 on
+invalid or incomparable input. Paths, excerpts and exception diagnostics are withheld.
+Only matching frozen benchmark/version/case count, task/output schema and metric policy
+compare. Model/prompt/configuration differences are explicit closed changed-field names.
+
+Report metadata includes exact model/adapter/runtime/quantization/context/sampling,
+benchmark and schema versions, declared license/terms digests and hosted observed quota/
+rate-limit counts. Local profiles follow specification 18; these declarations are not
+verified academic, licensing or provider approvals. All planned cases remain in metric
+denominators; low-confidence, invalid, failed, safety and unrun cases are separate.
+Unavailable latency/usage stays null. Output contains only safe report IDs and aggregates,
+not arbitrary model labels, raw answers, prompts or credentials. No output can activate
+scoring. Genuine benchmark/report authority and actual local/Gemini evaluation remain
+separately gated. Do not run Gemini evaluation without the owner's explicit request.
+
+
+The report's SYNTHETIC_PAYLOAD_FREE marker is declared metadata; the comparison does
+not perform or certify dataset sanitation. It cannot establish trusted benchmark/report
+provenance or academic, licensing or processor approval. Actual evaluation must retain
+its separate sanitizer and frozen academic authority gates.

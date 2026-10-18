@@ -1,5 +1,16 @@
 # Changelog
 
+## Work in progress — offline evaluation reports
+
+- Propose ADR-052 and implement a strict payload-free synthetic short-text report
+  contract and the required read-only `make eval-compare` command. Compare only matching
+  frozen benchmark/schema/metric-policy references, include all planned cases in quality
+  denominators and preserve unavailable usage. Reject ambiguous, oversized or private
+  input and return closed errors. No inference, model/provider selection, approval or
+  learner scoring is performed. Thirty-seven new cases, 881 total unit/contract and
+  35 tooling cases, actual Make invocation, lint/contracts/security pass; hosted
+  acceptance and actual benchmark/provider/evaluation gates remain open.
+
 ## Work in progress — staff mobile navigation
 
 - Replace the always-expanded narrow-screen staff links with an explicit accessible

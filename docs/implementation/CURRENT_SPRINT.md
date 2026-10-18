@@ -7,6 +7,20 @@ promoted to main. Its merged branch is removed locally and remotely.
 Current next-slice branch: `codex/grading-expert-review`, based on that candidate.
 Do not promote the next branch ahead of its verification.
 
+## Active follow-up: offline report comparison
+
+Staff navigation `3775ae1` passes local serial/browser/image verification and is pushed
+for [hosted acceptance](https://github.com/Jotham566/kasoma/actions/runs/39151218081).
+Active branch `codex/offline-evaluation-reports` implements FR-GRD-003/004, FR-OPS-002
+and NFR-MNT-001 through the missing offline comparison command only. See
+[readiness](E4_EVALUATION_REPORT_READINESS.md) and
+[ADR-052](../decisions/ADR/052-offline-evaluation-report-comparison.md).
+No model, Gemini, messaging or cloud call is made; no academic approval or actual
+scoring is enabled. Local lint/types/contracts, 881 unit/contract and 35 tooling cases,
+37 new reader/contract/CLI cases, actual Make invocation and source/dependency security
+pass. See [report verification](E4_EVALUATION_REPORT_VERIFICATION.md). Hosted acceptance
+remains required before promotion.
+
 ## Active follow-up: compact staff navigation
 
 Expert-review candidate `2164209` is committed/pushed and undergoing exact-source
