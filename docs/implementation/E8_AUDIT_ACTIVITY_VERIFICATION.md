@@ -44,6 +44,11 @@ provides no learner-level support permission, full audit coverage or production 
 Logs: `.local/audit-activity-*.log`. The stack remains available at localhost:3000;
 no existing volume was removed and no external model/messaging/Gemini call was made.
 
+The first candidate push omitted the new service module from its explicit staging
+list. A clean-tree review caught the untracked file before hosted acceptance; a normal
+follow-up commit includes it. No force push or hook bypass. Hosted acceptance must be
+for the corrected complete source, not the incomplete first push.
+
 ## Files in this candidate
 
 - API/data: `services/audit_activity.py`, `apps/api/operations.py`,
