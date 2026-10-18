@@ -106,7 +106,7 @@ for (const width of [320, 1280]) {
     ).toHaveAttribute("aria-current", "page");
     await expect(
       staffNavigation.getByRole("link", { name: "Audit", exact: true }),
-    ).toHaveCount(0);
+    ).toHaveAttribute("href", "/admin/audit");
     await reflow();
     for (const link of await staffNavigation.getByRole("link").all()) {
       expect((await link.boundingBox())?.height).toBeGreaterThanOrEqual(44);

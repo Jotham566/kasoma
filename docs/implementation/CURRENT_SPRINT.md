@@ -41,7 +41,8 @@ All four legacy wrappers reproduce a missed hold committed after transaction sta
 forward migration 0036 changes only DELETE evaluation time. Four focused cases pass after the
 fix; the upgrade/replay supplement and related suites total 57 passing cases.
 918 unit/contract and 35 tooling cases, restricted logins, security, populated recovery
-and rebuilt 0036 image/service smoke pass. Complete hosted acceptance remains pending.
+and rebuilt 0036 image/service smoke pass. Hosted 39167600610 fails on runner disk exhaustion after successful backend
+and five browser batches; no promotion. ADR-059 records the capacity correction.
 Original append-only protections remain; no original row is erased for reproduction.
 
 ## Merged terminal receipt slice
@@ -114,3 +115,21 @@ The MVP is not complete. Genuine inventory/benchmark/calibration, privacy/DPIA/P
 provider/pilot approvals, full preservation, erasure/anonymization/accountability expiry,
 production PITR/RPO/RTO and branded/physical-device evidence remain in
 [release gates](RELEASE_GATES.md) and [requirements traceability](REQUIREMENTS_TRACEABILITY.md).
+
+## Acceptance record correction
+
+The NFR-PERF-002 row now links the existing October 9 objective load baseline rather
+than incorrectly suggesting no deterministic feedback measurement exists. ANSWER
+includes decoded feedback JSON and its historical p95 is 27.221 ms for 2,500 responses.
+No new benchmark, current-source performance claim, AI/provider acceptance or additional
+response-format scope is inferred. Existing broader performance gates remain.
+
+## Hosted capacity correction
+
+NFR-MNT-001: [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) and
+[CI evidence](E0_CI_STORAGE_VERIFICATION.md) record the observed disposable-runner
+disk failure, hosted-only fixed-SDK preparation, capacity gates and diagnostics.
+22 safety cases, 940 unit/contract and 35 tooling cases, static/contracts/security
+checks pass locally. No real SDK cleanup is performed locally. Corrected navigation
+expectations pass all 105 browser executions; the full Chromium target also passes 31 cases. Complete hosted acceptance
+remains pending. All eight local Docker services remain running on candidate schema 0037.

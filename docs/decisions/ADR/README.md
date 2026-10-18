@@ -138,3 +138,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-058: Bounded ADMIN audit activity](058-bounded-admin-audit-activity.md)
   records aggregate-only audit navigation, finite sampling and no individual disclosure.
+
+- [ADR-059: Disposable CI runner storage](059-disposable-ci-runner-storage.md)
+  records fixed-SDK hosted-only preparation, capacity gates and diagnostics.

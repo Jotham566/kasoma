@@ -382,3 +382,10 @@ approval. No new preservation meaning, raw-data retention or erasure is authoriz
 [ADR-058](../decisions/ADR/058-bounded-admin-audit-activity.md). Implement the approved
 audit endpoint/navigation as a bounded fixed-category ADMIN aggregate, preserving
 individual-record support boundaries, immutable evidence and finite sample reporting.
+
+## ADR-059: Disposable CI runner storage
+
+**Status:** Proposed; hosted verification pending. See
+[ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md). A measured runner
+disk failure motivates hosted-only fixed SDK preparation, capacity checks and
+diagnostics. No local/application data cleanup or acceptance reduction is permitted.

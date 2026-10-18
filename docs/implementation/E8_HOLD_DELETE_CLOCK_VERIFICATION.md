@@ -40,3 +40,11 @@ acceptance from static checks. Prior receipt UI acceptance remains separate evid
 Logs: `.local/hold-delete-clock-*.log`. Broader preservation, legacy clock-anomalous
 metadata and future erasure clearance remain separately required. The MVP and actual
 learner/academic/privacy/provider production approvals are not complete.
+
+## Hosted gate failure
+
+Run [39167600610](https://github.com/Jotham566/kasoma/actions/runs/39167600610) at
+978ab30 passes 918 unit/contract and 373 integration cases plus five browser batches,
+then the disposable runner runs out of disk. The pipeline fails and this source is
+not promoted. [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) records
+the capacity correction; require a complete corrected-source run before acceptance.

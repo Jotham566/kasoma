@@ -73,7 +73,7 @@ build:
 containers:
 	docker compose --profile application build
 security:
-	$(UV) bandit -r apps/api apps/worker services -q
+	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py -q
 	$(UV) python scripts/check_secrets.py
 	$(UV) pip-audit --local
 	$(PNPM) audit --audit-level=high
@@ -380,3 +380,13 @@ test-web-audit:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/audit.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/audit.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/audit.spec.ts
+
+.PHONY: ci-runner-storage ci-storage-report ci-storage-check test-ci-storage
+ci-runner-storage:
+	$(PYTHON) scripts/ci_runner_storage.py --prepare
+ci-storage-report:
+	$(PYTHON) scripts/ci_runner_storage.py
+ci-storage-check:
+	$(PYTHON) scripts/ci_runner_storage.py --check
+test-ci-storage:
+	$(UV) pytest tests/contract/test_ci_runner_storage.py

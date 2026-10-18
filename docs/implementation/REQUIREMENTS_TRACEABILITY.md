@@ -1,5 +1,11 @@
 # Requirements Traceability
 
+NFR-MNT-001 candidate: [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md)
+and [CI storage evidence](E0_CI_STORAGE_VERIFICATION.md) address the observed hosted
+disk failure without reducing tests or touching developer data. Hosted-only SDK
+preparation and read-only capacity gates pass 22 safety/940 unit-contract cases;
+complete hosted acceptance remains required.
+
 FR-OPS-003 / NFR-SEC-002 / NFR-ACC-001 / NFR-PERF-001 / NFR-MNT-001 candidate:
 [ADR-058](../decisions/ADR/058-bounded-admin-audit-activity.md) and
 [audit readiness](E8_AUDIT_ACTIVITY_READINESS.md) and
@@ -140,7 +146,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; broader operations audit UI/retention pending |
 | FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; configurable shared short-text per-job request/token/time ceiling with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); [runtime-budget candidate](E4_RUNTIME_BUDGET_VERIFICATION.md); actual fake exhaustion and exact replay | Local channel controls merged; typed runtime budget passes local and complete hosted checks; actual provider usage/billing and production acceptance remain gated. No unspecified learner/day/fleet quota is invented |
 | NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); hosted regression passes; representative deployment/history/provider acceptance pending |
-| NFR-PERF-002 | Bounded local queue wake-up after durable channel intake | Wake-up contract tests; [conversation evidence](E7_CONVERSATION_VERIFICATION.md) | Implementation partial; measured p95 feedback latency gate pending |
+| NFR-PERF-002 | Objective answer response includes deterministic feedback; bounded channel wake-up | [Historical objective load evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md); [channel evidence](E7_CONVERSATION_VERIFICATION.md) | Historical isolated objective baseline: ANSWER p95 27.221 ms across 2,500 complete JSON responses. This is not a current-source/deployment rerun; representative histories, numeric/AI/provider and WhatsApp end-to-end acceptance remain pending |
 | NFR-REL-001 | — | — | Not started |
 | NFR-REL-002 | Isolated synthetic logical recovery command (ADR-042) | 16 safety cases; [recovery evidence](E9_RECOVERY_VERIFICATION.md) | Synthetic logical recovery verified in CI 37223872075; production PITR/RPO/RTO pending |
 | NFR-SCL-001 | Synthetic 2,000-registration/500-active/50-concurrent objective load profile | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local 7,000-request baseline passed with 500 sessions/2,500 grades and no errors; broader scale acceptance pending |

@@ -1218,3 +1218,19 @@ activity. No current result is shown after a failed refresh.
 controls; `make test-web-audit test-web-content` covers real authenticated browser
 access and isolated empty/capped/error UI harnesses. Migration 0037 adds an index
 without rewriting evidence. Preserve the source audit rows/guards during rollback.
+
+### Disposable hosted CI disk capacity
+
+`make ci-storage-report` is read-only. `make ci-storage-check` is also read-only but
+fails below the fixed 8 GiB phase budget. `make test-ci-storage` tests only synthetic
+temporary directories and profile refusal. `make ci-runner-storage` is privileged
+preparation for the disposable Ubuntu 24.04 X64 GitHub-hosted workflow only; it must
+refuse the developer/self-hosted profile before mutation. Never sudo that command
+locally or forge its context. It removes only the two versioned unused SDK roots
+and requires 24 GiB afterward; it never prunes Docker or resets application volumes.
+See [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) and
+[verification](../implementation/E0_CI_STORAGE_VERIFICATION.md).
+
+On a failed hosted capacity gate, retain the before/after numeric disk and Docker usage
+diagnostics and fix that disposable job's profile. Do not disable browser/security
+checks, lower product acceptance or delete developer test schemas by prefix.

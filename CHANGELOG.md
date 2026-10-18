@@ -1,5 +1,14 @@
 # Changelog
 
+## Work in progress — disposable CI storage and navigation regression
+
+- Preserve the failed hold-clock hosted run as failed disk-capacity evidence. Add
+  ADR-059 hosted-only fixed SDK preparation, initial/phase capacity gates and read-only
+  diagnostics; no local cleanup or reduction in application checks.
+- Replace the obsolete absent-Audit navigation guard with its implemented exact target.
+  All 105 ordinary browser executions, 22 storage safety and 940 unit/contract cases
+  pass locally; corrected full-source hosted acceptance remains required.
+
 ## Work in progress — bounded ADMIN audit activity
 
 - Implement the approved audit endpoint and navigation as fixed-category last-24-hour

@@ -17,6 +17,10 @@ jobs:
       TURBO_TELEMETRY_DISABLED: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Prepare disposable runner storage
+        env:
+          KASOMA_CI_RUNNER_ENVIRONMENT: ${{ runner.environment }}
+        run: sudo --preserve-env=CI,GITHUB_ACTIONS,KASOMA_CI_RUNNER_ENVIRONMENT,RUNNER_OS,RUNNER_ARCH,GITHUB_WORKSPACE,RUNNER_TEMP make ci-runner-storage
       - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
@@ -71,5 +75,11 @@ jobs:
       - run: make test-runtime-role
       - run: make lint test openapi-check build
       - run: make e2e-install
-      - run: make e2e security containers
+      - run: make ci-storage-check e2e
+      - run: make ci-storage-check security containers
       - run: make security-source security-containers container-smoke
+      - name: Final read-only storage diagnostics
+        if: always()
+        run: |
+          make ci-storage-report
+          docker system df

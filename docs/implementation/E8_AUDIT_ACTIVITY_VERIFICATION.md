@@ -64,3 +64,18 @@ for the corrected complete source, not the incomplete first push.
   receipt/audit verification, audit readiness, local runbook, data model/API and
   canonical decision register. Older accepted-stage summaries are synchronized;
   no architectural decision body or release gate is weakened.
+
+## Full navigation regression and CI capacity follow-up
+
+The extra full-Chromium target initially passes 29/31 cases; two existing parameterized
+learner/staff navigation cases still assert that the formerly unimplemented Audit link
+is absent. Replace that obsolete guard with its exact /admin/audit target, keeping
+learner/staff separation and authorization checks. All 105 ordinary three-engine/short-text
+journeys subsequently pass. Failure traces are retained under .local/audit-navigation-failure.
+The corrected full Chromium target separately passes all 31 cases.
+
+The older hold-clock hosted run fails on disposable-runner disk exhaustion, not a
+completed acceptance gate. The bounded CI profile correction is recorded in
+[ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) and
+[CI evidence](E0_CI_STORAGE_VERIFICATION.md). Existing local application gates pass;
+complete corrected-source hosted verification remains required.
