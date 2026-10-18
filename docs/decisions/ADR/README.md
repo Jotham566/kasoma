@@ -132,3 +132,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-056: Wall-clock hold DELETE guards](056-wall-clock-hold-delete-guards.md)
   proposes correction of four legacy evaluation clocks without granting erasure.
+
+- [ADR-057: Minimized channel preservation snapshots — proposal](057-minimized-channel-preservation-proposal.md)
+  compares bounded capture and version history; explicit owner approval is pending.

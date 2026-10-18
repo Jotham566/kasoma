@@ -68,6 +68,17 @@ staged reader compatibility. See [channel readiness](E8_CHANNEL_HOLD_READINESS.m
 live-state preservation still requires a separately recorded design. Full hold
 coverage and erasure are not complete.
 
+## Next preservation decision
+
+[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) is a concrete
+proposal, not implementation: bounded encrypted evidence for an exact owned link or
+conversation version, excluding contact/message/authentication material. It compares
+continuous version history, defines ownership, atomic capture, finite retention and
+access/rollout tests, and leaves full coverage/erasure disabled. Explicit owner approval
+has been requested under the source-of-truth change protocol; no reply is approval.
+Unaffected verification continues. A nondestructive post-power-interruption procedure
+is now recorded in [local recovery](../runbooks/LOCAL_DEVELOPMENT.md).
+
 ## Review stack and remaining gates
 
 All eight Compose services are kept running for review at http://localhost:3000;

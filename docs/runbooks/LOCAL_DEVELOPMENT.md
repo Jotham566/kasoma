@@ -1,5 +1,41 @@
 # Local development and recovery
 
+## Resume after a power interruption
+
+Open Docker Desktop and wait for its engine to be ready. In the repository, inspect
+`git status --short --branch` before changing checkout; preserve unfinished work.
+Do not reset the database, remove volumes or regenerate an existing ignored `.env`.
+A PostgreSQL crash recovery message alone is not a reason to restore over the database.
+
+For the current local synthetic profile, run these steps in order:
+
+```sh
+make services
+make migrate
+make containers
+docker compose --profile application up -d --wait --wait-timeout 90 api worker export-worker web
+make container-smoke
+docker compose --profile application ps --format 'table {{.Service}}	{{.State}}	{{.Health}}'
+```
+
+`make migrate` applies forward migrations from the checked-out source; confirm that
+source is the intended local review candidate first. `make containers` rebuilds images
+from that source. These commands preserve existing volumes. Do not run them concurrently
+with a different checkout's migration or overwrite unfinished work to match main.
+The fake smoke is synthetic and tests the owned export worker/storage path and bounded
+request/model observations; it does not call an external model or messaging provider.
+Do not run Gemini evaluation as part of recovery. Normal short-text scoring and staged
+receipt-hold creation stay disabled unless separately authorized for the chosen profile.
+
+Expect eight running healthy services. Review the UI at http://localhost:3000 and the
+local mail viewer at http://localhost:8025. If a service fails, inspect only its bounded
+local logs, fix that cause and repeat its health/smoke checks; do not paste secrets or
+raw learner data into reports. This restart is not a production restore or PITR test.
+Host-native Ollama is a separate optional interactive process; fake automated checks do
+not require starting or contacting it. Do not reset synthetic users by rerunning seed
+merely because the power failed.
+
+
 Prerequisites: Git, Make, Python 3.9+ for the setup launcher, npm and Corepack,
 Docker Desktop/Compose. `make setup` installs repository-local uv 0.12.18, Python
 3.12.14 and Node 24.21.0, then Corepack's pinned pnpm 10.30.2 and locked dependencies.

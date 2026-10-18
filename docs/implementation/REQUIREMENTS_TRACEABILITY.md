@@ -1,5 +1,14 @@
 # Requirements Traceability
 
+FR-ID-006 / FR-WA-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
+[ADR-057 proposal](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
+records exact source/version, field allowlists, atomic encrypted capture, independent
+authorization, finite expiry, export boundaries and tests before further mutable-channel
+preservation. Explicit owner approval is pending; no code or acceptance is claimed.
+NFR-REL-002 local recovery instructions now include nondestructive power-interruption
+restart; this does not replace the separately required production recovery evidence.
+
+
 FR-ID-006 / BR-010 / NFR-SEC-002 / NFR-MNT-001 candidate: forward migration 0036 corrects
 four legacy DELETE wrappers using transaction-start time. Four real-trigger probe
 reproductions fail before the change and pass after it; original records/append-only

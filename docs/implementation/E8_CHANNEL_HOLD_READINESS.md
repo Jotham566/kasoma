@@ -70,7 +70,17 @@ This channel assessment does not close those gaps or enable the account-erasure 
 
 ## Pre-erasure clock review
 
-Terminal receipt DELETE/cleanup uses database wall clock under ADR-055. Legacy
-held-record guards still use transaction-start time; review long-transaction boundaries
-before enabling any future erasure processor. Existing append-only protections remain,
+Terminal receipt DELETE/cleanup uses database wall clock under ADR-055. Four legacy
+held-record DELETE wrappers used transaction-start time; the separate
+[ADR-056 candidate](../decisions/ADR/056-wall-clock-hold-delete-guards.md) reproduces
+and corrects that boundary with local verification, pending full hosted acceptance.
+Review any remaining clock-anomalous metadata before a future erasure processor. Existing append-only protections remain,
 account erasure is disabled and this terminal subset does not claim universal clearance.
+
+## Concrete proposal awaiting approval
+
+[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) now compares
+bounded encrypted capture with continuous immutable versions and specifies the proposed
+first link/conversation slice, field exclusions, finite lifecycle and acceptance. It is
+not accepted; implementation changing preservation meaning waits for explicit approval.
+Terminal original-record holds and unaffected engineering verification can continue.

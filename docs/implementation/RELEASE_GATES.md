@@ -45,3 +45,13 @@ immutable guards; see [recovery verification](E9_RECOVERY_VERIFICATION.md). Thre
 pass 60 journey executions and cold question transfer stays below 250,000 bytes; see
 [browser verification](E9_BROWSER_COVERAGE_VERIFICATION.md). These reduce engineering gaps but
 do not replace production PITR/RPO/RTO, branded/mobile tests, academic approval or owner sign-off.
+
+## Preservation design decision prepared 19 October
+
+OPEN-QUESTION PRESERVATION-01: approve/revise the exact minimized link/conversation
+snapshot proposal in [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
+before implementation changes the existing original-record preservation meaning.
+Source identities, field allowlists and finite lifecycle are concrete and reviewable;
+raw messages, usable credentials and real-data processing are excluded. Owner approval
+is requested and not recorded. This decision cannot close all hold coverage or authorize
+erasure; destructive execution still needs the separate reviewed transform and approval.

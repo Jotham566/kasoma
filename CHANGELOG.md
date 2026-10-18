@@ -1,5 +1,12 @@
 # Changelog
 
+## Documentation — recovery and preservation review
+
+- Record a nondestructive eight-service restart after a power interruption, preserving
+  volumes and existing environment configuration, with fake-only smoke verification.
+- Prepare ADR-057 for explicit owner review of bounded minimized link/conversation
+  snapshots. No runtime behavior, new data retention or erasure authority is introduced.
+
 ## Work in progress — legacy hold DELETE clock
 
 - Reproduce transaction-start time missing a later committed hold in all four legacy

@@ -353,3 +353,11 @@ stays disabled for staged rollout; live-state preservation and full coverage sta
 See [ADR-056](../decisions/ADR/056-wall-clock-hold-delete-guards.md). Four legacy
 wrappers must observe a committed hold when DELETE executes, even if its transaction
 began earlier. Historical queries, source evidence and immutable guards remain unchanged.
+
+## ADR-057: Minimized channel preservation snapshots — proposal
+
+**Status:** Proposed; explicit owner approval required before implementation. See
+[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md).
+Bounded encrypted link/conversation-version evidence is proposed independently of
+mutable operational state; source identity, allowed fields and finite lifecycle need
+approval. No new preservation meaning, raw-data retention or erasure is authorized.
