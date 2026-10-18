@@ -317,6 +317,10 @@ test-short-text-eligibility:
 test-grading-bands:
 	$(UV) pytest tests/integration/test_grading_bands.py --allow-hosts=localhost,127.0.0.1,::1
 
+.PHONY: test-grading-publications
+test-grading-publications:
+	$(UV) pytest tests/integration/test_grading_publications.py --allow-hosts=localhost,127.0.0.1,::1
+
 .PHONY: test-web-privacy
 test-web-privacy:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/data-requests.spec.ts

@@ -12,6 +12,7 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 
 from services.domain.curriculum import Topic
+from services.domain.grading_audits import GradingPublicationCounter
 from services.domain.grading_bands import GradingBandHistory, GradingBandRow
 from services.grading_band_store import disable, locked, register, snapshot
 from services.seed import seed
@@ -220,3 +221,7 @@ def test_scope_upgrade_preserves_populated_band_and_history(catalog):
         assert snapshot(locked(db, band.id)) == band
         assert db.scalar(select(func.count()).select_from(GradingBandHistory)) == 1
     test_topic_cannot_move_to_another_subject_after_band_registration(catalog)
+    with Session(service.engine) as db:
+        counter = db.get(GradingPublicationCounter, band.id)
+        assert counter is not None
+        assert (counter.returned_grades, counter.assigned_audits) == (0, 0)

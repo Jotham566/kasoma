@@ -1,63 +1,32 @@
-# Current sprint: export acceptance and learner UI completion
+# Current sprint: short-text grading integration
 
-Current hosted run: 38033307073 at `5f959ef` is in progress. The Linux WebKit native
-transport check now passes, as do service startup/migrations/seed, recovery, restricted
-role and full backend checks. Browser/security/container verification is in progress;
-the complete pipeline must pass before promotion.
+Updated 18 October 2026. This header supersedes the historical slice notes below.
+Main is `46a0f8a`; current candidate branch is `codex/grading-band-state`.
 
-Hosted status, 10 October: run 38004530911 at `84772f1` passed service startup,
-backend regression, recovery, restricted-role checks and Chromium/Firefox journeys.
-Three Linux WebKit native-download cases timed out, including the successful export.
-This supersedes the earlier registry-startup failures as the immediate blocker.
-A complete-transfer loopback control now checks native filename and exact bytes;
-all three controls pass on macOS WebKit. Linux diagnosis remains open. No current
-candidate has full hosted acceptance. See [CI evidence](E9_CI_RUNTIME_VERIFICATION.md).
+## Current verification and promotion state
 
-Linux ARM64 transport follow-up: the pinned WebKit control reproduces all three
-download-event timeouts. Adding explicit HTML `download` intent passes all three
-controls. The candidate export link now declares that intent; native application
-privacy/retry/error checks are running. No hosted or release acceptance is claimed.
-Pre-fix hosted run 38032691929 at `0270f0a` also reproduced all three header-only control
-timeouts. Attribute-only application testing caught a signed-out notice regression;
-the candidate now checks recent-owner status before dispatching the native attachment
-and preserves closed in-page errors. The download still rechecks authorization and expiry.
-The native full browser matrix now passes all 90 executions. Linux transport controls,
-rebuilt image scans and all eight service/export/metrics smoke checks pass. A final
-expired-status notice mapping passes all six focused privacy executions across the
-three engines, alongside format/lint/types/build. The fix is ready for commit and
-fresh complete hosted verification; main remains unchanged until acceptance passes.
+- Export/UI/request-aggregation candidate `5f959ef` passes the complete hosted pipeline
+  [38033307073](https://github.com/Jotham566/kasoma/actions/runs/38033307073), including
+  Linux WebKit controls, all browser engines, backend, recovery, security and containers.
+  This resolves the earlier transport/registry acceptance failures for that source.
+- Calibration-band commit `46a0f8a` passes hosted verification in run
+  [38034913518](https://github.com/Jotham566/kasoma/actions/runs/38034913518).
+- Publication/audit assignment migrations 0030/0031 and privacy integration are uncommitted.
+  Twelve focused SQL cases, 19 existing hold cases, restricted-login verification,
+  six privacy browser executions, populated recovery, lint/types/contracts, rebuilt-image
+  scans and eight-service export/metrics smoke pass. Full backend regression passes 780 unit/contract, 35 tooling and
+  291 integration cases, supplemented by the final focused assertions. Security
+  retry passes after a PyPI network timeout. New hosted verification remains required.
+  See [publication evidence](E4_PUBLICATION_VERIFICATION.md).
 
-Updated 9 October 2026. Main remains `bb2f4eb`. The pushed candidate `2a3b251`
-failed its original two Firefox export cases. Local follow-ups now pass all 90 browser
-executions, including native Firefox corruption, bounded cancellation and frozen retry.
-The service independently bounds adapter reads; navigation targets are 48px. Full
-246-case integration/security checks, the 625-case unit run, 32 tooling checks and the
-rebuilt eight-service stack smoke/image scans pass. Follow-ups are committed/pushed as
-`ac4e10f`; hosted run 37987018714 is in progress. ADR-048 remains proposed; no production, academic
-or MVP completion is claimed.
+## Immediate implementation sequence
 
-## Next slice in progress: request aggregation
-
-FR-OPS-002 / NFR-OBS-001 / NFR-SEC-002 / NFR-MNT-001: candidate OTel/Redis collection,
-API lifecycle, ADMIN snapshot/alerts and dashboard are implemented under
-[ADR-049 proposal](../decisions/ADR/049-local-request-histograms.md). Fixed buckets,
-disabled exemplars, static resources, finite retention and honest percentile intervals
-are covered by component checks. API verification passes 664 unit/contract, 32 tooling,
-51 focused telemetry and 20 operations cases, lint/types and generated contracts.
-Full backend/browser regressions are active. Browser traces exposed test locators
-matching the negative consent sentence and Next's route announcer; those assertions
-are tightened and the full matrix is rerunning. See [verification](E8_REQUEST_AGGREGATION_VERIFICATION.md).
-This work is uncommitted. The updated API/web are now deployed to the review stack.
-Updated 10 October: the corrected full browser matrix passes all 90 executions,
-including new operations states; narrow-screen capture reviewed. Full backend regression
-is still running. Container build/scans pass with no HIGH/CRITICAL findings; all eight
-services are healthy and the scheduled export smoke passes. The new runtime metrics
-probe also passes. Unit coverage is now 666 with two added smoke tests; combined
-container smoke now includes collection and passes. Full backend regression has now
-passed all 259 integration cases (664 unit cases at collection; the subsequent
-666-case unit run includes two added smoke tests). The candidate is ready to commit
-and push on `codex/request-timing`; final-head hosted acceptance remains required.
-The older candidate evidence below is chronological; the header records the latest status.
+Finish publication acceptance and promote only verified source with synchronized ADR/
+documentation status. Then integrate independent blinded expert review and atomic band
+disablement with the short-text worker, grade/mastery transaction and learner fallback.
+No short-text learner assignment, real model call or genuine calibration approval is
+implied by the storage fixtures. External academic/privacy/provider/pilot gates remain
+in [the release register](RELEASE_GATES.md).
 
 ## Local review stack
 
@@ -156,7 +125,7 @@ See [requirements traceability](REQUIREMENTS_TRACEABILITY.md) for the complete h
 
 Durable calibration metadata/state is under full regression: migration 0028 enforces
 disabled registration, immutable report metadata, one-time activation and sticky
-disablement with automatic exact history. Eleven focused SQL cases, the real restricted
+disablement with automatic exact history. Twelve focused SQL cases, the real restricted
 login and populated 60-table recovery pass. There is no activation application command
 or learner enablement. See [band storage verification](E4_BAND_STORAGE_VERIFICATION.md).
 Lint/types, contracts, security/source scans and rebuilt container health/export/metrics
@@ -293,3 +262,49 @@ and the extended restricted-login check pass separately. Six three-engine privac
 journeys, populated logical recovery, source/dependency checks, final rebuilt image
 scans and eight-service smoke pass. Exact-head hosted acceptance remains required;
 worker/learner/scoring integration is still disabled.
+
+## Publication and audit assignment preparation — 10 October 2026
+
+FR-GRD-003/004, FR-MST-001, FR-ID-006 and NFR-SEC-002: migrations 0030/0031
+add a band-locked publication ordinal, atomic minimum-10% audit assignment, immutable
+records and exact publication/assignment holds. Owned exports omit calibration IDs,
+ordinals and sampling flags; deletion inventory includes both personal record types.
+The generated hold contract and staff selector include the new types. These are
+format-independent storage controls tested with valid synthetic objective grades;
+learner short-text scoring remains disabled. Grade/mastery integration, blinded expert
+review, rolling audit outcomes and automatic disablement remain required.
+
+Initial eight PostgreSQL cases pass after correcting a test-only projection import.
+Additional negative and restricted-login checks are running. Full regression, populated
+recovery and browser acceptance remain required; no completion or promotion is claimed.
+See [publication verification](E4_PUBLICATION_VERIFICATION.md).
+
+Verification update: `make test-grading-publications` passes 10 PostgreSQL cases;
+`make test-legal-holds` passes 19 existing preservation cases; the real restricted-login
+case passes with INSERT-only publication/assignment rights and guarded counter UPDATE.
+It denies record rewriting/deletion and band activation/approval changes. Formatting,
+lint/types and generated contracts pass. The isolated populated recovery now compares
+63 tables / 302 rows, restores in 282 ms and verifies publication/assignment/counter
+immutability, with no cleanup failures. Its synthetic owner-only band transition is
+restricted to the generated recovery-source database name and is not academic evidence.
+Full backend and three-engine privacy regressions are running; acceptance remains open.
+
+Diagnostic disclosure follow-up: all 11 focused publication cases pass, including a
+complete 15-question diagnostic proving publication/audit records remain absent from
+owned exports until completion. The first privacy-browser run used a stale production
+web build and failed the new option-list assertion (one pass, one failure). No assertion
+was weakened; `make build test-web-privacy` is rerunning against the rebuilt source.
+The full backend run began before this final diagnostic test was added; its evidence
+must be read alongside the 11-case focused result, not claimed as an exact final-tree run.
+
+Rebuilt browser acceptance: `make build test-web-privacy` passes all six executions
+across Chromium, Firefox and WebKit, including the new hold selector and unchanged
+ownership/retry/export protections. Final `make lint openapi-check` also passes.
+The earlier stale-build failure is resolved. Full backend/security regression and
+rebuilt-container checks remain live; no commit or main promotion is claimed yet.
+
+Final focused checks pass 12 publication cases and 13 band cases, including foreign
+scope/replay rejection and populated upgrade counter backfill. Rebuilt container scans,
+eight-service export/metrics smoke and source checks pass. Full backend/security
+regression remains running; the [publication report](E4_PUBLICATION_VERIFICATION.md)
+consolidates final evidence and the resolved initial test/browser failures.

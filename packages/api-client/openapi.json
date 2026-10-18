@@ -2152,7 +2152,9 @@
               "MASTERY_HISTORY",
               "FLAG_HISTORY",
               "DATA_REQUEST_REVIEW",
-              "GRADING_HISTORY"
+              "GRADING_HISTORY",
+              "GRADING_PUBLICATION",
+              "GRADING_AUDIT"
             ],
             "title": "Record Type",
             "type": "string"
@@ -2267,7 +2269,9 @@
               "MASTERY_HISTORY",
               "FLAG_HISTORY",
               "DATA_REQUEST_REVIEW",
-              "GRADING_HISTORY"
+              "GRADING_HISTORY",
+              "GRADING_PUBLICATION",
+              "GRADING_AUDIT"
             ],
             "title": "Record Type",
             "type": "string"

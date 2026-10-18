@@ -1,7 +1,7 @@
 # ADR-049 proposal: Bounded local request histograms
 
 Date: 9 October 2026
-Status: Proposed; candidate runtime integration under verification
+Status: Accepted for local synthetic implementation; production approval remains gated
 Requirements: FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-MNT-001
 
 ## Context and proposed decision
@@ -78,3 +78,14 @@ the local review stack after full native API/backend/browser and container check
 Hosted acceptance remains pending; this proposal is not accepted on main.
 Rollback removes the reader/exporter and lets its
 finite Redis TTL expire; the dashboard must return to unavailable, not zero.
+
+## Acceptance recorded 18 October 2026
+
+Complete hosted verification passed at `5f959ef` in run
+[38033307073](https://github.com/Jotham566/kasoma/actions/runs/38033307073), and
+again with calibration preparation at `46a0f8a` in run
+[38034913518](https://github.com/Jotham566/kasoma/actions/runs/38034913518).
+Commit `46a0f8a` is on main. This supersedes earlier candidate/pending-hosted
+statements in this record. Acceptance covers the documented local synthetic
+implementation and engineering choices; real learner use, privacy/DPIA approval,
+production providers, performance SLOs and pilot sign-off retain their separate gates.

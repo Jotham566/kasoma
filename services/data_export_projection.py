@@ -27,6 +27,7 @@ from services.domain.curriculum import Competency, Concept, Subject, Topic
 from services.domain.data_requests import DataRequest
 from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag
+from services.domain.grading_audits import GradingAuditAssignment, GradingPublication
 from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import Consent, Identifier, IdentityEvent, LearnerSubject, User
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
@@ -237,6 +238,20 @@ def _records(
                 "grade_released": grade_released,
             },
         )
+    yield ("grading_publications", None)
+    for publication in rows(
+        select(GradingPublication)
+        .where(GradingPublication.attempt_id.in_(visible))
+        .order_by(GradingPublication.attempt_id)
+    ):
+        yield ("grading_publications", fields(publication, "attempt_id published_at"))
+    yield ("grading_audit_assignments", None)
+    for audit in rows(
+        select(GradingAuditAssignment)
+        .where(GradingAuditAssignment.attempt_id.in_(visible))
+        .order_by(GradingAuditAssignment.id)
+    ):
+        yield ("grading_audit_assignments", fields(audit, "id attempt_id assigned_at"))
     yield ("grading_work", None)
     for work in rows(
         select(GradingWorkRow)

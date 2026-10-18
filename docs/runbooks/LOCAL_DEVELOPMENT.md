@@ -986,3 +986,11 @@ created in the review application and no activation endpoint exists. `make test-
 checks that the real restricted login can disable but cannot write approval metadata or
 the activation timestamp. `make recovery-drill` includes unapproved synthetic band/history
 rows in its isolated logical restore; this is not production PITR or academic acceptance.
+
+### Publication/audit storage checks
+
+`make test-grading-publications` exercises isolated synthetic grade publication,
+atomic audit selection, rollback, replay and privacy controls using real PostgreSQL.
+`make test-runtime-role` checks the actual restricted login. Run `make migrate` for
+additive migrations 0030/0031; do not reset the developer database. This preparation
+provides no activation command, production approval or learner short-text delivery.

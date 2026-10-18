@@ -1,7 +1,7 @@
 """Assessment under a real temporary login with limited grants, never SET ROLE as owner."""
 
 import secrets
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 from pydantic import SecretStr
@@ -23,17 +23,24 @@ from services.domain.assessment import (
     SessionItem,
 )
 from services.domain.curriculum import Topic
+from services.domain.grading_audits import (
+    GradingAuditAssignment,
+    GradingPublication,
+    GradingPublicationCounter,
+)
 from services.domain.grading_bands import GradingBandHistory
 from services.domain.grading_work import GradingHistory, GradingWorkRow
 from services.domain.identity import RateBucket
 from services.domain.mastery import MasteryEstimate, MasteryEvidence, MasteryHistory
 from services.grading_band_store import disable as disable_band
 from services.grading_band_store import register as register_band
+from services.grading_publications import publish
 from services.grading_work_store import claim_next, enqueue, finish_neutral
 from services.identity import IdentityError, IdentityService
 from services.providers import FakeMessagingProvider
 from services.short_text_eligibility import GradingScope
 from tests.integration.test_assessment import assessment as assessment_fixture
+from tests.integration.test_grading_bands import activate_synthetic
 from tests.integration.test_identity import consent, profile
 
 assessment = assessment_fixture
@@ -59,6 +66,19 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
             )
         )
         register_band(db, band, original.clock())
+        publication_band = unapproved_band(
+            band.scope.model_copy(
+                update={"subject_id": UUID(plan["subject_id"]), "topic_id": UUID(plan["topic_id"])}
+            )
+        ).model_copy(
+            update={
+                "approval_id": uuid4(),
+                "approved_at": original.clock(),
+                "subgroup_review": "APPROVED",
+            }
+        )
+        register_band(db, publication_band, original.clock())
+        activate_synthetic(db, publication_band, original.clock())
     role = "kasoma_runtime_test_" + uuid4().hex
     with original.engine.connect() as db:
         schema = db.scalar(text("SELECT current_schema()"))
@@ -101,6 +121,9 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
                     (GradingWorkRow, "INSERT, UPDATE"),
                     (GradingHistory, "INSERT"),
                     (GradingBandHistory, "INSERT"),
+                    (GradingPublication, "INSERT"),
+                    (GradingAuditAssignment, "INSERT"),
+                    (GradingPublicationCounter, "UPDATE"),
                     (MasteryEvidence, "INSERT"),
                     (MasteryEstimate, "INSERT, UPDATE"),
                     (MasteryHistory, "INSERT"),
@@ -166,7 +189,17 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
             service.get(other, session.id)
         with Session(restricted) as db, db.begin():
             assert disable_band(db, band.id, original.clock(), "MANUAL")
-            assert db.scalar(select(func.count()).select_from(GradingBandHistory)) == 2
+            assert (
+                db.scalar(
+                    select(func.count())
+                    .select_from(GradingBandHistory)
+                    .where(GradingBandHistory.band_id == band.id)
+                )
+                == 2
+            )
+            publication = publish(db, publication_band.id, grade.attempt_id, original.clock())
+            assert publication.ordinal == 1 and publication.audit_required
+            assert db.scalar(select(func.count()).select_from(GradingAuditAssignment)) == 1
         for statement in (
             f"CREATE TABLE {quoted_schema}.unauthorized_table (id int)",
             f"UPDATE {quoted_schema}.grading_bands SET activated_at=now(),enabled=true",
@@ -175,6 +208,11 @@ def test_assessment_works_without_schema_or_evidence_rewrite_permissions(
             f"DELETE FROM {quoted_schema}.grading_bands",
             f"UPDATE {quoted_schema}.grading_band_history SET snapshot=snapshot",
             f"DELETE FROM {quoted_schema}.grading_band_history",
+            f"UPDATE {quoted_schema}.grading_publications SET ordinal=ordinal",
+            f"DELETE FROM {quoted_schema}.grading_publications",
+            f"UPDATE {quoted_schema}.grading_audit_assignments SET assigned_at=assigned_at",
+            f"DELETE FROM {quoted_schema}.grading_audit_assignments",
+            f"DELETE FROM {quoted_schema}.grading_publication_counters",
             f"ALTER TABLE {quoted_schema}.attempts DISABLE TRIGGER ALL",
             f"DROP TABLE {quoted_schema}.grades",
             f"DELETE FROM {quoted_schema}.assessment_grading_work",

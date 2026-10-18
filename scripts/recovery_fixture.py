@@ -1,8 +1,10 @@
 """Original synthetic assessment evidence for an isolated recovery drill only."""
 
+import re
 from datetime import date
 from uuid import uuid4
 
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from scripts.assessment_fixtures import seed_assessment
@@ -15,6 +17,7 @@ from services.database import engine_for
 from services.domain.assessment import Attempt
 from services.grading_band_store import disable as disable_band
 from services.grading_band_store import register as register_band
+from services.grading_publications import publish
 from services.grading_work_store import claim_next, enqueue, finish_neutral
 from services.identity import IdentityService
 from services.identity_contracts import ConsentInput, OTPRequest, OTPVerify, ProfilePatch
@@ -79,7 +82,7 @@ def populate(settings: Settings) -> RecoveryExport:
             token, StartRevision(subject_id=subject, topic_id=topic), uuid4(), uuid4()
         )
         item = assessment.next_item(token, session.id, uuid4())
-        assessment.submit(
+        grade = assessment.submit(
             token,
             session.id,
             SubmitAnswer(
@@ -89,6 +92,27 @@ def populate(settings: Settings) -> RecoveryExport:
             uuid4(),
             uuid4(),
         )
+        # Owner-only synthetic transition in the drill's generated database. This is
+        # storage recovery evidence, never a report authority or learner enablement.
+        with Session(engine) as db, db.begin():
+            database = db.scalar(text("SELECT current_database()"))
+            if not re.fullmatch(r"kasoma_drill_src_[0-9a-f]{32}", database or ""):
+                raise ValueError("Synthetic publication requires an isolated recovery source")
+            publication_band = unapproved_band(band.scope).model_copy(
+                update={
+                    "approval_id": uuid4(),
+                    "approved_at": identity.clock(),
+                    "subgroup_review": "APPROVED",
+                }
+            )
+            register_band(db, publication_band, identity.clock())
+            db.execute(
+                text("""UPDATE grading_bands SET enabled=true,activated_at=:now,
+                updated_at=:now,revision=revision+1 WHERE id=:id"""),
+                {"now": identity.clock(), "id": publication_band.id},
+            )
+            publish(db, publication_band.id, grade.attempt_id, identity.clock())
+            disable_band(db, publication_band.id, identity.clock(), "MANUAL")
         # Valid ungraded synthetic attempt for durable-state recovery; no assignment
         # guard or academic eligibility is bypassed and no model call is performed.
         pending_item = assessment.next_item(token, session.id, uuid4())

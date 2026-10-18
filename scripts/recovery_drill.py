@@ -20,6 +20,11 @@ from services.config import Settings
 from services.domain.assessment import Attempt, Grade
 from services.domain.content import ItemVersion
 from services.domain.export_jobs import ExportGeneration, ExportJob
+from services.domain.grading_audits import (
+    GradingAuditAssignment,
+    GradingPublication,
+    GradingPublicationCounter,
+)
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence
 from services.identity import IdentityService
@@ -67,6 +72,9 @@ def check_guards(engine: Engine) -> None:
         "UPDATE assessment_grading_history SET snapshot=snapshot",
         "UPDATE grading_bands SET held_out_exact=held_out_exact",
         "UPDATE grading_band_history SET snapshot=snapshot",
+        "UPDATE grading_publications SET ordinal=ordinal",
+        "UPDATE grading_audit_assignments SET assigned_at=assigned_at",
+        "UPDATE grading_publication_counters SET returned_grades=0,assigned_audits=0",
         "UPDATE topics t SET subject_id=(SELECT id FROM subjects WHERE id<>t.subject_id LIMIT 1) "
         "WHERE t.id IN (SELECT topic_id FROM grading_bands)",
         "UPDATE assessment_grading_work SET status='QUEUED',revision=revision+1",
@@ -135,6 +143,9 @@ def drill(settings: Settings) -> dict[str, object]:
             ItemVersion,
             ExportJob,
             ExportGeneration,
+            GradingPublication,
+            GradingAuditAssignment,
+            GradingPublicationCounter,
         ):
             if before.get(model.__tablename__, (0, ""))[0] == 0:
                 raise RuntimeError("Synthetic evidence fixture is incomplete")

@@ -394,6 +394,8 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       "Mastery history",
       "Flag history",
       "Grading history",
+      "Grading publication (attempt reference)",
+      "Grading audit assignment",
       "Data request review (request reference)",
     ]);
     await expect(

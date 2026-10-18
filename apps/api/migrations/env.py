@@ -9,6 +9,7 @@ from services.domain import (  # noqa: F401
     curriculum,
     data_requests,
     flags,
+    grading_audits,
     grading_bands,
     grading_work,
     identity,

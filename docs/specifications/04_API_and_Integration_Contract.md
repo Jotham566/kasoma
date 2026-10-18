@@ -637,3 +637,14 @@ immutable grading-history row UUID. An attempt ID is not a history ID. Independe
 ADMIN review, ownership, finite expiry, retry and release semantics remain unchanged.
 Holding a history snapshot does not prevent new workflow transitions; release does
 not permit mutation of retained evidence. Deletion remains disabled.
+
+### Grading publication and audit preservation (candidate ADR-050)
+
+The existing independently claimed administrator hold routes additionally accept
+`GRADING_PUBLICATION` (record ID is the attempt UUID) and `GRADING_AUDIT` (record ID
+is the audit-assignment UUID). Ownership derives from the attempt. Release preserves
+record immutability. No grading or expert-review endpoint is introduced.
+Owned export groups `grading_publications` and `grading_audit_assignments` contain
+attempt reference/publication time and assignment reference/attempt reference/assignment
+time respectively. Diagnostic sealing applies; band IDs, ordinals and sampling flags
+are excluded. These groups do not disclose model grades or authorize learner scoring.

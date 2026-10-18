@@ -99,7 +99,7 @@ deletion-impact preview is merged. Specific-record legal holds for consent, atte
 content flags and data requests are merged. Bounded synthetic JSON draft imports, source
 locators and atomic worker processing are verified. Local ADMIN operational health and
 threshold alerts are merged. Bounded local channel queue/status and fake-dispatch timing
-are verified; minimized API response-start timing is verified, and minimized synthetic model-call telemetry is verified; aggregate telemetry remains pending. Local consent-gated WhatsApp
+are verified; minimized API response-start timing is verified, and minimized synthetic model-call telemetry is verified; bounded local aggregate request telemetry is verified. Local consent-gated WhatsApp
 linking, signed durable intake, STOP/unlink barriers, fake delivery and expiry are verified.
 Internal channel selection and objective grading/mastery parity are verified under ADR-037.
 End-to-end five-question WhatsApp conversations, reply binding, shared grading, STOP/expiry and
@@ -117,7 +117,10 @@ Narrow 320-pixel touch journeys are verified across the three test engines; phys
 branded-browser acceptance remain separate. The ADR-046 objective load baseline passes locally
 with shared content locks and batched plan validation; full hosted regression is verified.
 Incremental export encoding and ADR-047 private artifact format are verified; asynchronous
-publication and delivery remain disabled. See
+publication and delivery are locally verified and merged under ADR-048. Production release
+gates remain. Calibration eligibility, immutable bands and bounded grading work are
+merged; per-grade publication/audit assignment and privacy coverage are under verification,
+with learner short-text delivery still disabled. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
 `docs/implementation/REQUIREMENTS_TRACEABILITY.md`. Accepted decisions remain
 in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in

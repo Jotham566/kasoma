@@ -945,3 +945,61 @@ and the extended restricted-login check pass separately. Six three-engine privac
 journeys, populated logical recovery, source/dependency checks, final rebuilt image
 scans and eight-service smoke pass. Exact-head hosted acceptance remains required;
 worker/learner/scoring integration is still disabled.
+
+## Publication and audit assignment preparation — 10 October 2026
+
+FR-GRD-003/004, FR-MST-001, FR-ID-006 and NFR-SEC-002: migrations 0030/0031
+add a band-locked publication ordinal, atomic minimum-10% audit assignment, immutable
+records and exact publication/assignment holds. Owned exports omit calibration IDs,
+ordinals and sampling flags; deletion inventory includes both personal record types.
+The generated hold contract and staff selector include the new types. These are
+format-independent storage controls tested with valid synthetic objective grades;
+learner short-text scoring remains disabled. Grade/mastery integration, blinded expert
+review, rolling audit outcomes and automatic disablement remain required.
+
+Initial eight PostgreSQL cases pass after correcting a test-only projection import.
+Additional negative and restricted-login checks are running. Full regression, populated
+recovery and browser acceptance remain required; no completion or promotion is claimed.
+See [publication verification](E4_PUBLICATION_VERIFICATION.md).
+
+Verification update: `make test-grading-publications` passes 10 PostgreSQL cases;
+`make test-legal-holds` passes 19 existing preservation cases; the real restricted-login
+case passes with INSERT-only publication/assignment rights and guarded counter UPDATE.
+It denies record rewriting/deletion and band activation/approval changes. Formatting,
+lint/types and generated contracts pass. The isolated populated recovery now compares
+63 tables / 302 rows, restores in 282 ms and verifies publication/assignment/counter
+immutability, with no cleanup failures. Its synthetic owner-only band transition is
+restricted to the generated recovery-source database name and is not academic evidence.
+Full backend and three-engine privacy regressions are running; acceptance remains open.
+
+Diagnostic disclosure follow-up: all 11 focused publication cases pass, including a
+complete 15-question diagnostic proving publication/audit records remain absent from
+owned exports until completion. The first privacy-browser run used a stale production
+web build and failed the new option-list assertion (one pass, one failure). No assertion
+was weakened; `make build test-web-privacy` is rerunning against the rebuilt source.
+The full backend run began before this final diagnostic test was added; its evidence
+must be read alongside the 11-case focused result, not claimed as an exact final-tree run.
+
+Rebuilt browser acceptance: `make build test-web-privacy` passes all six executions
+across Chromium, Firefox and WebKit, including the new hold selector and unchanged
+ownership/retry/export protections. Final `make lint openapi-check` also passes.
+The earlier stale-build failure is resolved. Full backend/security regression and
+rebuilt-container checks remain live; no commit or main promotion is claimed yet.
+
+Final focused checks pass 12 publication cases and 13 band cases, including foreign
+scope/replay rejection and populated upgrade counter backfill. Rebuilt container scans,
+eight-service export/metrics smoke and source checks pass. Full backend/security
+regression remains running; the [publication report](E4_PUBLICATION_VERIFICATION.md)
+consolidates final evidence and the resolved initial test/browser failures.
+
+## 18 October 2026 acceptance reconciliation
+
+FR-ID-006 / FR-OPS-002 / NFR-OBS-001 / NFR-MNT-001: main is `46a0f8a`, with
+complete hosted runs 38033307073 and 38034913518 passing. ADR-048/049 now record
+local synthetic acceptance. Completed export, timing and earlier short-text branches
+are removed; the current grading branch retains the unpublished audit-ledger work.
+FR-GRD-003/004 / FR-MST-001 / FR-ID-006: publication tests pass as recorded in the
+[verification report](E4_PUBLICATION_VERIFICATION.md). Full regression passes 780
+unit/contract, 35 tooling and 291 integration cases; 12 final publication and 13 band
+cases cover later assertions. The security retry passes after a PyPI timeout.
+No learner short-text grading, academic approval or production acceptance is inferred.

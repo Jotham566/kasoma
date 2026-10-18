@@ -1,7 +1,7 @@
 # ADR-048: Asynchronous owned export delivery
 
 Date: 9 October 2026
-Status: Proposed — candidate wired on the working branch for synthetic acceptance; not promoted
+Status: Accepted for local synthetic implementation; production approval remains gated
 Requirements: FR-ID-006, FR-OPS-002/003, NFR-SEC-001/002, NFR-OBS-001, NFR-MNT-001
 
 ## Intended outcome and compatibility
@@ -260,3 +260,14 @@ READY job, and a successful retry with independently matching byte count/SHA-256
 Downloaded paths must resolve inside the disposable profile. Timeouts terminate the
 helper and its owned browser; profile cleanup runs on failure and interruption.
 The proposal remains unaccepted until full native and hosted acceptance passes.
+
+## Acceptance recorded 18 October 2026
+
+Complete hosted verification passed at `5f959ef` in run
+[38033307073](https://github.com/Jotham566/kasoma/actions/runs/38033307073), and
+again with calibration preparation at `46a0f8a` in run
+[38034913518](https://github.com/Jotham566/kasoma/actions/runs/38034913518).
+Commit `46a0f8a` is on main. This supersedes earlier candidate/pending-hosted
+statements in this record. Acceptance covers the documented local synthetic
+implementation and engineering choices; real learner use, privacy/DPIA approval,
+production providers, performance SLOs and pilot sign-off retain their separate gates.

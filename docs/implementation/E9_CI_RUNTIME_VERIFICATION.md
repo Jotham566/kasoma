@@ -177,3 +177,13 @@ unavailable status with no download, exact frozen recovery and signed-out notice
 Log: `.local/download-intent-final-privacy.log`. This includes the final expiry mapping.
 The fix is ready for commit and a fresh complete hosted run; main promotion still
 requires that run to pass. ADR-048 remains proposed.
+
+## Hosted acceptance — 10 October 2026
+
+Run [38033307073](https://github.com/Jotham566/kasoma/actions/runs/38033307073)
+completed successfully at `5f959efdd0ab0d4400fccd788a689d0ad9eb9b1c`. The full
+pipeline passed, including native Linux WebKit controls, service/migration/seed,
+backend, recovery, restricted login, all three browser engines, security and container
+checks. This supersedes the historical unresolved-hosted notes for that source.
+Newer calibration/publication changes require their own evidence; production and
+academic release gates are not satisfied by this synthetic hosted run.

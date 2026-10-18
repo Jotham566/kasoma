@@ -93,7 +93,7 @@ sealing, deletion-impact inventory, exact-record legal holds, and preservation o
 attempt/rubric linkage before runtime wiring. Holding an immutable review must not
 freeze unrelated work or the entire account. Apply the existing privacy retention
 schedule; do not use audit accountability as permission to retain raw answers forever.
-Publication/audit persistence and expert projections remain unimplemented. This design
+Publication/audit persistence is under verification; expert projections remain unimplemented. This design
 does not broaden enabled answer formats or authorize academic/production use.
 
 Durable preparation: migration 0028 stores immutable global report projections and
@@ -244,3 +244,18 @@ worker or create an account-wide hold. Existing history immutability survives ho
 release. The foreign keys and current no-delete guards preserve the referenced work
 and attempt; future retention processing must retain the context of held snapshots
 before removing any projection or linkage. No deletion processor is enabled here.
+
+## Publication ledger preparation
+
+Migrations 0030/0031 implement publication bindings and audit assignments. The SQL
+trigger locks the band, checks enabled state and grade scope, allocates the next ordinal,
+creates a required audit for ordinals 1, 11, 21 and advances the aggregate counter in
+one transaction. Counters cannot reset; duplicate service calls return the original
+binding, including after disablement. A binding to another band is rejected.
+
+The publication service is internal and does not establish grading authorization.
+The future worker must call it inside the same transaction as grade/mastery creation
+and current consent/content/eligibility checks. Objective fixtures verify this substrate
+without bypassing the existing SHORT_TEXT assignment exclusion. No learner format is
+enabled. Owned projection, exact holds and deletion inventory cover the new personal
+records; preservation still needs the existing future retention processor.

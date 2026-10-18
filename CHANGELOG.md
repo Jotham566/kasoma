@@ -2,6 +2,14 @@
 
 ## Work in progress — short-text learner integration
 
+- Add the publication/audit assignment ledger with band-locked ordinals, atomic sampling,
+  immutable records, owned minimized exports, deletion inventory and exact-record holds.
+  Generated contracts and staff hold controls include both types. Verification passes 12 focused SQL cases, 19 existing hold cases, restricted login,
+  populated recovery, six browser executions, lint/types/contracts and rebuilt image
+  scans. Full regression passes 780 unit/contract, 35 tooling and 291 integration cases;
+  dependency security retry passes. Hosted publication acceptance remains required.
+  Learner scoring, expert review and automatic disablement remain pending.
+
 - Add immutable calibration-band metadata and exact transition history, disabled
   registration, locked snapshots and sticky disablement. Verify worker permissions
   allow disablement without approval/activation rights and extend populated recovery.

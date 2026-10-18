@@ -158,10 +158,10 @@ export function LegalHolds({
             Record an already authorized preservation decision for one record.
             Other record types still require review. Expiry or release does not
             delete data. Decision references must be opaque UUIDs; do not enter
-            names or legal narratives. For a grade, use its attempt reference;
-            for a data request review, use its request reference. Other types
-            use their own record reference. Each hold covers only the named
-            record.
+            names or legal narratives. For a grade, use its attempt reference; a
+            grading publication also uses its attempt reference. For a data
+            request review, use its request reference. Other types use their own
+            record reference. Each hold covers only the named record.
           </p>
           <form
             key={formVersion}
@@ -206,6 +206,12 @@ export function LegalHolds({
                   <option value="MASTERY_HISTORY">Mastery history</option>
                   <option value="FLAG_HISTORY">Flag history</option>
                   <option value="GRADING_HISTORY">Grading history</option>
+                  <option value="GRADING_PUBLICATION">
+                    Grading publication (attempt reference)
+                  </option>
+                  <option value="GRADING_AUDIT">
+                    Grading audit assignment
+                  </option>
                   <option value="DATA_REQUEST_REVIEW">
                     Data request review (request reference)
                   </option>
