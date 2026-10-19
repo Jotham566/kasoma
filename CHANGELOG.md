@@ -8,7 +8,9 @@ historical clocks and normal OTP build completed diagnostics and old/recent evid
 current credentials are issued only after preparation. Local quality/contracts/build,1,253 unit/contract,35 tooling,69 focused controls
 and203 typed source files pass; dependency/source security checks pass. Full-size
 native profile is live; native and own complete hosted gates remain pending. No measured performance is claimed yet.
-[Verification](docs/implementation/E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md).
+[Verification](docs/implementation/E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md). First native profile PASSES:35000 grades,
+7000 HTTP/zero errors,START p95410.622ms,cleanup false. Original/recent rechecks
+and own hosted verification remain; no production acceptance.
 
 
 ## Isolated database/private-object recovery - candidate

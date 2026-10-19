@@ -1,0 +1,104 @@
+{
+  "active_learners": 500,
+  "all_http": {
+    "p50_ms": 12.84,
+    "p95_ms": 27.932,
+    "p99_ms": 282.843,
+    "samples": 7000
+  },
+  "answer_dispatch_lag": {
+    "p50_ms": 1.079,
+    "p95_ms": 1.181,
+    "p99_ms": 13.158,
+    "samples": 2500
+  },
+  "answer_formats": {
+    "NUMERIC": {
+      "p50_ms": 20.189,
+      "p95_ms": 29.137,
+      "p99_ms": 82.107,
+      "samples": 1250
+    },
+    "SINGLE_CHOICE": {
+      "p50_ms": 20.186,
+      "p95_ms": 28.734,
+      "p99_ms": 90.141,
+      "samples": 1250
+    }
+  },
+  "attempts": 35000,
+  "cleanup_failed": false,
+  "completed_learners": 500,
+  "completed_sessions": 6000,
+  "concurrency_limit": 50,
+  "cpu_seconds_client_and_api": 53.478,
+  "database_resources_measured": false,
+  "duration_seconds": 125.405,
+  "errors": 0,
+  "grades": 35000,
+  "history_attempts": 32500,
+  "history_completed_sessions": 5500,
+  "history_diagnostic_age_days": 91,
+  "history_diagnostic_answers": 7500,
+  "history_diagnostic_sessions": 500,
+  "history_grades": 32500,
+  "history_revision_age_counts": {
+    "1": 2500,
+    "14": 2500,
+    "2": 2500,
+    "21": 2500,
+    "30": 2500,
+    "45": 2500,
+    "60": 2500,
+    "7": 2500,
+    "75": 2500,
+    "90": 2500
+  },
+  "observed_answer_dispatch_per_second": 19.988,
+  "operations": {
+    "ANSWER": {
+      "p50_ms": 20.187,
+      "p95_ms": 28.829,
+      "p99_ms": 84.493,
+      "samples": 2500
+    },
+    "NEXT": {
+      "p50_ms": 10.675,
+      "p95_ms": 16.66,
+      "p99_ms": 251.503,
+      "samples": 2500
+    },
+    "PROFILE": {
+      "p50_ms": 4.142,
+      "p95_ms": 206.36,
+      "p99_ms": 235.246,
+      "samples": 500
+    },
+    "PROGRESS": {
+      "p50_ms": 12.803,
+      "p95_ms": 18.105,
+      "p99_ms": 40.762,
+      "samples": 500
+    },
+    "START": {
+      "p50_ms": 13.393,
+      "p95_ms": 410.622,
+      "p99_ms": 959.979,
+      "samples": 500
+    },
+    "STATE": {
+      "p50_ms": 9.893,
+      "p95_ms": 14.731,
+      "p99_ms": 19.619,
+      "samples": 500
+    }
+  },
+  "peak_inflight_http": 50,
+  "peak_rss_bytes_client_api_and_fixture_setup": 137461760,
+  "production_acceptance": false,
+  "profile": "isolated-temporal-diagnostic-http-v1",
+  "registered_learners": 2000,
+  "reviewed_synthetic_items": 288,
+  "status": "PASSED",
+  "target_answer_dispatch_per_second": 20
+}

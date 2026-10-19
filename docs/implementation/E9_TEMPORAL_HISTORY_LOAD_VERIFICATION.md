@@ -83,3 +83,42 @@ cases in0.92s. Documentation checks cover188 Markdown files/61 requirements and
 whitespace. Runtime source is checkpointed locally while the original native
 process remains live; no performance claim, main promotion or new hosted run is
 inferred from this checkpoint. Earlier candidate remote heads remain unchanged.
+
+## First complete native measurement
+
+The original live make load-history-temporal completes PASSED with cleanup_failed
+false. Runtime logic is represented by checkpoint8a4e09a; the measurement began
+before that commit while its runtime code was unchanged, with test/documentation
+refinement continuing separately. [Aggregate report](evidence/E9_TEMPORAL_HISTORY_LOAD_2026_10_19.json)
+contains only closed measurement fields, without identifiers, records or raw errors.
+
+All32500 historical attempts/grades,5500 historical sessions,500 completed91-day-old
+diagnostics/7500 answers and ten2500-answer revision-age cohorts are verified before
+HTTP. Timed work completes500 learners and7000 requests with zero errors,50 peak
+in-flight,1250 choice/1250 numeric grades and exactly35000 final attempts/grades/
+6000 completed sessions. The observed answer dispatch rate is19.988/s; lag p95 is
+1.181ms. Timed duration125.405s, client/API CPU53.478s and peak RSS137461760 bytes.
+Database/container resource attribution and production_acceptance remain false.
+
+| Operation | Samples | p50 ms | p95 ms | p99 ms |
+| --- | ---: | ---: | ---: | ---: |
+| Profile | 500 | 4.142 | 206.360 | 235.246 |
+| Session start | 500 | 13.393 | 410.622 | 959.979 |
+| Next question | 2500 | 10.675 | 16.660 | 251.503 |
+| Answer | 2500 | 20.187 | 28.829 | 84.493 |
+| Numeric subset | 1250 | 20.189 | 29.137 | 82.107 |
+| Choice subset | 1250 | 20.186 | 28.734 | 90.141 |
+| Saved state | 500 | 9.893 | 14.731 | 19.619 |
+| Progress | 500 | 12.803 | 18.105 | 40.762 |
+| All HTTP | 7000 | 12.840 | 27.932 | 282.843 |
+
+All original per-operation/per-format500ms p95 and deterministic feedback1500ms gates
+pass; no workload, deadline, assertion or server limit is reduced. One scoped read-only
+aggregate progress query occurs during the timed work, in addition to a catalog-only
+statistics check. They expose no records and do not grant cleanup authority. The normal
+Docker preview remains running; this is not an isolated production-host experiment.
+
+The source still requires sequential original/recent profile rechecks and its own full
+hosted regression. b5557a3's completed hosted39308594889 is separate acceptance for the
+metric-loss fix, not acceptance of this newer runner. Object recovery remains live at
+29f1ddc in39311093503. No main promotion of temporal tooling is inferred yet.
