@@ -134,7 +134,8 @@ This directory location follows the user-requested repository organization. It d
   records verified correction of four legacy evaluation clocks without granting erasure.
 
 - [ADR-057: Minimized channel preservation snapshots](057-minimized-channel-preservation-proposal.md)
-  has explicit approval for bounded synthetic implementation; full application acceptance is pending.
+  has explicit bounded synthetic approval and complete hosted engineering verification
+  at `0a8f674`; full coverage and production/erasure authority remain excluded.
 
 - [ADR-058: Bounded ADMIN audit activity](058-bounded-admin-audit-activity.md)
   records aggregate-only audit navigation, finite sampling and no individual disclosure.

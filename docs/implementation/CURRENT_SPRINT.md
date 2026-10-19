@@ -7,14 +7,14 @@ This is not a completed MVP or production-release declaration.
 
 ## Verified source on main
 
-Application source is `25b44b1`; complete hosted
-[39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670) passes. The documentation-only closeout
-preserves that exact application tree. The format branch is merged; its merged branch
-is removed locally/remotely. The active capture branch remains separate. Earlier
-checkpoint: [5d95f9d](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
-
-Terminal receipt source 397f562 also passes complete hosted 39165896953. Receipt
-creation remains false; live-state preservation and erasure remain incomplete.
+Application source is `0a8f674`; complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) passes every gate.
+It is pushed to main; the merged capture branch is removed locally and remotely.
+This documentation closeout preserves its exact application tree. The earlier private
+format source `25b44b1` passes hosted 39176205670; receipt source 397f562 passes
+39165896953. Receipt and capture creation remain false; full preservation and erasure
+remain incomplete. Progress and shared-selector improvements remain on active child
+branches under separate complete hosted verification. The local Docker review stack
+serves those synthetic candidates ahead of main, with all eight services healthy.
 
 Earlier merged checkpoints:
 
@@ -56,45 +56,29 @@ and five browser batches; it is not accepted. Initial missing proxy/client/stagi
 obsolete navigation expectations were caught and corrected. Failed/cancelled evidence
 is retained; no timeout, authorization or academic threshold is relaxed.
 
-## Current preservation increment
+## Verified bounded preservation increment
 
-[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) defines
-bounded encrypted evidence for an exact owned link/conversation version, excluding
-contacts, message bodies and authentication material. It compares version history,
-sets finite lifecycle/access boundaries and defines atomic capture/race/recovery tests.
-On 19 October the user explicitly approved this bounded synthetic implementation.
-Real-data processing and erasure were excluded in the approval request and remain
-unauthorized. The first increment is an offline strict evidence format and independently
-derived Fernet encryption bound to snapshot/request/owner/source/revision/version.
-All 82 focused socket-disabled, 1,022 unit/contract, 378 integration and 35 tooling cases
-pass locally, alongside lint/type/generated-contract/security/image/service checks.
-Complete hosted 39176205670 passes at `25b44b1`. See
-[increment verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md).
-Capture candidate on `codex/channel-preservation-capture` adds additive 0038, opaque
-exact source versions, independent SQL guards, atomic finite decisions/disposal,
-generated contracts, preview inventory and operator controls. Initial 27 integration
-cases were extended to 34 (including both actual restricted-login paths); 105 focused
-format/contract and two advancing-clock cases pass. Initial three-engine browser
-journeys pass. Populated logical recovery passes 68 tables/680 rows in 302 ms,
-including encrypted snapshots and disposal/sequence state after source removal.
-The full 1,055-unit/contract and 35-tooling suites pass; integration finishes with
-411 passes and one historical-schema fixture failure. Its correction preserves
-the 0034 JSON guard and forward-upgrade assertions. All 108 browser executions,
-three UI harness and three native transport checks pass; final scoped dropdown
-target-size correction passes the capture journey in all three engines. Security,
-recovery, migration and Docker smoke pass. The corrected 21-case receipt/restricted-login suite passes, including the
-historical upgrade. Complete hosted acceptance remains required. See
+The user explicitly approved [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
+on 19 October for the bounded synthetic implementation only. Source `0a8f674` adds
+0038 mutation versions, separate encrypted exact snapshots, current independent
+recent-OTP authorization, SQL ownership/immutability guards, atomic finite decisions,
+release/expiry disposal, exact retries, advisory inventory and accessible controls.
+Contacts, message bodies, codes and tokens are excluded. STOP/unlink/withdrawal and
+operational expiry remain independent. Creation defaults false.
+
+Complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) passes 1,055 unit/contract, 412 integration and 35 tooling
+cases, actual restricted logins, 108 browser executions, three UI harness and three
+native WebKit transport controls, security/images and service smoke. Hosted logical
+recovery verifies 68 tables/680 rows in 640 ms; local recovery records 302 ms.
+The initial local 0034 historical-fixture failure is corrected without dropping its
+JSON rejection, held replay or forward upgrades; the focused 21-case receipt suite
+passes. Real-time clock, duplicate landmarks, stale selector options and 23-pixel
+WebKit capture menus are corrected and reverified. See
 [capture verification](E8_CHANNEL_PRESERVATION_VERIFICATION.md).
-Format source `25b44b1` is on main with documentation closeout `9c98a55`; its merged
-branch is removed. The running Docker UI is upgraded additively to 0038; migration and service smoke
-pass with all eight services healthy. Capture remains disabled.
-Full coverage, erasure/anonymization and accountability expiry remain incomplete.
 
-The separate capture candidate is under implementation. Its real-time browser path
-exposes an existing clock defect: conversation updated_at and exact 24-hour expiry used
-different clock reads. Two deterministic advancing-clock cases reproduce it. A fix
-using one instant and new browser/role/capture coverage are under separate verification;
-no real-time conversation or full capture acceptance is inferred from this format gate.
+No complete FR-ID-006/BR-010, erasure, real-data or production approval is inferred.
+The next independent progress and shared-selector candidates retain ADR-024 math
+and existing native semantics; their complete hosted acceptance remains separate.
 
 ## Review stack and remaining gates
 
@@ -117,13 +101,17 @@ Gemini remains manual and explicitly opt-in; it was not run. No production cloud
 application dependency is introduced. Historical objective ANSWER p95 27.221 ms is
 recorded accurately; no current-source/provider/long-history performance is inferred.
 
+Host-native Ollama was unavailable after the power interruption. The pinned
+`make ollama-serve` restarts it on loopback; `make ollama-check` and the API-container
+connectivity probe pass after readiness. No inference or model download is performed.
+
 ## Next unblocked slice: progress replay reuse
 
-Capture source `0a8f674` is pushed on its dedicated branch; complete hosted
-[39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) is in progress.
-Main remains the verified format source. The merged format branch and the temporary
-owned capture stash are removed; the active capture and child progress branches
-remain until their exact-source gates pass and main promotion is complete.
+Capture source `0a8f674` passes complete hosted 39183714273 and is on main with
+Markdown-only closeout `3ad1743`; its merged branch is removed locally/remotely.
+The progress and shared-selector child branches remain active until their own exact
+application gates pass. Earlier progress source `3291ef7` was superseded/cancelled
+by the portable-oracle correction at `7148a1c`; no cancelled run is counted as a pass.
 
 `codex/progress-rollup-reuse` addresses FR-MST-004/005 and NFR-PERF-001 within ADR-024.
 All 31 frozen legacy summaries and 1,074 unit/contract cases pass. The

@@ -1,6 +1,7 @@
 # ADR-057 bounded synthetic capture verification
 
-Date: 19 October 2026. Candidate under verification, not application acceptance.
+Date: 19 October 2026. Bounded synthetic engineering verified at `0a8f674`;
+complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) passes. This is not production or full MVP acceptance.
 Requirements advanced: FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002,
 NFR-MNT-001 and NFR-ACC-001; the advancing-clock correction also addresses FR-WA-002.
 Follow [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md),
@@ -90,11 +91,14 @@ upgrade fixture invoking the current conversation ORM before the new column exis
 The fixture now creates its terminal menu with original receipt columns, asserts
 0034 explicitly, and retains the expected JSON-equality failure, held receipt replay
 and two forward upgrades. The corrected 21-case receipt/restricted-login suite passes, including that upgrade.
-A complete hosted run remains required before promotion.
+Complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) passes all 412 integration cases, including this upgrade.
 
 Formatting, Python/TypeScript type checks, generated contracts and native builds pass.
 Source/dependency/image security, populated recovery, additive migration and Docker
-smoke pass. Complete hosted verification remains required before promotion. The additive
+smoke pass. Complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) passes every gate, including 1,055 unit/contract,
+412 integration, 35 tooling, 108 browser executions, UI/transport, security/images
+and service smoke. Hosted recovery records 68 tables/680 rows in 640 ms.
+Source `0a8f674` is pushed to main and its merged branch is removed. The additive
 local migration and rebuilt service smoke pass, including asynchronous frozen export
 and scoped live request metrics; all eight services are healthy on schema 0038,
 with capture creation still false. Source/dependency/image scans report no findings
