@@ -1,5 +1,19 @@
 # Changelog
 
+## Proposed synthetic erasure decision — awaiting owner approval
+
+FR-ID-003/005/006, BR-010, FR-GRD-003/004/005, FR-WA-006, FR-OPS-003,
+NFR-SEC-002/OBS-001/MNT-001: [ADR-061](docs/decisions/ADR/061-synthetic-account-erasure-proposal.md) and its
+[exact disposition manifest](docs/implementation/E8_ERASURE_DISPOSITION_PROPOSAL.md) now propose the full bounded learner
+execution/retirement lane against all 69 existing sources, with actual primary keys.
+The explicit choices include eligible row removal instead of an unreviewed replacement
+identity, exact encrypted profile/contact/reply preservation, post-completion custody,
+finite original deadlines and affected-band disablement without counter resets.
+A bounded OTP drain prevents pre-closure challenges becoming new registrations after
+identifier removal. Staff/representative cases and real-data/release gates remain gaps.
+This is documentation only: no migration, new permission, execution or acceptance.
+ADR-057/060 approvals do not cover these new choices.
+
 ## Erasure proposal assessment — schema and academic dependencies
 
 FR-ID-006/BR-010/FR-GRD-003/004/005/NFR-SEC-002/NFR-MNT-001: schema-only inspection

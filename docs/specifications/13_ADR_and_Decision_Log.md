@@ -413,3 +413,13 @@ browser executions. Executor operations now pass complete hosted39256037485 atte
 at `d8fc031`: 1,112 unit/contract, 465 integration, 35 tooling and 111 browser
 executions, focused controls and all engineering gates. Review state stays false.
 These are bounded synthetic engineering results, not real-data/erasure or release approval.
+
+## ADR-061: Retention-aware synthetic learner account erasure
+
+**Status:** Proposed; no implementation/execution approval. See
+[ADR-061](../decisions/ADR/061-synthetic-account-erasure-proposal.md) and its
+[69-table disposition manifest](../implementation/E8_ERASURE_DISPOSITION_PROPOSAL.md).
+The proposal explicitly resolves the data-model replacement-identity ambiguity through
+eligible row removal, retains lawful exact evidence and proposes restricted finite
+execution, richer encrypted preservation and post-completion custody. These are new
+choices, not extensions of ADR-057/060. No real-data/production authority is inferred.

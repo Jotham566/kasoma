@@ -127,3 +127,12 @@ academic/provider authority and pilot sign-off remain separate gates.
 This assessment chooses no new status, retained aggregate, retention period, provider,
 public API or architecture. It does not narrow the full FR-ID-006/BR-010 obligation to
 the currently working export or preview journeys.
+
+## Concrete proposal prepared
+
+[ADR-061](../decisions/ADR/061-synthetic-account-erasure-proposal.md) and its
+[disposition manifest](E8_ERASURE_DISPOSITION_PROPOSAL.md) are now Proposed. They
+recommend explicit transforms and custody/retention rules, including the data-model
+replacement-identity conflict; this does not retroactively change the factual assessment
+above or grant approval. Review the exact new personal-preservation fields, shared-band
+availability trade-off and restricted destructive/recovery boundary before approval.

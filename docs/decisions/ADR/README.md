@@ -146,3 +146,7 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-060: Completed export accountability retirement](060-completed-export-accountability-retirement-proposal.md)
   has explicit user approval for a default-disabled bounded synthetic retention slice;
   implementation verification and real-data/release approval remain separate.
+
+- [ADR-061: Retention-aware synthetic learner account erasure](061-synthetic-account-erasure-proposal.md)
+  is Proposed, not approved: exact disposition, new profile/contact/reply preservation,
+  restricted erasure, post-completion custody and fail-closed grading authority.
