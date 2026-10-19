@@ -1235,10 +1235,10 @@ On a failed hosted capacity gate, retain the before/after numeric disk and Docke
 diagnostics and fix that disposable job's profile. Do not disable browser/security
 checks, lower product acceptance or delete developer test schemas by prefix.
 
-### Minimized channel snapshots (ADR-057 candidate)
+### Minimized channel snapshots (ADR-057 bounded synthetic implementation)
 
 Keep CHANNEL_PRESERVATION_ENABLED=false during the additive 0038/all-reader rollout.
-This flag is separate from terminal original-receipt holds. The candidate is authorized
+This flag is separate from terminal original-receipt holds. The implementation is authorized
 for synthetic development only; real-data/production processing and account erasure
 remain separately gated. See
 [verification](../implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md).
@@ -1285,3 +1285,13 @@ and 320-pixel reflow at normal and 200% text before completing saved practice.
 `make test-web-content` includes the corresponding controlled staff editor checks.
 See [verification](../implementation/E6_SELECT_TARGET_VERIFICATION.md); this does
 not replace physical-device acceptance.
+
+### Conversation mutation-version permissions
+
+0038 assigns conversation versions through a noncycling sequence in a trigger. A
+future separately reviewed channel-writing database role needs USAGE on that sequence
+in addition to its narrowly scoped conversation writes. The snapshot-inspection role
+does not mutate conversations or require that grant; the assessment role is not a
+channel-writing role. Actual restricted capture/assessment tests do not establish a
+production channel-worker role profile. Verify that distinct role and forward rollout
+before any real-data deployment; do not broaden assessment or inspection privileges.

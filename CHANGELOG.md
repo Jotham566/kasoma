@@ -1,21 +1,26 @@
 # Changelog
 
-## In progress — shared native select touch targets
+## Verified — shared native select touch targets
 
 - Extend the proven WebKit menu styling to shared single-select inputs, preserving
   native semantics and a visible arrow. NFR-ACC-001/NFR-COMP-001 tests reproduce a
   23-pixel practice menu before the correction. All three touch journeys and three
   staff UI harness cases pass with 320-pixel reflow and normal/200%-text targets;
-  hosted acceptance remains pending. No API or permission change.
+  complete hosted 39185423895 passes at `6d53541`, including all 1,074 unit/contract,
+  412 integration, 35 tooling and 108 browser executions, security/recovery/images
+  and service smoke. The verified sources are on main and merged branches are removed.
+  No API or permission change.
 
-## In progress — request-local progress replay reuse
+## Verified engineering — request-local progress replay reuse
 
 - Reuse immutable skill estimates only within one progress read under ADR-024
   (FR-MST-004/005, NFR-PERF-001). Exact legacy summary/hash/change outputs remain
   unchanged; authorization, consent, evidence filtering and calculation time remain
   per request. No shared cache, migration, algorithm or API change.
 - Add frozen legacy output and replay-work/isolation regressions; all 1,074 unit/contract
-  cases pass. API/browser and complete hosted verification remain pending.
+  cases pass. Complete hosted 39184552472 passes at `7148a1c`, including all 412
+  integration and full browser/security/recovery/image/service gates. It is merged
+  to main with the verified shared-selector follow-up.
 
 ## Verified — bounded synthetic channel capture
 
@@ -40,7 +45,8 @@
   snapshot-bound authenticated encryption, UTC canonicalization and closed diagnostics.
   No runtime capture, storage, endpoint, permission or retention change is enabled.
 - Add 82 offline format/tampering/allowlist/binding cases and the prescribed
-  `make test-channel-preservation-format` command. Full ADR-057 acceptance remains pending.
+  `make test-channel-preservation-format` command. That first increment did not
+  supply capture acceptance; bounded capture is verified in the later entry above.
 - Source `25b44b1` passes complete hosted [39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670),
   all 1,022 unit/contract, 378 integration and 35 tooling cases, full browser/security/
   recovery/image/service gates. This is format acceptance only; capture is separate.

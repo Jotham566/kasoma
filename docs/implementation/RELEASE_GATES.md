@@ -55,3 +55,12 @@ Raw messages, usable credentials and real-data processing remain excluded. Sourc
 `0a8f674` passes complete hosted 39183714273 for bounded capture/lifecycle/API/UI/
 recovery and security/service engineering. Creation remains default-disabled. This decision cannot close all hold coverage or authorize erasure;
 destructive execution still needs the separate reviewed transform and approval.
+
+## Further engineering verification recorded 19 October
+
+Progress source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham566/kasoma/actions/runs/39184552472); shared-control/latest
+application source `6d53541` passes complete hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895). All 1,074 unit/contract,
+412 integration, 35 tooling and 108 browser executions, recovery, restricted login,
+security/images and service smoke pass. This supplies bounded synthetic engineering
+evidence only. It does not waive remaining preservation/erasure/accountability,
+academic, privacy/provider, production recovery, physical/branded-device or pilot gates.

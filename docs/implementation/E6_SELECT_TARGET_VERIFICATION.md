@@ -1,6 +1,7 @@
 # Shared select touch-target correction
 
-Date: 19 October 2026. Candidate, not application acceptance.
+Date: 19 October 2026. Synthetic engineering verified at `6d53541`; complete
+hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895) passes. This is not production or full MVP acceptance.
 Requirements: NFR-ACC-001, NFR-COMP-001, NFR-MNT-001.
 
 ## Comprehension and boundary
@@ -45,6 +46,17 @@ truncate long selected labels at the narrowest enlarged view; their full options
 remain available through the native picker and accessibility tree. No tiny-font or
 custom JavaScript substitute is introduced. Multi-select/listbox styles are excluded.
 Lint, formatting, Python/TypeScript checks, generated-contract agreement and the
-production build pass. Final image/security/service and complete hosted checks
-remain required before main promotion. No backend code or migration changes here;
-the parent source's broad backend run continues independently.
+production build pass. Image/security/service and complete hosted checks pass.
+The verified source is pushed to main and its merged branch is removed. Backend
+code and migrations are unchanged here; the complete hosted backend run passes as
+recorded below.
+
+## Complete hosted evidence
+
+Source `6d53541` passes every step of [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895): 1,074 unit/contract, 412 integration,
+35 tooling, 108 browser executions, three UI harness and three native WebKit transport
+controls, actual restricted logins, security/dependency/source/image gates and service
+smoke. Logical recovery verifies 68 tables/680 rows in 532 ms. Later Markdown-only
+merges/closeout preserve the exact tested application/test/workflow tree. All merged
+implementation branches are removed locally/remotely. Physical/branded devices,
+production recovery and all other release gates remain separate.

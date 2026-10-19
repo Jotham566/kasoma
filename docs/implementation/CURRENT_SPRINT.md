@@ -1,132 +1,79 @@
-# Current sprint: approved synthetic preservation implementation
+# Current sprint: verified bounded preservation, progress and shared controls
 
-Updated 19 October 2026. Earlier context is preserved in
-[sprint history](SPRINT_HISTORY_2026_10_18.md) and the
-[implementation checkpoint](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
-This is not a completed MVP or production-release declaration.
+Updated 19 October 2026. This is not a completed MVP or production-release declaration.
+[Earlier sprint history](SPRINT_HISTORY_2026_10_18.md), the
+[historical power-recovery checkpoint](IMPLEMENTATION_CHECKPOINT_2026_10_19.md) and
+[the current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md)
+preserve the evidence and boundaries.
 
 ## Verified source on main
 
-Application source is `0a8f674`; complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) passes every gate.
-It is pushed to main; the merged capture branch is removed locally and remotely.
-This documentation closeout preserves its exact application tree. The earlier private
-format source `25b44b1` passes hosted 39176205670; receipt source 397f562 passes
-39165896953. Receipt and capture creation remain false; full preservation and erasure
-remain incomplete. Progress and shared-selector improvements remain on active child
-branches under separate complete hosted verification. The local Docker review stack
-serves those synthetic candidates ahead of main, with all eight services healthy.
+Application/test source `6d53541` passes complete hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895) and is pushed to main
+through Markdown-only merge `5de2ce5`. This documentation closeout preserves that
+exact application/test/workflow tree. All three merged implementation branches are
+removed locally/remotely. Capture source `0a8f674` passes complete hosted
+[39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273); progress
+source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham566/kasoma/actions/runs/39184552472). Superseded progress run
+39184146180 at `3291ef7` is cancelled, not a pass.
 
-Earlier merged checkpoints:
+## Requirements and implementation
 
-- `0c73c45`: bounded private local model observations, truthful unknown usage and
-  ADMIN visibility; [hosted 39160113771](https://github.com/Jotham566/kasoma/actions/runs/39160113771)
-  and [model evidence](E8_MODEL_USAGE_VERIFICATION.md) pass under ADR-054.
-- `f5f408e`: typed existing per-job request/token/time ceilings;
-  [hosted 39157127637](https://github.com/Jotham566/kasoma/actions/runs/39157127637)
-  and [budget evidence](E4_RUNTIME_BUDGET_VERIFICATION.md) pass.
-- `a357222`: bounded grading operations and database-clock review completion cap;
-  [hosted 39155326659](https://github.com/Jotham566/kasoma/actions/runs/39155326659)
-  and [grading evidence](E8_GRADING_OPERATIONS_VERIFICATION.md) pass.
-- Independent blinded review, rolling controls, staff navigation and offline report
-  comparison are merged; genuine reviewer/model/academic approval remains separate.
+- FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002 and NFR-MNT-001:
+  approved ADR-057 exact owned encrypted link/conversation snapshots, additive 0038,
+  independent API/SQL guards, atomic finite decisions, replay, disposal, inventory
+  and accessible controls. Contacts, message bodies, codes and tokens are excluded.
+  STOP/unlink/withdrawal and operational expiry remain independent. The advancing-clock
+  conversation correction also addresses FR-WA-002. See
+  [capture evidence](E8_CHANNEL_PRESERVATION_VERIFICATION.md).
+- FR-MST-004/005, NFR-PERF-001 and NFR-MNT-001: request-local immutable estimate reuse
+  under unchanged ADR-024. No shared cache, stored aggregate, math, API or consent
+  change. Thirty-one frozen original summaries preserve hashes and nonnumeric fields;
+  only the two floating-point oracle fields use machine-precision tolerance. See
+  [progress evidence](E6_PROGRESS_REUSE_VERIFICATION.md).
+- NFR-ACC-001/NFR-COMP-001/NFR-MNT-001: shared single-select appearance preserves
+  native semantics and a visible arrow while correcting WebKit's 23-pixel menus.
+  Three-engine 320-pixel touch/keyboard/axe journeys and normal/200%-text targets pass;
+  staff controls also pass. See [select evidence](E6_SELECT_TARGET_VERIFICATION.md).
 
-## Verified integrated changes
+## Verification and retained failures
 
-Source `5d95f9d` passes every step of the complete hosted pipeline, including actual
-24/8 GiB capacity checks, full backend/browser suites, security/images and service smoke.
+Latest complete hosted verification passes 1,074 unit/contract, 412 integration,
+35 tooling and 108 browser executions (32 ordinary plus four fake short-text journeys
+per engine), three UI harness and three native WebKit transport controls, actual
+restricted logins, generated contracts, security/images and service smoke. Hosted
+logical recovery verifies 68 tables/680 rows in 532 ms; local recovery records 302 ms.
+These are synthetic engineering checks, not production PITR/RPO/RTO or academic approval.
 
-- ADR-056: four legacy DELETE wrappers evaluate holds at wall clock, preserving
-  historical predicates and original immutable guards. Five focused cases plus
-  related suites pass; [clock evidence](E8_HOLD_DELETE_CLOCK_VERIFICATION.md).
-- ADR-058: fixed-category ADMIN audit activity, newest-10,000 cap, strict generated
-  contract and time-window index; [audit evidence](E8_AUDIT_ACTIVITY_VERIFICATION.md).
-  No individual audit field, new learner support permission or retention change.
-- ADR-059: hosted-only fixed SDK preparation, capacity gates and diagnostics after
-  runner disk exhaustion; [CI evidence](E0_CI_STORAGE_VERIFICATION.md). No developer
-  SDK cleanup, Docker prune or application-volume reset.
+The historical 0034 fixture is corrected without dropping JSON rejection, held replay
+or two forward upgrades; its 21-case suite passes. The later local full backend run
+passes 411/412 with a privileged temporary-role provisioning failure before application
+checks. Its unchanged standalone recheck and both complete follow-up hosted suites
+pass. Password diagnostics remain withheld; underlying local cause is unconfirmed.
+The first broader progress browser run has one Firefox pointer click without a
+follow-up request; unchanged rechecks and final local/hosted full matrices pass.
+No timeout or permission is broadened. Original macOS/Linux math differs by at most
+1.1102230246251565e-16; the portable oracle keeps all input hashes/other fields exact
+and uses absolute 1e-15 only for mastery/confidence. No product threshold changes.
 
-Local verification passes 940 unit/contract, 35 tooling and 378 integration cases,
-actual restricted logins, 65-table/648-row populated logical recovery (287 ms), source/
-dependency/image security, rebuilt Docker smoke, 105 browser executions,
-three UI harness/navigation cases and 31 full-Chromium executions. These are named
-runs with overlapping cases. No real model or messaging provider is exercised.
+A 48-row/five-scope pure Linux probe records medians 29.959 ms before and 5.103 ms
+after, 30 samples each; replay calls fall from 24 to eight. This excludes API/SQL and
+hosted concurrency. Historical objective ANSWER p95 27.221 ms remains historical;
+no current agreed-load or provider latency claim follows from either measurement.
 
-The old standalone clock run 39167600610 fails on runner disk exhaustion after backend
-and five browser batches; it is not accepted. Initial missing proxy/client/staging and
-obsolete navigation expectations were caught and corrected. Failed/cancelled evidence
-is retained; no timeout, authorization or academic threshold is relaxed.
+## Running review stack and next boundary
 
-## Verified bounded preservation increment
+All eight Docker services are healthy on 0038 at http://localhost:3000; existing
+volumes are preserved. Capture and receipt creation remain false, and normal learner
+short-text scoring remains disabled. Host-native Ollama was down after power recovery;
+the pinned `make ollama-serve`, ready-state `make ollama-check` and API-container
+connectivity probe now pass. No model download, inference, Gemini or external model/
+messaging/cloud application call is made. Use fictional data only.
 
-The user explicitly approved [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
-on 19 October for the bounded synthetic implementation only. Source `0a8f674` adds
-0038 mutation versions, separate encrypted exact snapshots, current independent
-recent-OTP authorization, SQL ownership/immutability guards, atomic finite decisions,
-release/expiry disposal, exact retries, advisory inventory and accessible controls.
-Contacts, message bodies, codes and tokens are excluded. STOP/unlink/withdrawal and
-operational expiry remain independent. Creation defaults false.
-
-Complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) passes 1,055 unit/contract, 412 integration and 35 tooling
-cases, actual restricted logins, 108 browser executions, three UI harness and three
-native WebKit transport controls, security/images and service smoke. Hosted logical
-recovery verifies 68 tables/680 rows in 640 ms; local recovery records 302 ms.
-The initial local 0034 historical-fixture failure is corrected without dropping its
-JSON rejection, held replay or forward upgrades; the focused 21-case receipt suite
-passes. Real-time clock, duplicate landmarks, stale selector options and 23-pixel
-WebKit capture menus are corrected and reverified. See
-[capture verification](E8_CHANNEL_PRESERVATION_VERIFICATION.md).
-
-No complete FR-ID-006/BR-010, erasure, real-data or production approval is inferred.
-The next independent progress and shared-selector candidates retain ADR-024 math
-and existing native semantics; their complete hosted acceptance remains separate.
-
-## Review stack and remaining gates
-
-All eight Compose services remain running healthy at http://localhost:3000;
-Mailpit is http://localhost:8025. The preview is on schema 0038 with capture and receipt
-creation false and normal learner short-text scoring disabled. Existing volumes are
-retained. See [nondestructive local recovery](../runbooks/LOCAL_DEVELOPMENT.md).
-Native Playwright runs are serial; do not rebuild native .next during an active server.
-Docker builds have a separate filesystem. Use fictional data only.
-
-Recent screenshots of learner home, practice, progress and audit were visually reviewed;
-large-text audit spacing was improved and reverified. Full Chromium is additional
-engineering evidence, not physical-device or all branded-browser acceptance.
-
-Genuine academic inventory/rights/benchmark/calibration, privacy/DPIA/PDPO and guardian
-procedures, Week 8 production provider/budget approval, complete preservation and
-reviewed erasure authority, production PITR/RPO/RTO and pilot/device sign-offs remain in
-[release gates](RELEASE_GATES.md) and [traceability](REQUIREMENTS_TRACEABILITY.md).
-Gemini remains manual and explicitly opt-in; it was not run. No production cloud
-application dependency is introduced. Historical objective ANSWER p95 27.221 ms is
-recorded accurately; no current-source/provider/long-history performance is inferred.
-
-Host-native Ollama was unavailable after the power interruption. The pinned
-`make ollama-serve` restarts it on loopback; `make ollama-check` and the API-container
-connectivity probe pass after readiness. No inference or model download is performed.
-
-## Next unblocked slice: progress replay reuse
-
-Capture source `0a8f674` passes complete hosted 39183714273 and is on main with
-Markdown-only closeout `3ad1743`; its merged branch is removed locally/remotely.
-The progress and shared-selector child branches remain active until their own exact
-application gates pass. Earlier progress source `3291ef7` was superseded/cancelled
-by the portable-oracle correction at `7148a1c`; no cancelled run is counted as a pass.
-
-`codex/progress-rollup-reuse` addresses FR-MST-004/005 and NFR-PERF-001 within ADR-024.
-All 31 frozen legacy summaries and 1,074 unit/contract cases pass. The
-pure dense overlapping-scope case reuses eight distinct skill replays instead of
-24, with no shared cache, data/API/math or authorization changes. Fresh-read API,
-browser and broad/hosted verification are pending; see
-[verification](E6_PROGRESS_REUSE_VERIFICATION.md).
-
-## Shared selector accessibility follow-up
-
-`codex/select-touch-targets` extends the same proven CSS correction to shared native
-single-select controls under NFR-ACC-001/NFR-COMP-001. The existing 320-pixel practice
-journey now asserts both selector targets at normal and 200% text: Chromium and
-Firefox pass before changes, while WebKit reproduces a 23-pixel target. Native
-options, labels, focus and disabled semantics stay intact; multi-select/listbox
-controls are excluded. All three corrected touch journeys and three staff UI
-harness cases pass; image/service and hosted verification remain pending. See
-[select target evidence](E6_SELECT_TARGET_VERIFICATION.md).
+The next narrow design boundary is completed EXPORT-request evidence retirement at
+its existing six-calendar-year deadline. Current immutable DELETE guards, key/receipt
+expiry semantics, exact holds and object-purge proof require a separately reviewed ADR
+before execution. Pending DELETE/snapshot parents have no invented completion or expiry.
+Full preservation, erasure/anonymization and accountability processing remain incomplete.
+Academic inventory/rights/benchmark/calibration, privacy/safeguarding and provider/budget
+approvals, production recovery, physical/branded devices and pilot sign-offs remain
+[release gates](RELEASE_GATES.md). No approval or completion is inferred from tests.

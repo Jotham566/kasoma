@@ -139,6 +139,15 @@ API/SQL guards and accessible controls are merged at `0a8f674` after complete ho
 The advancing-clock conversation expiry correction is verified; creation stays false.
 Full raw/live-body coverage, erasure and accountability expiry remain pending.
 See `docs/implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md` for the exact boundary.
+Request-local progress replay reuse under unchanged ADR-024 is merged after complete
+hosted 39184552472 at `7148a1c`; shared native select touch targets are merged after
+complete hosted 39185423895 at `6d53541`. Latest application/test source `6d53541`
+passes 1074 unit/contract, 412 integration, 35 tooling and 108 browser executions,
+plus recovery, actual restricted logins, security/images and service smoke.
+Only documentation changes follow that source; all merged implementation branches
+are removed. Docker remains healthy on 0038 and host-native Ollama connectivity is
+restored without inference. Completed-export evidence retirement needs a separately
+reviewed guard/retention design; ADR-057 does not authorize account erasure.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

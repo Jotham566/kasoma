@@ -1,6 +1,7 @@
 # E6 request-local progress replay reuse
 
-Date: 19 October 2026. Candidate, not application acceptance.
+Date: 19 October 2026. Synthetic engineering verified at `7148a1c`; complete
+hosted [39184552472](https://github.com/Jotham566/kasoma/actions/runs/39184552472) passes. It is merged to main with verified descendant `6d53541`; no full MVP acceptance.
 Requirements: FR-MST-004/005, NFR-PERF-001, NFR-MNT-001.
 
 ## Comprehension and boundary
@@ -36,8 +37,9 @@ MVP-load or academic acceptance claim.
 
 ## Initial results
 
-Before engine changes, 31 complete legacy summaries were frozen from source
-`0a8f674` in `tests/fixtures/progress-rollup-v1-reuse-baseline.json`. Seven scenarios
+Legacy full-summary fingerprints were frozen before engine changes from source
+`0a8f674`; the portable oracle later re-executes that same original source and stores
+all 31 complete summaries in `tests/fixtures/progress-rollup-v1-reuse-baseline.json`. Seven scenarios
 cover 31 scopes, including different scope-specific latest attempts. The first
 unit run passes the seven legacy summary cases and fails the 12 new reuse cases
 because the context is not implemented. After implementation, all 19 new cases and
@@ -55,8 +57,10 @@ all scopes in that same context requires no additional skill replay. Complete DT
 The context copies input grouping; returned mutable summary changes cannot poison
 subsequent results. Corrupt/future/conflicting inputs still reject on repeated calls.
 
-Full backend/browser, image/service, security and complete hosted checks remain in
-progress. No complete MVP, hosted latency or academic acceptance is inferred.
+Complete hosted [39184552472](https://github.com/Jotham566/kasoma/actions/runs/39184552472) passes every gate: 1,074 unit/contract, 412 integration,
+35 tooling, 108 browser executions, UI/transport, recovery, security/images and
+service smoke. Hosted logical restore verifies 68 tables/680 rows in 613 ms.
+No complete MVP, agreed-load hosted latency or academic acceptance is inferred.
 
 ## Cross-platform fixture correction
 
@@ -83,5 +87,18 @@ The first broader browser run passes both Chromium batches and 15/16 in its firs
 Firefox batch. The existing cross-device assessment journey observes a Next question
 click without a subsequent API request. Its unchanged full Firefox recheck passes
 both 16-case batches. The trace and failure remain recorded; no timeout, assertion
-or product code is changed to mask it. Remaining WebKit/short-text and hosted
-checks continue; the intermittent pointer-event cause is unconfirmed.
+or product code is changed to mask it. Subsequent complete WebKit/short-text and
+hosted matrices pass; the intermittent pointer-event cause is unconfirmed.
+
+The broader local integration run passes 411/412; its sole failure occurs while
+provisioning the privileged temporary database test role, before application checks.
+The wrapper withholds server diagnostics to protect the generated password. A
+standalone unchanged `make test-runtime-role` recheck passes in 12.90 seconds, and
+the complete clean hosted run passes all 412 integration cases. No grant, permission
+assertion or timeout is broadened. The underlying local fixture cause is unconfirmed.
+The final complete local `make e2e` on descendant `6d53541` also passes all 108
+executions, including the shared-selector styling follow-up.
+
+Latest descendant `6d53541` also passes complete hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895). It is pushed to main;
+both follow-up branches are removed locally/remotely. Subsequent commits are
+Markdown-only and preserve that exact application/test tree.

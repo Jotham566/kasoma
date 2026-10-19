@@ -2,16 +2,15 @@
 
 ## Current accepted checkpoint — 19 October 2026
 
-Application source `0a8f674` passes complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) and is pushed to main.
-The merged capture branch is removed locally/remotely. All 1,055 unit/contract,
+Application/test source `6d53541` passes complete hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895) and is pushed to main
+through Markdown-only merge `5de2ce5`; all merged implementation branches are removed
+locally/remotely. Subsequent closeout changes only Markdown. All 1,074 unit/contract,
 412 integration, 35 tooling, 108 browser and UI/transport/security/recovery/image/
 service gates pass. This supersedes older candidate engineering status below.
-ADR-057's bounded encrypted exact link/conversation snapshots are engineering-verified;
-real-data processing, full preservation, erasure and production release remain excluded.
-The advancing-clock conversation correction is verified. Progress/shared-selector
-follow-ups remain on active child branches with separate hosted acceptance pending.
-See [capture evidence](E8_CHANNEL_PRESERVATION_VERIFICATION.md) and the earlier
-[checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
+ADR-057 bounded capture passes 39183714273 at `0a8f674`; progress replay reuse passes
+39184552472 at `7148a1c`; latest shared controls pass 39185423895 at `6d53541`.
+Real-data processing, full preservation/erasure, academic and production acceptance
+remain excluded. See [current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md).
 
 
 NFR-MNT-001 candidate: [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md)
@@ -1202,7 +1201,7 @@ merged branch removed. Local scan interruption is not a local pass. The next rev
 branch remains uncommitted/unverified after its initial 20 contract/SQL cases; no
 complete grading, real-data or MVP acceptance is claimed.
 
-FR-ID-006 / FR-WA-006 / NFR-ACC-001 current capture candidate evidence: full
+Historical pre-hosted FR-ID-006 / FR-WA-006 / NFR-ACC-001 capture evidence: full
 1,055-unit/contract and 35-tooling suites pass; first full integration run passes
 411/412, with a historical 0034 fixture invoking the current conversation ORM.
 The corrected fixture retains original-schema JSON rejection and held-record replay
@@ -1210,19 +1209,22 @@ through forward upgrades; the corrected 21-case receipt/restricted-login suite p
 All 108 browser executions, three UI harness and three
 WebKit transport controls pass; the subsequent 44-pixel select regression reproduces
 23-pixel native WebKit output and passes after scoped styling in all three engines
-at normal and 200% text. Hosted application acceptance remains pending.
+at normal and 200% text. Complete capture 39183714273 and latest 39185423895
+supersede that pending engineering status; production acceptance stays separate.
 
-FR-MST-004 / FR-MST-005 / NFR-PERF-001 / NFR-MNT-001 candidate: request-local
+FR-MST-004 / FR-MST-005 / NFR-PERF-001 / NFR-MNT-001 verified at `7148a1c`: request-local
 immutable skill replay reuse under unchanged ADR-024, calculation time, hashes and
 confidence/change semantics. Frozen 31 complete legacy summaries and
 1,074 unit/contract cases pass; dense scoped replay work falls from 24 to eight
-distinct calls. Per-read consent/isolation, browser and complete hosted acceptance
-remain required. See [progress verification](E6_PROGRESS_REUSE_VERIFICATION.md).
+distinct calls. Complete hosted 39184552472 passes all 412 integration and full
+browser/security/recovery/image/service gates. The verified sources are on main; merged branches are removed. Agreed-load hosted
+latency remains gated. See [progress verification](E6_PROGRESS_REUSE_VERIFICATION.md).
 
 NFR-ACC-001 / NFR-COMP-001 / NFR-MNT-001 candidate: shared single-select CSS now
 reuses the verified native-menu appearance/arrow treatment. A new actual 320-pixel
 journey assertion reproduces the existing 23-pixel WebKit practice selector before
 the fix; all three normal/200%-text touch journeys and three staff UI checks pass.
-Image/service and complete hosted checks remain required. No
-API, permission, data or architectural decision changes. See
+Complete hosted 39185423895 passes at `6d53541`, including image/service and all
+regression gates. Source is on main; merged branches are removed. No API, permission,
+data or architectural decision changes. See
 [select target verification](E6_SELECT_TARGET_VERIFICATION.md).
