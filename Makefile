@@ -512,3 +512,9 @@ recovery-objects:
 	$(UV) python -m scripts.object_recovery_drill
 test-recovery-objects:
 	$(UV) pytest tests/contract/test_object_recovery.py
+
+.PHONY: load-history-temporal test-temporal-load
+load-history-temporal:
+	$(UV) python -m scripts.objective_load --history-temporal
+test-temporal-load:
+	$(UV) pytest tests/contract/test_temporal_history_load.py tests/contract/test_objective_load.py

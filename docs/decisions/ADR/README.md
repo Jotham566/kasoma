@@ -166,3 +166,7 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-065: Isolated database and private-object recovery](065-isolated-database-object-recovery.md)
   records a separate synthetic rehearsal restoring private temporary backups with source
   services stopped, exact storage namespace and exclusively owned disposable services.
+
+- [ADR-066: Temporal diagnostic load profile](066-temporal-diagnostic-load-profile.md)
+  records a fixed old-evidence/completed-diagnostic synthetic profile using independent
+  clocks and normal OTP/domain processing, retaining all existing latency/isolation gates.

@@ -359,3 +359,14 @@ recovery exactsource29f1ddc is pushed for own live39311093503; metric-loss sourc
 b5557a3 stays unchanged for live39308594889. Only Markdown closeout follows these
 heads; neither pending feature is accepted yet. Docker8/8healthy; read-only
 ownership-label audit finds no leftover recovery containers.
+
+ADR-066 older/diagnostic load tooling is a separate candidate: independent clocks
+and normal OTP/domain paths, no source-row rewrite or changed deadline/latency gate.
+Initial69 focused controls and203 typed files pass; a full native profile is live,
+not accepted. Own final local/hosted evidence and original/recent rechecks remain.
+
+ADR-066 final local tooling gates pass1,253 unit/contract,35 tooling,69 focused
+controls,203 typed files and quality/contracts/build/security. Native temporal
+measurement remains live; no performance acceptance. Learner-level ADMIN mastery
+replay cannot be inferred from aggregate audit access: explicit support permission/
+audit is required by API section9 and remains unresolved.

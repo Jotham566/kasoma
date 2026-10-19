@@ -1512,3 +1512,20 @@ Private temporary dump/ciphertext files are removed on exit. Existing Docker pre
 services keep running. This is synthetic logical/private-object preparation only;
 managed PITR, production RPO/RTO, escrow and regional recovery remain unproved.
 [Exact verification boundary](../implementation/E9_OBJECT_RECOVERY_VERIFICATION.md).
+
+## Older-evidence and diagnostic load profile
+
+NFR-PERF-001/002,SCL-001 and [ADR-066](../decisions/ADR/066-temporal-diagnostic-load-profile.md):
+make test-temporal-load checks fixture/isolation contracts; make load-history-temporal
+runs the real fixed full-size profile on its own generated database/role. There is no
+supplied database/application target. Do not run native load profiles concurrently;
+wait for terminal result and successful exact owned cleanup before the next profile.
+The original make load-objective and make load-history-mixed remain separate checks.
+
+Expect32500 historical grades (including7500 diagnostic answers),500 completed
+91-day-old diagnostics and ten revision-age cohorts before the unchanged7000-request
+HTTP workload. Timing excludes fixture setup; current login happens only after all
+historical work. Only a PASSED terminal report with cleanup_failed false is a passing
+measurement. Preserve failures, per-operation/per-format p50/p95/p99 and error/dispatch
+counts; do not substitute the mixed percentile for a slow operation. Existing review
+services remain running. [Evidence and limits](../implementation/E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md).

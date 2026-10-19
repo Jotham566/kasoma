@@ -1,5 +1,16 @@
 # Current sprint: practice-day and operational verification
 
+## Older/diagnostic history load - candidate
+
+NFR-PERF-001/002,SCL-001 and FR-DIAG/MST: ADR-066 adds a fixed temporal fixture
+profile without changing application/engine behavior or thresholds. Independent
+historical clocks and normal OTP build completed diagnostics and old/recent evidence;
+current credentials are issued only after preparation. Local quality/contracts/build,1,253 unit/contract,35 tooling,69 focused controls
+and203 typed source files pass; dependency/source security checks pass. Full-size
+native profile is live; native and own complete hosted gates remain pending. No measured performance is claimed yet.
+[Verification](E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md).
+
+
 ## Isolated database/private-object recovery - candidate
 
 NFR-REL-002, NFR-SEC-002/MNT-001: ADR-065 adds a separate synthetic rehearsal with

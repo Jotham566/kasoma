@@ -1,5 +1,16 @@
 # Requirements Traceability
 
+## Older/diagnostic history load - candidate
+
+NFR-PERF-001/002,SCL-001 and FR-DIAG/MST: ADR-066 adds a fixed temporal fixture
+profile without changing application/engine behavior or thresholds. Independent
+historical clocks and normal OTP build completed diagnostics and old/recent evidence;
+current credentials are issued only after preparation. Local quality/contracts/build,1,253 unit/contract,35 tooling,69 focused controls
+and203 typed source files pass; dependency/source security checks pass. Full-size
+native profile is live; native and own complete hosted gates remain pending. No measured performance is claimed yet.
+[Verification](E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md).
+
+
 ## Isolated database/private-object recovery - candidate
 
 NFR-REL-002, NFR-SEC-002/MNT-001: ADR-065 adds a separate synthetic rehearsal with
@@ -553,7 +564,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-GRD-009 | Owned attempt/version-bound reporting, encrypted bounded comments, safe receipt recovery | Flag contract/API/browser suites; [verification](E8_FLAGS_VERIFICATION.md) | Local synthetic implementation; current consent and diagnostic sealing enforced |
 | FR-MST-001 | Unique append-only attempt/skill evidence; synchronous deterministic grading; consented legacy reconciliation | Duplicate replay, rollback, immutable DB records and integration tests | Local deterministic path implemented |
 | FR-MST-002 | Specified weighted prior, score, coverage/recency confidence and display state | Hand calculations, property tests and diagnostic UI | Local implemented |
-| FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
+| FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Offline reproduction implemented; no authenticated learner-level support replay UI/permission yet. API section9 requires explicit support permission/audit; aggregate ADMIN access does not grant record access |
 | FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history; roadmap 3.5 practice-day candidate | Progress engine/API/browser tests; [verified baseline](E6_PROGRESS_VERIFICATION.md); [activity candidate](E6_PRACTICE_ACTIVITY_VERIFICATION.md) | Baseline and practice-day synthetic engineering verified at adf4328 by full hosted39299684285; native loads remain pinned to78ca959. Prior WebKit timeout remains unexplained. Academic aggregation and release approval remain pending |
 | FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |

@@ -460,3 +460,12 @@ private database/ciphertext backups after stopping the owned source, preserving 
 storage scope and existing integrity/retirement controls. No developer data/volumes,
 production provider, retention/erasure policy or production recovery claim changes.
 Own local/hosted acceptance is recorded separately from ADR-042's logical evidence.
+
+## ADR-066 - older and diagnostic objective load composition
+
+[ADR-066](../decisions/ADR/066-temporal-diagnostic-load-profile.md) adds a separate
+fixed synthetic older-evidence/completed-diagnostic load profile with independent
+historical clocks and normal OTP re-authentication. Original/recent commands, schema,
+application behavior, secrecy/consent/immutable guards and latency/deadline gates stay
+unchanged. Native and own hosted verification are separate requirements; no production,
+academic, support-access, real-data or erasure authority is inferred.

@@ -12,7 +12,7 @@ import sys
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import UTC, date, datetime, timedelta
 from threading import Thread
 from time import monotonic, process_time, sleep
 from typing import Any
@@ -29,6 +29,15 @@ from scripts.assessment_fixtures import seed_assessment
 from scripts.disposable_owner import cleanup_owner as cleanup_disposable_owner
 from scripts.disposable_owner import create_owner as create_disposable_owner
 from scripts.recovery_drill import local_database_url
+from scripts.temporal_history import (
+    REGISTRATION_AGE,
+)
+from scripts.temporal_history import (
+    composition as temporal_composition,
+)
+from scripts.temporal_history import (
+    prepare as prepare_temporal_history,
+)
 from services.assessment import AssessmentService
 from services.assessment_contracts import GradeView, StartRevision, SubmitAnswer
 from services.config import Settings
@@ -375,8 +384,11 @@ async def exercise(
             )
 
 
-def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
+def run(
+    settings: Settings, history_mixed: bool = False, temporal_history: bool = False
+) -> dict[str, object]:
     url = local_database_url(settings)
+    history_mixed = history_mixed or temporal_history
     name = database_name("kasoma_load_" + uuid4().hex)
     admin = create_engine(
         url.set(database="postgres"), isolation_level="AUTOCOMMIT", hide_parameters=True
@@ -390,7 +402,9 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
     measured: Measurements | None = None
     result: dict[str, object] = {
         "status": "FAILED",
-        "profile": "isolated-history-mixed-http-v1"
+        "profile": "isolated-temporal-diagnostic-http-v1"
+        if temporal_history
+        else "isolated-history-mixed-http-v1"
         if history_mixed
         else "isolated-objective-http-v1",
     }
@@ -434,14 +448,40 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
         fake = FakeMessagingProvider()
         identity = IdentityService(engine, config, fake, fake, code=lambda: "246810")
         stage = "SYNTHETIC_FIXTURES"
-        credentials, plan = populate(identity, history_mixed)
+        anchor = datetime.now(UTC)
+        historical = (
+            IdentityService(
+                engine,
+                config,
+                fake,
+                fake,
+                clock=lambda: anchor - timedelta(days=REGISTRATION_AGE),
+                code=lambda: "246810",
+            )
+            if temporal_history
+            else identity
+        )
+        credentials, plan = populate(historical, history_mixed)
         tokens = [value.access_token for value in credentials]
         plans = None
-        history_attempts = ACTIVE * HISTORY_SESSIONS * 5 if history_mixed else 0
-        history_sessions = ACTIVE * HISTORY_SESSIONS if history_mixed else 0
+        history_attempts = (
+            ACTIVE * (HISTORY_SESSIONS * 5 + (15 if temporal_history else 0))
+            if history_mixed
+            else 0
+        )
+        history_sessions = (
+            ACTIVE * (HISTORY_SESSIONS + int(temporal_history)) if history_mixed else 0
+        )
+        temporal_report: dict[str, object] = {}
         if history_mixed:
             stage = "SYNTHETIC_HISTORY"
-            tokens, plans = prepare_history(identity, credentials)
+            if temporal_history:
+                tokens, plans = prepare_temporal_history(
+                    identity, credentials, anchor, fixture_login, fixture_response, history_correct
+                )
+                temporal_report = temporal_composition(engine, anchor, ACTIVE)
+            else:
+                tokens, plans = prepare_history(identity, credentials)
         with Session(engine) as db:
             item_count = db.scalar(select(func.count()).select_from(ItemVersion)) or 0
             prior_attempts = db.scalar(select(func.count()).select_from(Attempt)) or 0
@@ -530,6 +570,7 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
                 * (1 if sys.platform == "darwin" else 1024),
                 "database_resources_measured": False,
                 "production_acceptance": False,
+                **temporal_report,
                 **measured.report(),
             }
         )
@@ -576,8 +617,14 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--history-mixed", action="store_true")
+    profiles = parser.add_mutually_exclusive_group()
+    profiles.add_argument("--history-mixed", action="store_true")
+    profiles.add_argument("--history-temporal", action="store_true")
     arguments = parser.parse_args()
-    report = run(Settings(), history_mixed=arguments.history_mixed)
+    report = run(
+        Settings(),
+        history_mixed=arguments.history_mixed,
+        temporal_history=arguments.history_temporal,
+    )
     print(json.dumps(report, sort_keys=True))
     raise SystemExit(0 if report["status"] == "PASSED" else 1)
