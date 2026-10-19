@@ -423,3 +423,13 @@ The proposal explicitly resolves the data-model replacement-identity ambiguity t
 eligible row removal, retains lawful exact evidence and proposes restricted finite
 execution, richer encrypted preservation and post-completion custody. These are new
 choices, not extensions of ADR-057/060. No real-data/production authority is inferred.
+
+## ADR-062: Owned recent practice-day indicator
+
+**Status:** Accepted within the user's approved MVP implementation discretion;
+engineering verification pending. See
+[ADR-062](../decisions/ADR/062-owned-practice-activity.md). Roadmap3.5's simple
+consistency indicator is a read-only count of visible graded-practice dates in the
+selected subject's last seven Kampala calendar days. No stored streak/reward system,
+new authorization, retention class or change to mastery/diagnostic sealing. This is
+independent of unapproved ADR-061 and grants no real-data/production authority.

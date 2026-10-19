@@ -10,6 +10,11 @@ semantics. All 98 focused cases and a 69-table/686-row logical restore pass loca
 (295ms, no cleanup failures). Quality/contracts/build, 1,138 unit/contract, 35 tooling and dependency/source security
 also pass. Exact combined-source hosted acceptance remains pending.
 No migration, production permission, erasure approval or release gate changes.
+The practice-day candidate is integrated locally: 98 role, 55 progress and 40
+assessment executions pass, plus 1,154 unit/contract, 35 tooling, quality/build/security
+and a 69-table/686-row restore (329ms). Shared channel cases overlap; full combined
+hosted verification remains pending and the original practice CI head is preserved.
+
 
 ## Official academic source discovery — review pending
 
@@ -19,6 +24,22 @@ and visually verified Senior 4 starting locators. Both rights states stay UNKNOW
 no source PDF/text/media is committed or imported. Academic currency, exact mappings,
 independent item review and expert benchmark evidence remain pending. This is
 documentation-only preparation, with no change to release gates or application acceptance.
+
+## Practice-day consistency indicator — candidate
+
+FR-MST-004/005, FR-ID-003, FR-WA-003, NFR-SEC-002/ACC-001/LOC-001/MNT-001:
+approved roadmap 3.5 gains a private read-only count of graded-practice days in the
+selected subject's seven Kampala calendar dates. ADR-062 records the definition,
+additive compatible DTO and neutral accessible meter. Existing evidence/authorization
+and unfinished diagnostic sealing remain unchanged; no new table, SQL, replay or
+retention permission. Five missing-field baseline failures become 54 initial focused
+passes; final 55 focused cases, 1,146 unit/contract, 35 tooling and three progress browser
+journeys pass, plus quality/contracts/build, security/images and service smoke.
+[Verification](docs/implementation/E6_PRACTICE_ACTIVITY_VERIFICATION.md) tracks expanded/backend/browser/hosted acceptance;
+this is not a stored streak system, ADR-061 approval or real-data release. Combined
+source 78ca959 also passes both native profiles: START p95 455.214/409.196ms and PROGRESS
+p95 14.087/16.522ms, with 7,000 requests, zero errors and owned cleanup per profile.
+Hosted 39294126038 is in progress; no runtime promotion or variance explanation is claimed.
 
 ## Verified fresh revision response — no empty evidence reads
 

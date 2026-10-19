@@ -33,7 +33,8 @@ def test_preexisting_derived_role_is_not_recovery_cleanup_authority(monkeypatch,
                 text("SELECT oid FROM pg_roles WHERE rolname=:role"), {"role": role}
             )
         monkeypatch.setattr(recovery, "uuid4", lambda: suffix)
-        monkeypatch.setattr(recovery.subprocess, "run", Mock())
+        migrate = Mock()
+        monkeypatch.setattr(recovery.subprocess, "run", migrate)
         monkeypatch.setattr(
             recovery, "populate", Mock(side_effect=RuntimeError("Intentional fixture stop"))
         )
@@ -54,6 +55,12 @@ def test_preexisting_derived_role_is_not_recovery_cleanup_authority(monkeypatch,
         assert result["status"] == "FAILED"
         assert result["cleanup_failed"] == []
         assert role not in str(result)
+        if kind == "src":
+            assert result["failed_stage"] == "CREATE_OWNER_ROLE"
+            migrate.assert_not_called()
+        else:
+            assert result["failed_stage"] == "POPULATE_SYNTHETIC_SOURCE"
+            migrate.assert_called_once()
     finally:
         # Only the exact role exclusively created by this test, never another owner.
         if owned:

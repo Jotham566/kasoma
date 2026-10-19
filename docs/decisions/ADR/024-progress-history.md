@@ -63,3 +63,10 @@ equal-time page boundaries, expiry, read-only evidence and browser retry/keyboar
 
 No peers, rankings, streak system, inference, production data, cloud dependency or
 mature-product feature is added. Academic calibration and production gates remain.
+
+## Approved roadmap follow-up — practice-day display
+
+[ADR-062](062-owned-practice-activity.md) records the read-only consistency indicator
+in roadmap3.5, retaining all access/sealed-result/replay boundaries above. It counts
+visible graded-practice dates without a stored streak/reward system or mastery change.
+Implementation verification remains separately required.

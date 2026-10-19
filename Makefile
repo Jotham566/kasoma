@@ -426,7 +426,7 @@ test-ci-storage:
 
 .PHONY: test-progress
 test-progress:
-	$(UV) pytest tests/contract/test_progress_engine.py tests/contract/test_progress_reuse.py tests/integration/test_progress.py --allow-hosts=localhost,127.0.0.1,::1
+	$(UV) pytest tests/contract/test_practice_activity.py tests/contract/test_progress_engine.py tests/contract/test_progress_reuse.py tests/integration/test_progress.py tests/integration/test_channel_assessment.py --allow-hosts=localhost,127.0.0.1,::1
 
 .PHONY: test-web-select-targets
 test-web-select-targets:
@@ -476,6 +476,12 @@ test-web-assessment:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
+
+.PHONY: test-web-progress
+test-web-progress:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/progress.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/progress.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/progress.spec.ts
 
 .PHONY: test-fresh-session-response
 test-fresh-session-response:

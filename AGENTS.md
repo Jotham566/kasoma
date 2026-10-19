@@ -216,6 +216,32 @@ source owner; a destination grants no role ownership. 98 focused cases and a 69-
 686-row logical restore pass (295ms, no cleanup failure). Quality/contracts/build, 1,138 unit/contract,
 35 tooling and dependency/source security pass; complete combined-source hosted
 acceptance remains pending. No role sweep or ADR-061 approval.
+After integrating activity source78ca959 through02c9abc and main e7a4fc0, 98 role,
+55 progress and40 assessment executions pass (shared channel cases overlap), plus
+1,154 unit/contract,35 tooling, quality/build/security and69-table/686-row restore
+in329ms. Complete combined-source hosted acceptance remains pending; the original
+practice branch head stays unchanged while its full CI runs.
+
+
+The new ADR-062 practice-day candidate implements roadmap 3.5's read-only consistency
+indicator without a stored streak/reward system, added SQL, evidence replay or retention
+permission. It preserves current consent, ownership and unfinished-diagnostic sealing.
+55 focused cases (41 contract/rollup/replay and 14 integration), 1,146 unit/contract,
+35 tooling and three final progress browser executions pass, plus quality/contracts/build,
+security/source/images and service smoke. Narrow screenshot review places the next
+learning action above the activity card. Generated contracts are updated; no migration
+or dependency change. Its own full combined-source load/hosted acceptance remains pending;
+normal Docker stays healthy on 0042 with retirement false. Native branded review was
+unavailable because the Mac was locked; automated engines do not satisfy physical gates.
+After integrating verified main 83f30cc, the 55-case progress and 40-case assessment
+targets, 1,146 unit/contract, 35 tooling and three progress browser executions pass,
+plus quality/contracts/build and security/source/images/service smoke. Seven channel
+cases overlap the two targeted commands. Combined source 78ca959 passes both native
+profiles (START p95 455.214/409.196ms; PROGRESS p95 14.087/16.522ms), each with 7,000
+requests, zero errors and owned cleanup. Full hosted 39294126038 is in progress; do not
+replace its branch head or infer acceptance from the earlier performance CI. Only
+Markdown/aggregate JSON closeout follows that runtime/test/Make tree. ADR-061 approval
+and physical/branded review remain pending; unlock was requested once from the owner.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

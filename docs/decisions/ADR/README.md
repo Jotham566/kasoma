@@ -150,3 +150,7 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-061: Retention-aware synthetic learner account erasure](061-synthetic-account-erasure-proposal.md)
   is Proposed, not approved: exact disposition, new profile/contact/reply preservation,
   restricted erasure, post-completion custody and fail-closed grading authority.
+
+- [ADR-062: Owned recent practice-day indicator](062-owned-practice-activity.md)
+  records the approved roadmap's read-only consistency display, explicit Kampala
+  calendar window and existing ownership/sealed-result rules; verification pending.

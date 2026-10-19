@@ -115,6 +115,12 @@ def test_five_answers_have_web_channel_grade_and_mastery_parity(content, respons
             expected = result.json()
             expected.pop("attempt_id")
             assert grade.model_dump(mode="json", exclude={"attempt_id"}) == expected
+    for actor_headers in [actors["learner"], actors["other"]]:
+        progress = client.get(
+            "/api/v1/me/progress", headers=actor_headers, params={"subject_id": plan["subject_id"]}
+        )
+        assert progress.status_code == 200
+        assert progress.json()["practice_activity"]["days_practised"] == 1
     with Session(identity.engine) as db:
         assert db.scalar(select(func.count()).select_from(Attempt)) == 10
         for actor, channel in [(web_actor, "WEB"), (wa_actor, "WHATSAPP")]:

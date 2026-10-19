@@ -26,6 +26,68 @@ function date(value: string) {
     timeZone: "Africa/Kampala",
   }).format(new Date(value));
 }
+function calendarDate(value: string) {
+  return new Intl.DateTimeFormat("en-UG", {
+    dateStyle: "medium",
+    timeZone: "Africa/Kampala",
+  }).format(new Date(`${value}T12:00:00Z`));
+}
+
+function PracticeActivitySummary({
+  activity,
+}: {
+  activity: Schema["PracticeActivity"] | null | undefined;
+}) {
+  return (
+    <section
+      className="surface-card space-y-3"
+      aria-labelledby="practice-activity-heading"
+    >
+      <h2 id="practice-activity-heading" className="text-xl font-semibold">
+        Practice days
+      </h2>
+      {activity && activity.version === "practice-days-v1" ? (
+        <>
+          <p className="text-3xl font-semibold tracking-tight">
+            {activity.days_practised}{" "}
+            <span className="text-base font-normal">of 7 days</span>
+          </p>
+          <div
+            role="meter"
+            aria-label="Days with graded practice"
+            aria-valuemin={0}
+            aria-valuemax={7}
+            aria-valuenow={activity.days_practised}
+            aria-valuetext={`${activity.days_practised} of the last 7 days`}
+            className="h-2 overflow-hidden rounded-full bg-slate-100"
+          >
+            <div
+              className="h-full rounded-full bg-emerald-600"
+              style={{ width: `${(activity.days_practised / 7) * 100}%` }}
+            />
+          </div>
+          <p className="text-sm text-slate-600">
+            {calendarDate(activity.window_start)} –{" "}
+            {calendarDate(activity.window_end)} (Kampala).
+          </p>
+          <p>
+            Days with graded answers in this subject. Practice activity and
+            mastery estimates are shown separately.
+          </p>
+          {activity.days_practised === 0 && (
+            <p>Your first day appears when graded results are available.</p>
+          )}
+        </>
+      ) : (
+        <p>
+          Practice activity is unavailable. Reload your learning record to try
+          again.
+        </p>
+      )}
+    </section>
+  );
+}
+
 function Summary({ summary }: { summary: Schema["ProgressSummary"] }) {
   return (
     <article
@@ -264,6 +326,7 @@ export function LearningDashboard({ mode }: { mode: "progress" | "history" }) {
           >
             {action?.label}
           </Link>
+          <PracticeActivitySummary activity={progress.practice_activity} />
           <section aria-label="Topic progress" className="space-y-3">
             <h2 className="text-xl font-semibold">Topics</h2>
             <div className="progress-grid">

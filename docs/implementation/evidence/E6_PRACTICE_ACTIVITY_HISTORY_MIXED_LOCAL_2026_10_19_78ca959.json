@@ -1,0 +1,90 @@
+{
+  "active_learners": 500,
+  "all_http": {
+    "p50_ms": 12.762,
+    "p95_ms": 27.874,
+    "p99_ms": 309.55,
+    "samples": 7000
+  },
+  "answer_dispatch_lag": {
+    "p50_ms": 2.077,
+    "p95_ms": 2.164,
+    "p99_ms": 10.666,
+    "samples": 2500
+  },
+  "answer_formats": {
+    "NUMERIC": {
+      "p50_ms": 20.452,
+      "p95_ms": 28.493,
+      "p99_ms": 92.911,
+      "samples": 1250
+    },
+    "SINGLE_CHOICE": {
+      "p50_ms": 20.146,
+      "p95_ms": 28.537,
+      "p99_ms": 93.509,
+      "samples": 1250
+    }
+  },
+  "attempts": 27500,
+  "cleanup_failed": false,
+  "completed_learners": 500,
+  "completed_sessions": 5500,
+  "concurrency_limit": 50,
+  "cpu_seconds_client_and_api": 54.067,
+  "database_resources_measured": false,
+  "duration_seconds": 125.324,
+  "errors": 0,
+  "grades": 27500,
+  "history_attempts": 25000,
+  "history_completed_sessions": 5000,
+  "history_grades": 25000,
+  "observed_answer_dispatch_per_second": 20.0,
+  "operations": {
+    "ANSWER": {
+      "p50_ms": 20.294,
+      "p95_ms": 28.516,
+      "p99_ms": 92.911,
+      "samples": 2500
+    },
+    "NEXT": {
+      "p50_ms": 11.087,
+      "p95_ms": 16.458,
+      "p99_ms": 309.55,
+      "samples": 2500
+    },
+    "PROFILE": {
+      "p50_ms": 4.266,
+      "p95_ms": 219.082,
+      "p99_ms": 242.087,
+      "samples": 500
+    },
+    "PROGRESS": {
+      "p50_ms": 11.908,
+      "p95_ms": 16.522,
+      "p99_ms": 21.249,
+      "samples": 500
+    },
+    "START": {
+      "p50_ms": 12.919,
+      "p95_ms": 409.196,
+      "p99_ms": 985.502,
+      "samples": 500
+    },
+    "STATE": {
+      "p50_ms": 10.107,
+      "p95_ms": 14.707,
+      "p99_ms": 16.919,
+      "samples": 500
+    }
+  },
+  "peak_inflight_http": 50,
+  "peak_rss_bytes_client_api_and_fixture_setup": 135970816,
+  "production_acceptance": false,
+  "profile": "isolated-history-mixed-http-v1",
+  "registered_learners": 2000,
+  "reviewed_synthetic_items": 288,
+  "source_commit": "78ca959da5e2866d6489d88bfb8f148bc6366cd8",
+  "status": "PASSED",
+  "target_answer_dispatch_per_second": 20
+}

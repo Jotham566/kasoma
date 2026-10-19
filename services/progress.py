@@ -16,6 +16,7 @@ from services.domain.curriculum import Competency, Concept, Subject, Topic
 from services.domain.mastery import MasteryEvidence
 from services.identity import IdentityError
 from services.mastery_engine import Evidence
+from services.practice_activity import practice_activity
 from services.progress_contracts import (
     ProgressAction,
     ProgressView,
@@ -100,6 +101,7 @@ def progress(service: "AssessmentService", token: str, subject_id: UUID) -> Prog
         )
         return ProgressView(
             subject=summary,
+            practice_activity=practice_activity((e.source.occurred_at for e in evidence), at),
             topics=[
                 rollups.summarize(t.id, t.name, {s for s in skills if concepts[s[0]] == t.id})
                 for t in topics

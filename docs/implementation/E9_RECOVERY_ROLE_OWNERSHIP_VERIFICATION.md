@@ -66,3 +66,27 @@ contract and actual PostgreSQL regressions; ADR-042 clarification, local runbook
 changelog, sprint and traceability. No API, database migration, dependency or product
 UI change. Finish broader checks and exact-source hosted verification before merging.
 Normal Docker services and review data are preserved.
+
+## Combined practice-day candidate checks
+
+The recovery branch integrates the activity candidate through 02c9abc (runtime source
+78ca959) and academic-source documentation from main e7a4fc0. Four informational merge
+conflicts retain both evidence histories; Make targets and runtime files merge without
+changing their behavior. The practice-day branch's existing CI head is not replaced.
+
+Combined `make test-recovery-role-cleanup test-progress test-fresh-session-response`
+passes 98 role/isolation cases in 2.05s, 55 progress cases in 60.91s and 40 assessment
+integration cases in 159.77s. The seven channel cases overlap the last two commands;
+these totals are executions, not distinct integration-test counts. Strengthening the
+actual source-collision test to require migration never runs also passes the 98-case
+role target in 2.77s. Combined `make recovery-drill` passes 69 tables/686 rows in 329ms
+with no cleanup failures and the existing encrypted/guard verification intact.
+
+Combined `make lint openapi-check build`, `make test-unit` and
+`make security security-source` pass: 1,154 unit/contract, 35 tooling, 196 typed source
+files, matching generated contracts and no known vulnerabilities/source leaks. The
+487 integration cases deselected by test-unit still require full hosted execution.
+This is local combined-source evidence only; full hosted verification is pending.
+Neither feature is accepted from the other's CI. No performance threshold or release
+gate changes. Normal Docker remains healthy; the recovery helper is verification
+tooling, with no additional application, schema or provider behavior.
