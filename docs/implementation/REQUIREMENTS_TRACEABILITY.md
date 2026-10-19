@@ -1,5 +1,17 @@
 # Requirements Traceability
 
+## Fresh revision response candidate — no empty evidence reads
+
+NFR-PERF-001/002, FR-REV-001/002/005/006, FR-GRD-008, FR-WA-003, NFR-SEC-002
+and NFR-MNT-001: the shared start transaction uses its known empty evidence only for
+a newly inserted revision. Same-key retries, active resumes and reassessment views
+retain current DB reads and full grade/provenance. Three baseline query-budget failures
+and the passing answered-resume control become four focused passes with full committed
+serialization parity. Expanded 40 integration, 1,130 unit/contract, 35 tooling and nine
+three-engine browser cases pass, plus quality/contracts/build and source security.
+[Verification](E9_FRESH_SESSION_RESPONSE_VERIFICATION.md) remains candidate pending broader
+checks and new load evidence; no claimed p95-variance fix or ADR-061 implementation.
+
 ## Proposed synthetic erasure decision — awaiting owner approval
 
 FR-ID-003/005/006, BR-010, FR-GRD-003/004/005, FR-WA-006, FR-OPS-003,

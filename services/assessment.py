@@ -143,10 +143,27 @@ class AssessmentService:
         link = db.scalar(select(Reassessment).where(Reassessment.session_id == session.id))
         original = db.get(Attempt, link.original_attempt_id) if link else None
         original_item = db.get(SessionItem, original.session_item_id) if original else None
-        return SessionView(
-            kind=session.kind,
+        return self._session_view(
+            session,
+            answers,
             original_attempt_id=original.id if original else None,
             original_session_id=original_item.session_id if original_item else None,
+        )
+
+    @staticmethod
+    def _session_view(
+        session: AssessmentSession,
+        answers: list[AnsweredItem],
+        *,
+        original_attempt_id: UUID | None = None,
+        original_session_id: UUID | None = None,
+    ) -> SessionView:
+        if session.topic_id is None:
+            raise ValueError("Revision requires a topic")
+        return SessionView(
+            kind=session.kind,
+            original_attempt_id=original_attempt_id,
+            original_session_id=original_session_id,
             id=session.id,
             subject_id=session.subject_id,
             topic_id=session.topic_id,
@@ -272,6 +289,7 @@ class AssessmentService:
             )
             .order_by(AssessmentSession.started_at)
         )
+        created = active is None
         if active:
             if active.item_count != body.desired_item_count:
                 raise IdentityError("VERSION_CONFLICT", 409)
@@ -352,7 +370,9 @@ class AssessmentService:
             )
         )
         db.flush()
-        return self.view(db, session)
+        # Only this transaction's new REVISION has no answers or reassessment link.
+        # Active-session and receipt retries must still read their current evidence.
+        return self._session_view(session, []) if created else self.view(db, session)
 
     def recommendation(self, token: str, subject: UUID) -> RecommendationView:
         from services.recommendations import plan

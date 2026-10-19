@@ -476,3 +476,7 @@ test-web-assessment:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
+
+.PHONY: test-fresh-session-response
+test-fresh-session-response:
+	$(UV) pytest tests/integration/test_fresh_session_response.py tests/integration/test_assessment.py tests/integration/test_recommendations.py tests/integration/test_reassessments.py tests/integration/test_assessment_transactions.py tests/integration/test_assessment_content_locks.py tests/integration/test_channel_assessment.py --allow-hosts=localhost,127.0.0.1,::1
