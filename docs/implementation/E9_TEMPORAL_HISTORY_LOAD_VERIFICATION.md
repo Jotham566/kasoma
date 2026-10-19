@@ -189,3 +189,23 @@ vulnerability and secret checks; owned private export/request/model/service smok
 passes. All8 normal Compose services are confirmed running/healthy again. No
 volumes/cache/images or unrelated data are swept. Only Markdown/aggregate evidence
 follows remote687d86c; own complete hosted acceptance remains pending.
+
+## Verified temporal diagnostic and history load profile
+
+Complete hosted [39313955470](https://github.com/Jotham566/kasoma/actions/runs/39313955470)
+succeeds at exact687d86cdd06bf188f7aa2a725b5e0f19a7e5423b:1,253 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused tests and
+all setup/migration/role/quality/contracts/build/security/image/service gates.
+Logical recovery69 tables/686 rows515ms and actual database/MinIO restore69/686/
+one42,084-byte object298ms pass with empty cleanup; retirement execution stays denied.
+
+ADR-066's three sequential native objective profiles also pass with7000 successful HTTP
+requests/zero errors each: temporal35,000 grades/START p95410.622ms; original2,500/
+428.329ms; recent27,500/424.046ms. All report cleanup_failed=false. Recent START
+p991074.231ms remains visible. No deadline, threshold, consent or source evidence is
+rewritten. These synthetic fixtures establish neither daily/provider failure soak,
+production latency/resource attribution nor academic/privacy/release acceptance.
+Only Markdown and aggregate evidence follow the verified tooling/test/runtime tree.
+NFR-PERF-001/003 and NFR-MNT-001 are addressed within these measured boundaries.
+
+Verified parent4ba94a3 is integrated through Markdown only relative to own hosted687d86c.

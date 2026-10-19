@@ -70,3 +70,7 @@ name only after its exclusive destination-container identity/loopback checks. It
 changes no capture or data mutation guard. Fixture event logging is suppressed
 only inside this standalone synthetic process and restored on exit; running
 application observability is untouched.
+
+Complete exact-source hosted39311093503 at29f1ddc passes all engineering gates. See
+[verification](../../implementation/E9_OBJECT_RECOVERY_VERIFICATION.md); this does
+not accept production PITR/RPO/RTO or concurrent snapshot consistency.

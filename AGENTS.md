@@ -346,6 +346,8 @@ quality/build/contracts/security; final real restore147ms cleans successfully. O
 complete hosted verification remains pending.
 No production PITR/RPO/RTO, developer data cleanup or ADR-061 authority is inferred.
 
+
+
 ADR-063 OTP observations pass complete hosted39304052749 at exactceee401:1,171
 unit/contract,498 integration,35 tooling and114 browser executions plus all focused
 and engineering gates. Logical recovery69 tables/686 rows892ms cleans successfully;
@@ -370,6 +372,7 @@ controls,203 typed files and quality/contracts/build/security. Native temporal
 measurement remains live; no performance acceptance. Learner-level ADMIN mastery
 replay cannot be inferred from aggregate audit access: explicit support permission/
 audit is required by API section9 and remains unresolved.
+
 
 ADR-064 known metric-loss windows pass complete hosted39308594889 at b5557a3:
 1,180 unit/contract,502 integration,35 tooling,114 full browser executions plus
@@ -402,3 +405,16 @@ Temporal candidate final local image/source/service gates pass and all8 normal
 Compose services are running/healthy after rebuild. Three native profiles and
 all local engineering gates pass; own687d86c hosted39313955470 remains pending,
 as does29f1ddc object39311093503. No full MVP or production approval is inferred.
+
+ADR-065 exact29f1ddc passes complete hosted39311093503:1,239 unit/contract,502
+integration,35 tooling,114 browser executions and all engineering gates. Actual
+quiescent database/MinIO restore69 tables/686 rows/one42,084-byte object241ms verifies
+sources stopped, integrity/failure probes and empty cleanup. Logical restore504ms.
+Only Markdown follows. Production recovery and ADR-061 remain unapproved.
+
+ADR-066 exact687d86c passes complete hosted39313955470:1,253 unit/contract,502
+integration,35 tooling,114 browser executions and all engineering gates. All three
+native profiles pass7000 HTTP/zero errors each: temporal35000 grades/START p95
+410.622ms, original2500/428.329ms, recent27500/424.046ms. Cleanup=false for all;
+recent START p991074.231ms retained. Only Markdown/aggregate evidence follows.
+Production/provider/daily soak, academic/privacy release and ADR-061 remain gated.

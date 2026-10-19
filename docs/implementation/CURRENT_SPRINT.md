@@ -1,5 +1,24 @@
 # Current sprint: practice-day and operational verification
 
+## Verified temporal diagnostic and history load profile
+
+Complete hosted [39313955470](https://github.com/Jotham566/kasoma/actions/runs/39313955470)
+succeeds at exact687d86cdd06bf188f7aa2a725b5e0f19a7e5423b:1,253 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused tests and
+all setup/migration/role/quality/contracts/build/security/image/service gates.
+Logical recovery69 tables/686 rows515ms and actual database/MinIO restore69/686/
+one42,084-byte object298ms pass with empty cleanup; retirement execution stays denied.
+
+ADR-066's three sequential native objective profiles also pass with7000 successful HTTP
+requests/zero errors each: temporal35,000 grades/START p95410.622ms; original2,500/
+428.329ms; recent27,500/424.046ms. All report cleanup_failed=false. Recent START
+p991074.231ms remains visible. No deadline, threshold, consent or source evidence is
+rewritten. These synthetic fixtures establish neither daily/provider failure soak,
+production latency/resource attribution nor academic/privacy/release acceptance.
+Only Markdown and aggregate evidence follow the verified tooling/test/runtime tree.
+NFR-PERF-001/003 and NFR-MNT-001 are addressed within these measured boundaries.
+
+
 ## Provider recovery decision preparation - documentation only
 
 NFR-REL-001/002,SEC-001/002,MNT-001: public primary-source research identifies
@@ -23,6 +42,23 @@ verification remain pending.
 7000 HTTP/zero errors,START p95410.622ms,cleanup_failed=false. Original and recent rechecks now both pass: START p95428.329/424.046ms,zero
 errors,cleanup_failed=false. Own exactsource687d86c remains live in hosted
 39313955470; no complete hosted or production acceptance is inferred.
+
+## Verified database and private-object recovery
+
+Complete hosted [39311093503](https://github.com/Jotham566/kasoma/actions/runs/39311093503)
+succeeds at exact source29f1ddc8c57d8bbb2c0dae138c6dcb233972c2f5:1,239 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused checks and
+all setup/migration/role/quality/contracts/build/security/image/service gates.
+The separate actual database/MinIO recovery restores69 tables/686 rows and one
+42,084-byte encrypted object in241ms, with both source services stopped. Exact
+storage scope, missing/corrupt-object rejection, immutable guards and cleanup pass.
+The unchanged logical restore separately passes504ms. Retirement execution remains denied.
+
+This accepts ADR-065's isolated synthetic engineering rehearsal under NFR-REL-002,
+NFR-SEC-002 and NFR-MNT-001. Production PITR, concurrent backup consistency, regional
+copies, escrow and RPO/RTO remain unproved. Only Markdown integration/closeout follows
+the verified source; the temporal-load candidate still needs its own complete hosted
+acceptance. No ADR-061 approval or production release is inferred.
 
 
 ## Isolated database/private-object recovery - candidate

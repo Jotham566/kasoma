@@ -52,3 +52,7 @@ This fills one representative-history gap. Provider failure/timing, database/con
 resource attribution, daily soak, real academic review, deployment latency and production
 acceptance remain separate. No support access, erasure authority, real data, model call,
 new provider, runtime tuning or reduced gate is introduced.
+
+Complete own hosted39313955470 at687d86c and all three native profiles pass. See
+[verification](../../implementation/E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md) for exact
+counts, retained tails, source scope and remaining production/academic/release gates.
