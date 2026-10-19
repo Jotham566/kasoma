@@ -1,5 +1,21 @@
 # Changelog
 
+## Verified known-export-loss metric windows
+
+Complete hosted [39308594889](https://github.com/Jotham566/kasoma/actions/runs/39308594889)
+succeeds at exact source b5557a373f42bf24241f7034d4068b0d1a86da3f:1,180 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused and all
+setup/migration/role/quality/contracts/build/security/image/service gates. Logical
+recovery verifies69 tables/686 rows in425ms with cleanup empty and retirement denied.
+
+This accepts ADR-064's finite namespace loss guard under FR-OPS-002 and NFR-OBS-001/
+SEC-002/MNT-001. Known export loss cannot recover as measured zero; stored payloads,
+scopes and expiry stay unchanged. All server readers must honor the marker; no mixed-
+version or production rollout/completeness/billing claim. Only Markdown follows the
+verified source. Object-recovery/temporal-load candidates need their own acceptance.
+[Verification](docs/implementation/E8_METRIC_LOSS_VERIFICATION.md).
+
+
 ## Known request/model metric loss - candidate
 
 FR-OPS-002, NFR-OBS-001/SEC-002/MNT-001: two actual SDK/Redis regressions reproduce
@@ -11,6 +27,24 @@ quality/contracts/build and security/images/service smoke pass. Own full hosted
 acceptance remains pending. No production, billing, complete ledger or mixed-reader acceptance.
 [Verification](docs/implementation/E8_METRIC_LOSS_VERIFICATION.md). Source b5557a3 is pushed for own full hosted39308594889, in progress.
 Parent OTP source ceee401 remains live and unchanged.
+
+## Verified local OTP adapter observations
+
+Complete hosted [39304052749](https://github.com/Jotham566/kasoma/actions/runs/39304052749)
+succeeds at exact source ceee4012c7f74dcc0c387a45ab112ed35d657f1b:1,171 unit/contract,
+498 integration,35 tooling and114 full browser executions (102 ordinary,12 synthetic
+short-text), plus focused staff/transport/assessment/rubric/restricted-login and all
+setup/migration/seed/quality/contracts/build/security/image/service gates. Logical
+recovery verifies69 tables/686 rows in892ms, cleanup empty, stripped retirement denied.
+
+This accepts ADR-063's bounded default-disabled synthetic API OTP counters/ADMIN
+projection under FR-OPS-002,FR-ID-001,NFR-OBS-001/SEC-002/ACC-001/MNT-001. Adapter return
+is not delivery/receipt/billing; no production provider or release approval. Only
+Markdown closeout follows ceee401. Separate metric-loss/object-recovery candidates
+are not accepted by this run. ADR-061, academic/privacy/provider/physical/pilot gates
+remain. Main promotion and owned-branch cleanup require remote/ancestry proof.
+[Detailed verification](docs/implementation/E8_OTP_OBSERVATIONS_VERIFICATION.md).
+
 
 ## Local OTP adapter observations - candidate
 

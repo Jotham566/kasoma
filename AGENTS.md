@@ -338,3 +338,16 @@ ADR-064 local engineering verification passes: 1,180 unit/contract, 35 tooling,
 executions; quality/contracts/build/security/images/service checks pass. Its own
 complete hosted acceptance remains pending. Native Edge access times out after
 the Mac becomes visible; no physical/branded acceptance is inferred.
+
+ADR-063 OTP observations pass complete hosted39304052749 at exactceee401:1,171
+unit/contract,498 integration,35 tooling and114 browser executions plus all focused
+and engineering gates. Logical recovery69 tables/686 rows892ms cleans successfully;
+object-storage and production recovery remain unproved by that run. Only Markdown
+closeout follows; separate metric-loss/object-recovery candidates need own acceptance.
+Collection stays defaultfalse and no ADR-061 or production enablement is inferred.
+
+ADR-064 known metric-loss windows pass complete hosted39308594889 at b5557a3:
+1,180 unit/contract,502 integration,35 tooling,114 full browser executions plus
+all focused/engineering gates. Logical69-table/686-row restore425ms cleans without
+failure and retirement stays denied. Only Markdown follows that verified tree;
+object-recovery and temporal-load candidates need separate own acceptance.
