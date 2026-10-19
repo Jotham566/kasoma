@@ -1,5 +1,19 @@
 # Requirements Traceability
 
+## Verified profile presentation correction
+
+FR-ID-001/005 / NFR-ACC-001 / NFR-MNT-001:
+[reverification visibility evidence](E1_CONTACT_REVERIFY_VISIBILITY_VERIFICATION.md)
+records the reproduced unconditional signed-out action, a profile-bound rendering
+condition and retained authenticated handler. The real-API regression fails before
+the correction; lint/types/build pass afterward. All nine corrected three-engine
+identity cases, 1,092 unit/contract, 35 tooling, contracts and security pass locally.
+Public screenshot evidence and the rebuilt Docker web preview are verified; all
+eight services are healthy. Complete hosted 39222489376 passes at `44ae9ad`,
+including 415 integration, 108 browser executions and full role/recovery/security/
+image/service checks.
+No new permission, authentication rule, API or architectural decision.
+
 ## Verified independent provider fault isolation
 
 FR-GRD-003/004/005 / FR-MST-001/004/005 / NFR-SEC-002 / NFR-MNT-001:

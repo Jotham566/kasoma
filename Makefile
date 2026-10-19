@@ -337,6 +337,12 @@ test-short-text-flow:
 test-provider-fault-isolation:
 	$(UV) pytest tests/integration/test_provider_fault_isolation.py --allow-hosts=localhost,127.0.0.1,::1
 
+.PHONY: test-web-identity
+test-web-identity:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/identity.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/identity.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/identity.spec.ts
+
 .PHONY: test-grading-reviews
 test-grading-reviews:
 	$(UV) pytest tests/contract/test_grading_review_contracts.py tests/integration/test_grading_reviews.py --allow-hosts=localhost,127.0.0.1,::1

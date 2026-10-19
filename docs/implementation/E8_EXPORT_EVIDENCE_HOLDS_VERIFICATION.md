@@ -79,7 +79,10 @@ is logical database recovery; object-storage and production PITR/RPO/RTO remain
 unverified. The review stack is additively migrated through 0040, all eight services
 remain healthy and creation remains false. No review-stack data is purged.
 
-Full integration and hosted acceptance remain pending. Documentation checks alone do not accept application behavior.
+The first broad local invocation is intentionally interrupted after 86 integration
+passes (no failure) to consolidate the final migration/test source and the separately
+verified UI merge. It is not a full-suite pass. A fresh complete invocation against
+the consolidated source and hosted acceptance remain pending. Documentation checks alone do not accept application behavior.
 
 ## Remaining work
 
@@ -87,3 +90,24 @@ The restricted six-year processor, DB-enforced policy/limits, leaf/parent races,
 atomic batch audit, finite retry retirement, bounded scheduling and health are next.
 Review-stack purge, real-data processing and account erasure remain excluded. Full
 preservation, investigation/audit retention and production release gates remain open.
+
+## Changed-file inventory
+
+- Configuration/commands: `.env.example`, `Makefile`, `services/config.py`.
+- Database/domain: migrations `0039_export_evidence_holds.py` and
+  `0040_export_receipt_subject_ownership.py`, `services/domain/data_requests.py`.
+- Contracts/API: `services/legal_hold_contracts.py`, `services/legal_holds.py`,
+  `apps/api/data_requests.py`, generated OpenAPI and TypeScript client schemas.
+- Operator UI: `apps/web/app/privacy/legal-holds.tsx`,
+  `apps/web/app/privacy/export-hold-sources.tsx`.
+- Tests: `tests/contract/test_legal_hold_contracts.py`,
+  `tests/integration/test_export_evidence_holds.py`,
+  `tests/integration/test_export_evidence_runtime_role.py`,
+  `tests/e2e/data-requests.spec.ts`.
+- Recovery: `scripts/recovery_drill.py`, `scripts/recovery_exports.py`,
+  `scripts/recovery_fixture.py`.
+- Documentation: `AGENTS.md`, `CHANGELOG.md`, ADR-060 and ADR index, current sprint,
+  traceability, local runbook, specifications03/04/13, this report and its screenshot.
+  The provider verification report receives the current approval-status correction.
+- The separately verified onboarding UI/source files enter through main's merge;
+  their exact inventory and acceptance remain in the linked E1 report.

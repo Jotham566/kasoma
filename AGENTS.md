@@ -150,7 +150,8 @@ Only Markdown/aggregate JSON closeout follows that verified code/test/Makefile t
 Publication through main `6ebdf71` is verified and its merged load branch is removed.
 Separately, provider-isolation tests at `8a938dd` pass complete hosted 39220793602
 with 415 integration and 108 browser executions. Profile UI correction at
-`44ae9ad` awaits its own hosted acceptance. The latter passes nine local identity
+`44ae9ad` passes complete hosted 39222489376 with 415 integration and
+108 browser executions plus full engineering gates. The latter passes nine local identity
 journeys and is running in the healthy Docker web preview; no acceptance is inferred
 for those branches from the load CI. Docker remains healthy on 0040 and host-native
 Ollama connectivity is restored without inference. ADR-060 has explicit bounded synthetic approval; additive exact export evidence

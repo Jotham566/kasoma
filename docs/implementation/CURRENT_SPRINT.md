@@ -14,7 +14,8 @@ is under verification: additive 0039/0040 receipt UUIDs, two independently guard
 targets, bounded claimed-case lookup and accessible controls. Creation stays false;
 no retirement processor, account erasure or review-stack purge is introduced.
 Provider isolation is verified and published through main `41cbcc6`; its merged
-branch is removed locally/remotely. UI source `44ae9ad` retains its separate hosted gate.
+branch is removed locally/remotely. UI source `44ae9ad` passes complete hosted 39222489376 and is published through
+main `29eaeee`; its merged branch is removed locally/remotely.
 
 ## Latest verified engineering source
 
@@ -33,10 +34,10 @@ documentation-only and preserve the exact code/test/Makefile/workflow source abo
 Independent candidates retain their own acceptance boundaries: provider-fault
 isolation source `8a938dd` passes complete hosted
 [39220793602](https://github.com/Jotham566/kasoma/actions/runs/39220793602); profile
-visibility source `44ae9ad` is running
+visibility source `44ae9ad` passes complete hosted
 [39222489376](https://github.com/Jotham566/kasoma/actions/runs/39222489376). The latter
 passes nine local identity executions and is running in the healthy Docker web
-preview. Their full hosted results will be recorded separately from this load source.
+preview. Their complete hosted results are verified separately from this load source.
 
 ## Earlier verified application increments
 
@@ -49,6 +50,16 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
 39184146180 at `3291ef7` is cancelled, not a pass.
 
 ## Requirements and implementation
+
+- FR-ID-001/005, NFR-ACC-001 and NFR-MNT-001: the
+  [profile reverification visibility correction](E1_CONTACT_REVERIFY_VISIBILITY_VERIFICATION.md)
+  removes an unrelated action from the signed-out form. The new regression fails
+  before the presentation correction; lint/types/build pass afterward. Corrected
+  three-engine verification now passes all nine identity executions, alongside
+  1,092 unit/contract, 35 tooling, contracts and security. A public signed-out
+  screenshot is recorded. Images build and the corrected Docker web preview is
+  verified with all eight services healthy. Complete hosted 39222489376 passes at `44ae9ad`, including 415 integration,
+  108 browser executions and full role/recovery/security/image/service checks.
 
 - FR-GRD-003/004/005, FR-MST-001/004/005, NFR-SEC-002 and NFR-MNT-001:
   [fake provider isolation](E9_PROVIDER_FAULT_ISOLATION_VERIFICATION.md) adds three
