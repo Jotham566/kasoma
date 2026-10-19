@@ -4071,6 +4071,53 @@
         "title": "PendingShortTextGrade",
         "type": "object"
       },
+      "PracticeActivity": {
+        "additionalProperties": false,
+        "description": "Distinct dates with eligible graded practice in the selected subject.",
+        "properties": {
+          "days_practised": {
+            "maximum": 7.0,
+            "minimum": 0.0,
+            "title": "Days Practised",
+            "type": "integer"
+          },
+          "time_zone": {
+            "const": "Africa/Kampala",
+            "default": "Africa/Kampala",
+            "title": "Time Zone",
+            "type": "string"
+          },
+          "version": {
+            "const": "practice-days-v1",
+            "default": "practice-days-v1",
+            "title": "Version",
+            "type": "string"
+          },
+          "window_days": {
+            "const": 7,
+            "default": 7,
+            "title": "Window Days",
+            "type": "integer"
+          },
+          "window_end": {
+            "format": "date",
+            "title": "Window End",
+            "type": "string"
+          },
+          "window_start": {
+            "format": "date",
+            "title": "Window Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "days_practised",
+          "window_start",
+          "window_end"
+        ],
+        "title": "PracticeActivity",
+        "type": "object"
+      },
       "PreservationCapture": {
         "additionalProperties": false,
         "properties": {
@@ -4461,6 +4508,16 @@
           },
           "next_action": {
             "$ref": "#/components/schemas/ProgressAction"
+          },
+          "practice_activity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PracticeActivity"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "subject": {
             "$ref": "#/components/schemas/ProgressSummary"

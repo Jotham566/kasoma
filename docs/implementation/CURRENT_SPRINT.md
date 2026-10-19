@@ -1,5 +1,18 @@
 # Current sprint: verified disposable load-role lifecycle
 
+## Practice-day consistency indicator — candidate
+
+FR-MST-004/005, FR-ID-003, FR-WA-003, NFR-SEC-002/ACC-001/LOC-001/MNT-001:
+approved roadmap 3.5 gains a private read-only count of graded-practice days in the
+selected subject's seven Kampala calendar dates. ADR-062 records the definition,
+additive compatible DTO and neutral accessible meter. Existing evidence/authorization
+and unfinished diagnostic sealing remain unchanged; no new table, SQL, replay or
+retention permission. Five missing-field baseline failures become 54 initial focused
+passes; final 55 focused cases, 1,146 unit/contract, 35 tooling and three progress browser
+journeys pass, plus quality/contracts/build, security/images and service smoke.
+[Verification](E6_PRACTICE_ACTIVITY_VERIFICATION.md) tracks expanded/backend/browser/hosted acceptance;
+this is not a stored streak system, ADR-061 approval or real-data release.
+
 ## Proposed synthetic erasure decision — awaiting owner approval
 
 FR-ID-003/005/006, BR-010, FR-GRD-003/004/005, FR-WA-006, FR-OPS-003,

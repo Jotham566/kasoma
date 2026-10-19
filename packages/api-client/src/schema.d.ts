@@ -2781,6 +2781,42 @@ export interface components {
              */
             status: "PENDING";
         };
+        /**
+         * PracticeActivity
+         * @description Distinct dates with eligible graded practice in the selected subject.
+         */
+        PracticeActivity: {
+            /** Days Practised */
+            days_practised: number;
+            /**
+             * Time Zone
+             * @default Africa/Kampala
+             * @constant
+             */
+            time_zone: "Africa/Kampala";
+            /**
+             * Version
+             * @default practice-days-v1
+             * @constant
+             */
+            version: "practice-days-v1";
+            /**
+             * Window Days
+             * @default 7
+             * @constant
+             */
+            window_days: 7;
+            /**
+             * Window End
+             * Format: date
+             */
+            window_end: string;
+            /**
+             * Window Start
+             * Format: date
+             */
+            window_start: string;
+        };
         /** PreservationCapture */
         PreservationCapture: {
             /**
@@ -2946,6 +2982,7 @@ export interface components {
             /** Competencies */
             competencies: components["schemas"]["ProgressSummary"][];
             next_action: components["schemas"]["ProgressAction"];
+            practice_activity?: components["schemas"]["PracticeActivity"] | null;
             subject: components["schemas"]["ProgressSummary"];
             /**
              * Synthetic

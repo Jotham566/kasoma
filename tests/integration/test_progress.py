@@ -1,6 +1,6 @@
 """FR-MST-004/005: owned, consented, read-only progress and cursor history."""
 
-from datetime import timedelta
+from datetime import UTC, timedelta
 from uuid import UUID, uuid4
 
 import pytest
@@ -15,6 +15,7 @@ from tests.integration.test_assessment import assessment as assessment_fixture
 from tests.integration.test_diagnostics import diagnostic as diagnostic_fixture
 from tests.integration.test_diagnostics import start as start_diagnostic
 from tests.integration.test_diagnostics import submit as submit_diagnostic
+from tests.integration.test_identity import login
 
 assessment = assessment_fixture
 diagnostic = diagnostic_fixture
@@ -42,6 +43,7 @@ def test_progress_coverage_history_and_read_immutability(assessment, monkeypatch
     headers = actors["learner"]
     subject = body["subject_id"]
     before = read(client, headers, subject)
+    assert before["practice_activity"]["days_practised"] == 0
     assert before["subject"]["confidence"] == 0
     assert before["subject"]["display_state"] == "NOT_ENOUGH_EVIDENCE"
     assert len(before["topics"]) == 3
@@ -53,6 +55,7 @@ def test_progress_coverage_history_and_read_immutability(assessment, monkeypatch
     after = read(client, headers, subject)
     assert calls and len(calls) == len(set(calls))
     first_read_calls = len(calls)
+    assert after["practice_activity"]["days_practised"] == 1
     assert after["subject"]["evidence_count"] == 1
     assert after["subject"]["display_state"] == "NOT_ENOUGH_EVIDENCE"
     assert sum(t["evidence_count"] for t in after["topics"]) == 1
@@ -152,7 +155,9 @@ def test_auth_current_consent_subject_and_learner_isolation(assessment):
             "affirmative": True,
         },
     )
-    assert read(client, other, subject)["subject"]["evidence_count"] == 0
+    other_progress = read(client, other, subject)
+    assert other_progress["subject"]["evidence_count"] == 0
+    assert other_progress["practice_activity"]["days_practised"] == 0
     assert client.get("/api/v1/me/session-history", headers=other).json()["data"] == []
     for path in ["/api/v1/me/progress", "/api/v1/me/session-history"]:
         assert (
@@ -185,9 +190,11 @@ def test_unfinished_diagnostic_scores_stay_sealed(diagnostic, ending):
         assert submit_diagnostic(client, headers, session, item).status_code == 200
         view = read(client, headers, subject)
         if index < 14:
+            assert view["practice_activity"]["days_practised"] == 0
             assert view["subject"] == baseline
             assert view["next_action"]["kind"] == "CONTINUE_DIAGNOSTIC"
         else:
+            assert view["practice_activity"]["days_practised"] == 1
             assert view["subject"]["evidence_count"] == 15
         entry = client.get("/api/v1/me/session-history", headers=headers).json()["data"][0]
         assert entry["answered_count"] == index + 1
@@ -206,6 +213,36 @@ def test_unfinished_diagnostic_scores_stay_sealed(diagnostic, ending):
         identity.clock = lambda: now + timedelta(minutes=2)
     if ending != "COMPLETED":
         view = read(client, headers, subject)
+        assert view["practice_activity"]["days_practised"] == 0
         assert view["subject"]["evidence_count"] == 0
         assert view["subject"]["confidence"] == 0
         assert view["next_action"]["kind"] == "START_DIAGNOSTIC"
+
+
+def test_practice_dates_follow_kampala_midnight_and_selected_subject(assessment):
+    identity, client, actors, body, _, plan = assessment
+    subjects = [str(subject.id) for subject in identity.subjects()]
+    response = client.patch(
+        "/api/v1/me",
+        headers=actors["learner"],
+        json={
+            "display_name": "Synthetic learner",
+            "birth_date": "2000-01-01",
+            "subject_ids": subjects,
+        },
+    )
+    assert response.status_code == 200
+    at = identity.clock().astimezone(UTC).replace(hour=20, minute=59, second=0, microsecond=0)
+    identity.clock = lambda: at
+    headers, _ = login(client)
+    session = start(client, headers, plan).json()["id"]
+    assert answer(client, headers, session, next_item(client, headers, session)).status_code == 200
+    assert read(client, headers, body["subject_id"])["practice_activity"]["days_practised"] == 1
+    identity.clock = lambda: at + timedelta(minutes=2)
+    wrong = answer(client, headers, session, next_item(client, headers, session), choice="B")
+    assert wrong.status_code == 200 and wrong.json()["score"] == 0
+    activity = read(client, headers, body["subject_id"])["practice_activity"]
+    assert activity["days_practised"] == 2
+    assert activity["window_end"] == (at + timedelta(days=1)).date().isoformat()
+    other = next(subject for subject in subjects if subject != body["subject_id"])
+    assert read(client, headers, other)["practice_activity"]["days_practised"] == 0

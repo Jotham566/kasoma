@@ -180,3 +180,14 @@ closes it, and aria-current identifies the exact destination. Desktop links rema
 visible. This is responsive presentation within the existing staff information
 architecture, not a permission change or an additional product feature. Sign-in and
 menu targets remain at least 44 pixels high, without remote fonts/assets or animation.
+
+## Practice-day consistency display — ADR-062 candidate
+
+Progress includes a private Practice days card for the selected subject: a count out
+of seven, a labelled non-interactive meter, explicit Kampala date range and neutral
+empty/unavailable states. It counts days with graded results, not consecutive days or
+a new mastery score. Pending feedback appears after results become visible; incomplete
+diagnostics stay sealed. Whole-page loading/offline/consent handling remains in effect.
+The card uses existing responsive styles, text alongside colour and keyboard/screen-reader
+semantics. See [ADR-062](../decisions/ADR/062-owned-practice-activity.md); browser,
+320-pixel and visual verification remain pending.

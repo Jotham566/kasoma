@@ -28,11 +28,21 @@ test("FR-MST-004/005: sparse progress, offline retry and sealed diagnostic histo
   await page.goto("/progress");
   await expect(page.getByRole("status")).toHaveText("Learning record loaded.");
   const overview = page.getByRole("region", { name: "Subject progress" });
+  const activity = page.getByRole("region", { name: "Practice days" });
+  await expect(activity.getByRole("meter")).toHaveAttribute(
+    "aria-valuenow",
+    "0",
+  );
+  await expect(activity.getByText("0 of 7 days")).toBeVisible();
   await expect(
     overview.getByText("Not enough evidence", { exact: true }),
   ).toBeVisible();
   await expect(page.getByText(/Estimated mastery:/)).toHaveCount(0);
   await expect(overview.getByText("Evidence confidence: 0%.")).toBeVisible();
+  await expect(activity.getByRole("meter")).toHaveAttribute(
+    "aria-valuenow",
+    "0",
+  );
   await expect(
     page.getByRole("link", { name: "Progress", exact: true }),
   ).toHaveAttribute("aria-current", "page");
@@ -51,6 +61,22 @@ test("FR-MST-004/005: sparse progress, offline retry and sealed diagnostic histo
     fullPage: true,
   });
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  // An older server omitting this additive field must not become a false zero.
+  await page.route(
+    "**/api/v1/me/progress?*",
+    async (route) => {
+      const response = await route.fetch();
+      const json = await response.json();
+      delete json.practice_activity;
+      await route.fulfill({ response, json });
+    },
+    { times: 1 },
+  );
+  await page.getByRole("button", { name: "Reload learning record" }).click();
+  await expect(
+    activity.getByText(/Practice activity is unavailable/),
+  ).toBeVisible();
+  await expect(activity.getByRole("meter")).toHaveCount(0);
   await page.route(
     "**/api/v1/me/progress?*",
     (route) => route.abort("failed"),
@@ -131,6 +157,10 @@ test("FR-MST-004/005: sparse progress, offline retry and sealed diagnostic histo
   ).toBeVisible();
   await page.goto("/progress");
   await expect(overview.getByText("Evidence confidence: 0%.")).toBeVisible();
+  await expect(activity.getByRole("meter")).toHaveAttribute(
+    "aria-valuenow",
+    "0",
+  );
   await expect(
     page.getByRole("link", { name: "Continue your diagnostic" }),
   ).toBeVisible();
@@ -146,4 +176,41 @@ test("FR-MST-004/005: sparse progress, offline retry and sealed diagnostic histo
   await expect(
     page.getByRole("group", { name: "Question 2", exact: true }),
   ).toBeVisible();
+  await page.goto("/revise");
+  await page
+    .getByRole("button", { name: "Start five-question practice" })
+    .click();
+  await page.getByLabel("Alpha", { exact: true }).check();
+  await page
+    .getByRole("button", { name: "Submit answer", exact: true })
+    .click();
+  await expect(
+    page.getByText("1 of 5 answers saved", { exact: true }),
+  ).toBeVisible();
+  await page.goto("/progress");
+  await expect(page.getByRole("status")).toHaveText("Learning record loaded.");
+  await expect(activity.getByRole("meter")).toHaveAttribute(
+    "aria-valuenow",
+    "1",
+  );
+  await expect(activity.getByText("1 of 7 days")).toBeVisible();
+  const actionBounds = await page
+    .getByRole("link", { name: "Continue your diagnostic", exact: true })
+    .boundingBox();
+  const activityBounds = await activity.boundingBox();
+  if (!actionBounds || !activityBounds)
+    throw new Error("Next action and activity require visible layout bounds");
+  expect(actionBounds.y + actionBounds.height).toBeLessThanOrEqual(
+    activityBounds.y,
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.screenshot({
+    path: `.local/ui-review/practice-days-${test.info().project.use.browserName}.png`,
+    fullPage: true,
+  });
 });

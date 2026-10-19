@@ -874,3 +874,19 @@ the latter starts at twice the configured interval without a database batch/acti
 There is no HTTP enablement, provisioning or deletion endpoint. Review-stack state
 stays false; the separately credentialed SQL execution is isolated synthetic only.
 See [candidate verification](../implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md).
+
+## Owned practice-day display — ADR-062 candidate
+
+GET /api/v1/me/progress?subject_id= retains its existing current consent, ownership,
+selected-subject and rate checks. The additive practice_activity field contains
+strict days_practised (0–7), window_start/window_end date strings spanning exactly
+seven inclusive dates, fixed window_days=7, time_zone=Africa/Kampala and version
+practice-days-v1. Source dates are the original attempt times of already-visible
+GRADED evidence; every unfinished diagnostic remains sealed. No learner ID, time
+range, timezone override or other input is added.
+
+The new server always provides the object on successful authorized reads. Optional/
+null schema compatibility supports older servers/readers only: missing data is
+unavailable, never a fabricated zero. Generated OpenAPI/client contracts accompany
+implementation. [ADR-062](../decisions/ADR/062-owned-practice-activity.md) defines
+calendar boundaries and count semantics. Candidate verification is not API acceptance.

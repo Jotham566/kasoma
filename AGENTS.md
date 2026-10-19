@@ -170,7 +170,7 @@ synthetic-only harness correction passes12 controls and108 local browser executi
 pointer transition. A deterministic delayed-hints layout regression reproduces a
 47.421875-pixel shift; moving review hints below actions passes nine focused cases.
 Latest source `e33ec69` passes111 local browser executions, quality/build and
-updated image/source/service checks; Docker is healthy on0042 with retirement false.
+updated image/source/service checks; Docker is healthy on 0042 with retirement false.
 Hosted39255125288 starts no steps because GitHub reports failed account payments or
 insufficient spending capacity. Owner action is requested once; main remains `e9f688e`,
 the active branch is preserved and complete hosted acceptance remains pending; ADR-057 does not authorize account erasure.
@@ -181,7 +181,7 @@ three staff UI and three native WebKit controls plus all engineering gates. Reco
 verifies 69 tables/686 rows in 465 ms. This supersedes the preceding pending operations
 acceptance only; earlier failures remain failures. Only Markdown closeout follows the
 verified application/test/Makefile/workflow tree `e33ec69`. Review Docker is healthy on
-0042 with retirement false. Disposable load-role source `a23e9bc` passes complete hosted39267916272:1,130 unit/contract,
+0042 with retirement false. Disposable load-role source `a23e9bc` passes complete hosted 39267916272:1,130 unit/contract,
 479 integration,35 tooling and111 browser executions plus all focused/engineering gates.
 Recovery verifies69 tables/686 rows in561ms. Exclusive committed creation and exact OID
 checks protect concurrent creators/replacements;69 focused native cases pass. Only
@@ -194,6 +194,21 @@ false; existing resources are never swept. Next prepare the exact account-erasur
 transform/preservation/recovery proposal from E8_ERASURE_TRANSFORM_READINESS.md;
 39 direct foreign keys across36 tables and19 hold kinds do not prove full clearance.
 No account-erasure authority or new anonymity policy is inferred.
+ADR-061 and its exact 69-table disposition are published as Proposed on main 4377da5;
+its bounded synthetic approval request is pending. Do not infer erasure, richer
+preservation or post-completion custody approval from generic continuation or ADR-057/060.
+Independent fresh-response source 58d598e awaits complete hosted 39286019222; its native
+checks and both load profiles pass, but that CI does not verify the practice-day feature.
+The new ADR-062 practice-day candidate implements roadmap 3.5's read-only consistency
+indicator without a stored streak/reward system, added SQL, evidence replay or retention
+permission. It preserves current consent, ownership and unfinished-diagnostic sealing.
+55 focused cases (41 contract/rollup/replay and 14 integration), 1,146 unit/contract,
+35 tooling and three final progress browser executions pass, plus quality/contracts/build,
+security/source/images and service smoke. Narrow screenshot review places the next
+learning action above the activity card. Generated contracts are updated; no migration
+or dependency change. Its own full combined-source load/hosted acceptance remains pending;
+normal Docker stays healthy on 0042 with retirement false. Native branded review was
+unavailable because the Mac was locked; automated engines do not satisfy physical gates.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

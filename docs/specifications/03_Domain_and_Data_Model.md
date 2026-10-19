@@ -557,3 +557,13 @@ candidates, five-second cooperative budget and existing database timeouts. An at
 NULL-actor audit carries batch UUID/counts only. UPDATE immutability and all nonallowlist
 records remain protected. The normal review public schema cannot execute retirement.
 See [candidate boundary/tests](../implementation/E8_EXPORT_RETIREMENT_VERIFICATION.md).
+
+## Owned practice activity projection — ADR-062 candidate
+
+The current progress read's validated, visible GRADED mastery evidence also supplies
+practice_activity, an ephemeral count of distinct original-attempt calendar dates in
+the last seven Africa/Kampala dates, including today, for the selected subject. No
+additional query, replay, table, persistence or mastery input. Pending grading and
+unfinished/abandoned/expired diagnostics remain excluded by the existing source query.
+See [ADR-062](../decisions/ADR/062-owned-practice-activity.md); this is engineering
+implementation under verification, not a new retained aggregate or academic measure.
