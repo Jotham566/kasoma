@@ -3,7 +3,7 @@
 ## In progress — request-local progress replay reuse
 
 - Reuse immutable skill estimates only within one progress read under ADR-024
-  (FR-MST-004/005, NFR-PERF-001). Exact legacy summary/hash/change fingerprints remain
+  (FR-MST-004/005, NFR-PERF-001). Exact legacy summary/hash/change outputs remain
   unchanged; authorization, consent, evidence filtering and calculation time remain
   per request. No shared cache, migration, algorithm or API change.
 - Add frozen legacy output and replay-work/isolation regressions; all 1,074 unit/contract

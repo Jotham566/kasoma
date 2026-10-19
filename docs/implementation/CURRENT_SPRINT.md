@@ -126,7 +126,7 @@ owned capture stash are removed; the active capture and child progress branches
 remain until their exact-source gates pass and main promotion is complete.
 
 `codex/progress-rollup-reuse` addresses FR-MST-004/005 and NFR-PERF-001 within ADR-024.
-All 31 frozen legacy summary fingerprints and 1,074 unit/contract cases pass. The
+All 31 frozen legacy summaries and 1,074 unit/contract cases pass. The
 pure dense overlapping-scope case reuses eight distinct skill replays instead of
 24, with no shared cache, data/API/math or authorization changes. Fresh-read API,
 browser and broad/hosted verification are pending; see
