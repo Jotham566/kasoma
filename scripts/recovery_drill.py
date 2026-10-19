@@ -16,6 +16,7 @@ from sqlalchemy import Engine, create_engine, inspect, text
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.exc import DBAPIError
 
+from scripts.disposable_owner import cleanup_owner, create_owner
 from scripts.recovery_channel_preservation import verify_preservation
 from scripts.recovery_fixture import populate
 from scripts.recovery_short_text import verify_short_text
@@ -138,6 +139,7 @@ def drill(settings: Settings) -> dict[str, object]:
         url.set(database="postgres"), isolation_level="AUTOCOMMIT", hide_parameters=True
     )
     created: list[str] = []
+    owners: dict[str, int] = {}
     engines: list[Engine] = []
     cleanup_failed: list[str] = []
     result: dict[str, object] = {"status": "FAILED", "profile": "isolated-synthetic-logical-v1"}
@@ -149,6 +151,8 @@ def drill(settings: Settings) -> dict[str, object]:
                 db.execute(text(f'CREATE DATABASE "{name}"'))
                 created.append(name)
         source_url, destination_url = url.set(database=source), url.set(database=destination)
+        stage = "CREATE_OWNER_ROLE"
+        owners[source] = create_owner(admin, source)
         stage = "MIGRATE_SYNTHETIC_SOURCE"
         env = dict(os.environ, DATABASE_URL=source_url.render_as_string(hide_password=False))
         subprocess.run(["make", "migrate"], env=env, capture_output=True, check=True, timeout=120)
@@ -307,21 +311,15 @@ def drill(settings: Settings) -> dict[str, object]:
                     db.execute(text(f'DROP DATABASE "{validate_name(name)}"'))
             except Exception:
                 cleanup_failed.append(name)
-        # These role names derive only from the fresh databases created above.
-        # Preserve their roles if database cleanup failed; never alter shared roles.
-        for name in created:
+        # A restored destination never creates an owner. Derived names alone grant
+        # no cleanup authority; require this invocation's exclusive committed OID.
+        for name, oid in owners.items():
             if name in cleanup_failed:
                 continue
-            role = owner_name(name, "public")
             try:
-                with admin.connect() as db:
-                    if db.scalar(
-                        text("SELECT EXISTS(SELECT 1 FROM pg_roles WHERE rolname=:role)"),
-                        {"role": role},
-                    ):
-                        db.execute(text(f'DROP ROLE "{role}"'))
+                cleanup_owner(admin, name, oid)
             except Exception:
-                cleanup_failed.append(role)
+                cleanup_failed.append(owner_name(name, "public"))
         admin.dispose()
     result["cleanup_failed"] = cleanup_failed
     if cleanup_failed:

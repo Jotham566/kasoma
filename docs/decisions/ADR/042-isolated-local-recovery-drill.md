@@ -44,3 +44,14 @@ Contract tests must reject unsafe targets before connection, enforce generated n
 creation/migration-failure cleanup ownership, and preserve minimized error reporting. Hosted CI must
 execute a real clean-source backup/restore and all existing application/security gates. No task is
 accepted from mock tests alone. Native Docker absence is reported as a failed local attempt.
+
+## Ownership enforcement correction - 19 October 2026
+
+Derived role names are not proof of creation. The [candidate correction](../../implementation/E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md)
+exclusively creates and commits the source's minimal NOLOGIN owner before migration,
+records its OID and cleans only that identity after successful owned database removal,
+subject to the existing load runner's attribute/membership/dependency checks. The
+restored destination creates no role and confers no cleanup authority. No migration
+SQL, application ACL, data policy or production entitlement changes. Complete hosted
+verification remains required; this clarifies enforcement of the original isolation
+decision rather than expanding its cleanup authorization.

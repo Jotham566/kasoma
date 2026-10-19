@@ -1437,3 +1437,14 @@ check alone grants no ownership. A pre-existing, replaced, unsafe/shared or depe
 is preserved and the run fails closed. Do not sweep existing orphan roles or use
 DROP OWNED, revoke dependencies, or clean developer/application resources.
 See [bounded verification](../implementation/E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).
+
+## Recovery owner identity safety
+
+`make test-recovery-role-cleanup` verifies shared role ownership checks, recovery
+orchestration and actual PostgreSQL preservation of unrelated/replaced derived roles.
+`make recovery-drill` exclusively creates its source owner before migration and records
+the committed OID. It may remove only that observed identity after owned source
+database removal and safe attribute/membership checks; the destination owns no role.
+A collision or refused cleanup fails closed. Do not delete, repair or sweep roles to
+make a retry pass. Existing developer data, schemas, images, volumes and SDKs remain
+outside this command's authority. [Candidate evidence](../implementation/E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md).

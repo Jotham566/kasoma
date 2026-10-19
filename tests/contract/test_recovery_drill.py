@@ -119,6 +119,8 @@ def test_partial_creation_cleans_only_the_owned_source(settings, monkeypatch):
 
 def test_migration_failure_and_cleanup_failure_are_reported_safely(settings, monkeypatch):
     engine = MagicMock()
+    monkeypatch.setattr("scripts.recovery_drill.create_owner", Mock(return_value=123))
+    monkeypatch.setattr("scripts.recovery_drill.cleanup_owner", Mock())
     engine.connect.return_value.__enter__.return_value.scalar.return_value = False
     execute = engine.connect.return_value.__enter__.return_value.execute
     execute.side_effect = [None, None, RuntimeError("private DB diagnostic"), None]
@@ -150,9 +152,10 @@ def test_migration_failure_and_cleanup_failure_are_reported_safely(settings, mon
 def test_cleanup_drops_only_derived_owner_after_its_created_database_is_gone(
     settings, monkeypatch, source_drop_fails
 ):
-    from services.export_retirement_install import owner_name
-
     engine = MagicMock()
+    owner_cleanup = Mock()
+    monkeypatch.setattr("scripts.recovery_drill.create_owner", Mock(return_value=123))
+    monkeypatch.setattr("scripts.recovery_drill.cleanup_owner", owner_cleanup)
     connection = engine.connect.return_value.__enter__.return_value
     statements = []
 
@@ -163,8 +166,6 @@ def test_cleanup_drops_only_derived_owner_after_its_created_database_is_gone(
             raise RuntimeError("Synthetic retained database")
 
     connection.execute.side_effect = execute
-    # Source has the installer-created role; destination never ran migrations.
-    connection.scalar.side_effect = [False] if source_drop_fails else [True, False]
     monkeypatch.setattr("scripts.recovery_drill.create_engine", lambda *a, **k: engine)
     monkeypatch.setattr("scripts.recovery_drill.subprocess.run", Mock())
     monkeypatch.setattr(
@@ -181,9 +182,10 @@ def test_cleanup_drops_only_derived_owner_after_its_created_database_is_gone(
         )
     )
     source = statements[0].split('"')[1]
-    role_drop = f'DROP ROLE "{owner_name(source, "public")}"'
     if source_drop_fails:
-        assert role_drop not in statements and result["cleanup_failed"] == [source]
+        owner_cleanup.assert_not_called()
+        assert result["cleanup_failed"] == [source]
     else:
-        assert statements[-1] == role_drop and result["cleanup_failed"] == []
+        owner_cleanup.assert_called_once_with(engine, source, 123)
+        assert result["cleanup_failed"] == []
     assert all("keep_me" not in statement for statement in statements)

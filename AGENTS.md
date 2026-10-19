@@ -209,6 +209,13 @@ zero errors and owned cleanup. Mixed-history also passes with 25,000 prior grade
 START p95 422.913ms, 7,000 successful requests and owned cleanup. Full hosted engineering acceptance now passes;
 explanation of earlier variance and full release gates remain pending. All eight Docker services are
 healthy on 0042; export retirement remains disabled.
+Recovery role ownership correction is a separate local candidate: two actual source/
+destination pre-existing-role regressions fail before the change. Shared exact-OID
+creation/cleanup checks now give recovery authority only over its exclusively created
+source owner; a destination grants no role ownership. 98 focused cases and a 69-table/
+686-row logical restore pass (295ms, no cleanup failure). Quality/contracts/build, 1,138 unit/contract,
+35 tooling and dependency/source security pass; complete combined-source hosted
+acceptance remains pending. No role sweep or ADR-061 approval.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

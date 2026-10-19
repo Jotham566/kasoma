@@ -26,6 +26,8 @@ from sqlalchemy.orm import Session
 
 from apps.api.main import create_app
 from scripts.assessment_fixtures import seed_assessment
+from scripts.disposable_owner import cleanup_owner as cleanup_disposable_owner
+from scripts.disposable_owner import create_owner as create_disposable_owner
 from scripts.recovery_drill import local_database_url
 from services.assessment import AssessmentService
 from services.assessment_contracts import GradeView, StartRevision, SubmitAnswer
@@ -61,45 +63,11 @@ def database_name(value: str) -> str:
 
 
 def create_owner(admin: Engine, name: str) -> int:
-    """Exclusively create the fresh owner and confirm its identity before commit."""
-    role = owner_name(database_name(name), "public")
-    with admin.connect().execution_options(isolation_level="READ COMMITTED") as db:
-        with db.begin():
-            db.execute(
-                text(
-                    f'CREATE ROLE "{role}" NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE '
-                    "NOINHERIT NOREPLICATION NOBYPASSRLS"
-                )
-            )
-            oid = db.scalar(
-                text("SELECT oid FROM pg_catalog.pg_roles WHERE rolname=:role"), {"role": role}
-            )
-            if not isinstance(oid, int) or isinstance(oid, bool) or oid <= 0:
-                raise RuntimeError("Isolated owner identity unavailable")
-    return oid
+    return create_disposable_owner(admin, database_name(name))
 
 
 def cleanup_owner(admin: Engine, name: str, owner_oid: int) -> None:
-    """Inspect only the owner derived from this invocation's dropped database."""
-    role = owner_name(database_name(name), "public")
-    with admin.connect() as db:
-        safe = db.scalar(
-            text("""
-              SELECT r.oid=:owner_oid AND NOT (
-                r.rolcanlogin OR r.rolsuper OR r.rolcreatedb OR r.rolcreaterole
-                OR r.rolinherit OR r.rolreplication OR r.rolbypassrls OR EXISTS(
-                  SELECT 1 FROM pg_catalog.pg_auth_members m
-                  WHERE m.roleid=r.oid OR m.member=r.oid))
-              FROM pg_catalog.pg_roles r WHERE r.rolname=:role
-            """),
-            {"role": role, "owner_oid": owner_oid},
-        )
-        if safe is None:
-            return
-        if safe is not True:
-            raise RuntimeError("Isolated owner cleanup refused")
-        # Restrictive DROP preserves PostgreSQL's cross-database dependency checks.
-        db.execute(text(f'DROP ROLE "{role}"'))
+    cleanup_disposable_owner(admin, database_name(name), owner_oid)
 
 
 def percentiles(values: list[float]) -> dict[str, float | int | None]:

@@ -480,3 +480,7 @@ test-web-assessment:
 .PHONY: test-fresh-session-response
 test-fresh-session-response:
 	$(UV) pytest tests/integration/test_fresh_session_response.py tests/integration/test_assessment.py tests/integration/test_recommendations.py tests/integration/test_reassessments.py tests/integration/test_assessment_transactions.py tests/integration/test_assessment_content_locks.py tests/integration/test_channel_assessment.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-recovery-role-cleanup
+test-recovery-role-cleanup:
+	$(UV) pytest tests/contract/test_recovery_drill.py tests/contract/test_objective_load.py tests/contract/test_disposable_owner.py tests/integration/test_recovery_role_lifecycle.py tests/integration/test_load_role_lifecycle.py --allow-hosts=localhost,127.0.0.1,::1

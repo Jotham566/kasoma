@@ -1,5 +1,16 @@
 # Current sprint: verified disposable load-role lifecycle
 
+## Recovery role ownership correction - candidate
+
+NFR-REL-002, NFR-SEC-002 and NFR-MNT-001: [verification](E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md)
+records two actual pre-existing-role failures and the correction to require exclusive
+committed source-role creation and exact OID/attribute/membership checks. A restored
+destination grants no role cleanup authority. Shared load checks retain their existing
+semantics. All 98 focused cases and a 69-table/686-row logical restore pass locally
+(295ms, no cleanup failures). Quality/contracts/build, 1,138 unit/contract, 35 tooling and dependency/source security
+also pass. Exact combined-source hosted acceptance remains pending.
+No migration, production permission, erasure approval or release gate changes.
+
 ## Official academic source discovery — review pending
 
 FR-CNT-005, FR-DIAG-003 and NFR-MNT-001: the [source review register](ACADEMIC_SOURCE_REVIEW_REGISTER.md)
