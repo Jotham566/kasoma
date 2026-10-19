@@ -1,8 +1,8 @@
 # E1 profile contact reverification visibility
 
 Requirements: FR-ID-001/005, NFR-ACC-001, NFR-MNT-001.
-Status: reproduced defect and corrected three-engine journeys verified locally;
-hosted acceptance and review-image update pending.
+Status: corrected three-engine journeys and running Docker preview verified locally;
+hosted acceptance pending.
 
 ## Finding and bounded correction
 
@@ -36,8 +36,13 @@ Add `make test-web-identity` for the existing three identity journeys in each en
   unchanged generated contracts, secret-boundary checks and dependency audits.
 - The [public WebKit screenshot](evidence/E1_SIGNED_OUT_PROFILE_2026_10_19.png) is
   captured before any fictional contact is entered. It is an automated test output,
-  not branded-browser evidence. Full hosted verification and the running review
-  image update remain pending.
+  not branded-browser evidence.
+- `make containers` succeeds. Recreate only the web service with the built image;
+  all eight services remain healthy and database volumes are preserved. A fresh
+  in-app preview at `localhost:3000/onboarding` confirms the signed-out control is
+  absent and the contact form visible. No contact or consent form is submitted.
+- Full hosted [39222489376](https://github.com/Jotham566/kasoma/actions/runs/39222489376)
+  at source `44ae9ad` is pending. Local preview success is not hosted acceptance.
 - Native Edge Beta selection through the UI tool times out; the subsequent review
   uses the existing in-app preview. No native Edge, stable/current-previous browser,
   physical-device or manual screen-reader acceptance is claimed.

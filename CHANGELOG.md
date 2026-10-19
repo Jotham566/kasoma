@@ -9,7 +9,8 @@
   The Chromium regression fails before the correction; lint/types/build pass after it.
   All nine corrected three-engine identity executions, 1,092 unit/contract,
   35 tooling, contracts and security pass locally; a public signed-out screenshot
-  is recorded. Hosted acceptance and review-image update remain pending.
+  is recorded. Images build and the corrected Docker web preview is verified with
+  all eight services healthy. Hosted acceptance remains pending at `44ae9ad`.
   No architectural change.
 
 ## In verification — stalled fake grading isolation

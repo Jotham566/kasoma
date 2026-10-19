@@ -24,7 +24,8 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
   before the presentation correction; lint/types/build pass afterward. Corrected
   three-engine verification now passes all nine identity executions, alongside
   1,092 unit/contract, 35 tooling, contracts and security. A public signed-out
-  screenshot is recorded. Hosted acceptance and review-image update remain pending.
+  screenshot is recorded. Images build and the corrected Docker web preview is
+  verified with all eight services healthy. Hosted `44ae9ad` acceptance is pending.
 
 - FR-GRD-003/004/005, FR-MST-001/004/005, NFR-SEC-002 and NFR-MNT-001:
   [fake provider isolation](E9_PROVIDER_FAULT_ISOLATION_VERIFICATION.md) adds three

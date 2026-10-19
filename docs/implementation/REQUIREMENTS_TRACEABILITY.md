@@ -8,7 +8,8 @@ records the reproduced unconditional signed-out action, a profile-bound renderin
 condition and retained authenticated handler. The real-API regression fails before
 the correction; lint/types/build pass afterward. All nine corrected three-engine
 identity cases, 1,092 unit/contract, 35 tooling, contracts and security pass locally.
-Public screenshot evidence is recorded; hosted/review-image acceptance is pending.
+Public screenshot evidence and the rebuilt Docker web preview are verified; all
+eight services are healthy. Hosted `44ae9ad` acceptance remains pending.
 No new permission, authentication rule, API or architectural decision.
 
 ## Independent provider fault candidate
