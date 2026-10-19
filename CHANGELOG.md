@@ -1,5 +1,18 @@
 # Changelog
 
+## In progress — bounded synthetic channel capture
+
+- Add candidate 0038 source/capture, finite disposal, generated contracts, advisory
+  inventory and operator controls under ADR-057. Expanded 34 focused integration (including
+  both actual restricted logins), 105 contract/format and 108 browser executions pass;
+  expanded acceptance and full regression remain pending. Creation stays disabled.
+- Reproduce and correct the existing advancing-clock conversation expiry mismatch
+  using one timestamp per exact 24-hour pair; both regression cases and the real-time
+  conversation/capture browser journey pass. No database invariant is relaxed.
+- Give each request hold region a distinct accessible name and enforce 44-pixel
+  capture dropdown targets, including WebKit and 200% text. No accessibility exclusion
+  or test timeout is added.
+
 ## Verified format — approved synthetic channel preservation
 
 - Record the user's explicit bounded ADR-057 implementation approval. Real-data
@@ -10,7 +23,7 @@
 - Add 82 offline format/tampering/allowlist/binding cases and the prescribed
   `make test-channel-preservation-format` command. Full ADR-057 acceptance remains pending.
 - Source `25b44b1` passes complete hosted [39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670),
-  all 1,022 unit/contract, 378 integration and35 tooling cases, full browser/security/
+  all 1,022 unit/contract, 378 integration and 35 tooling cases, full browser/security/
   recovery/image/service gates. This is format acceptance only; capture is separate.
 - Capture development exposes a real advancing-clock conversation expiry mismatch;
   correction and its new real-time browser coverage remain on the capture branch.

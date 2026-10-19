@@ -371,6 +371,21 @@ test-channel-receipt-holds:
 test-channel-preservation-format:
 	$(UV) pytest tests/contract/test_channel_preservation_format.py
 
+.PHONY: test-channel-preservation
+test-channel-preservation:
+	$(UV) pytest tests/contract/test_channel_preservation_contracts.py tests/contract/test_channel_preservation_format.py
+	$(UV) pytest tests/integration/test_channel_preservation.py tests/integration/test_channel_preservation_runtime_role.py tests/integration/test_channel_preservation_sql.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-web-channel-preservation
+test-web-channel-preservation:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/channel-preservation.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/channel-preservation.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/channel-preservation.spec.ts
+
+.PHONY: test-channel-clock
+test-channel-clock:
+	$(UV) pytest tests/contract/test_channel_clock.py
+
 .PHONY: test-hold-delete-clock
 test-hold-delete-clock:
 	$(UV) pytest tests/integration/test_hold_delete_clock.py --allow-hosts=localhost,127.0.0.1,::1

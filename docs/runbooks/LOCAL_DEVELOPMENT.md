@@ -1234,3 +1234,37 @@ See [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md) and
 On a failed hosted capacity gate, retain the before/after numeric disk and Docker usage
 diagnostics and fix that disposable job's profile. Do not disable browser/security
 checks, lower product acceptance or delete developer test schemas by prefix.
+
+### Minimized channel snapshots (ADR-057 candidate)
+
+Keep CHANNEL_PRESERVATION_ENABLED=false during the additive 0038/all-reader rollout.
+This flag is separate from terminal original-receipt holds. The candidate is authorized
+for synthetic development only; real-data/production processing and account erasure
+remain separately gated. See
+[verification](../implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md).
+
+Use `make test-channel-preservation test-channel-clock` for the strict private format,
+contracts, database upgrade/races/expiry, actual restricted logins and advancing-clock
+regressions. Run `make build` before `make test-web-channel-preservation`; the latter
+uses isolated synthetic schemas, explicit fake providers and three browser engines.
+Do not rebuild native .next during an active browser run. `make recovery-drill` includes
+bound ciphertext, disposal metadata and sequence-position recovery after operational
+source removal. It creates/drops only its own generated synthetic databases; it is not
+production PITR or object-storage recovery verification.
+
+The ADMIN who independently claimed a pending DELETE request must recently sign in.
+Open record holds, provide the actual source link UUID/revision and check the exact
+current version before confirming an authorized finite decision. A conversation has no
+independent source UUID. The resulting record reference is a new snapshot UUID; use
+that UUID for additional decisions on the same snapshot. A stale source requires a
+fresh check and affirmative confirmation. An uncertain capture response must retry the
+same key/body; never silently recapture changing state.
+
+Only approved minimized link/conversation fields are copied. No contacts, message
+bodies, codes or tokens are retained by this mechanism. There is no payload viewer or
+source-browsing endpoint. STOP barriers, unlink, withdrawal, normal source expiry and
+shared grading remain independent. The worker removes ciphertext after the last exact
+decision ends; immutable disposal/capture accountability follows the parent's existing
+policy. Keep creation disabled on rollback while preserving readers, release, guards
+and cleanup. Never drop evidence tables, reset volumes or reinterpret this subset as
+full legal-hold coverage or permission to erase an account.

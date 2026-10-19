@@ -24,15 +24,21 @@ RecordType = Literal[
     "GRADING_REVIEW",
     "CHANNEL_INBOUND_RECEIPT",
     "CHANNEL_OUTBOUND_RECEIPT",
+    "CHANNEL_LINK_SNAPSHOT",
+    "CHANNEL_CONVERSATION_SNAPSHOT",
 ]
 CHANNEL_RECEIPT_TYPES = frozenset({"CHANNEL_INBOUND_RECEIPT", "CHANNEL_OUTBOUND_RECEIPT"})
+CHANNEL_SNAPSHOT_TYPES = frozenset({"CHANNEL_LINK_SNAPSHOT", "CHANNEL_CONVERSATION_SNAPSHOT"})
 
 
-def supported_record_types(channel_receipts: bool) -> list[RecordType]:
+def supported_record_types(
+    channel_receipts: bool, channel_snapshots: bool = False
+) -> list[RecordType]:
     return [
         kind
         for kind in get_args(RecordType)
-        if channel_receipts or kind not in CHANNEL_RECEIPT_TYPES
+        if (channel_receipts or kind not in CHANNEL_RECEIPT_TYPES)
+        and (channel_snapshots or kind not in CHANNEL_SNAPSHOT_TYPES)
     ]
 
 

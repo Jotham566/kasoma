@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
+import { ChannelPreservation } from "./channel-preservation";
 
 type S = components["schemas"];
 type Operation = { key: string } & (
@@ -131,7 +132,7 @@ export function LegalHolds({
   }
   return (
     <section
-      aria-label="Record legal holds"
+      aria-label={`Record legal holds for request ${target}`}
       className="legal-hold-controls space-y-3"
     >
       <button
@@ -170,7 +171,8 @@ export function LegalHolds({
             narratives. For a grade, use its attempt reference; a grading
             publication also uses its attempt reference. For a data request
             review, use its request reference. Other types use their own record
-            reference. Each hold covers only the named record.
+            reference. Each hold covers only the named record. For an existing
+            channel snapshot, use its snapshot UUID, not its source link ID.
           </p>
           <form
             key={formVersion}
@@ -234,6 +236,16 @@ export function LegalHolds({
                       Terminal channel outbound receipt
                     </option>
                   )}
+                  {supported.includes("CHANNEL_LINK_SNAPSHOT") && (
+                    <option value="CHANNEL_LINK_SNAPSHOT">
+                      Existing link snapshot (snapshot UUID)
+                    </option>
+                  )}
+                  {supported.includes("CHANNEL_CONVERSATION_SNAPSHOT") && (
+                    <option value="CHANNEL_CONVERSATION_SNAPSHOT">
+                      Existing conversation snapshot (snapshot UUID)
+                    </option>
+                  )}
                   <option value="DATA_REQUEST_REVIEW">
                     Data request review (request reference)
                   </option>
@@ -243,8 +255,9 @@ export function LegalHolds({
                 <p>
                   Channel holds require an owned, already-minimized terminal
                   receipt. Queued messages, live contacts, link codes and
-                  conversations are not supported. Delivery callbacks and
-                  opt-out remain effective.
+                  conversations are not supported as original receipt targets.
+                  Minimized version snapshots use the separate capture controls.
+                  Delivery callbacks and opt-out remain effective.
                 </p>
               )}
               <label className="block">
@@ -384,6 +397,16 @@ export function LegalHolds({
             Minimized hold evidence is retained for six years after request
             completion. All timestamps above use Kampala time.
           </p>
+          {supported.includes("CHANNEL_LINK_SNAPSHOT") && (
+            <ChannelPreservation
+              target={target}
+              onAttempt={onChange}
+              onCaptured={async () => {
+                onChange();
+                await load();
+              }}
+            />
+          )}
         </>
       )}
     </section>

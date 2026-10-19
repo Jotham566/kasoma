@@ -788,3 +788,40 @@ reader permission or supported hold kind. In particular, internal integrity deco
 is not a payload-reading/export endpoint. No client may submit snapshot kinds through
 the existing original-record hold contract. Capture/capability/version-selection
 contracts remain pending and must ship with authorization, SQL/lifecycle and UI tests.
+
+## Synthetic channel capture candidate (ADR-057)
+
+CHANNEL_PRESERVATION_ENABLED defaults false. Both new routes require a recent-OTP
+independent ADMIN claimant of the pending DELETE request, before inspecting feature
+availability. Creation disabled returns409 HOLD_TARGET_UNAVAILABLE. No payload-read
+or source-browsing endpoint exists.
+
+- POST `/admin/data-requests/{target}/channel-preservations/inspect`: strict
+  PreservationSource contains source_kind (CHANNEL_LINK_SNAPSHOT or
+  CHANNEL_CONVERSATION_SNAPSHOT), actual source_link_id UUID and positive int32
+  link_revision. Return only PreservationVersion.source_version, a64-hex opaque keyed
+  current-version value. Share the existing60/minute hold-read budget and audit the
+  inspection without source payload/IDs. JSON body keeps operational IDs out of URLs.
+- POST `/admin/data-requests/{target}/channel-preservations`: strict PreservationCapture
+  adds source_version, authorized decision_reference UUID, existing reason code,
+  finite future expires_at and affirmative=true. Require Idempotency-Key UUID; share
+  the existing10/minute hold-write pool. Return201 HoldView with a newly generated
+  snapshot UUID in record_id and the explicit snapshot kind. It is not a source-row hold.
+
+Stale versions return409 SOURCE_VERSION_CONFLICT. Unavailable, cleared, stopped,
+unlinked, expired or cross-owner sources return404 without guessing history. Claim
+timestamps ahead of database time fail503; an invalid finite end returns422. Exact
+key/body retries return the existing decision and never recapture changing state.
+Input expiry normalizes to UTC for retry binding; all response data remains no-store.
+
+HoldPage.supported_record_types advertises snapshot kinds only when creation is enabled.
+The existing hold POST may add a finite decision to an existing same-request snapshot
+UUID while its body exists. These IDs never authorize source access, dispatch or resume.
+Existing list/release and disposal remain available after creation is disabled. New
+snapshot decisions use database wall clock for creation/status/release and preview counts;
+historical record_is_held queries and legacy original-record behavior remain unchanged.
+
+The exact web proxy admits only POST for the two new paths. Operator controls separately
+check the source and confirm an authorized finite capture, preserve the same key/body
+after an uncertain response, and clear stale selections before a new capture. No
+source version, payload or internal ciphertext is displayed. Browser acceptance remains pending.

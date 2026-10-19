@@ -1131,7 +1131,8 @@
               "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION",
               "EXPIRES_AFTER_24_HOURS",
               "STAFF_PROVENANCE_REVIEW",
-              "TRANSIENT_EXPIRY"
+              "TRANSIENT_EXPIRY",
+              "ACTIVE_EXACT_PRESERVATION_ONLY"
             ],
             "title": "Retention",
             "type": "string"
@@ -2537,7 +2538,9 @@
               "GRADING_AUDIT",
               "GRADING_REVIEW",
               "CHANNEL_INBOUND_RECEIPT",
-              "CHANNEL_OUTBOUND_RECEIPT"
+              "CHANNEL_OUTBOUND_RECEIPT",
+              "CHANNEL_LINK_SNAPSHOT",
+              "CHANNEL_CONVERSATION_SNAPSHOT"
             ],
             "title": "Record Type",
             "type": "string"
@@ -2593,7 +2596,9 @@
                 "GRADING_AUDIT",
                 "GRADING_REVIEW",
                 "CHANNEL_INBOUND_RECEIPT",
-                "CHANNEL_OUTBOUND_RECEIPT"
+                "CHANNEL_OUTBOUND_RECEIPT",
+                "CHANNEL_LINK_SNAPSHOT",
+                "CHANNEL_CONVERSATION_SNAPSHOT"
               ],
               "type": "string"
             },
@@ -2681,7 +2686,9 @@
               "GRADING_AUDIT",
               "GRADING_REVIEW",
               "CHANNEL_INBOUND_RECEIPT",
-              "CHANNEL_OUTBOUND_RECEIPT"
+              "CHANNEL_OUTBOUND_RECEIPT",
+              "CHANNEL_LINK_SNAPSHOT",
+              "CHANNEL_CONVERSATION_SNAPSHOT"
             ],
             "title": "Record Type",
             "type": "string"
@@ -3992,6 +3999,120 @@
           "item_version_id"
         ],
         "title": "PendingShortTextGrade",
+        "type": "object"
+      },
+      "PreservationCapture": {
+        "additionalProperties": false,
+        "properties": {
+          "affirmative": {
+            "const": true,
+            "title": "Affirmative",
+            "type": "boolean"
+          },
+          "decision_reference": {
+            "format": "uuid",
+            "title": "Decision Reference",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "link_revision": {
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Link Revision",
+            "type": "integer"
+          },
+          "reason": {
+            "enum": [
+              "LEGAL_OBLIGATION",
+              "SECURITY_INVESTIGATION"
+            ],
+            "title": "Reason",
+            "type": "string"
+          },
+          "source_kind": {
+            "enum": [
+              "CHANNEL_LINK_SNAPSHOT",
+              "CHANNEL_CONVERSATION_SNAPSHOT"
+            ],
+            "title": "Source Kind",
+            "type": "string"
+          },
+          "source_link_id": {
+            "format": "uuid",
+            "title": "Source Link Id",
+            "type": "string"
+          },
+          "source_version": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Source Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_version",
+          "source_kind",
+          "source_link_id",
+          "link_revision",
+          "decision_reference",
+          "reason",
+          "expires_at",
+          "affirmative"
+        ],
+        "title": "PreservationCapture",
+        "type": "object"
+      },
+      "PreservationSource": {
+        "additionalProperties": false,
+        "properties": {
+          "link_revision": {
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Link Revision",
+            "type": "integer"
+          },
+          "source_kind": {
+            "enum": [
+              "CHANNEL_LINK_SNAPSHOT",
+              "CHANNEL_CONVERSATION_SNAPSHOT"
+            ],
+            "title": "Source Kind",
+            "type": "string"
+          },
+          "source_link_id": {
+            "format": "uuid",
+            "title": "Source Link Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_kind",
+          "source_link_id",
+          "link_revision"
+        ],
+        "title": "PreservationSource",
+        "type": "object"
+      },
+      "PreservationVersion": {
+        "additionalProperties": false,
+        "properties": {
+          "source_version": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Source Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_version"
+        ],
+        "title": "PreservationVersion",
         "type": "object"
       },
       "ProfilePatch": {
@@ -6552,9 +6673,269 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Queue"
+      }
+    },
+    "/api/v1/admin/data-requests/{target}/channel-preservations": {
+      "post": {
+        "operationId": "capture_channel_source_api_v1_admin_data_requests__target__channel_preservations_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreservationCapture"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Capture Channel Source"
+      }
+    },
+    "/api/v1/admin/data-requests/{target}/channel-preservations/inspect": {
+      "post": {
+        "operationId": "inspect_channel_source_api_v1_admin_data_requests__target__channel_preservations_inspect_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreservationSource"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreservationVersion"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Inspect Channel Source"
       }
     },
     "/api/v1/admin/data-requests/{target}/claim": {
@@ -6672,6 +7053,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Claim"
@@ -6772,6 +7163,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Deletion Preview"
@@ -6901,6 +7302,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Holds"
@@ -7019,6 +7430,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Create Hold"
@@ -7149,6 +7570,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Release Hold"
@@ -10296,6 +10727,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Listing"
@@ -10404,6 +10845,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Create"
@@ -10504,6 +10955,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Get"
@@ -10624,6 +11085,16 @@
               }
             },
             "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
           }
         },
         "summary": "Export"

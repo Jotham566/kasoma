@@ -5,6 +5,7 @@ from datetime import timedelta
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session
 
+from services.channel_preservation import dispose_bodies
 from services.domain.messaging import (
     ChannelLink,
     ChannelMutationReceipt,
@@ -134,4 +135,7 @@ def expire(identity: IdentityService) -> int:
             .limit(100)
         )
         db.execute(delete(ChannelSender).where(ChannelSender.sender_hash.in_(senders)))
+        # Snapshot bodies are independent evidence, never operational channel state.
+        # Disposal must continue even when new snapshot creation is disabled.
+        dispose_bodies(db)
         return len(receipts)

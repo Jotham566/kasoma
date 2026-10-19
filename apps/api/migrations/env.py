@@ -5,6 +5,7 @@ from services.config import Settings
 from services.database import Base, engine_for
 from services.domain import (  # noqa: F401
     assessment,
+    channel_preservation,
     content,
     curriculum,
     data_requests,

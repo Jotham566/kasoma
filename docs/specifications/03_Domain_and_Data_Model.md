@@ -507,3 +507,29 @@ capture/decrypt. Those belong to the next atomic authorized transaction, indepen
 SQL guards and finite cleanup. No operational channel row is frozen or copied yet;
 STOP/unlink and ordinary expiry retain their existing behavior. See
 [verification](../implementation/E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md).
+
+## Synthetic channel capture candidate (ADR-057, 0038)
+
+The default-disabled candidate adds conversation state_version from a noncycling bigint
+sequence on every INSERT/UPDATE; supplied values are overwritten, rollback gaps are
+allowed and reinsertion receives a fresh value. Existing channel-link revision already
+increments on every UPDATE and remains unchanged. No conversation UUID is invented.
+
+`channel_preservation_snapshots` keeps immutable source kind/link/revision, optional
+conversation state version, opaque observed version, parent request and capturing actor/
+time. Owner derives from the request. `channel_preservation_bodies` holds only bounded
+ciphertext; `channel_preservation_disposals` holds immutable snapshot/time accountability.
+None references operational channel rows. Initial capture must commit ciphertext and
+an exact active finite decision together. SQL independently checks current independent
+claim, source ownership/version/availability and effective STOP barrier.
+
+Bodies cannot update or reappear after disposal. Cleanup excludes active exact decisions
+before its100-row bound, locks eligible bodies with SKIP LOCKED and removes ciphertext
+with a disposal receipt. Metadata follows the existing six-years-after-request-completion
+policy, with no invented completion for pending requests. Accountability expiry remains
+pending. Source cleanup, STOP/unlink and contact/code disposal remain independent.
+
+The preview inventories metadata, encrypted bodies and disposal receipts separately;
+bodies use ACTIVE_EXACT_PRESERVATION_ONLY. Existing export projection excludes this
+internal evidence. LEGAL_HOLD_COVERAGE_INCOMPLETE and execution=false remain. Full
+candidate acceptance is pending; see [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md).

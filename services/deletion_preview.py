@@ -19,6 +19,11 @@ from services.domain.assessment import (
     RecommendationSnapshot,
     SessionItem,
 )
+from services.domain.channel_preservation import (
+    ChannelSnapshot,
+    ChannelSnapshotBody,
+    ChannelSnapshotDisposal,
+)
 from services.domain.content import (
     AuditLog,
     ContentEvent,
@@ -77,8 +82,8 @@ LIMITATIONS = [
     "Advisory counts may change; this is not an execution plan or legal-hold clearance.",
     "Shared rate buckets, operational logs, backups and arbitrary embedded references "
     "need separate review.",
-    "Channel inventory excludes unbound sender history; terminal receipt holds do not cover "
-    "live channel state, links, conversations or authentication capabilities.",
+    "Channel inventory excludes unbound sender history; terminal receipt holds and exact "
+    "minimized snapshots do not cover all live state or authentication capabilities.",
     "Related staff records may also concern other people and are not account-owned data.",
 ]
 
@@ -103,6 +108,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     evidence = select(MasteryEvidence.id).where(MasteryEvidence.learner_id == user)
     requests = select(DataRequest.id).where(DataRequest.user_id == user)
     holds = select(LegalHold.id).where(LegalHold.request_id.in_(requests))
+    snapshots = select(ChannelSnapshot.id).where(ChannelSnapshot.request_id.in_(requests))
     flags = select(ContentFlag.id).where(ContentFlag.reporter_id == user)
     authored = select(Item.id).where(Item.author_id == user)
     versions = select(ItemVersion.id).where(
@@ -183,6 +189,17 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
         add(model, condition, "SIX_YEARS_AFTER_COMPLETION")
     add(LegalHold, LegalHold.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
     add(LegalHoldReceipt, LegalHoldReceipt.hold_id.in_(holds), "SIX_YEARS_AFTER_COMPLETION")
+    add(ChannelSnapshot, ChannelSnapshot.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
+    add(
+        ChannelSnapshotBody,
+        ChannelSnapshotBody.snapshot_id.in_(snapshots),
+        "ACTIVE_EXACT_PRESERVATION_ONLY",
+    )
+    add(
+        ChannelSnapshotDisposal,
+        ChannelSnapshotDisposal.snapshot_id.in_(snapshots),
+        "SIX_YEARS_AFTER_COMPLETION",
+    )
     add(DataExport, DataExport.request_id.in_(requests), "EXPIRES_AFTER_24_HOURS")
     add(ExportJob, ExportJob.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
     # Includes unclaimed/failed leases as well as published 24-hour copies.
@@ -202,6 +219,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
         (DataRequestReview, DataRequestReview.actor_id == user),
         (LegalHold, or_(LegalHold.created_by == user, LegalHold.released_by == user)),
         (LegalHoldReceipt, LegalHoldReceipt.actor_id == user),
+        (ChannelSnapshot, ChannelSnapshot.captured_by == user),
         (Item, Item.author_id == user),
         (ItemVersion, ItemVersion.id.in_(versions)),
         (Rubric, Rubric.id.in_(versions)),

@@ -16,6 +16,7 @@ from sqlalchemy import Engine, create_engine, inspect, text
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.exc import DBAPIError
 
+from scripts.recovery_channel_preservation import verify_preservation
 from scripts.recovery_fixture import populate
 from scripts.recovery_short_text import verify_short_text
 from services.config import Settings
@@ -72,6 +73,10 @@ def inventory(engine: Engine) -> dict[str, tuple[int, str]]:
 
 def check_guards(engine: Engine) -> None:
     for statement in (
+        "UPDATE channel_preservation_snapshots SET source_version=source_version",
+        "UPDATE channel_preservation_bodies SET encrypted_payload=encrypted_payload",
+        "DELETE FROM channel_preservation_bodies",
+        "DELETE FROM channel_preservation_disposals",
         "DELETE FROM outbound_messages",
         "UPDATE inbound_messages SET command='STOP'",
         "UPDATE outbound_messages SET recipient_hash='synthetic-tampering'",
@@ -237,6 +242,7 @@ def drill(settings: Settings) -> dict[str, object]:
         restored_identity = IdentityService(restored_engine, restored_settings, fake, fake)
         export.verify(restored_identity)
         verify_short_text(restored_identity)
+        verify_preservation(restored_identity)
         if inventory(restored_engine) != before or inventory(source_engine) != before:
             raise RuntimeError("Recovery verification changed evidence")
         result.update(
@@ -248,6 +254,7 @@ def drill(settings: Settings) -> dict[str, object]:
             pgvector_verified=True,
             populated_export_verified=True,
             encrypted_short_text_verified=True,
+            encrypted_channel_preservation_verified=True,
             object_storage_recovery_verified=False,
             production_rpo_rto_verified=False,
         )

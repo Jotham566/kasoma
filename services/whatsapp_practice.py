@@ -36,8 +36,9 @@ def queue(
 
 
 def state_for(identity: IdentityService, db: Session, link: ChannelLink) -> ConversationState:
+    now = identity.clock()
     state = db.get(ConversationState, link.id)
-    if state and (state.link_revision != link.revision or state.expires_at <= identity.clock()):
+    if state and (state.link_revision != link.revision or state.expires_at <= now):
         db.delete(state)
         db.flush()
         state = None
@@ -46,8 +47,8 @@ def state_for(identity: IdentityService, db: Session, link: ChannelLink) -> Conv
             link_id=link.id,
             actor_id=link.user_id,
             link_revision=link.revision,
-            updated_at=identity.clock(),
-            expires_at=identity.clock() + timedelta(hours=24),
+            updated_at=now,
+            expires_at=now + timedelta(hours=24),
         )
         db.add(state)
     return state
@@ -107,8 +108,9 @@ def process(
     service = AssessmentService(identity)
     service.authorize_actor(db, link.user_id)
     state = state_for(identity, db, link)
-    state.updated_at = identity.clock()
-    state.expires_at = identity.clock() + timedelta(hours=24)
+    now = identity.clock()
+    state.updated_at = now
+    state.expires_at = now + timedelta(hours=24)
     if incoming.command == "PROGRESS":
         queue(identity, db, incoming, link, "PROGRESS")
     elif incoming.command in {"START", "CONTINUE"}:

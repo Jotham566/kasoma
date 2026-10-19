@@ -1,9 +1,11 @@
 """Original minimized held receipts confined to generated synthetic recovery databases."""
 
 import re
+from dataclasses import dataclass
 from datetime import timedelta
-from uuid import uuid4
+from uuid import UUID, uuid4
 
+from pydantic import SecretStr
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -17,7 +19,13 @@ from services.legal_holds import LegalHoldService
 from services.staff import provision
 
 
-def populate_channel_receipts(identity: IdentityService, token: str) -> None:
+@dataclass(frozen=True, repr=False)
+class ChannelHoldAuthority:
+    request_id: UUID
+    token: SecretStr
+
+
+def populate_channel_receipts(identity: IdentityService, token: str) -> ChannelHoldAuthority:
     with Session(identity.engine) as db:
         database = db.scalar(text("SELECT current_database()"))
         if not re.fullmatch(r"kasoma_drill_src_[0-9a-f]{32}", database or ""):
@@ -111,3 +119,4 @@ def populate_channel_receipts(identity: IdentityService, token: str) -> None:
             )
     finally:
         identity.settings.channel_receipt_holds_enabled = original
+    return ChannelHoldAuthority(target, SecretStr(admin))

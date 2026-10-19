@@ -6,6 +6,12 @@ from uuid import UUID
 from fastapi import APIRouter, Header, Query, Request, Response
 
 from apps.api.identity import bearer, service
+from services.channel_preservation import ChannelPreservationService
+from services.channel_preservation_contracts import (
+    PreservationCapture,
+    PreservationSource,
+    PreservationVersion,
+)
 from services.content_contracts import ErrorEnvelope
 from services.data_request_contracts import (
     DataExportBundle,
@@ -21,7 +27,7 @@ from services.legal_holds import LegalHoldService
 
 router = APIRouter(
     prefix="/api/v1",
-    responses={s: {"model": ErrorEnvelope} for s in [401, 403, 404, 409, 410, 422, 429]},
+    responses={s: {"model": ErrorEnvelope} for s in [401, 403, 404, 409, 410, 422, 429, 503]},
 )
 
 
@@ -129,4 +135,32 @@ def release_hold(
 ) -> HoldView:
     return LegalHoldService(service(request)).release(
         bearer(request), target, hold, body, idempotency_key, UUID(request.state.request_id)
+    )
+
+
+@router.post(
+    "/admin/data-requests/{target}/channel-preservations/inspect",
+    response_model=PreservationVersion,
+)
+def inspect_channel_source(
+    target: UUID, body: PreservationSource, request: Request
+) -> PreservationVersion:
+    return ChannelPreservationService(service(request)).inspect(
+        bearer(request), target, body, UUID(request.state.request_id)
+    )
+
+
+@router.post(
+    "/admin/data-requests/{target}/channel-preservations",
+    response_model=HoldView,
+    status_code=201,
+)
+def capture_channel_source(
+    target: UUID,
+    body: PreservationCapture,
+    request: Request,
+    idempotency_key: Annotated[UUID, Header(alias="Idempotency-Key")],
+) -> HoldView:
+    return ChannelPreservationService(service(request)).capture(
+        bearer(request), target, body, idempotency_key, UUID(request.state.request_id)
     )

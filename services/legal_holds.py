@@ -1,13 +1,15 @@
 """Specific-record preservation decisions, never blanket deletion clearance."""
 
+from contextlib import nullcontext
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import func, select
+from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
 
 from services.data_requests import DataRequestService
 from services.domain.assessment import Attempt, Grade
+from services.domain.channel_preservation import ChannelSnapshot, ChannelSnapshotBody
 from services.domain.data_requests import (
     DataRequest,
     DataRequestReview,
@@ -27,6 +29,7 @@ from services.domain.messaging import InboundMessage, OutboundMessage
 from services.identity import IdentityError, IdentityService
 from services.legal_hold_contracts import (
     CHANNEL_RECEIPT_TYPES,
+    CHANNEL_SNAPSHOT_TYPES,
     HoldInput,
     HoldPage,
     HoldRelease,
@@ -41,15 +44,25 @@ def active(db: Session, kind: RecordType, target: UUID, at: datetime) -> bool:
     return bool(db.scalar(select(func.record_is_held(kind, target, at))))
 
 
+def database_now(db: Session) -> datetime:
+    now = db.scalar(select(func.clock_timestamp()))
+    if not isinstance(now, datetime):
+        raise IdentityError("HOLD_TARGET_UNAVAILABLE", 503)
+    return now
+
+
 def active_count(db: Session, user: UUID, at: datetime) -> tuple[int, bool]:
+    observed_at = case(
+        (LegalHold.record_type.in_(CHANNEL_SNAPSHOT_TYPES), func.clock_timestamp()), else_=at
+    )
     limited = (
         select(LegalHold.id)
         .join(DataRequest)
         .where(
             DataRequest.user_id == user,
             LegalHold.released_at.is_(None),
-            LegalHold.created_at <= at,
-            LegalHold.expires_at > at,
+            LegalHold.created_at <= observed_at,
+            LegalHold.expires_at > observed_at,
         )
         .limit(10_001)
         .subquery()
@@ -79,7 +92,8 @@ class LegalHoldService:
             raise IdentityError("REQUEST_COMPLETED", 409)
         return actor, request
 
-    def view(self, row: LegalHold) -> HoldView:
+    def view(self, row: LegalHold, at: datetime | None = None) -> HoldView:
+        at = at or self.identity.clock()
         return HoldView.model_validate(
             dict(
                 id=row.id,
@@ -90,7 +104,7 @@ class LegalHoldService:
                 reason=row.reason,
                 status="RELEASED"
                 if row.released_at
-                else ("EXPIRED" if row.expires_at <= self.identity.clock() else "ACTIVE"),
+                else ("EXPIRED" if row.expires_at <= at else "ACTIVE"),
                 created_at=row.created_at,
                 expires_at=row.expires_at,
                 released_at=row.released_at,
@@ -132,27 +146,39 @@ class LegalHoldService:
         with self.identity.transaction() as db:
             actor, request = self.access(db, token, target)
             channel_receipt = body.record_type in CHANNEL_RECEIPT_TYPES
+            snapshot = body.record_type in CHANNEL_SNAPSHOT_TYPES
             if channel_receipt and not self.identity.settings.channel_receipt_holds_enabled:
                 raise IdentityError("HOLD_TARGET_UNAVAILABLE", 409)
-            if channel_receipt:
+            if snapshot and not self.identity.settings.channel_preservation_enabled:
+                raise IdentityError("HOLD_TARGET_UNAVAILABLE", 409)
+            if channel_receipt or snapshot:
                 from services.whatsapp_linking import channel_lock
 
                 channel_lock(self.identity, db)
             old = self.replay(db, actor, key, digest)
             if old:
-                return self.view(old)
+                return self.view(old, database_now(db) if snapshot else None)
             at = self.identity.clock()
-            if channel_receipt:
-                database_now = db.scalar(select(func.clock_timestamp()))
-                if database_now is None:
-                    raise IdentityError("HOLD_TARGET_UNAVAILABLE", 503)
-                at = min(at, database_now)
+            if channel_receipt or snapshot:
+                observed = database_now(db)
+                at = observed if snapshot else min(at, observed)
                 review = db.get(DataRequestReview, target)
                 if review is None or review.created_at > at:
                     raise IdentityError("HOLD_TARGET_UNAVAILABLE", 503)
             if body.expires_at <= at:
                 raise IdentityError("HOLD_END_REQUIRED", 422)
+            snapshot_query = (
+                select(ChannelSnapshot.id)
+                .join(ChannelSnapshotBody, ChannelSnapshotBody.snapshot_id == ChannelSnapshot.id)
+                .where(
+                    ChannelSnapshot.id == body.record_id,
+                    ChannelSnapshot.source_kind == body.record_type,
+                    ChannelSnapshot.request_id == target,
+                )
+            )
             query = {
+                "CHANNEL_LINK_SNAPSHOT": snapshot_query,
+                "CHANNEL_CONVERSATION_SNAPSHOT": snapshot_query,
                 "CHANNEL_INBOUND_RECEIPT": select(InboundMessage.id).where(
                     InboundMessage.id == body.record_id,
                     InboundMessage.actor_id == request.user_id,
@@ -230,7 +256,12 @@ class LegalHoldService:
                     DataRequest.id == body.record_id, DataRequest.user_id == request.user_id
                 ),
             }[body.record_type]
-            if db.scalar(query.with_for_update(read=True, key_share=True)) is None:
+            locked = (
+                query.with_for_update(of=ChannelSnapshotBody)
+                if snapshot
+                else query.with_for_update(read=True, key_share=True)
+            )
+            if db.scalar(locked) is None:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
             row = LegalHold(
                 id=uuid4(),
@@ -246,12 +277,13 @@ class LegalHoldService:
                 released_by=None,
                 release_reference=None,
             )
-            db.add(row)
-            db.flush()
-            self.evidence(
-                db, actor, row, key, digest, "legal_hold.created", request.user_id, request_id
-            )
-            return self.view(row)
+            with db.begin_nested() if snapshot else nullcontext():
+                db.add(row)
+                db.flush()
+                self.evidence(
+                    db, actor, row, key, digest, "legal_hold.created", request.user_id, request_id
+                )
+            return self.view(row, at if snapshot else None)
 
     def release(
         self, token: str, target: UUID, hold: UUID, body: HoldRelease, key: UUID, request_id: UUID
@@ -263,20 +295,25 @@ class LegalHoldService:
             actor, request = self.access(db, token, target)
             old = self.replay(db, actor, key, digest)
             if old:
-                return self.view(old)
+                return self.view(
+                    old, database_now(db) if old.record_type in CHANNEL_SNAPSHOT_TYPES else None
+                )
             row = db.get(LegalHold, hold)
             if row is None or row.request_id != target:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
-            if row.released_at or row.expires_at <= self.identity.clock():
+            snapshot = row.record_type in CHANNEL_SNAPSHOT_TYPES
+            at = database_now(db) if snapshot else self.identity.clock()
+            if row.released_at or row.expires_at <= at:
                 raise IdentityError("HOLD_NOT_ACTIVE", 409)
-            row.released_at = self.identity.clock()
-            row.released_by = actor
-            row.release_reference = body.decision_reference
-            db.flush()
-            self.evidence(
-                db, actor, row, key, digest, "legal_hold.released", request.user_id, request_id
-            )
-            return self.view(row)
+            with db.begin_nested() if snapshot else nullcontext():
+                row.released_at = at
+                row.released_by = actor
+                row.release_reference = body.decision_reference
+                db.flush()
+                self.evidence(
+                    db, actor, row, key, digest, "legal_hold.released", request.user_id, request_id
+                )
+            return self.view(row, at if snapshot else None)
 
     def listing(
         self, token: str, target: UUID, cursor: UUID | None, limit: int, request_id: UUID
@@ -289,11 +326,20 @@ class LegalHoldService:
             if cursor:
                 query = query.where(LegalHold.id > cursor)
             rows = list(db.scalars(query.order_by(LegalHold.id).limit(limit + 1)))
+            observed = (
+                database_now(db)
+                if any(row.record_type in CHANNEL_SNAPSHOT_TYPES for row in rows[:limit])
+                else None
+            )
             self.requests.audit(db, actor, target, "legal_hold.queue_read", request_id)
             return HoldPage(
-                data=[self.view(r) for r in rows[:limit]],
+                data=[
+                    self.view(r, observed if r.record_type in CHANNEL_SNAPSHOT_TYPES else None)
+                    for r in rows[:limit]
+                ],
                 next_cursor=rows[limit - 1].id if len(rows) > limit else None,
                 supported_record_types=supported_record_types(
-                    self.identity.settings.channel_receipt_holds_enabled
+                    self.identity.settings.channel_receipt_holds_enabled,
+                    self.identity.settings.channel_preservation_enabled,
                 ),
             )

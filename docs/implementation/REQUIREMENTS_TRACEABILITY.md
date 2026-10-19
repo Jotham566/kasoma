@@ -43,6 +43,23 @@ socket-disabled format/binding/tampering tests; see
 access/API/UI and full application acceptance remain pending. No real-data/erasure authority.
 Format source `25b44b1` passes full local and complete hosted 39176205670. This closes
 only its format acceptance, not these full functional requirements.
+The additive 0038 capture candidate implements exact source versions, independent guards,
+atomic finite decisions/disposal and disabled operator controls; initial 27 integration cases, 105 contract/format cases and three browser engines pass.
+See [capture readiness](E8_CHANNEL_PRESERVATION_CAPTURE_READINESS.md). Broad and
+restricted-role/race/recovery/browser/security acceptance is still required; this does
+not close FR-ID-006/BR-010 or complete channel preservation coverage.
+Expanded local evidence covers 34 focused integration cases, both restricted logins,
+105 format/contracts, advancing-clock regressions and initial three-engine journeys.
+Logical restore verifies 68 tables/680 rows, bound ciphertext after source removal,
+finite disposal and sequence position; real PITR/RPO/RTO remains unverified. See
+[capture verification](E8_CHANNEL_PRESERVATION_VERIFICATION.md). Current full regression
+and hosted acceptance remain pending.
+
+FR-WA-002 / FR-WA-006 / NFR-MNT-001 candidate: real-time conversation testing exposes
+two clock reads violating the exact 24-hour expiry constraint. Both new advancing-clock
+cases fail before the one-instant correction and pass afterward; the new real-time
+conversation/capture browser path passes in all three engines. No SQL constraint or
+provider/release gate is relaxed.
 NFR-REL-002 local recovery instructions now include nondestructive power-interruption
 restart; this does not replace the separately required production recovery evidence.
 
@@ -1198,3 +1215,13 @@ including rebuilt-image security and container smoke. It is promoted to main and
 merged branch removed. Local scan interruption is not a local pass. The next review
 branch remains uncommitted/unverified after its initial 20 contract/SQL cases; no
 complete grading, real-data or MVP acceptance is claimed.
+
+FR-ID-006 / FR-WA-006 / NFR-ACC-001 current capture candidate evidence: full
+1,055-unit/contract and 35-tooling suites pass; first full integration run passes
+411/412, with a historical 0034 fixture invoking the current conversation ORM.
+The corrected fixture retains original-schema JSON rejection and held-record replay
+through forward upgrades; the corrected 21-case receipt/restricted-login suite passes.
+All 108 browser executions, three UI harness and three
+WebKit transport controls pass; the subsequent 44-pixel select regression reproduces
+23-pixel native WebKit output and passes after scoped styling in all three engines
+at normal and 200% text. Hosted application acceptance remains pending.

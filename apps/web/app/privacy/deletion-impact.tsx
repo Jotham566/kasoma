@@ -12,6 +12,8 @@ const policies: Record<Preview["sources"][number]["retention"], string> = {
   STAFF_PROVENANCE_REVIEW:
     "Separate review of staff and other people's records",
   TRANSIENT_EXPIRY: "Existing short-lived verification expiry policy",
+  ACTIVE_EXACT_PRESERVATION_ONLY:
+    "Encrypted copy only while an exact decision remains active",
 };
 const blockers: Record<Preview["blockers"][number], string> = {
   LEGAL_HOLD_COVERAGE_INCOMPLETE:

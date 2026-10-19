@@ -165,3 +165,57 @@ the pending database lifecycle must enforce finite decisions, release and dispos
 
 No full ADR-057 acceptance is claimed until the transaction, SQL guards, lifecycle,
 authorization, API/capability discovery, preview, UI and recovery criteria above pass.
+
+## Capture implementation details — candidate under verification
+
+The next additive increment uses migration 0038. Existing link UPDATE already requires
+revision to increase by exactly one; retain that invariant. A noncycling bigint sequence
+assigns conversation state_version on every INSERT/UPDATE, including no-op and same-time
+writes. Deletion/reinsertion cannot reset the version. Sequence gaps after rollback are
+allowed; exhaustion fails rather than wrapping. Existing rows receive distinct versions
+on upgrade; the trigger then overrides caller-supplied versions. This counter is transient
+operational metadata, not continuous payload history or a new conversation source UUID.
+
+The observed version is a purpose-keyed HMAC over request/owner, source kind, exact
+allowlisted evidence and conversation state version. Raw sequence values never enter
+client responses. Source inspection uses a bounded JSON POST so the supplied operational
+source identifier does not enter a query string. It returns only the opaque version,
+requires the same recent independent claimant and shares the hold-read rate budget.
+
+Capture is restricted to the existing owned ACTIVE link without an effective STOP
+barrier. Conversation capture additionally requires the matching owned current revision,
+unexpired state and at least one surviving session/outbound reference. An outbound
+reference must itself belong to that link/revision/owner; it is never used to infer
+ownership. Already unlinked, stopped, expired, absent, cleared or ambiguous sources
+are unavailable. Existing terminal original-record hold selection remains separate.
+
+Three separate tables hold immutable capture metadata, disposable encrypted bodies
+and immutable disposal receipts. They reference the existing request/user and each
+other, never operational channel rows. Snapshot metadata retains exact source/version,
+capturing actor/time and parent request; owner is derived from that immutable request.
+The encrypted binding still includes owner as specified by the private format.
+Deferred SQL checks reject initial metadata without both ciphertext and an active
+finite exact decision. Independent SQL checks validate current claim, source ownership,
+revision/state, effective STOP barrier and source availability. Evidence bodies cannot
+be updated or recreated after disposal; metadata/receipts remain immutable.
+
+The service uses existing account/request-before-channel locks, current database time,
+constant-time observed-version comparison and the existing exact actor/key receipt pool.
+IdentityError deliberately commits outer rate accounting; explicit savepoints roll back
+every capture write, including audit/outbox, on late failure. Additional decisions and
+releases for these snapshot kinds also use that rollback boundary. Existing original
+record kinds retain their established behavior. Retries return the same existing
+decision even after the source changes; they never recapture changing state.
+
+Existing HoldView lists only opaque decision/snapshot references and lifecycle metadata.
+Additional finite decisions may name an existing snapshot from the same parent request
+while its encrypted body exists. Creation, reads and release for new kinds use database
+wall clock; historical record_is_held queries remain unchanged. Bounded cleanup excludes
+active exact decisions before LIMIT, locks bodies with SKIP LOCKED, deletes only expired/
+released encrypted evidence and records disposal atomically. This continues when new
+creation is disabled. Accountability expiry and account erasure are still separate.
+
+CHANNEL_PRESERVATION_ENABLED defaults false. Advertise new snapshot kinds only while
+creation is enabled; existing readers/release and body disposal remain available after
+disablement. Generated contracts, advisory inventory and operator controls ship with the
+candidate, but full SQL/race/role/recovery/browser/security acceptance is still required.

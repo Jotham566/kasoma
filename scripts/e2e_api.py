@@ -35,7 +35,12 @@ def main() -> None:
     url = make_url(config.database_url.get_secret_value()).update_query_dict(
         {"options": f"-csearch_path={schema},public"}
     )
-    config = Settings(database_url=url.render_as_string(hide_password=False), email_provider="fake")
+    config = Settings(
+        database_url=url.render_as_string(hide_password=False),
+        email_provider="fake",
+        model_provider="fake",
+        channel_preservation_enabled=True,
+    )
     subprocess.run(
         ["uv", "run", "--frozen", "alembic", "-c", "apps/api/alembic.ini", "upgrade", "head"],
         env=os.environ | {"DATABASE_URL": config.database_url.get_secret_value()},
@@ -58,6 +63,7 @@ def main() -> None:
         "second": ["ACADEMIC_REVIEWER"],
         "flag-reviewer": ["ACADEMIC_REVIEWER"],
         "privacy-admin": ["ADMIN"],
+        "preservation-admin": ["ADMIN"],
         "operations-admin": ["ADMIN"],
         "audit-admin": ["ADMIN"],
     }.items():

@@ -84,6 +84,9 @@ async function gateway(
   const holdRelease = new RegExp(
     `^admin/data-requests/${uuid}/holds/${uuid}/release$`,
   ).test(path);
+  const channelPreservation = new RegExp(
+    `^admin/data-requests/${uuid}/channel-preservations(?:/inspect)?$`,
+  ).test(path);
   const importRead = new RegExp(`^admin/content-imports/${uuid}$`).test(path);
   const gradingAudit = new RegExp(
     `^admin/grading-audits/${uuid}(/review)?$`,
@@ -128,6 +131,7 @@ async function gateway(
                                 : ["GET", "PATCH"]
                             : allowed[path];
   if (exportJob) methods = ["GET", "POST"];
+  if (channelPreservation) methods = ["POST"];
   if (exportFile) methods = ["GET"];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");

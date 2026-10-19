@@ -66,12 +66,28 @@ On 19 October the user explicitly approved this bounded synthetic implementation
 Real-data processing and erasure were excluded in the approval request and remain
 unauthorized. The first increment is an offline strict evidence format and independently
 derived Fernet encryption bound to snapshot/request/owner/source/revision/version.
-All 82 focused socket-disabled, 1,022 unit/contract, 378 integration and35 tooling cases
+All 82 focused socket-disabled, 1,022 unit/contract, 378 integration and 35 tooling cases
 pass locally, alongside lint/type/generated-contract/security/image/service checks.
 Complete hosted 39176205670 passes at `25b44b1`. See
 [increment verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md).
-Capture transactions, SQL guards, exact observed-version generation, finite cleanup,
-authorization, API/capabilities, preview, UI and recovery are next; no capture is enabled.
+Capture candidate on `codex/channel-preservation-capture` adds additive 0038, opaque
+exact source versions, independent SQL guards, atomic finite decisions/disposal,
+generated contracts, preview inventory and operator controls. Initial 27 integration
+cases were extended to 34 (including both actual restricted-login paths); 105 focused
+format/contract and two advancing-clock cases pass. Initial three-engine browser
+journeys pass. Populated logical recovery passes 68 tables/680 rows in 302 ms,
+including encrypted snapshots and disposal/sequence state after source removal.
+The full 1,055-unit/contract and 35-tooling suites pass; integration finishes with
+411 passes and one historical-schema fixture failure. Its correction preserves
+the 0034 JSON guard and forward-upgrade assertions. All 108 browser executions,
+three UI harness and three native transport checks pass; final scoped dropdown
+target-size correction passes the capture journey in all three engines. Security,
+recovery, migration and Docker smoke pass. The corrected 21-case receipt/restricted-login suite passes, including the
+historical upgrade. Complete hosted acceptance remains required. See
+[capture verification](E8_CHANNEL_PRESERVATION_VERIFICATION.md).
+Format source `25b44b1` is on main with documentation closeout `9c98a55`; its merged
+branch is removed. The running Docker UI is upgraded additively to 0038; migration and service smoke
+pass with all eight services healthy. Capture remains disabled.
 Full coverage, erasure/anonymization and accountability expiry remain incomplete.
 
 The separate capture candidate is under implementation. Its real-time browser path
@@ -83,7 +99,7 @@ no real-time conversation or full capture acceptance is inferred from this forma
 ## Review stack and remaining gates
 
 All eight Compose services remain running healthy at http://localhost:3000;
-Mailpit is http://localhost:8025. The preview is on schema 0037 with receipt
+Mailpit is http://localhost:8025. The preview is on schema 0038 with capture and receipt
 creation false and normal learner short-text scoring disabled. Existing volumes are
 retained. See [nondestructive local recovery](../runbooks/LOCAL_DEVELOPMENT.md).
 Native Playwright runs are serial; do not rebuild native .next during an active server.

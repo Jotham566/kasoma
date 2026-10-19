@@ -136,6 +136,10 @@ its private evidence format is the first increment, with capture/lifecycle accep
 Format source `25b44b1` passes complete hosted 39176205670. Real-time capture development
 exposes an existing conversation updated_at/exact 24-hour expiry clock mismatch; its
 advancing-clock correction and new browser coverage remain on the active capture branch.
+The bounded capture candidate adds 0038 and exact encrypted evidence/lifecycle/UI;
+local evidence and the corrected historical-schema fixture are tracked in
+`docs/implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md`. Complete hosted
+acceptance remains pending; capture creation remains false.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

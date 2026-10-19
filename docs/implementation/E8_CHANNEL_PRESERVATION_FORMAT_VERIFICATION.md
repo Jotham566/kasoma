@@ -74,8 +74,12 @@ fixed-clock fixture acceptance does not prove real-time channel acceptance.
 
 ## Next complete application slice
 
+See the concrete [capture readiness plan](E8_CHANNEL_PRESERVATION_CAPTURE_READINESS.md)
+for existing integration points, exact-version constraints and rollback/lifecycle gates.
+
 Implement default-disabled exact source inspection/capture with independent recent-OTP
-ADMIN claim checks, request-owner lock then channel lock, exact version validation,
+ADMIN claim checks, existing authenticated-account/request locks before the channel lock,
+exact version validation,
 atomic immutable metadata/encrypted body/finite decision/audit/safe outbox and exact
 idempotency. The identity transaction helper intentionally commits IdentityError for
 rate/OTP accounting; capture must use an explicit rollback/savepoint boundary so a

@@ -506,20 +506,23 @@ def test_json_guard_forward_upgrade_keeps_existing_menu_hold(identity, content):
     import os
     import subprocess
 
-    from services.whatsapp_delivery import deliver_one
-    from services.whatsapp_processing import process_one
+    from services.domain.messaging import ChannelLink
     from tests.integration.test_whatsapp_practice import Flow
 
     flow = Flow(identity, content)
     service, client, actors, *_ = content
     service.settings.channel_receipt_holds_enabled = True
-    flow.incoming("START")
-    assert process_one(service)
-    assert deliver_one(service, flow.provider)
-    with Session(service.engine) as db:
-        source = db.scalar(
-            select(OutboundMessage.id).where(OutboundMessage.template == "PRACTICE_MENU")
-        )
+    # Build the historical terminal fixture using only its original columns.
+    # The current conversation ORM requires 0038 and must not run against 0034.
+    _, source = receipt(content, owner=flow.actor)
+    with Session(service.engine) as db, db.begin():
+        assert db.scalar(text("SELECT version_num FROM alembic_version")) == "0034"
+        link = db.scalar(select(ChannelLink).where(ChannelLink.user_id == flow.actor))
+        row = db.get(OutboundMessage, source)
+        row.template = "PRACTICE_MENU"
+        row.link_id, row.link_revision = link.id, link.revision
+        row.recipient_hash = link.sender_hash
+        row.menu_topic_ids = [flow.plan["topic_id"]]
     target, body = prepare(content)
     value, key = scoped(body, "CHANNEL_OUTBOUND_RECEIPT", source), str(uuid4())
     held = hold(client, actors["admin"], target, value, key)

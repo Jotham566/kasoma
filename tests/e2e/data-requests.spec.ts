@@ -381,7 +381,9 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     expect(
       (await new AxeBuilder({ page: admin }).analyze()).violations,
     ).toEqual([]);
-    const holds = deletion.getByRole("region", { name: "Record legal holds" });
+    const holds = deletion.getByRole("region", {
+      name: /^Record legal holds for request /,
+    });
     await holds.getByRole("button", { name: "Manage record holds" }).click();
     await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
     await expect(holds).toContainText(
@@ -400,6 +402,8 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       "Grading publication (attempt reference)",
       "Grading audit assignment",
       "Completed grading review",
+      "Existing link snapshot (snapshot UUID)",
+      "Existing conversation snapshot (snapshot UUID)",
       "Data request review (request reference)",
     ]);
     // Presentation-only advertised capability; real flag/ownership/SQL behavior is

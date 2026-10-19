@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from scripts.assessment_fixtures import seed_assessment
 from scripts.grading_fixtures import unapproved_band
+from scripts.recovery_channel_preservation import populate_preservation
 from scripts.recovery_channel_receipts import populate_channel_receipts
 from scripts.recovery_exports import RecoveryExport, populate_export
 from scripts.recovery_short_text import populate_short_text
@@ -157,7 +158,8 @@ def populate(settings: Settings) -> RecoveryExport:
                 uuid4(),
             )
         populate_short_text(identity, token, subject, topic)
-        populate_channel_receipts(identity, token)
+        channel_authority = populate_channel_receipts(identity, token)
+        populate_preservation(identity, token, channel_authority)
         return populate_export(identity, token)
     finally:
         engine.dispose()
