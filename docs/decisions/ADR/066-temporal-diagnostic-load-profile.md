@@ -1,7 +1,7 @@
 # ADR-066: Older evidence and completed diagnostics in the objective load profile
 
 Date: 19 October 2026
-Status: Accepted within delegated synthetic test engineering; local tooling checks pass, native/hosted verification pending
+Status: Accepted within delegated synthetic test engineering; local tooling, native profiles and complete own hosted39313955470 pass
 Requirements: NFR-PERF-001/002, NFR-SCL-001, FR-DIAG-001–005, FR-MST-001–005,
 NFR-SEC-002, NFR-MNT-001
 

@@ -16,7 +16,7 @@ p991074.231ms remains visible. No deadline, threshold, consent or source evidenc
 rewritten. These synthetic fixtures establish neither daily/provider failure soak,
 production latency/resource attribution nor academic/privacy/release acceptance.
 Only Markdown and aggregate evidence follow the verified tooling/test/runtime tree.
-NFR-PERF-001/003 and NFR-MNT-001 are addressed within these measured boundaries.
+NFR-PERF-001/002 and NFR-MNT-001 are addressed within these measured boundaries.
 
 
 ## Provider recovery decision preparation - documentation only

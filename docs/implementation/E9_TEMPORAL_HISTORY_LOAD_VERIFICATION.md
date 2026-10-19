@@ -1,9 +1,9 @@
-# Older/diagnostic history objective load - candidate
+# Older/diagnostic history objective load
 
 Requirements: NFR-PERF-001/002, NFR-SCL-001, FR-DIAG-001–005,
 FR-MST-001–005, NFR-SEC-002, NFR-MNT-001.
 Decision: [ADR-066](../decisions/ADR/066-temporal-diagnostic-load-profile.md).
-Status: final local tooling and all three sequential native profiles pass; own complete hosted acceptance pending.
+Status: local tooling, all three native profiles and complete own hosted39313955470 pass; production acceptance remains gated.
 
 ## Profile boundary
 
@@ -206,6 +206,6 @@ p991074.231ms remains visible. No deadline, threshold, consent or source evidenc
 rewritten. These synthetic fixtures establish neither daily/provider failure soak,
 production latency/resource attribution nor academic/privacy/release acceptance.
 Only Markdown and aggregate evidence follow the verified tooling/test/runtime tree.
-NFR-PERF-001/003 and NFR-MNT-001 are addressed within these measured boundaries.
+NFR-PERF-001/002 and NFR-MNT-001 are addressed within these measured boundaries.
 
 Verified parent4ba94a3 is integrated through Markdown only relative to own hosted687d86c.
