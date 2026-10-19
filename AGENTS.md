@@ -222,8 +222,12 @@ unavailable because the Mac was locked; automated engines do not satisfy physica
 After integrating verified main 83f30cc, the 55-case progress and 40-case assessment
 targets, 1,146 unit/contract, 35 tooling and three progress browser executions pass,
 plus quality/contracts/build and security/source/images/service smoke. Seven channel
-cases overlap the two targeted commands. New combined load evidence and its own
-complete hosted run remain pending. The performance CI does not verify ADR-062.
+cases overlap the two targeted commands. Combined source 78ca959 passes both native
+profiles (START p95 455.214/409.196ms; PROGRESS p95 14.087/16.522ms), each with 7,000
+requests, zero errors and owned cleanup. Full hosted 39294126038 is in progress; do not
+replace its branch head or infer acceptance from the earlier performance CI. Only
+Markdown/aggregate JSON closeout follows that runtime/test/Make tree. ADR-061 approval
+and physical/branded review remain pending; unlock was requested once from the owner.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

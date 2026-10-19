@@ -11,7 +11,10 @@ retention permission. Five missing-field baseline failures become 54 initial foc
 passes; final 55 focused cases, 1,146 unit/contract, 35 tooling and three progress browser
 journeys pass, plus quality/contracts/build, security/images and service smoke.
 [Verification](E6_PRACTICE_ACTIVITY_VERIFICATION.md) tracks expanded/backend/browser/hosted acceptance;
-this is not a stored streak system, ADR-061 approval or real-data release.
+this is not a stored streak system, ADR-061 approval or real-data release. Combined
+source 78ca959 also passes both native profiles: START p95 455.214/409.196ms and PROGRESS
+p95 14.087/16.522ms, with 7,000 requests, zero errors and owned cleanup per profile.
+Hosted 39294126038 is in progress; no runtime promotion or variance explanation is claimed.
 
 ## Verified fresh revision response — no empty evidence reads
 
@@ -171,7 +174,7 @@ nine focused assessment cases, lint/types/contracts/build, updated image/source 
 and Docker service smoke. All eight services are healthy on0042 at http://localhost:3000;
 retirement stays false. See [layout evidence](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md).
 
-Hosted39255125288 is refused before any steps because GitHub reports failed account
+Hosted 39255125288 is refused before any steps because GitHub reports failed account
 payments or insufficient spending capacity. The owner has been asked once to restore
 Actions capacity. Main remains verified `e9f688e`; no merge, gate bypass or destruction
 of the unmerged branch occurs. A complete hosted run remains required. The earlier
@@ -197,7 +200,7 @@ that browser step pass. A bounded, guarded test-transport correction and exact
 committed-code/retry-key checks are in verification; no application policy changes
 or main promotion occur. Corrected source `b6aea35` passes 12 transport controls,
 three focused channel journeys, three native Linux attachment controls and all 108
-browser executions locally. Hosted39249423592 passes all backend and transport controls but fails a different
+browser executions locally. Hosted 39249423592 passes all backend and transport controls but fails a different
 WebKit resumed-session pointer transition after 79 ordinary browser passes. No main
 promotion occurs. A [review-action layout correction](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md)
 reproduces a 47.421875-pixel shift under delayed hints, moves optional review hints

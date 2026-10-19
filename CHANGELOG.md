@@ -11,7 +11,10 @@ retention permission. Five missing-field baseline failures become 54 initial foc
 passes; final 55 focused cases, 1,146 unit/contract, 35 tooling and three progress browser
 journeys pass, plus quality/contracts/build, security/images and service smoke.
 [Verification](docs/implementation/E6_PRACTICE_ACTIVITY_VERIFICATION.md) tracks expanded/backend/browser/hosted acceptance;
-this is not a stored streak system, ADR-061 approval or real-data release.
+this is not a stored streak system, ADR-061 approval or real-data release. Combined
+source 78ca959 also passes both native profiles: START p95 455.214/409.196ms and PROGRESS
+p95 14.087/16.522ms, with 7,000 requests, zero errors and owned cleanup per profile.
+Hosted 39294126038 is in progress; no runtime promotion or variance explanation is claimed.
 
 ## Verified fresh revision response — no empty evidence reads
 

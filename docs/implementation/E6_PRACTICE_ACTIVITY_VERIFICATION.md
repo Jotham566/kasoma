@@ -62,7 +62,7 @@ all normal Docker services running. No real data, inference, Gemini or external 
 
 ## Verified performance baseline integrated
 
-Main83f30cc publishes complete hosted39286019222's verified performance source58d598e
+Main 83f30cc publishes complete hosted 39286019222's verified performance source58d598e
 plus Markdown/aggregate closeout. Its merged branch is removed. That baseline is now
 merged into the activity candidate; overlapping documentation and Make targets retain
 both changes. The combined tree still requires its own targeted/load/hosted verification;
@@ -80,3 +80,58 @@ and WebKit 16.1s, including real graded activity, sealed diagnostic exclusion, l
 absence, offline retry, axe and narrow primary-action order. Native branded/physical
 review remains separate. Both source-pinned load profiles and the feature's own full
 hosted run are still required; no prior CI result substitutes for this combined tree.
+
+## Published candidate and objective load observation
+
+Combined runtime/test/Make source 78ca959da5e2866d6489d88bfb8f148bc6366cd8 is pushed
+on codex/practice-consistency. Its own hosted 39294126038 is in progress. Do not replace
+that branch head while verification runs. Main 83f30cc retains the separately accepted
+performance runtime; the activity feature is not promoted or accepted.
+
+Standard `make load-objective` passes at this combined source: 7,000 HTTP requests,
+zero errors, 500 completed learners/2,500 grades and 50 peak concurrent requests.
+START p95/p99 is 455.214/1,002.465ms; PROGRESS p95 is 14.087ms and ANSWER p95 is 27.497ms.
+Owned database/role cleanup succeeds. The [source-pinned aggregate report](evidence/E6_PRACTICE_ACTIVITY_OBJECTIVE_LOCAL_2026_10_19_78ca959.json)
+contains no learner/source identifiers or payloads and explicitly excludes production
+acceptance/database resource measurement. The mixed-history observation below completes this native pair; these
+positive observations do not explain prior START variance or close release gates.
+
+## Manual-review environment
+
+The native UI inventory reports the Mac locked and automatic unlock unavailable.
+Unlock was requested once from the owner; no bypass or inferred manual acceptance.
+The three-engine isolated screenshot/keyboard/axe checks above remain valid within
+their own scope. Actual branded browsers, assistive technology and physical devices
+still require their separate observations/evidence.
+
+## Mixed-history result at the same combined source
+
+Standard `make load-history-mixed` passes at 78ca959 with 25,000 prior grades and 27,500
+final grades/5,500 completed sessions. All 7,000 requests succeed; 500 learners complete
+at 50 peak concurrent HTTP requests, and owned cleanup succeeds. START p95/p99 is
+409.196/985.502ms; PROGRESS p95 is 16.522ms. Numeric/choice ANSWER p95 is 28.493/28.537ms
+with 1,250 timed answers per format; observed answer dispatch is 20/s.
+The [source-pinned aggregate report](evidence/E6_PRACTICE_ACTIVITY_HISTORY_MIXED_LOCAL_2026_10_19_78ca959.json)
+contains counts/timings only, not learner/source identifiers or payloads. Database
+resources and production acceptance remain explicitly unmeasured/unapproved.
+
+Both native profiles ran once sequentially after other native checks completed; no
+threshold, warm-up or retry change. Earlier failed history START p95 559.306ms remains
+failed and unexplained. These passes do not establish real-provider/soak/release SLOs.
+The exact source's full hosted 39294126038 remains in progress; keep its branch head
+unchanged. Only Markdown/aggregate JSON closeout follows runtime/test/Make source 78ca959.
+
+## Files in the implementation increment
+
+- Projection/contracts: services/practice_activity.py, services/progress.py and
+  services/progress_contracts.py.
+- UI/generated clients: apps/web/app/learning-dashboard.tsx,
+  packages/api-client/openapi.json and packages/api-client/src/schema.d.ts.
+- Commands/tests: Makefile; tests/contract/test_practice_activity.py;
+  tests/integration/test_progress.py and test_channel_assessment.py;
+  tests/e2e/progress.spec.ts.
+- Decisions/specifications: ADR-062, ADR-024 follow-up, ADR index and decision log;
+  domain/API/UX specifications.
+- Evidence/tracking: AGENTS.md, CHANGELOG.md, current sprint, requirements traceability,
+  this verification and the two aggregate reports. No migration, dependency or provider
+  implementation/configuration change.

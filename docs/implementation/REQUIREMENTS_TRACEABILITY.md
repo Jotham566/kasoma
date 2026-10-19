@@ -11,7 +11,10 @@ retention permission. Five missing-field baseline failures become 54 initial foc
 passes; final 55 focused cases, 1,146 unit/contract, 35 tooling and three progress browser
 journeys pass, plus quality/contracts/build, security/images and service smoke.
 [Verification](E6_PRACTICE_ACTIVITY_VERIFICATION.md) tracks expanded/backend/browser/hosted acceptance;
-this is not a stored streak system, ADR-061 approval or real-data release.
+this is not a stored streak system, ADR-061 approval or real-data release. Combined
+source 78ca959 also passes both native profiles: START p95 455.214/409.196ms and PROGRESS
+p95 14.087/16.522ms, with 7,000 requests, zero errors and owned cleanup per profile.
+Hosted 39294126038 is in progress; no runtime promotion or variance explanation is claimed.
 
 ## Verified fresh revision response — no empty evidence reads
 
@@ -169,7 +172,7 @@ Source `e33ec69` passes111 local browser executions, nine focused assessment cas
 quality/security/image/service checks and runs in healthy Docker on0042 with retirement
 false. Its backend tree is unchanged from the1,112-unit/465-integration/35-tooling
 verified tree. [Layout evidence](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md) records
-the red/green47.421875-pixel regression. Hosted39255125288 starts no steps because
+the red/green47.421875-pixel regression. Hosted 39255125288 starts no steps because
 GitHub reports an account payment/spending-capacity problem. Owner action is requested
 once; complete hosted acceptance/main promotion remain pending, with no gate waiver.
 The [operations evidence](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md) retains both
@@ -189,7 +192,7 @@ socket reset, after all 465 hosted integration and 1,112 unit/contract cases pas
 The FR-WA-001/004/006 / NFR-MNT-001 / NFR-SEC-002 correction adds guarded single-reset
 transport handling, private failure diagnostics and exact committed-code/key assertions.
 Corrected `b6aea35` passes 12 transport controls and the full local 108-execution
-browser matrix. Hosted39249423592 passes backend/transport gates but fails a WebKit
+browser matrix. Hosted 39249423592 passes backend/transport gates but fails a WebKit
 resumed-practice transition after79 ordinary passes. NFR-ACC-001 / FR-REV-005 /
 FR-GRD-006 / NFR-MNT-001: [stable review-action evidence](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md)
 records a deterministic47.421875-pixel red regression and nine green focused cases
@@ -438,7 +441,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-001 | Unique append-only attempt/skill evidence; synchronous deterministic grading; consented legacy reconciliation | Duplicate replay, rollback, immutable DB records and integration tests | Local deterministic path implemented |
 | FR-MST-002 | Specified weighted prior, score, coverage/recency confidence and display state | Hand calculations, property tests and diagnostic UI | Local implemented |
 | FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
-| FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history | Progress engine/API/browser tests; [verification](E6_PROGRESS_VERIFICATION.md) | Local synthetic implemented; academic aggregation calibration and large-history performance gates pending |
+| FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history; roadmap 3.5 practice-day candidate | Progress engine/API/browser tests; [verified baseline](E6_PROGRESS_VERIFICATION.md); [activity candidate](E6_PRACTICE_ACTIVITY_VERIFICATION.md) | Baseline synthetic implementation; activity source 78ca959 awaits own full hosted/combined-load verification. Academic aggregation and full release performance approval remain pending |
 | FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
 | FR-WA-001 | `services/whatsapp_linking.py`, migration 0018, owned web channel UI | [E7 evidence](E7_LINKING_READINESS.md); expiry/replay/concurrency, consent/minor and sender-collision tests | Local fake linking verified; production provider/pilot gates remain |
