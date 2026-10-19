@@ -250,6 +250,16 @@ are unexecuted. Unchanged six-case native privacy diagnosis passes; no fix is in
 Combined recovery/activity source adf4328 is pushed for full hosted39299684285, now
 in progress. Main remains e7a4fc0; neither branch is promoted. Preserve the active
 remote head; only Markdown closeout follows that runtime/test/Make tree.
+Complete hosted39299684285 is SUCCESS at exact combined source
+adf432879a8b55eeb1f9e8d59f5d6b053f76bf56:1,154 unit/contract,487 integration,35 tooling
+and111 full browser executions plus every focused/setup/migration/seed/role/quality/
+contract/build/security/image/service gate. Recovery verifies69 tables/686 rows in493ms,
+no cleanup failure and stripped retirement execution denied. Bounded practice-day and
+recovery-ownership engineering are accepted. Earlier39294126038 WebKit privacy timeout
+remains FAILED/unexplained; no fix or new adf load measurement is inferred. Only
+Markdown closeout follows the verified tree. Separate OTP sourceceee401 CI39304052749
+is live, not accepted by this run. Normal review Docker stays healthy on0042; local
+preview includes that separate OTP candidate with collection/retirement disabled.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

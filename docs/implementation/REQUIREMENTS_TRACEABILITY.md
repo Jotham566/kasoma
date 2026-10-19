@@ -1,5 +1,23 @@
 # Requirements Traceability
 
+## Verified practice-day display and recovery ownership
+
+Complete hosted [39299684285](https://github.com/Jotham566/kasoma/actions/runs/39299684285) passes at exact combined
+source adf432879a8b55eeb1f9e8d59f5d6b053f76bf56: 1,154 unit/contract, 487 integration,
+35 tooling and 111 full browser executions, plus focused assessment/transport/staff/
+native WebKit controls and all setup/migration/seed/role/quality/contracts/build/
+security/image/service gates. Logical recovery verifies 69 tables/686 rows in 493ms,
+without cleanup failure; restored retirement execution remains denied.
+
+This accepts the bounded synthetic practice-day indicator (FR-MST-004/005 and roadmap
+3.5) and exact owned recovery-role correction (NFR-REL-002/SEC-002/MNT-001). Native
+load observations remain pinned to activity source78ca959; no adf4328 load remeasurement
+is invented. The earlier run39294126038 remains FAILED at an unexplained WebKit
+privacy timeout; current full passes do not establish its cause or a transport fix.
+Only Markdown closeout follows the verified application/test/Make tree. External
+academic/privacy/provider, full preservation/erasure, production recovery, physical/
+branded-device and pilot gates remain. No ADR-061 approval or OTP acceptance is inferred.
+
 ## Activity hosted timeout retained; combined verification active
 
 Full source78ca959 run39294126038 passes 1,146 unit/contract,484 integration,35 tooling,
@@ -476,7 +494,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-001 | Unique append-only attempt/skill evidence; synchronous deterministic grading; consented legacy reconciliation | Duplicate replay, rollback, immutable DB records and integration tests | Local deterministic path implemented |
 | FR-MST-002 | Specified weighted prior, score, coverage/recency confidence and display state | Hand calculations, property tests and diagnostic UI | Local implemented |
 | FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
-| FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history; roadmap 3.5 practice-day candidate | Progress engine/API/browser tests; [verified baseline](E6_PROGRESS_VERIFICATION.md); [activity candidate](E6_PRACTICE_ACTIVITY_VERIFICATION.md) | Baseline synthetic implementation; activity source 78ca959 passes both native loads but hosted 39294126038 fails a WebKit privacy timeout. Combined source adf4328 full hosted verification is pending. Academic aggregation and release approval remain pending |
+| FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history; roadmap 3.5 practice-day candidate | Progress engine/API/browser tests; [verified baseline](E6_PROGRESS_VERIFICATION.md); [activity candidate](E6_PRACTICE_ACTIVITY_VERIFICATION.md) | Baseline and practice-day synthetic engineering verified at adf4328 by full hosted39299684285; native loads remain pinned to78ca959. Prior WebKit timeout remains unexplained. Academic aggregation and release approval remain pending |
 | FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
 | FR-WA-001 | `services/whatsapp_linking.py`, migration 0018, owned web channel UI | [E7 evidence](E7_LINKING_READINESS.md); expiry/replay/concurrency, consent/minor and sender-collision tests | Local fake linking verified; production provider/pilot gates remain |
@@ -498,7 +516,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-PERF-001 | Isolated objective and mixed recent-history HTTP load; ADR-046 locks/batched eligibility | [Baseline evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md); [mixed history](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) | Native 6b06c53 profiles and complete hosted 39217860618 pass; mixed START p95 432.085 ms. Deployment, older/diagnostic histories and provider acceptance remain pending |
 | NFR-PERF-002 | Deterministic choice/numeric response feedback; bounded channel wake-up | [Current baseline/mixed evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md); [channel evidence](E7_CONVERSATION_VERIFICATION.md) | Native 6b06c53 mixed ANSWER p95 27.487 ms; numeric subset 27.778 ms, 1,250 samples per format. Full AI/provider/WhatsApp/deployment acceptance remains pending |
 | NFR-REL-001 | — | — | Not started |
-| NFR-REL-002 | Isolated synthetic logical recovery command (ADR-042) | 16 safety cases; [recovery evidence](E9_RECOVERY_VERIFICATION.md) | Synthetic logical recovery verified in CI 37223872075; production PITR/RPO/RTO pending |
+| NFR-REL-002 | Isolated synthetic logical recovery with exclusive source-role/OID cleanup (ADR-042) | [Recovery evidence](E9_RECOVERY_VERIFICATION.md); [ownership correction](E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md) | Full hosted39299684285 at adf4328 verifies69 tables/686 rows in493ms and preserves unowned/replaced roles; object-storage and production PITR/RPO/RTO remain pending |
 | NFR-SCL-001 | Synthetic 2,000-registration/500-active/50-concurrent objective and mixed-history profiles | [Load evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) | Both native 6b06c53 7,000-request profiles pass; mixed final totals 27,500 grades/5,500 sessions, zero errors, successful cleanup. Complete hosted regression passes; daily soak/deployed/provider scale acceptance pending |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |

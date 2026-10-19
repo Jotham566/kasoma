@@ -1,8 +1,8 @@
-# Owned practice-day indicator — candidate verification
+# Owned practice-day indicator — bounded engineering verified
 
 Requirements: FR-MST-004/005, FR-ID-003, FR-WA-003, NFR-SEC-002,
 NFR-ACC-001, NFR-LOC-001 and NFR-MNT-001; approved roadmap 3.5.
-Status: implementation candidate; not accepted or promoted.
+Status: bounded synthetic engineering accepted after full hosted39299684285 at adf4328; production/release gates remain.
 
 ## Requirement and decisions
 
@@ -163,3 +163,27 @@ Its full hosted [39299684285](https://github.com/Jotham566/kasoma/actions/runs/3
 started before the preceding timeout result was inspected and remains in progress.
 Neither branch is promoted; main remains e7a4fc0. Do not replace the live combined
 head for Markdown closeout. Full MVP/release gates and the unresolved timeout remain.
+
+## Verified practice-day display and recovery ownership
+
+Complete hosted [39299684285](https://github.com/Jotham566/kasoma/actions/runs/39299684285) passes at exact combined
+source adf432879a8b55eeb1f9e8d59f5d6b053f76bf56: 1,154 unit/contract, 487 integration,
+35 tooling and 111 full browser executions, plus focused assessment/transport/staff/
+native WebKit controls and all setup/migration/seed/role/quality/contracts/build/
+security/image/service gates. Logical recovery verifies 69 tables/686 rows in 493ms,
+without cleanup failure; restored retirement execution remains denied.
+
+This accepts the bounded synthetic practice-day indicator (FR-MST-004/005 and roadmap
+3.5) and exact owned recovery-role correction (NFR-REL-002/SEC-002/MNT-001). Native
+load observations remain pinned to activity source78ca959; no adf4328 load remeasurement
+is invented. The earlier run39294126038 remains FAILED at an unexplained WebKit
+privacy timeout; current full passes do not establish its cause or a transport fix.
+Only Markdown closeout follows the verified application/test/Make tree. External
+academic/privacy/provider, full preservation/erasure, production recovery, physical/
+branded-device and pilot gates remain. No ADR-061 approval or OTP acceptance is inferred.
+
+The verified combined source retains every activity API/UI assertion, including the
+new real graded count and unfinished-diagnostic exclusion. Chromium/Firefox/WebKit
+ordinary suites pass 33 each, followed by four synthetic short-text cases per engine.
+Focused staff content, transport, assessment, eight rubric and actual runtime-login
+checks also pass. No accepted declaration is inferred from documentation validation.
