@@ -413,3 +413,9 @@ test-ci-storage:
 .PHONY: test-progress
 test-progress:
 	$(UV) pytest tests/contract/test_progress_engine.py tests/contract/test_progress_reuse.py tests/integration/test_progress.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-web-select-targets
+test-web-select-targets:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts

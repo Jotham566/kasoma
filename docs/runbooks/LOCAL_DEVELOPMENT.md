@@ -1276,3 +1276,12 @@ request-local replay-work bound and existing consent/sealed-diagnostic/read-only
 API cases. Every progress request builds a fresh replay context at its own explicit
 time; no persistent/shared cache or environment flag is added. See
 [verification](../implementation/E6_PROGRESS_REUSE_VERIFICATION.md).
+
+### Shared select touch targets
+
+`make test-web-select-targets` runs the existing synthetic narrow touch journey in
+Chromium, Firefox and WebKit, requiring 44-pixel select targets, keyboard focus, axe
+and 320-pixel reflow at normal and 200% text before completing saved practice.
+`make test-web-content` includes the corresponding controlled staff editor checks.
+See [verification](../implementation/E6_SELECT_TARGET_VERIFICATION.md); this does
+not replace physical-device acceptance.

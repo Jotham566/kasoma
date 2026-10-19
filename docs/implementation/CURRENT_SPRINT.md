@@ -131,3 +131,14 @@ pure dense overlapping-scope case reuses eight distinct skill replays instead of
 24, with no shared cache, data/API/math or authorization changes. Fresh-read API,
 browser and broad/hosted verification are pending; see
 [verification](E6_PROGRESS_REUSE_VERIFICATION.md).
+
+## Shared selector accessibility follow-up
+
+`codex/select-touch-targets` extends the same proven CSS correction to shared native
+single-select controls under NFR-ACC-001/NFR-COMP-001. The existing 320-pixel practice
+journey now asserts both selector targets at normal and 200% text: Chromium and
+Firefox pass before changes, while WebKit reproduces a 23-pixel target. Native
+options, labels, focus and disabled semantics stay intact; multi-select/listbox
+controls are excluded. All three corrected touch journeys and three staff UI
+harness cases pass; image/service and hosted verification remain pending. See
+[select target evidence](E6_SELECT_TARGET_VERIFICATION.md).

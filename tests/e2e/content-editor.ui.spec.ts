@@ -90,6 +90,26 @@ test("FR-CNT-003: controlled rubric survives save and explicit reload", async ({
     path: ".local/ui-review/content-editor-mobile.png",
     fullPage: true,
   });
+  for (const scale of ["100%", "200%"]) {
+    await page.evaluate((value) => {
+      document.documentElement.style.fontSize = value;
+    }, scale);
+    const controls = page.getByRole("combobox");
+    expect(await controls.count()).toBeGreaterThan(0);
+    for (const control of await controls.all()) {
+      const bounds = await control.boundingBox();
+      expect(bounds?.width).toBeGreaterThanOrEqual(44);
+      expect(bounds?.height).toBeGreaterThanOrEqual(44);
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "100%";
+  });
   await page.getByRole("button", { name: "Save draft", exact: true }).click();
   await expect(page.getByRole("status")).toHaveText("Version 1: DRAFT.");
   await expect(page.getByLabel("Response format")).toHaveValue("SHORT_TEXT");

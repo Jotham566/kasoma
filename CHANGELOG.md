@@ -1,5 +1,13 @@
 # Changelog
 
+## In progress — shared native select touch targets
+
+- Extend the proven WebKit menu styling to shared single-select inputs, preserving
+  native semantics and a visible arrow. NFR-ACC-001/NFR-COMP-001 tests reproduce a
+  23-pixel practice menu before the correction. All three touch journeys and three
+  staff UI harness cases pass with 320-pixel reflow and normal/200%-text targets;
+  hosted acceptance remains pending. No API or permission change.
+
 ## In progress — request-local progress replay reuse
 
 - Reuse immutable skill estimates only within one progress read under ADR-024

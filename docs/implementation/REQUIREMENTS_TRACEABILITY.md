@@ -1232,3 +1232,11 @@ confidence/change semantics. Frozen 31 complete legacy summaries and
 1,074 unit/contract cases pass; dense scoped replay work falls from 24 to eight
 distinct calls. Per-read consent/isolation, browser and complete hosted acceptance
 remain required. See [progress verification](E6_PROGRESS_REUSE_VERIFICATION.md).
+
+NFR-ACC-001 / NFR-COMP-001 / NFR-MNT-001 candidate: shared single-select CSS now
+reuses the verified native-menu appearance/arrow treatment. A new actual 320-pixel
+journey assertion reproduces the existing 23-pixel WebKit practice selector before
+the fix; all three normal/200%-text touch journeys and three staff UI checks pass.
+Image/service and complete hosted checks remain required. No
+API, permission, data or architectural decision changes. See
+[select target verification](E6_SELECT_TARGET_VERIFICATION.md).

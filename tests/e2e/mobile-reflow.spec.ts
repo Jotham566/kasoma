@@ -26,6 +26,7 @@ async function touchTarget(target: Locator) {
 
 test("NFR-ACC-001/NFR-COMP-001: narrow touch journey reflows and retains saved learning", async ({
   page,
+  browserName,
 }) => {
   await page.goto("/onboarding");
   await page
@@ -55,6 +56,30 @@ test("NFR-ACC-001/NFR-COMP-001: narrow touch journey reflows and retains saved l
   await reflows(page);
 
   await page.goto("/revise");
+  const selectors = page.getByRole("combobox");
+  await expect(selectors).toHaveCount(2);
+  await expect(selectors.first()).toBeEnabled();
+  for (const scale of ["100%", "200%"]) {
+    await page.evaluate((value) => {
+      document.documentElement.style.fontSize = value;
+    }, scale);
+    for (const control of await selectors.all()) {
+      const bounds = await control.boundingBox();
+      expect(bounds?.width).toBeGreaterThanOrEqual(44);
+      expect(bounds?.height).toBeGreaterThanOrEqual(44);
+      await control.focus();
+      await expect(control).toBeFocused();
+    }
+    await reflows(page);
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+    await page.screenshot({
+      path: `.local/ui-review/${browserName}-select-targets-${scale}.png`,
+      fullPage: true,
+    });
+  }
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "100%";
+  });
   await touchTarget(
     page.getByRole("button", { name: "Start five-question practice" }),
   );
