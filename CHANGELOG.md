@@ -1,6 +1,6 @@
 # Changelog
 
-## In verification — synthetic history and numeric load
+## Native verified; hosted pending — synthetic history and numeric load
 
 - Extend the isolated objective harness for NFR-PERF-001/002/NFR-SCL-001 with
   50 prior answers per active learner, varied evidence trajectories, Mathematics/
@@ -8,11 +8,17 @@
   latency gates without changing runtime limits or empty-history baseline behavior.
   All 37 harness cases, 1,092 unit/contract, lint/types/contracts and security pass;
   initial history setup fails safely and is corrected to normal refresh rotation.
-  Corrected full-size and hosted
-  verification remain pending. No production performance or academic claim.
+  Final native full-size profile passes at `6b06c53`: 7,000 HTTP requests, zero errors,
+  1,250 answers per format, 27,500 total grades and successful cleanup. START p95 is
+  432.085 ms, numeric-answer p95 27.778 ms and progress p95 17.079 ms. Hosted regression
+  and main promotion remain pending. The original-baseline recheck also passes:
+  7,000 requests, zero errors, START p95 421.751 ms and successful cleanup. Retain
+  startup p99 above one second as a risk. No production or academic claim.
 - Make format coverage independent of random item UUID order: the final fixture
   pool has 144 Mathematics choice and 144 Physics numeric items. The earlier
-  293-item candidate run is observation only; final-source full-size evidence is required.
+  293-item candidate completes with zero HTTP errors and successful cleanup but
+  correctly fails because all timed answers are choice; its failed report is retained
+  separately from the passing final-source evidence.
 
 ## Proposed — completed export accountability retirement
 

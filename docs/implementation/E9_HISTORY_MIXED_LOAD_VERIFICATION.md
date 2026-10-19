@@ -1,7 +1,8 @@
 # E9 synthetic history and mixed objective HTTP load
 
 Requirements: NFR-PERF-001/002, NFR-SCL-001, supporting FR-MST-004/005 and NFR-MNT-001.
-Status: implementation under verification; no performance acceptance yet.
+Status: final-source native profile passes; hosted regression and promotion pending.
+This is bounded local engineering evidence, not full performance/release acceptance.
 
 ## Scope and assumptions
 
@@ -70,11 +71,58 @@ only its own successfully created disposable database and fails on cleanup failu
 - `make lint test-unit openapi-check` passes: 1,092 unit/contract and 35 tooling
   cases, lint/format, Python/TypeScript types and unchanged generated contracts.
   `make security` passes, including secret-boundary checks and both dependency audits.
-- The corrected full-size native load and hosted verification are pending.
-  The live second command started from `21ccb9b` with 293 items. Subsequent fixture
-  review replaces its small numeric pool with the guaranteed 144/144 split; that
-  final source needs a separate full-size run after the earlier process finishes.
+- The second command at `21ccb9b` with 293 items completes 7,000 HTTP requests,
+  500 timed sessions and exactly 27,500 attempts/grades with zero HTTP errors and
+  successful cleanup, but correctly fails format coverage: all 2,500 timed answers
+  are SINGLE_CHOICE. START p95 is 465.507 ms and mixed p95 27.784 ms; these do not
+  supply numeric acceptance. The [aggregate failed report](evidence/E9_HISTORY_MIXED_MISSED_NUMERIC_2026_10_19.json)
+  confirms the small numeric pool can be missed.
+  Final fixture source `6b06c53` replaces it with the guaranteed 144/144 split;
+  its separate full-size native run passes below. Superseded hosted
+  39217608868 is cancelled, not passed; final-source hosted 39217860618 is live.
   This record is not application or performance acceptance from documentation checks.
+
+## Final-source native result — 19 October 2026
+
+`make load-history-mixed` passes at runner source `6b06c53`: 2,000 registered learners,
+288 reviewed synthetic fixtures, 25,000 verified prior attempts/grades in 5,000 completed
+sessions, followed by 500 timed five-question sessions. All 7,000 HTTP requests succeed;
+final totals are exactly 27,500 attempts/grades and 5,500 completed sessions. Maximum
+in-flight HTTP reaches 50. All 1,250 numeric and 1,250 choice timed answers score one
+with completed mastery updates. The owned temporary database is removed successfully.
+
+| Operation | Samples | p50 ms | p95 ms | p99 ms |
+| --- | ---: | ---: | ---: | ---: |
+| Profile | 500 | 4.298 | 218.707 | 252.972 |
+| Session start | 500 | 14.167 | 432.085 | 975.166 |
+| Next question | 2,500 | 10.720 | 15.865 | 323.636 |
+| Objective answer | 2,500 | 19.723 | 27.487 | 74.974 |
+| Numeric answer subset | 1,250 | 19.727 | 27.778 | 107.760 |
+| Choice answer subset | 1,250 | 19.718 | 27.178 | 72.815 |
+| Saved state | 500 | 10.364 | 13.333 | 18.176 |
+| Progress | 500 | 11.960 | 17.079 | 23.802 |
+| All HTTP | 7,000 | 12.909 | 26.986 | 288.525 |
+
+The unchanged per-operation and per-format p95 gates pass. Actual answer dispatch
+averages 19.992/s against the 20/s target; lag p95 is 2.161 ms. Timed duration is
+125.404 seconds, client/API CPU 52.239 seconds and peak RSS including fixture setup
+136,396,800 bytes. Database/container resource use remains unmeasured. Existing review
+services stay running; two read-only progress checks observe counts during this run.
+No latency adjustment, suppressed sample, widened pool/timeout or external call occurs.
+See the [aggregate final report](evidence/E9_HISTORY_MIXED_LOCAL_2026_10_19.json).
+Session-start p99 remains close to one second and is retained as a risk signal.
+The original empty-history baseline also passes sequentially at the same runner
+source: 7,000 requests, zero errors, 2,500 attempts/grades, 500 completed sessions,
+peak 50 in-flight HTTP and successful cleanup. START p95 is 421.751 ms, answer p95
+26.430 ms and progress p95 11.795 ms. History counts are exactly zero. Timed duration
+is 125.414 seconds, dispatch 19.987/s, lag p95 2.164 ms, client/API CPU 50.664 seconds
+and peak RSS including setup 137,134,080 bytes. START p99 is 1,115.791 ms; retain the
+tail-latency risk. See the [baseline report](evidence/E9_OBJECTIVE_LOAD_LOCAL_2026_10_19.json).
+These sequential runs are not a controlled causal comparison of history cost.
+
+Native verification is complete for these two fixed profiles; full hosted source
+regression [39217860618](https://github.com/Jotham566/kasoma/actions/runs/39217860618)
+and main promotion remain pending. No destructive retention approval is inferred.
 
 Remaining scope includes older/decayed and diagnostic histories, additional response
 formats, model/messaging delay/failure scenarios, database resource measurements,

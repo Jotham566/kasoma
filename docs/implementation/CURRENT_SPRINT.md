@@ -24,7 +24,13 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
   runtime changes. See [scope and evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
   No load acceptance is claimed before the full-size command finishes.
   Final fixture coverage is deterministic by subject (144 choice/144 numeric);
-  the earlier 293-item candidate run cannot verify that final source.
+  the earlier 293-item candidate correctly fails for missing numeric delivery despite
+  zero HTTP errors and successful cleanup. Final source `6b06c53` passes the native
+  profile: 7,000 HTTP requests, 1,250 timed answers per format, 27,500 total grades,
+  zero errors and successful cleanup; START p95 432.085 ms, numeric answer 27.778 ms.
+  The sequential original-baseline recheck also passes: 7,000 requests, zero errors,
+  START p95 421.751 ms and successful cleanup. Hosted regression and main promotion
+  remain pending; startup p99 and broader performance/release gaps remain.
 
 - FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002 and NFR-MNT-001:
   approved ADR-057 exact owned encrypted link/conversation snapshots, additive 0038,

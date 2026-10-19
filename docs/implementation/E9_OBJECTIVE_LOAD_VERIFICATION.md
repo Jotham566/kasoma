@@ -3,9 +3,10 @@
 Requirements: NFR-PERF-001, NFR-PERF-002, NFR-SCL-001. Local objective baseline passes;
 full hosted regression passes; broader performance acceptance remains pending.
 
-An additional [history/mixed profile](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) is under
-verification through `make load-history-mixed`; it does not replace the historical
-empty-history results below or imply that broader performance gates have passed.
+An additional [history/mixed profile](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) passes
+native `make load-history-mixed` at `6b06c53`; hosted/main promotion remains pending.
+It does not replace the historical empty-history results below or imply that broader
+performance gates have passed.
 
 `make load-objective` creates a fresh randomly named local database, applies the repository
 migrations and seeds original synthetic content. Only the standard development PostgreSQL profile
@@ -114,3 +115,30 @@ restored 54 tables/272 rows in 452 ms with pgvector and immutable guards and no 
 Cold question transfers were 191532/194232/193633 bytes, below 250000 in every engine.
 The commit is on main; its branch was removed locally/remotely. This CI verifies regression,
 not a production rerun of the native load measurements above.
+
+## Native baseline recheck — 19 October 2026
+
+Runner source `6b06c53` passes the original `make load-objective` profile after the
+new mixed-history profile completes. Exactly 7,000 HTTP requests, 500 completed
+sessions and 2,500 attempts/grades finish with zero errors, no prior history and
+successful owned-database cleanup. Maximum in-flight HTTP reaches 50. All unchanged
+per-operation p95 and deterministic-feedback gates pass.
+
+| Operation | Samples | p50 ms | p95 ms | p99 ms |
+| --- | ---: | ---: | ---: | ---: |
+| Profile | 500 | 4.082 | 205.710 | 237.400 |
+| Session start | 500 | 12.668 | 421.751 | 1,115.791 |
+| Next question | 2,500 | 10.854 | 15.658 | 378.969 |
+| Objective answer | 2,500 | 19.478 | 26.430 | 78.974 |
+| Saved state | 500 | 10.041 | 13.898 | 17.147 |
+| Progress | 500 | 8.866 | 11.795 | 18.784 |
+| All HTTP | 7,000 | 12.308 | 25.899 | 316.664 |
+
+Actual answer dispatch averages 19.987/s, lag p95 2.164 ms, timed duration 125.414
+seconds, client/API CPU 50.664 seconds and peak RSS including setup 137,134,080 bytes.
+Database/container resources remain unmeasured. Session-start p99 remains a risk
+despite passing the specified p95 gate. No timeout, pool, authentication, clock or
+grading behavior is relaxed. See the [aggregate recheck report](evidence/E9_OBJECTIVE_LOAD_LOCAL_2026_10_19.json).
+The earlier 9 October result remains historical. These separate runs do not prove
+causal performance improvement or replace provider/deployment/soak acceptance.
+Full hosted regression at the new runner source remains pending.

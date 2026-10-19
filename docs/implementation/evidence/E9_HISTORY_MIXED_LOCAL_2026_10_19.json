@@ -1,0 +1,89 @@
+{
+  "active_learners": 500,
+  "all_http": {
+    "p50_ms": 12.909,
+    "p95_ms": 26.986,
+    "p99_ms": 288.525,
+    "samples": 7000
+  },
+  "answer_dispatch_lag": {
+    "p50_ms": 2.079,
+    "p95_ms": 2.161,
+    "p99_ms": 14.568,
+    "samples": 2500
+  },
+  "answer_formats": {
+    "NUMERIC": {
+      "p50_ms": 19.727,
+      "p95_ms": 27.778,
+      "p99_ms": 107.76,
+      "samples": 1250
+    },
+    "SINGLE_CHOICE": {
+      "p50_ms": 19.718,
+      "p95_ms": 27.178,
+      "p99_ms": 72.815,
+      "samples": 1250
+    }
+  },
+  "attempts": 27500,
+  "cleanup_failed": false,
+  "completed_learners": 500,
+  "completed_sessions": 5500,
+  "concurrency_limit": 50,
+  "cpu_seconds_client_and_api": 52.239,
+  "database_resources_measured": false,
+  "duration_seconds": 125.404,
+  "errors": 0,
+  "grades": 27500,
+  "history_attempts": 25000,
+  "history_completed_sessions": 5000,
+  "history_grades": 25000,
+  "observed_answer_dispatch_per_second": 19.992,
+  "operations": {
+    "ANSWER": {
+      "p50_ms": 19.723,
+      "p95_ms": 27.487,
+      "p99_ms": 74.974,
+      "samples": 2500
+    },
+    "NEXT": {
+      "p50_ms": 10.72,
+      "p95_ms": 15.865,
+      "p99_ms": 323.636,
+      "samples": 2500
+    },
+    "PROFILE": {
+      "p50_ms": 4.298,
+      "p95_ms": 218.707,
+      "p99_ms": 252.972,
+      "samples": 500
+    },
+    "PROGRESS": {
+      "p50_ms": 11.96,
+      "p95_ms": 17.079,
+      "p99_ms": 23.802,
+      "samples": 500
+    },
+    "START": {
+      "p50_ms": 14.167,
+      "p95_ms": 432.085,
+      "p99_ms": 975.166,
+      "samples": 500
+    },
+    "STATE": {
+      "p50_ms": 10.364,
+      "p95_ms": 13.333,
+      "p99_ms": 18.176,
+      "samples": 500
+    }
+  },
+  "peak_inflight_http": 50,
+  "peak_rss_bytes_client_api_and_fixture_setup": 136396800,
+  "production_acceptance": false,
+  "profile": "isolated-history-mixed-http-v1",
+  "registered_learners": 2000,
+  "reviewed_synthetic_items": 288,
+  "status": "PASSED",
+  "target_answer_dispatch_per_second": 20
+}

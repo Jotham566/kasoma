@@ -7,11 +7,19 @@ NFR-PERF-001/002 / NFR-SCL-001 / FR-MST-004/005 / NFR-MNT-001:
 50-prior-answer synthetic history profile, varied trajectories and numeric timed
 submissions under unchanged operation/format latency gates. All 37 harness cases,
 1,092 unit/contract, lint/types/contracts and security pass. Initial history setup
-fails before timing with successful cleanup; the refresh correction is being run
-at full size. Native/hosted acceptance evidence remains pending.
+fails before timing with successful cleanup; the refresh correction passes at full
+size in the final-source native result recorded below. Hosted acceptance
+and main promotion remain pending.
 No runtime, retention, provider or academic enablement changes.
 Final fixture generation guarantees both formats with 144 items per subject; the
-earlier 293-item load candidate is separate from final-source acceptance.
+earlier 293-item candidate correctly fails for missing numeric delivery despite zero
+HTTP errors and successful cleanup. `6b06c53` passes the native profile with 7,000 HTTP
+requests, zero errors, 1,250 answers per format, 27,500 total grades and successful
+cleanup. START p95 432.085 ms, numeric-answer p95 27.778 ms and progress p95 17.079 ms
+pass unchanged gates. This closes only this recent-history mixed objective profile;
+the sequential original-baseline recheck also passes 7,000 requests with zero errors,
+START p95 421.751 ms and successful cleanup. Hosted/main promotion, full performance
+and external release acceptance remain pending. Startup p99 remains a risk.
 
 ## Proposed retention boundary — not implemented
 
