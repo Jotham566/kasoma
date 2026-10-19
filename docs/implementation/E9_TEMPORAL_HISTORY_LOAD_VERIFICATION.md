@@ -134,3 +134,24 @@ informational conflicts preserve both current acceptance and candidate histories
 The measured runtime remains unchanged; original/recent rechecks will use this tree.
 Object source29f1ddc's own hosted39311093503 remains live and cannot accept this
 newer load tooling. No academic/privacy/provider/erasure or production gate changes.
+
+## Published candidate and sequential native baseline
+
+Combined source687d86cdd06bf188f7aa2a725b5e0f19a7e5423b is pushed for own full
+[39313955470](https://github.com/Jotham566/kasoma/actions/runs/39313955470), confirmed
+in progress. Keep its remote runtime head unchanged; only local Markdown/aggregate
+evidence follows. It includes the verified b5557a3 application tree and separately
+pending object-recovery tooling; parent acceptance cannot accept these new tests.
+
+After the temporal profile terminates with successful owned cleanup, make load-objective
+load-history-mixed runs sequentially on this unchanged runtime tree. The original
+[baseline recheck](evidence/E9_TEMPORAL_BASELINE_RECHECK_2026_10_19.json) passes:2000
+registered/500 active,50 peak in-flight,7000 HTTP/zero errors,2500 attempts/grades,
+500 completions and cleanup_failed false. START p95428.329ms,ANSWER p9529.174ms;
+every original latency gate passes. The recent-history target is now live; this is
+not a pass for that still-running target and the original process is not restarted.
+No runtime change or weakening of thresholds, deadlines, pacing or auth policy.
+
+Public provider-recovery documentation research is recorded separately; it changes
+no code, dependency, provider choice, architecture approval or source CI head. It
+cannot supply production backup/RPO/RTO or legal/transfer sign-off.

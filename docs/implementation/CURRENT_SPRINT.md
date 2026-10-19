@@ -1,5 +1,15 @@
 # Current sprint: practice-day and operational verification
 
+## Provider recovery decision preparation - documentation only
+
+NFR-REL-001/002,SEC-001/002,MNT-001: public primary-source research identifies
+35-day PITR tier/default and secondary-region constraints for AWS/Azure/Google.
+Budget/approved countries/compatibility/full-stack configuration/owner evidence
+remain missing; no vendor, resource, cloud SDK, legal/retention exception or
+production gate is selected/closed. Research is independent of live application CI.
+[Evidence](PROVIDER_RECOVERY_DECISION_EVIDENCE.md).
+
+
 ## Older/diagnostic history load - candidate
 
 NFR-PERF-001/002,SCL-001 and FR-DIAG/MST: ADR-066 adds a fixed temporal fixture
@@ -11,7 +21,9 @@ full-size temporal measurement passes; original/recent rechecks and own hosted
 verification remain pending.
 [Verification](E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md). First native profile PASSES:35000 grades,
 7000 HTTP/zero errors,START p95410.622ms,cleanup_failed=false. Original/recent rechecks
-and own hosted verification remain; no production acceptance.
+and own hosted verification remain; no production acceptance. Original baseline
+recheck now passes (START p95428.329ms,zero errors,cleanup_failed=false); recent
+history is running. Own exactsource687d86c is live in hosted39313955470.
 
 
 ## Isolated database/private-object recovery - candidate

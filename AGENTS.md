@@ -383,3 +383,10 @@ native profile passes35000 grades/7000 HTTP/zero errors,START p95410.622ms and
 cleanup_failed=false; original/recent profile rechecks and own full hosted remain.
 ADR-065 source29f1ddc stays unchanged for live39311093503. The load candidate
 integrates main through Markdown only; do not infer full MVP/release acceptance.
+
+Temporal candidate exactsource687d86c is pushed for live own39313955470. Original
+baseline recheck passes on its unchanged runtime:2500 grades/7000 HTTP/zero errors,
+START p95428.329ms,cleanup_failed=false. Sequential recent-history recheck remains
+live. Main3cde8c2 is remotely verified and its merged metric branch is removed.
+Provider recovery documentation research changes no selection, cloud dependency,
+permission, architecture approval, retention or release gate.

@@ -108,3 +108,12 @@ official NCDC Lower Secondary PDFs with byte hashes, page counts and visually ch
 starting locators. This reduces source-discovery work only. Rights remain UNKNOWN_BLOCKED;
 applicable edition, exact mappings, reviewers, 250 approved items and expert benchmark
 truth remain unprovided. No academic, legal or release gate changes status.
+
+## Week 8 recovery-tier research — 19 October
+
+The [provider recovery evidence](PROVIDER_RECOVERY_DECISION_EVIDENCE.md) compares
+current public AWS/Azure/Google documentation against the unchanged35-day PITR and
+approved secondary-region requirement. It records material edition/default/region
+constraints and the missing budget, regional transfer, compatibility and ownership
+inputs. This is research only: no provider selection, cloud operation, paid allocation,
+legal approval, retention exception or production recovery evidence is inferred.
