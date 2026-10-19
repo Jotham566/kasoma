@@ -174,3 +174,29 @@ No main promotion or complete hosted acceptance is claimed. The
 and corrects a47.421875-pixel action shift from delayed review hints. Its exact
 relationship to that unretained hosted pointer trace remains unconfirmed. Application
 change is limited to feedback layout; backend/migrations/contracts remain unchanged. No main promotion occurs while hosted acceptance is absent.
+
+
+## Latest local verification and external CI capacity gate
+
+Source `e33ec6966220bbddd24f11ce8a641e959ebd2983` includes the independently reproduced
+feedback-layout correction and passes111 local browser executions (99 ordinary plus12
+fake short-text), nine focused assessment cases, types/contracts/build and updated
+source/image/service smoke checks. All eight Docker services are healthy on0042,
+with retirement false. Backend/migration/contract source remains identical to the
+backend tree that passes1,112 unit/contract,465 integration and35 tooling cases both
+natively and in the earlier complete hosted attempts. Their overall browser failures
+remain failed and are not retrospectively accepted.
+
+[39255125288](https://github.com/Jotham566/kasoma/actions/runs/39255125288) does not
+start any steps. GitHub's check annotation says account payments failed or the spending
+limit needs increasing. It supplies no application acceptance. Actions capacity must
+be restored by the owner, then the exact candidate must pass a complete hosted run
+before promotion. No permission/budget change or weaker workflow is substituted.
+The agent requested this external action once and keeps the goal incomplete.
+
+Further closeout edits are Markdown evidence only; no application, migration, test,
+contract, Makefile or workflow changes follow `e33ec69`. Main remains `e9f688e` and
+the active unmerged branch is retained to preserve verified work. Full preservation,
+other retention classes, erasure and external academic/privacy/provider/production
+release gates remain open. The [next bounded assessment](E9_LOAD_ROLE_CLEANUP_PLAN.md)
+is ready, with no implementation begun before the required publication gate.

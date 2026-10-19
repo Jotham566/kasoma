@@ -169,7 +169,11 @@ synthetic-only harness correction passes12 controls and108 local browser executi
 `b6aea35`. Hosted39249423592 passes backend/transport gates but fails a WebKit resumed
 pointer transition. A deterministic delayed-hints layout regression reproduces a
 47.421875-pixel shift; moving review hints below actions passes nine focused cases.
-Complete hosted gates remain pending; ADR-057 does not authorize account erasure.
+Latest source `e33ec69` passes111 local browser executions, quality/build and
+updated image/source/service checks; Docker is healthy on0042 with retirement false.
+Hosted39255125288 starts no steps because GitHub reports failed account payments or
+insufficient spending capacity. Owner action is requested once; main remains `e9f688e`,
+the active branch is preserved and complete hosted acceptance remains pending; ADR-057 does not authorize account erasure.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

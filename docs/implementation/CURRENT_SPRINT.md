@@ -6,6 +6,21 @@ Updated 19 October 2026. This is not a completed MVP or production-release decla
 [the current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md)
 preserve the evidence and boundaries.
 
+## Publication held for external Actions capacity
+
+Latest application/test source `e33ec69` is pushed to `codex/export-retirement-operations`.
+The confirmed delayed-hints layout correction passes all111 local browser executions,
+nine focused assessment cases, lint/types/contracts/build, updated image/source security
+and Docker service smoke. All eight services are healthy on0042 at http://localhost:3000;
+retirement stays false. See [layout evidence](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md).
+
+Hosted39255125288 is refused before any steps because GitHub reports failed account
+payments or insufficient spending capacity. The owner has been asked once to restore
+Actions capacity. Main remains verified `e9f688e`; no merge, gate bypass or destruction
+of the unmerged branch occurs. A complete hosted run remains required. The earlier
+94b40a6/b6aea35 hosted browser failures remain failures. The next
+[load-role lifecycle assessment](E9_LOAD_ROLE_CLEANUP_PLAN.md) is ready but unimplemented.
+
 ## Active ADR-060 executor operations candidate
 
 FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001: separate private LOGIN/configuration,

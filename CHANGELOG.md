@@ -1,5 +1,14 @@
 # Changelog
 
+## Local verification complete — hosted publication pending
+
+- Source `e33ec69` passes111 local browser executions, nine focused assessment cases,
+  quality/build, updated source/image security and Docker smoke. All eight services
+  are healthy on0042; retirement stays false.
+- GitHub refuses39255125288 before any steps because account payments/spending capacity
+  need owner attention. Complete hosted acceptance and main promotion remain pending.
+  Preserve both earlier browser failures and the active unmerged branch; no gate bypass.
+
 ## Candidate — stable feedback actions during review-hint loading
 
 - NFR-ACC-001/FR-REV-005/FR-GRD-006/NFR-MNT-001: reproduce a 47.421875-pixel

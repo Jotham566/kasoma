@@ -46,7 +46,19 @@ ordinary matrix from96 to99, for111 including the existing12 fake short-text jou
 The red run fails the new assertion with47.421875-pixel movement, while its two
 existing cases pass. After the layout change, all nine focused cases pass:
 Chromium18.5s, Firefox20.7s and WebKit18.2s. `make lint openapi-check build` passes.
-Final full/hosted, accessibility and running-image results remain to be recorded.
+Final local `make e2e` passes111 executions:99 ordinary and12 disabled fake
+short-text journeys, with original bandwidth, pointer/touch and axe assertions retained.
+`make containers`, `make security-source security-containers` and `make container-smoke`
+pass; all eight Docker services are healthy on0042 and persisted retirement remains
+false. The review UI includes the updated feedback layout.
+
+Exact source `e33ec6966220bbddd24f11ce8a641e959ebd2983` is pushed to the verification
+branch. [Hosted39255125288](https://github.com/Jotham566/kasoma/actions/runs/39255125288)
+is refused before any job steps: GitHub's annotation reports failed account payments
+or an insufficient spending limit. This is not an application test result. No complete
+hosted acceptance or main promotion occurs. The owning account must restore Actions
+capacity before a fresh complete run; no billing change, gate bypass or new spending
+is performed by the agent. The owner has been asked once for that external action.
 Earlier complete native backend evidence remains separate; its source has no backend,
 migration or contract change in this correction. No production or academic acceptance.
 

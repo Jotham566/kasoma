@@ -1,5 +1,17 @@
 # Requirements Traceability
 
+## Current publication boundary
+
+Source `e33ec69` passes111 local browser executions, nine focused assessment cases,
+quality/security/image/service checks and runs in healthy Docker on0042 with retirement
+false. Its backend tree is unchanged from the1,112-unit/465-integration/35-tooling
+verified tree. [Layout evidence](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md) records
+the red/green47.421875-pixel regression. Hosted39255125288 starts no steps because
+GitHub reports an account payment/spending-capacity problem. Owner action is requested
+once; complete hosted acceptance/main promotion remain pending, with no gate waiver.
+The [operations evidence](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md) retains both
+earlier browser failures. No full FR-ID-006/BR-010 or release acceptance is inferred.
+
 ## Active synthetic retirement operations candidate
 
 FR-ID-006 / FR-OPS-002/003 / BR-010 / NFR-SEC-002 / NFR-MNT-001 / NFR-ACC-001:
