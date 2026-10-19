@@ -60,19 +60,39 @@ def database_name(value: str) -> str:
     return value
 
 
-def cleanup_owner(admin: Engine, name: str) -> None:
+def create_owner(admin: Engine, name: str) -> int:
+    """Exclusively create the fresh owner and confirm its identity before commit."""
+    role = owner_name(database_name(name), "public")
+    with admin.connect().execution_options(isolation_level="READ COMMITTED") as db:
+        with db.begin():
+            db.execute(
+                text(
+                    f'CREATE ROLE "{role}" NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE '
+                    "NOINHERIT NOREPLICATION NOBYPASSRLS"
+                )
+            )
+            oid = db.scalar(
+                text("SELECT oid FROM pg_catalog.pg_roles WHERE rolname=:role"), {"role": role}
+            )
+            if not isinstance(oid, int) or isinstance(oid, bool) or oid <= 0:
+                raise RuntimeError("Isolated owner identity unavailable")
+    return oid
+
+
+def cleanup_owner(admin: Engine, name: str, owner_oid: int) -> None:
     """Inspect only the owner derived from this invocation's dropped database."""
     role = owner_name(database_name(name), "public")
     with admin.connect() as db:
         safe = db.scalar(
             text("""
-              SELECT NOT (r.rolcanlogin OR r.rolsuper OR r.rolcreatedb OR r.rolcreaterole
+              SELECT r.oid=:owner_oid AND NOT (
+                r.rolcanlogin OR r.rolsuper OR r.rolcreatedb OR r.rolcreaterole
                 OR r.rolinherit OR r.rolreplication OR r.rolbypassrls OR EXISTS(
                   SELECT 1 FROM pg_catalog.pg_auth_members m
                   WHERE m.roleid=r.oid OR m.member=r.oid))
               FROM pg_catalog.pg_roles r WHERE r.rolname=:role
             """),
-            {"role": role},
+            {"role": role, "owner_oid": owner_oid},
         )
         if safe is None:
             return
@@ -394,7 +414,7 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
         url.set(database="postgres"), isolation_level="AUTOCOMMIT", hide_parameters=True
     )
     created = False
-    owner_was_absent = False
+    owner_oid: int | None = None
     engine = None
     server = None
     thread = None
@@ -419,7 +439,8 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
             )
             if exists is not False:
                 raise RuntimeError("Pre-existing isolated owner is preserved")
-            owner_was_absent = True
+        stage = "CREATE_OWNER_ROLE"
+        owner_oid = create_owner(admin, name)
         local_url = url.set(database=name).render_as_string(hide_password=False)
         stage = "MIGRATE"
         subprocess.run(
@@ -575,8 +596,8 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
                     raise RuntimeError("Isolated server is still active")
                 with admin.connect() as db:
                     db.execute(text(f'DROP DATABASE "{database_name(name)}"'))
-                if owner_was_absent:
-                    cleanup_owner(admin, name)
+                if owner_oid is not None:
+                    cleanup_owner(admin, name, owner_oid)
             except Exception:
                 result.update({"cleanup_failed": True, "status": "FAILED"})
         admin.dispose()

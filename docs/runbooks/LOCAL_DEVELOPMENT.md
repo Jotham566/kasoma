@@ -1431,7 +1431,9 @@ See [verification](../implementation/E3_REVIEW_ACTION_STABILITY_VERIFICATION.md)
 privilege-refusal checks over exclusively created synthetic resources. The shared
 `make load-objective` and `make load-history-mixed` lifecycle now requires absence
 of its exact derived role before migration and removes only that role after its own
-database is successfully dropped. A pre-existing, unsafe/shared or dependent role
+database is successfully dropped. The tool exclusively creates its role in a
+transaction and confirms its OID; cleanup requires that same identity. An absence
+check alone grants no ownership. A pre-existing, replaced, unsafe/shared or dependent role
 is preserved and the run fails closed. Do not sweep existing orphan roles or use
 DROP OWNED, revoke dependencies, or clean developer/application resources.
 See [candidate evidence](../implementation/E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).

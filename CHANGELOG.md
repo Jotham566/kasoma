@@ -1,5 +1,15 @@
 # Changelog
 
+## Candidate correction: exclusive load-role ownership
+
+NFR-MNT-001/NFR-SEC-002: a deterministic two-connection PostgreSQL regression proves
+that absence alone can misidentify a concurrently created role as owned. Retain that
+one-failure/65-pass red result. Exclusive transactional role creation, confirmed OID
+and an identity check at cleanup now pass69 focused cases (55 contract/14 integration),
+including concurrent creation and replacement refusal. The original two native HTTP
+profiles pass at4614bd3, but do not accept the revised ownership boundary. Lint/types/contracts/build,1,130 unit/contract plus35 tooling and security/source
+checks pass. Full revised verification is pending; see [evidence](docs/implementation/E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).
+
 ## Candidate: disposable load-role lifecycle
 
 NFR-MNT-001/NFR-SEC-002: the shared objective/history-mixed load harness checks that its

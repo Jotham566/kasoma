@@ -99,6 +99,7 @@ def test_actual_unsafe_or_shared_owner_is_preserved(load_admin, unsafe):
         with admin.connect() as db:
             db.execute(text(f'CREATE ROLE "{role}" NOLOGIN NOINHERIT'))
             created.append(role)
+            oid = db.scalar(text("SELECT oid FROM pg_roles WHERE rolname=:role"), {"role": role})
             if unsafe in {"MEMBER", "RECIPIENT"}:
                 db.execute(text(f'CREATE ROLE "{peer}" NOLOGIN NOINHERIT'))
                 created.append(peer)
@@ -108,7 +109,7 @@ def test_actual_unsafe_or_shared_owner_is_preserved(load_admin, unsafe):
                 # The flag is from the fixed parametrization above, never caller input.
                 db.execute(text(f'ALTER ROLE "{role}" {unsafe}'))
         with pytest.raises(RuntimeError, match="Isolated owner cleanup refused"):
-            load.cleanup_owner(admin, name)
+            load.cleanup_owner(admin, name, oid)
         with admin.connect() as db:
             assert (
                 db.scalar(
@@ -135,9 +136,10 @@ def test_postgresql_dependency_refusal_is_preserved(load_admin):
             database_created = True
             db.execute(text(f'CREATE ROLE "{role}" NOLOGIN NOINHERIT'))
             role_created = True
+            oid = db.scalar(text("SELECT oid FROM pg_roles WHERE rolname=:role"), {"role": role})
             db.execute(text(f'GRANT CONNECT ON DATABASE "{name}" TO "{role}"'))
         with pytest.raises(DBAPIError):
-            load.cleanup_owner(admin, name)
+            load.cleanup_owner(admin, name, oid)
         with admin.connect() as db:
             assert (
                 db.scalar(
@@ -151,4 +153,84 @@ def test_postgresql_dependency_refusal_is_preserved(load_admin):
             with admin.connect() as db:
                 db.execute(text(f'DROP DATABASE "{name}"'))
         if role_created:
-            load.cleanup_owner(admin, name)
+            load.cleanup_owner(admin, name, oid)
+
+
+def test_role_created_between_absence_check_and_migration_is_not_owned(load_admin, monkeypatch):
+    from sqlalchemy import event
+
+    config, control = load_admin
+    original = load.create_engine
+    names = []
+    fixture_roles = []
+
+    def race(connection, cursor, statement, parameters, context, executemany):
+        if statement.startswith('CREATE DATABASE "'):
+            names.append(load.database_name(statement.split('"')[1]))
+        if "SELECT EXISTS(SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=" in statement:
+            assert len(names) == 1 and not fixture_roles
+            role = owner_name(names[0], "public")
+            # This separate creator commits after the absence SELECT has executed.
+            with control.connect() as db:
+                db.execute(text(f'CREATE ROLE "{role}" NOLOGIN NOINHERIT'))
+                fixture_roles.append(role)
+
+    def intercepted(*args, **kwargs):
+        engine = original(*args, **kwargs)
+        event.listen(engine, "after_cursor_execute", race)
+        return engine
+
+    def stop_before_learner_fixtures(*args):
+        raise RuntimeError("Intentional synthetic fixture stop")
+
+    monkeypatch.setattr(load, "create_engine", intercepted)
+    monkeypatch.setattr(load, "populate", stop_before_learner_fixtures)
+    try:
+        result = load.run(config)
+        assert len(fixture_roles) == 1
+        role = fixture_roles[0]
+        with control.connect() as db:
+            assert (
+                db.scalar(
+                    text("SELECT EXISTS(SELECT 1 FROM pg_roles WHERE rolname=:role)"),
+                    {"role": role},
+                )
+                is True
+            )
+        assert result["status"] == "FAILED"
+        assert result["failed_stage"] == "CREATE_OWNER_ROLE"
+        assert result["cleanup_failed"] is False
+    finally:
+        # Only this test's independently created role; never an application role.
+        for role in fixture_roles:
+            with control.connect() as db:
+                if db.scalar(
+                    text("SELECT EXISTS(SELECT 1 FROM pg_roles WHERE rolname=:role)"),
+                    {"role": role},
+                ):
+                    db.execute(text(f'DROP ROLE "{role}"'))
+
+
+def test_replacement_role_identity_is_preserved(load_admin):
+    _, admin = load_admin
+    name = load.database_name("kasoma_load_" + uuid4().hex)
+    role = owner_name(name, "public")
+    oid = load.create_owner(admin, name)
+    replacement = None
+    try:
+        with admin.connect() as db:
+            db.execute(text(f'DROP ROLE "{role}"'))
+            db.execute(text(f'CREATE ROLE "{role}" NOLOGIN NOINHERIT'))
+            replacement = db.scalar(
+                text("SELECT oid FROM pg_roles WHERE rolname=:role"), {"role": role}
+            )
+        assert replacement != oid
+        with pytest.raises(RuntimeError, match="Isolated owner cleanup refused"):
+            load.cleanup_owner(admin, name, oid)
+        with admin.connect() as db:
+            assert (
+                db.scalar(text("SELECT oid FROM pg_roles WHERE rolname=:role"), {"role": role})
+                == replacement
+            )
+    finally:
+        load.cleanup_owner(admin, name, replacement if replacement is not None else oid)

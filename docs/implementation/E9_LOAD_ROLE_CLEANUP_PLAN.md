@@ -26,13 +26,17 @@ bounded tool-resource cleanup gap, not permission to purge application data or r
    database. Before migrations, require that exact role to be absent using a bounded
    catalog lookup. If it already exists, refuse migration and preserve the role;
    creating a fresh database alone does not prove ownership of a pre-existing role.
-   After successful drop of the invocation-created database, inspect only that derived
-   role using a bounded lookup rather than enumeration.
-3. If absent, finish successfully. If present, require the expected non-login,
+   Exclusively CREATE that role in a transaction and record its OID before successful
+   commit; absence alone cannot prove creation ownership. A concurrent creator makes
+   this creation fail without conferring cleanup authority. After successful drop of
+   the invocation-created database, inspect only that derived role using a bounded
+   lookup rather than enumeration.
+3. If absent, finish successfully. If present, require the same confirmed OID and
+   the expected non-login,
    non-elevated attributes and no memberships before attempting normal restrictive
    DROP ROLE. Do not alter attributes, revoke dependencies, use DROP OWNED or sweep
    matching role names. PostgreSQL dependency refusal remains effective.
-4. Preserve the role if database cleanup fails or its creation was unconfirmed. Treat
+4. Preserve the role if database cleanup fails or its creation/commit was unconfirmed. Treat
    role cleanup refusal/failure as `cleanup_failed=true` and overall failure, using
    the existing closed diagnostics. Never mask the original processing failure or
    claim a successful load when owned cleanup fails.
@@ -44,7 +48,9 @@ bounded tool-resource cleanup gap, not permission to purge application data or r
 - Preserve existing negative tests with explicit absent-role mocks where needed.
 - Cover a pre-existing exact role (refuse before migration and preserve it),
   role absent/created by migration, database-drop failure, unsafe/shared role refusal
-  and role-drop failure. Assert exact SQL targets/order and withheld diagnostic text.
+  and role-drop failure. Cover a separate creator racing the absence check and a
+  replacement with the same name but a different OID. Assert exact SQL targets/order
+  and withheld diagnostic text.
 - Run an actual isolated fresh migration that creates the derived role, stop before
   learner fixture creation, and verify database/role cleanup. Use only an invocation's
   freshly created resources; no cleanup of existing orphan roles is authorized.
@@ -68,3 +74,9 @@ plan; it grants no authority over pre-existing roles. Implementation still follo
 current candidate promotion. That promotion is now published through main `226ecf3`;
 the operations branch is removed locally/remotely. The load-role implementation remains
 a separate candidate.
+
+The initial absence-only candidate at `4614bd3` is not accepted: a deterministic
+actual two-connection regression creates a role after its absence SELECT and proves
+that candidate incorrectly removes it. Exclusive transactional creation and an exact
+OID recheck correct the ownership boundary. This remains local tooling under the
+existing naming/installer decision; no production capability or new ADR is introduced.

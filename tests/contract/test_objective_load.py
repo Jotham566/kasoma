@@ -99,6 +99,7 @@ def test_cleanup_only_created_database_and_redacts_failures(
         if creation_fails
         else [None, RuntimeError("sensitive") if cleanup_fails else None]
     )
+    monkeypatch.setattr(load, "create_owner", Mock(return_value=1234))
     monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
     migrate = Mock(side_effect=RuntimeError("sensitive"))
     monkeypatch.setattr(load.subprocess, "run", migrate)
@@ -126,6 +127,7 @@ def test_domain_failure_diagnostics_are_closed_and_cleanup_still_runs(
 
     engine = MagicMock()
     engine.connect.return_value.__enter__.return_value.scalar.side_effect = [False, None]
+    monkeypatch.setattr(load, "create_owner", Mock(return_value=1234))
     monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
     monkeypatch.setattr(load.subprocess, "run", Mock(side_effect=IdentityError(code)))
     result = load.run(local(settings), history_mixed=True)
@@ -363,6 +365,7 @@ def test_exact_owned_role_lifecycle_and_private_failures(
             raise RuntimeError("sensitive role cleanup")
 
     connection.execute.side_effect = execute
+    monkeypatch.setattr(load, "create_owner", Mock(return_value=1234))
     monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
     migrate = Mock(side_effect=RuntimeError("sensitive migration"))
     monkeypatch.setattr(load.subprocess, "run", migrate)
@@ -377,8 +380,10 @@ def test_exact_owned_role_lifecycle_and_private_failures(
     assert result["status"] == "FAILED"
     cleanup_lookup = checked and not drop_database_fails
     assert connection.scalar.call_count == 1 + int(cleanup_lookup)
-    for call in connection.scalar.call_args_list:
-        assert call.args[1] == {"role": role}
+    for position, call in enumerate(connection.scalar.call_args_list):
+        assert call.args[1] == (
+            {"role": role} if position == 0 else {"role": role, "owner_oid": 1234}
+        )
         assert "WHERE" in str(call.args[0]) and ":role" in str(call.args[0])
     role_drop = cleanup_lookup and after is True
     assert statements[2:] == ([f'DROP ROLE "{role}"'] if role_drop else [])
@@ -391,3 +396,28 @@ def test_exact_owned_role_lifecycle_and_private_failures(
     )
     assert all(value not in str(result) for value in ["sensitive", "secret", name, role])
     engine.dispose.assert_called_once()
+
+
+@pytest.mark.parametrize("history_mixed", [False, True])
+def test_failed_exclusive_creation_never_confers_owner_cleanup(
+    settings, monkeypatch, history_mixed
+):
+    engine = MagicMock()
+    connection = engine.connect.return_value.__enter__.return_value
+    connection.scalar.return_value = False
+    monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
+    create = Mock(side_effect=RuntimeError("sensitive concurrent role creation"))
+    monkeypatch.setattr(load, "create_owner", create)
+    migrate = Mock()
+    monkeypatch.setattr(load.subprocess, "run", migrate)
+    result = load.run(local(settings), history_mixed=history_mixed)
+    statements = [str(call.args[0]) for call in connection.execute.call_args_list]
+    name = statements[0].split('"')[1]
+    assert statements == [f'CREATE DATABASE "{name}"', f'DROP DATABASE "{name}"']
+    create.assert_called_once_with(engine, name)
+    migrate.assert_not_called()
+    assert connection.scalar.call_count == 1
+    assert result["failed_stage"] == "CREATE_OWNER_ROLE"
+    assert result["status"] == "FAILED"
+    assert result["cleanup_failed"] is False
+    assert "sensitive" not in str(result)
