@@ -92,6 +92,7 @@ def test_cleanup_only_created_database_and_redacts_failures(
     settings, monkeypatch, creation_fails, cleanup_fails, history_mixed
 ):
     engine = MagicMock()
+    engine.connect.return_value.__enter__.return_value.scalar.side_effect = [False, None]
     execute = engine.connect.return_value.__enter__.return_value.execute
     execute.side_effect = (
         [RuntimeError("sensitive")]
@@ -124,6 +125,7 @@ def test_domain_failure_diagnostics_are_closed_and_cleanup_still_runs(
     from services.identity import IdentityError
 
     engine = MagicMock()
+    engine.connect.return_value.__enter__.return_value.scalar.side_effect = [False, None]
     monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
     monkeypatch.setattr(load.subprocess, "run", Mock(side_effect=IdentityError(code)))
     result = load.run(local(settings), history_mixed=True)
@@ -326,3 +328,66 @@ def test_http_journeys_bind_each_plan_and_measure_numeric_without_external_calls
         assert measured.report()["answer_formats"]["NUMERIC"]["samples"] == 5
         assert measured.report()["answer_formats"]["SINGLE_CHOICE"]["samples"] == 5
     assert "fixture" not in str(measured.report())
+
+
+@pytest.mark.parametrize("history_mixed", [False, True])
+@pytest.mark.parametrize(
+    "before,after,drop_database_fails,drop_role_fails",
+    [
+        (False, None, False, False),
+        (False, True, False, False),
+        (True, None, False, False),
+        (False, False, False, False),
+        (False, True, True, False),
+        (False, True, False, True),
+        (False, RuntimeError("sensitive role lookup"), False, False),
+        (RuntimeError("sensitive preflight"), None, False, False),
+    ],
+)
+def test_exact_owned_role_lifecycle_and_private_failures(
+    settings, monkeypatch, history_mixed, before, after, drop_database_fails, drop_role_fails
+):
+    from services.export_retirement_install import owner_name
+
+    engine = MagicMock()
+    connection = engine.connect.return_value.__enter__.return_value
+    connection.scalar.side_effect = [before, after]
+    statements = []
+
+    def execute(statement):
+        value = str(statement)
+        statements.append(value)
+        if value.startswith("DROP DATABASE") and drop_database_fails:
+            raise RuntimeError("sensitive database cleanup")
+        if value.startswith("DROP ROLE") and drop_role_fails:
+            raise RuntimeError("sensitive role cleanup")
+
+    connection.execute.side_effect = execute
+    monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
+    migrate = Mock(side_effect=RuntimeError("sensitive migration"))
+    monkeypatch.setattr(load.subprocess, "run", migrate)
+    result = load.run(local(settings), history_mixed=history_mixed)
+    name = statements[0].split('"')[1]
+    role = owner_name(load.database_name(name), "public")
+    assert statements[:2] == [f'CREATE DATABASE "{name}"', f'DROP DATABASE "{name}"']
+    checked = before is False
+    migration_reached = checked
+    assert migrate.call_count == int(migration_reached)
+    assert result["failed_stage"] == ("MIGRATE" if checked else "CHECK_OWNER_ROLE")
+    assert result["status"] == "FAILED"
+    cleanup_lookup = checked and not drop_database_fails
+    assert connection.scalar.call_count == 1 + int(cleanup_lookup)
+    for call in connection.scalar.call_args_list:
+        assert call.args[1] == {"role": role}
+        assert "WHERE" in str(call.args[0]) and ":role" in str(call.args[0])
+    role_drop = cleanup_lookup and after is True
+    assert statements[2:] == ([f'DROP ROLE "{role}"'] if role_drop else [])
+    assert result["cleanup_failed"] is bool(
+        drop_database_fails
+        or cleanup_lookup
+        and (after is False or isinstance(after, Exception))
+        or role_drop
+        and drop_role_fails
+    )
+    assert all(value not in str(result) for value in ["sensitive", "secret", name, role])
+    engine.dispose.assert_called_once()

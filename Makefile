@@ -250,13 +250,15 @@ test-legal-holds:
 test-web-mobile:
 	$(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts
 
-.PHONY: load-objective load-history-mixed test-load-profile
+.PHONY: load-objective load-history-mixed test-load-profile test-load-role-cleanup
 load-objective:
 	$(UV) python -m scripts.objective_load
 load-history-mixed:
 	$(UV) python -m scripts.objective_load --history-mixed
 test-load-profile:
 	$(UV) pytest tests/contract/test_objective_load.py
+test-load-role-cleanup:
+	$(UV) pytest tests/contract/test_objective_load.py tests/integration/test_load_role_lifecycle.py --allow-hosts=localhost,127.0.0.1,::1
 
 .PHONY: test-assessment-locks
 test-assessment-locks:

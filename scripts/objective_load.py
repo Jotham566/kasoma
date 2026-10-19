@@ -21,7 +21,7 @@ from uuid import uuid4
 import httpx
 import uvicorn
 from pydantic import SecretStr
-from sqlalchemy import create_engine, func, select, text
+from sqlalchemy import Engine, create_engine, func, select, text
 from sqlalchemy.orm import Session
 
 from apps.api.main import create_app
@@ -33,6 +33,7 @@ from services.config import Settings
 from services.database import engine_for
 from services.domain.assessment import AssessmentSession, Attempt, Grade
 from services.domain.content import ItemVersion
+from services.export_retirement_install import owner_name
 from services.identity import IdentityError, IdentityService
 from services.identity_contracts import (
     ConsentInput,
@@ -57,6 +58,28 @@ def database_name(value: str) -> str:
     if not re.fullmatch(r"kasoma_load_[0-9a-f]{32}", value):
         raise ValueError("Only a generated load database is allowed")
     return value
+
+
+def cleanup_owner(admin: Engine, name: str) -> None:
+    """Inspect only the owner derived from this invocation's dropped database."""
+    role = owner_name(database_name(name), "public")
+    with admin.connect() as db:
+        safe = db.scalar(
+            text("""
+              SELECT NOT (r.rolcanlogin OR r.rolsuper OR r.rolcreatedb OR r.rolcreaterole
+                OR r.rolinherit OR r.rolreplication OR r.rolbypassrls OR EXISTS(
+                  SELECT 1 FROM pg_catalog.pg_auth_members m
+                  WHERE m.roleid=r.oid OR m.member=r.oid))
+              FROM pg_catalog.pg_roles r WHERE r.rolname=:role
+            """),
+            {"role": role},
+        )
+        if safe is None:
+            return
+        if safe is not True:
+            raise RuntimeError("Isolated owner cleanup refused")
+        # Restrictive DROP preserves PostgreSQL's cross-database dependency checks.
+        db.execute(text(f'DROP ROLE "{role}"'))
 
 
 def percentiles(values: list[float]) -> dict[str, float | int | None]:
@@ -371,6 +394,7 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
         url.set(database="postgres"), isolation_level="AUTOCOMMIT", hide_parameters=True
     )
     created = False
+    owner_was_absent = False
     engine = None
     server = None
     thread = None
@@ -387,6 +411,15 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
         with admin.connect() as db:
             db.execute(text(f'CREATE DATABASE "{name}"'))
             created = True
+        stage = "CHECK_OWNER_ROLE"
+        with admin.connect() as db:
+            exists = db.scalar(
+                text("SELECT EXISTS(SELECT 1 FROM pg_catalog.pg_roles WHERE rolname=:role)"),
+                {"role": owner_name(name, "public")},
+            )
+            if exists is not False:
+                raise RuntimeError("Pre-existing isolated owner is preserved")
+            owner_was_absent = True
         local_url = url.set(database=name).render_as_string(hide_password=False)
         stage = "MIGRATE"
         subprocess.run(
@@ -542,6 +575,8 @@ def run(settings: Settings, history_mixed: bool = False) -> dict[str, object]:
                     raise RuntimeError("Isolated server is still active")
                 with admin.connect() as db:
                     db.execute(text(f'DROP DATABASE "{database_name(name)}"'))
+                if owner_was_absent:
+                    cleanup_owner(admin, name)
             except Exception:
                 result.update({"cleanup_failed": True, "status": "FAILED"})
         admin.dispose()

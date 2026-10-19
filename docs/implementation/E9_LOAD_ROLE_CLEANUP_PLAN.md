@@ -1,6 +1,6 @@
 # Next slice: disposable load role lifecycle
 
-Status: implementation-ready assessment; no implementation or acceptance claimed.
+Status: implementation candidate; focused checks pass, complete verification pending.
 Requirements: NFR-MNT-001, NFR-SEC-002; supports repeatable NFR-PERF-001/002 and
 NFR-SCL-001 verification without adding a product feature or performance claim.
 
@@ -18,7 +18,7 @@ role after dropping only its fresh databases, but the load harness does not yet 
 Repeated fresh load runs can therefore leave unused maintenance roles. This is a
 bounded tool-resource cleanup gap, not permission to purge application data or roles.
 
-## Exact change to implement after current promotion
+## Assessed implementation boundary
 
 1. Keep the current local-only validator, generated database naming, provider choices,
    HTTP profiles, latency thresholds and server-stop-before-drop rules unchanged.
@@ -65,4 +65,6 @@ role when its attributes pass validation. The load invocation must therefore rec
 absence before migration, rather than infer exclusive lifecycle ownership from its
 fresh database name. This adds an acceptance case within the existing bounded cleanup
 plan; it grants no authority over pre-existing roles. Implementation still follows
-current candidate promotion.
+current candidate promotion. That promotion is now published through main `226ecf3`;
+the operations branch is removed locally/remotely. The load-role implementation remains
+a separate candidate.

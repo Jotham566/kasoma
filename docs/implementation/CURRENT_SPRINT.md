@@ -1,5 +1,26 @@
 # Current sprint: verified bounded synthetic export retirement operations
 
+## Candidate: disposable load-role lifecycle
+
+NFR-MNT-001/NFR-SEC-002: the shared objective/history-mixed load harness checks that its
+exact derived owner role is absent before migration. After stopping its server, closing
+engines and successfully dropping its own generated database, it inspects only that
+role and removes it only if non-login, non-elevated and without memberships. Absent
+roles succeed; unsafe/shared roles, lookup/drop failures and PostgreSQL dependencies
+fail cleanup with closed diagnostics. Pre-existing roles and failed-database-drop
+resources are preserved. No sweep, DROP OWNED, privilege revocation or application
+resource cleanup is introduced. No API/schema/architecture or load thresholds change.
+
+The new regressions first fail16 cases against the old implementation (37 existing
+cases pass). `make test-load-role-cleanup` now passes65 cases:53 contract and12 actual
+PostgreSQL tests. The latter include fresh migrations through0042 for both profiles,
+intentional stops before learner fixtures, all seven prohibited role attributes,
+both membership directions and actual dependency refusal. These are lifecycle tests,
+not completed HTTP load or performance acceptance. Lint/types/contracts/build,
+1,128 unit/contract plus35 tooling, security and source scans pass; full acceptance
+remains pending.
+See [verification](E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).
+
 ## Complete hosted engineering verification — 19 October 2026
 
 [Run 39256037485, attempt 2](https://github.com/Jotham566/kasoma/actions/runs/39256037485/attempts/2)

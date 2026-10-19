@@ -1423,3 +1423,15 @@ pointer targets. The regression retains a real pointer click and the existing co
 question transfer budget. Failure-only diagnostics report capped endpoint-kind/status
 counts and scalar focus/visibility state, without request IDs, payloads or credentials.
 See [verification](../implementation/E3_REVIEW_ACTION_STABILITY_VERIFICATION.md).
+
+## Disposable load owner lifecycle candidate
+
+`make test-load-profile` runs deterministic contract checks without external calls.
+`make test-load-role-cleanup` adds actual local PostgreSQL migration/cleanup and
+privilege-refusal checks over exclusively created synthetic resources. The shared
+`make load-objective` and `make load-history-mixed` lifecycle now requires absence
+of its exact derived role before migration and removes only that role after its own
+database is successfully dropped. A pre-existing, unsafe/shared or dependent role
+is preserved and the run fails closed. Do not sweep existing orphan roles or use
+DROP OWNED, revoke dependencies, or clean developer/application resources.
+See [candidate evidence](../implementation/E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).
