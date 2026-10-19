@@ -9,7 +9,8 @@ expiry and provider behavior. Local checks pass: 1,180 unit/contract, 35 tooling
 51 request, 43 model, 35 OTP/identity, 24 operations and six browser executions;
 quality/contracts/build and security/images/service smoke pass. Own full hosted
 acceptance remains pending. No production, billing, complete ledger or mixed-reader acceptance.
-[Verification](docs/implementation/E8_METRIC_LOSS_VERIFICATION.md). Parent OTP source ceee401 remains live and unchanged.
+[Verification](docs/implementation/E8_METRIC_LOSS_VERIFICATION.md). Source b5557a3 is pushed for own full hosted39308594889, in progress.
+Parent OTP source ceee401 remains live and unchanged.
 
 ## Local OTP adapter observations - candidate
 

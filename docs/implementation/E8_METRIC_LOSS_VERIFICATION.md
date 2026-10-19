@@ -74,3 +74,26 @@ Bounded interval store, request/model collectors and OTP store method inheritanc
 new contract/actual Redis regressions and Make target; ADR-064/049/054/index, API and
 runbook, changelog/sprint/traceability. No UI or generated contract change. Publish a separate source candidate for its own full hosted
 run. Do not infer application acceptance from documentation checks.
+
+## Exact publication and manual preview boundary
+
+Source b5557a373f42bf24241f7034d4068b0d1a86da3f is pushed on
+codex/metric-loss-windows for its own complete hosted
+[39308594889](https://github.com/Jotham566/kasoma/actions/runs/39308594889).
+It is in progress, not accepted or promoted. Parent OTP source ceee401 stays unchanged
+on its own remote branch while run39304052749 progresses beyond backend verification
+to browser setup. Main remains87a93d7; neither unmerged branch can be removed yet.
+
+After the user replied to the unlock request, the Mac inventory becomes available,
+but two native Edge connection attempts time out. No lock bypass is attempted.
+The existing in-app browser remains usable: the home has labelled navigation,
+clear synthetic-only boundaries and services-ready status; the separate profile
+review tab has a visible skip-link focus indicator and clean desktop layout.
+Activating the skip link moves actual focus to main-content. Empty contact submission
+shows native required-field validation and focuses the labelled contact field.
+No contact, OTP or real data is submitted. The temporary review tab is closed and
+the user's existing home tab is preserved. This is limited in-app desktop observation,
+not native Edge, screen-reader, physical/mobile or current/previous branded acceptance.
+
+Only Markdown closeout follows b5557a3 locally while its remote runtime head remains
+fixed. No application acceptance is inferred from this closeout.
