@@ -1,5 +1,23 @@
 # Changelog
 
+## Verified local OTP adapter observations
+
+Complete hosted [39304052749](https://github.com/Jotham566/kasoma/actions/runs/39304052749)
+succeeds at exact source ceee4012c7f74dcc0c387a45ab112ed35d657f1b:1,171 unit/contract,
+498 integration,35 tooling and114 full browser executions (102 ordinary,12 synthetic
+short-text), plus focused staff/transport/assessment/rubric/restricted-login and all
+setup/migration/seed/quality/contracts/build/security/image/service gates. Logical
+recovery verifies69 tables/686 rows in892ms, cleanup empty, stripped retirement denied.
+
+This accepts ADR-063's bounded default-disabled synthetic API OTP counters/ADMIN
+projection under FR-OPS-002,FR-ID-001,NFR-OBS-001/SEC-002/ACC-001/MNT-001. Adapter return
+is not delivery/receipt/billing; no production provider or release approval. Only
+Markdown closeout follows ceee401. Separate metric-loss/object-recovery candidates
+are not accepted by this run. ADR-061, academic/privacy/provider/physical/pilot gates
+remain. Main promotion and owned-branch cleanup require remote/ancestry proof.
+[Detailed verification](docs/implementation/E8_OTP_OBSERVATIONS_VERIFICATION.md).
+
+
 ## Local OTP adapter observations - candidate
 
 FR-OPS-002, FR-ID-001 and NFR-OBS-001/SEC-002/ACC-001/MNT-001: ADR-063 adds four

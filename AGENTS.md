@@ -325,3 +325,10 @@ At the end of every coding task, report:
 - architectural decisions made;
 - unresolved risks or specification gaps;
 - recommended next task.
+
+ADR-063 OTP observations pass complete hosted39304052749 at exactceee401:1,171
+unit/contract,498 integration,35 tooling and114 browser executions plus all focused
+and engineering gates. Logical recovery69 tables/686 rows892ms cleans successfully;
+object-storage and production recovery remain unproved by that run. Only Markdown
+closeout follows; separate metric-loss/object-recovery candidates need own acceptance.
+Collection stays defaultfalse and no ADR-061 or production enablement is inferred.
