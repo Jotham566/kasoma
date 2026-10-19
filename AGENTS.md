@@ -163,15 +163,15 @@ run is not a pass; existing volumes/images recover without data/cache cleanup. S
 false and scope excludes review public. Separate executor operations with additive0042,
 private configuration/AppLoader, finite count-only health and accessible UI are in
 verification: 25 focused cases, 1,112 unit/contract, 465 integration, 108 browser
-executions and 69-table/686-row recovery pass locally. Hosted39243195783 at `94b40a6`
+executions and 69-table/686-row recovery pass locally. Hosted 39243195783 at `94b40a6`
 passes backend gates but fails one Chromium intercepted transport reset; a bounded
 synthetic-only harness correction passes12 controls and108 local browser executions at
-`b6aea35`. Hosted39249423592 passes backend/transport gates but fails a WebKit resumed
+`b6aea35`. Hosted 39249423592 passes backend/transport gates but fails a WebKit resumed
 pointer transition. A deterministic delayed-hints layout regression reproduces a
 47.421875-pixel shift; moving review hints below actions passes nine focused cases.
 Latest source `e33ec69` passes111 local browser executions, quality/build and
-updated image/source/service checks; Docker is healthy on0042 with retirement false.
-Hosted39255125288 starts no steps because GitHub reports failed account payments or
+updated image/source/service checks; Docker is healthy on 0042 with retirement false.
+Hosted 39255125288 starts no steps because GitHub reports failed account payments or
 insufficient spending capacity. Owner action is requested once; main remains `e9f688e`,
 the active branch is preserved and complete hosted acceptance remains pending; ADR-057 does not authorize account erasure.
 The owner-authorized public visibility change clears CI startup. Complete hosted
@@ -190,10 +190,23 @@ Corrected native objective/history recheck pass, but the initial history START p
 559.306ms miss remains failed; variability is unexplained. Main follow-up39264562568
 fails at the export journey's initial OTP POST socket reset; unchanged focused Firefox
 and the new full suite pass, without a claimed transport fix. Review retirement stays
-false; existing resources are never swept. Next prepare the exact account-erasure
-transform/preservation/recovery proposal from E8_ERASURE_TRANSFORM_READINESS.md;
-39 direct foreign keys across36 tables and19 hold kinds do not prove full clearance.
+false; existing resources are never swept. The exact account-erasure proposal is now
+prepared as ADR-061 and E8_ERASURE_DISPOSITION_PROPOSAL.md, published on main 4377da5
+with status Proposed after documentation checks. Its full 69-table/488-column inventory
+and actual primary-key matrix are assessment evidence, not clearance or execution
+approval. The explicit request for bounded synthetic approval is pending; do not infer
+it from generic continuation, ADR-057/060 approvals or a green pipeline.
 No account-erasure authority or new anonymity policy is inferred.
+Independent fresh-revision response source 58d598e passes 40 focused integration,
+1,130 unit/contract, 35 tooling and nine assessment browser executions plus quality,
+contracts/build, source/dependency/images and container smoke. It removes only two
+known-empty response reads for this transaction's new revision; existing resumes and
+reassessment provenance remain current. Hosted 39286019222 is in progress; source is not yet
+promoted to main. The new objective profile passes with START p95 408.061ms, 7,000 requests,
+zero errors and owned cleanup. Mixed-history also passes with 25,000 prior grades,
+START p95 422.913ms, 7,000 successful requests and owned cleanup. Full hosted acceptance
+and explanation of earlier variance remain pending. All eight Docker services are
+healthy on 0042; export retirement remains disabled.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

@@ -2,7 +2,7 @@
 
 Requirements: NFR-PERF-001/002, FR-REV-001/002/005/006, FR-GRD-008,
 FR-WA-003, NFR-MNT-001 and NFR-SEC-002.
-Status: candidate; full application/hosted acceptance and new load evidence pending.
+Status: native checks and both load profiles pass; full hosted acceptance pending.
 
 ## Change and boundary
 
@@ -41,8 +41,8 @@ preserved. Broader transaction, consent, channel, reassessment and lock suites f
 
 - `make test-fresh-session-response`: now includes the four focused cases and existing
   assessment, recommendation, reassessment, shared-transaction, content-lock and channel
-  integration suites. The initial focused-only command results above are not a claim
-  that the expanded command or full suite has passed.
+  integration suites. The initial focused-only result is separate from the expanded 40-case pass below.
+  Neither is a claim of a complete 483-case native integration run.
 - Expanded `make test-fresh-session-response`: 40 integration cases pass in 165.05s,
   including transactions/rollback, authorization/consent, recommendation/reassessment,
   content-lock races and channel grading/mastery parity.
@@ -53,9 +53,8 @@ preserved. Broader transaction, consent, channel, reassessment and lock suites f
   Chromium 20.2s, Firefox 23.2s and WebKit 19.3s. These are the focused journeys, not a new
   complete 111-execution browser or branded/physical-device acceptance claim.
 - `make security security-source` passes: dependency audits report no known
-  vulnerabilities and source Gitleaks reports no leaks. Image/service checks are
-  in progress; hosted regression and new load evidence remain pending.
-- Re-run both standard native load profiles sequentially after other checks finish.
+  vulnerabilities and source Gitleaks reports no leaks. Image/service checks also pass; full hosted regression remains pending.
+- Both standard native load profiles pass sequentially after other checks finish.
   Retain every failure and unchanged per-operation thresholds; do not claim that two
   fewer queries fix the previously unexplained START p95 variance.
 
@@ -63,3 +62,39 @@ The original corrected-source history miss at 559.306ms remains failed. The prev
 passing 448.045ms recheck is not acceptance of this candidate. Full agreed-load/provider/
 soak/production acceptance and genuine academic/privacy/safeguarding gates remain open.
 Normal Docker services remain running on 0042, with review retirement false.
+
+## Native candidate source and first load result
+
+Application/test/Make source `58d598eb77196d28844f156165488175e26a1dcb` is committed
+and pushed. Hosted 39286019222 is now in progress, not accepted. Main 4377da5 publishes only the
+checked Proposed ADR-061/readiness/inventory documents; its runtime tree is unchanged
+from the previously verified main baseline. The merged proposal branch is removed.
+No erasure implementation approval has arrived.
+
+`make containers security-containers container-smoke` passes; rebuilt API/worker/web
+services are healthy. Standard native `make load-objective` passes: 7,000 HTTP requests,
+zero errors, 500 completed learners/2,500 grades, 50 peak concurrent requests and successful
+owned cleanup. START p95/p99 is 408.061/922.495ms; ANSWER p95 is 27.248ms; target 20 answers/s
+(observed 19.992/s). Database resources are not measured. The source-pinned
+[aggregate report](evidence/E9_FRESH_RESPONSE_OBJECTIVE_LOCAL_2026_10_19_58d598e.json)
+contains no learner/source identifiers or payloads. The history result below completes this pair of native observations;
+these runs do not explain prior variance or complete NFR-PERF-001 release acceptance.
+
+## Mixed-history result and review runtime
+
+Standard `make load-history-mixed` passes at the same runtime source, with 25,000 prior
+grades and 27,500 final grades/5,500 completed sessions. All 7,000 HTTP requests succeed;
+500 learners complete, peak concurrency is 50 and owned cleanup succeeds. START
+p95/p99 is 422.913/924.864ms. Numeric/choice ANSWER p95 is 27.610/28.092ms, with 1,250 timed
+answers per format. Target 20 answers/s is observed at 19.998/s. The source-pinned
+[aggregate report](evidence/E9_FRESH_RESPONSE_HISTORY_MIXED_LOCAL_2026_10_19_58d598e.json)
+retains the exact scope and database_resources_measured=false/production_acceptance=false.
+No recheck or threshold/warm-up change was used for this candidate pair.
+
+Read-only SHA-256 comparison of services/assessment.py in the rebuilt API, worker and
+export-worker matches the local candidate: f9b8795780909bd20f31b470ffa448109d4fba43d264096037e3bf015a5d4959.
+All eight services remain healthy; schema 0042/review retirement false are preserved.
+Only Markdown and aggregate JSON closeout follows runtime/test/Make source 58d598e.
+Do not push a replacement branch head while its exact hosted verification is running.
+Promote runtime to main and remove its branch only after full hosted verification;
+the proposal on main remains unapproved independently of these engineering checks.

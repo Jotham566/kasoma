@@ -9,8 +9,9 @@ retain current DB reads and full grade/provenance. Three baseline query-budget f
 and the passing answered-resume control become four focused passes with full committed
 serialization parity. Expanded 40 integration, 1,130 unit/contract, 35 tooling and nine
 three-engine browser cases pass, plus quality/contracts/build and source security.
-[Verification](E9_FRESH_SESSION_RESPONSE_VERIFICATION.md) remains candidate pending broader
-checks and new load evidence; no claimed p95-variance fix or ADR-061 implementation.
+[Verification](E9_FRESH_SESSION_RESPONSE_VERIFICATION.md) records both passing native profiles (START p95 408.061/422.913ms),
+image/service checks and source-pinned aggregate reports. Hosted39286019222 at58d598e
+is in progress; runtime is not promoted. No claimed p95-variance fix or ADR-061 implementation.
 
 ## Proposed synthetic erasure decision — awaiting owner approval
 
