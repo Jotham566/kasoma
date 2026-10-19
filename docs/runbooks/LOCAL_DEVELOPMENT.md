@@ -1615,3 +1615,8 @@ new private keys through the child environment and cleans only its returned full
 with the matching erasure-test label. Failed or uncertain cleanup fails verification.
 It neither provisions an executor nor touches the normal review database. The source
 uses the existing approved local image without pulling; all eight review services stay.
+
+The standard browser matrix runs three fresh API shards per engine. Each gets its
+own generated database and production OTP peer budget; adding journeys must not
+be accommodated by raising the application rate limit or test deadline. Separate
+short-text and configuration profiles retain their existing commands.

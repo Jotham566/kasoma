@@ -301,6 +301,20 @@ in `docs/specifications/13_ADR_and_Decision_Log.md`; new ADRs belong in
 For documentation-only tasks, verify links and whitespace; application tests,
 migrations and generated contracts apply when those components change.
 
+The follow-up practice viewport candidate reproduces48 pixels of scroll movement under
+delayed hints. A root-only opt-out while practice is present passes15 focused and108
+standard three-engine executions, including320/1280 pointer targets; nine exact owned
+containers are independently absent. Three fresh shards per engine retain the unchanged
+OTP peer limit. Earlier numeric/OTP failures stay recorded; no full combined/hosted
+acceptance or new erasure execution is inferred. Main publication remains pending.
+
+ADR-069 extends exact-ID test resources with a separate erasure-test purpose for the
+closed identity target, not an execution capability. The OTP race candidate fails two
+regressions before the change and passes all11 after, plus1,444 unit/contract and105
+resource/controller cases. It now combines the local practice root-scroll correction;
+full exact-source combined hosted acceptance remains pending. No account closure or
+DELETE completion is enabled. Preserve the normal review stack and all prior failures.
+
 ## Standard commands
 
 Prefer repository commands over improvised alternatives:

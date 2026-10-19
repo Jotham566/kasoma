@@ -205,7 +205,7 @@ export default function Revise() {
   }, []);
 
   return (
-    <main className="learning-page">
+    <main className="learning-page practice-page">
       <p className="eyebrow">Your learning · One question at a time</p>
       <h1 className="text-3xl font-semibold">
         {session?.kind === "REASSESSMENT"

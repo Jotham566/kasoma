@@ -13,6 +13,17 @@ Three new executions cover barrier serialization, concurrent identifier binding 
 single-use verification for an existing identity. Actual database verification and
 full acceptance remain pending; this is a prerequisite within approved ADR-061.
 
+## Practice review viewport stability — candidate
+
+NFR-ACC-001/COMP-001 and FR-REV-005: combined source2966bab reproduces a Firefox
+numeric solution click without a solution request, despite a fresh owned database.
+A deterministic delayed-hints regression now measures viewport coordinates with the
+pointer already placed at the action. Before the correction, Chromium reproduces
+a48-pixel shift. The prior document-coordinate regression missed scroll adjustment.
+Disable root browser scroll anchoring while the practice page is present; normal manual scrolling
+and existing actions remain. Three-engine verification is in progress. No policy,
+API/schema, provider, timeout, retry or authorization change.
+
 
 ## Explicit private-profile parser dependency
 
@@ -1852,3 +1863,32 @@ ADR-069 records the test-resource choice; CI invokes the same owned-source targe
 Complete combined backend/browser/recovery/image/service and own hosted acceptance
 remain pending. This is identity coordination, not a permanent closed_at/SQL session
 guard, account-closure authorization, actual erasure or DELETE fulfillment.
+
+The final focused assessment matrix passes15 executions: five each in Chromium,
+Firefox and WebKit, including pointer stability at320 and1280 pixels. The original
+document-position regression, lost acknowledgement/resume and grading gates remain.
+Screenshots confirm readable narrow feedback/actions. Complete browser, backend,
+image/service/recovery and own exact-source hosted acceptance remain pending.
+
+The first final full-browser attempt fails Chromium shard2 at WhatsApp onboarding:
+OTP request returns202, verification returns400/OTP_INVALID and no profile appears
+(17 pass). This is an authentication rejection, not another proved pointer miss.
+The expanded36-test engine cohort now uses three fresh API shards to retain the
+unchanged20-per-peer OTP policy; no production rate or test deadline is increased.
+The removed fixture's exact suppression cause is unproven. A new complete matrix
+is required; focused15 passes do not accept this failed full run.
+
+The three-shard standard cohort passes108 executions (12 in each of nine fresh
+shards), with nine empty cleanup reports and independent exact-ID absence confirmed
+for all nine containers. The focused15 assessment cases also pass at320/1280 pixels.
+This supersedes the failed two-shard cohort for this local standard-browser matrix
+only; configuration/short-text/full hosted engineering acceptance remain separate.
+
+## Current combined verification candidate
+
+This source combines the ADR-061 identity lock/ADR-069 owned test source with the
+practice root-scroll correction and three-shard browser budget. Local component
+evidence is1,444 unit/contract,105 resource/controller,11 actual identity and15
+focused/108 standard browser passes; prior failures remain recorded. Combined-source
+checks and complete exact-source hosted verification must pass before main publication.
+No permanent closure marker, authorization/executor, erasure or DELETE completion exists.

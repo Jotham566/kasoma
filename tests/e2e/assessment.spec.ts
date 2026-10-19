@@ -318,3 +318,72 @@ test("NFR-ACC-001/FR-REV-005: delayed review hints keep the next action stable",
     page.getByRole("heading", { name: "Question 2 of 5" }),
   ).toBeVisible();
 });
+
+for (const width of [320, 1280]) {
+  test(`NFR-ACC-001/FR-REV-005: delayed hints preserve a pointer target at ${width}px`, async ({
+    page,
+    browserName,
+  }) => {
+    await page.setViewportSize({ width, height: 720 });
+    await onboard(page, `e3-hint-pointer-${width}@example.invalid`);
+    await page.goto("/revise");
+    await page
+      .getByRole("button", { name: "Start five-question practice" })
+      .click();
+    await page.getByRole("radio", { name: "Alpha", exact: true }).check();
+    let held: Route | undefined;
+    await page.route("**/api/v1/attempts/*/hints", (route) => {
+      held = route;
+    });
+    await page
+      .getByRole("button", { name: "Submit answer", exact: true })
+      .click();
+    const solution = page.getByRole("button", { name: "Show worked solution" });
+    await expect(solution).toBeEnabled();
+    await expect.poll(() => held !== undefined).toBe(true);
+    const paused = held!;
+    const response = await paused
+      .fetch({ maxRetries: 1, maxRedirects: 0 })
+      .catch(() => {
+        throw new Error(
+          "Synthetic hint read unavailable; diagnostics withheld",
+        );
+      });
+    expect(response.status()).toBe(200);
+    const available = (await response.json()).has_more_hints;
+    await page.evaluate(() =>
+      window.scrollTo(0, document.documentElement.scrollHeight),
+    );
+    const before = await solution.boundingBox();
+    expect(before).not.toBeNull();
+    const point = {
+      x: before!.x + before!.width / 2,
+      y: before!.y + before!.height / 2,
+    };
+    await page.mouse.move(point.x, point.y);
+    await paused.fulfill({ response });
+    const hints = page.getByRole("region", { name: "Reviewed hints" });
+    if (available)
+      await expect(
+        hints.getByRole("button", { name: "Show next reviewed hint" }),
+      ).toBeVisible();
+    else
+      await expect(
+        hints.getByText(
+          "No more reviewed hints are available for this question.",
+        ),
+      ).toBeVisible();
+    const after = await solution.boundingBox();
+    expect(after).not.toBeNull();
+    expect(Math.abs(after!.y - before!.y)).toBeLessThan(1);
+    await page.screenshot({
+      path: `.local/ui-review/review-pointer-${browserName}-${width}.png`,
+    });
+    await page.mouse.click(point.x, point.y);
+    await expect(
+      page.getByText("The requested label is Alpha, option A.", {
+        exact: true,
+      }),
+    ).toBeVisible();
+  });
+}

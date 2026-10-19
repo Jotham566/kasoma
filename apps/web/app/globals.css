@@ -851,3 +851,8 @@ select.ui-input:not([multiple]):not([size]) {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* Delayed hints must not move a review action beneath an already placed pointer. */
+html:has(.practice-page) {
+  overflow-anchor: none;
+}
