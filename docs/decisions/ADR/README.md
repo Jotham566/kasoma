@@ -175,3 +175,8 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-067: Versioned operational warning configuration](067-versioned-operational-warning-configuration.md)
   records an ADMIN/recent-auth closed numeric editor, atomic staff audit/version checks,
   original-command retries and explicit warning-only fallback. Verification pending.
+
+
+- [ADR-068: Owned browser database services](068-owned-browser-database-services.md)
+  records one bounded fresh PostgreSQL/pgvector service for the standard synthetic browser
+  API, distinct ownership labels and exact-ID cleanup; verification pending.

@@ -5,8 +5,10 @@ import os
 import re
 import subprocess
 from dataclasses import dataclass, field
+from typing import Literal
 
 LABEL = "org.kasoma.synthetic-recovery"
+BROWSER_LABEL = "org.kasoma.synthetic-browser"
 PARTS = {"source-db", "destination-db", "source-objects", "destination-objects"}
 
 
@@ -89,11 +91,28 @@ class OwnedServices:
     invocation: str
     created: dict[str, str] = field(default_factory=dict)
     uncertain: list[str] = field(default_factory=list)
+    purpose: Literal["recovery", "browser"] = field(default="recovery", kw_only=True)
 
     def __post_init__(self) -> None:
         invocation_id(self.invocation)
+        if self.purpose not in {"recovery", "browser"}:
+            raise ValueError("RECOVERY_PURPOSE_INVALID")
+
+    @property
+    def label(self) -> str:
+        if self.purpose not in {"recovery", "browser"}:
+            raise ValueError("RECOVERY_PURPOSE_INVALID")
+        return LABEL if self.purpose == "recovery" else BROWSER_LABEL
+
+    def name(self, part: str) -> str:
+        if self.purpose not in {"recovery", "browser"}:
+            raise ValueError("RECOVERY_PURPOSE_INVALID")
+        if part not in PARTS or (self.purpose == "browser" and part != "source-db"):
+            raise ValueError("RECOVERY_COMPONENT_INVALID")
+        return f"kasoma-{self.purpose}-{part}-{self.invocation}"
 
     def create(self, part: str, image: str, environment: dict[str, str]) -> str:
+        name = self.name(part)
         if part not in PARTS or part in self.created:
             raise ValueError("RECOVERY_COMPONENT_INVALID")
         image_id(image)
@@ -113,9 +132,9 @@ class OwnedServices:
             "create",
             "--pull=never",
             "--name",
-            f"kasoma-recovery-{part}-{self.invocation}",
+            name,
             "--label",
-            f"{LABEL}={self.invocation}",
+            f"{self.label}={self.invocation}",
             "--memory",
             "512m",
             "--pids-limit",
@@ -143,6 +162,7 @@ class OwnedServices:
         return cid
 
     def inspect_owned(self, part: str) -> dict[str, object]:
+        self.name(part)
         cid = self.created[part]
         result = json.loads(command(["docker", "inspect", cid]))
         if not isinstance(result, list) or len(result) != 1 or not isinstance(result[0], dict):
@@ -150,7 +170,7 @@ class OwnedServices:
         item = result[0]
         if (
             item.get("Id") != cid
-            or item.get("Config", {}).get("Labels", {}).get(LABEL) != self.invocation
+            or item.get("Config", {}).get("Labels", {}).get(self.label) != self.invocation
         ):
             raise ValueError("RECOVERY_OWNERSHIP_MISMATCH")
         if any(mount.get("Type") in {"bind", "volume"} for mount in item.get("Mounts", [])):
@@ -180,13 +200,13 @@ class OwnedServices:
         return int(value)
 
     def cleanup(self) -> list[str]:
-        failed = [f"kasoma-recovery-{part}-{self.invocation}" for part in self.uncertain]
+        failed = [self.name(part) for part in self.uncertain]
         for part, cid in reversed(self.created.items()):
             try:
                 self.inspect_owned(part)
                 command(["docker", "rm", "--force", cid])
             except Exception:
-                failed.append(f"kasoma-recovery-{part}-{self.invocation}")
+                failed.append(self.name(part))
         return failed
 
     def stop(self, part: str) -> None:

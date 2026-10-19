@@ -193,3 +193,17 @@ response until feedback actions render, releases it, then checks that Next stays
 place and a real pointer click advances. The one-pixel tolerance is a specific
 regression's rounding allowance, not a new product-wide layout SLO. Original resume,
 keyboard, pointer/touch, hint/solution and bandwidth assertions remain required.
+
+
+### Bounded synthetic browser database diagnosis
+
+scripts.e2e_api may attach the test-only driver-error observer after verifying its
+fresh owned e2e UUID schema and fake provider profile. It emits at most16 events per
+process with a fixed six-value driver category, eight-value operation label and elapsed
+milliseconds. Operation labels use compiled statement metadata and exact equality with
+one fixed parameterized advisory-lock template. SQL/parameters, dynamic source names,
+exception messages/repr, credentials, payloads and learner identifiers are never emitted.
+Normal application entrypoints do not import it. Observer failure cannot replace the
+original error or change transaction/retry/timeout/assertion behavior. Verify with
+make test-e2e-failure-diagnosis before diagnostic browser targets. A non-reproducing pass
+is not proof of a fix or of the cause of an earlier failure; retain failed-run evidence.

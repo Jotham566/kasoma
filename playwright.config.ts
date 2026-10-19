@@ -36,6 +36,7 @@ export default defineConfig({
       command: "uv run --frozen python -m scripts.e2e_api",
       url: "http://127.0.0.1:18000/api/v1/live",
       reuseExistingServer: false,
+      gracefulShutdown: { signal: "SIGTERM", timeout: 10_000 },
     },
     {
       command: "corepack pnpm --filter @kasoma/web start",

@@ -1737,3 +1737,28 @@ Complete hosted 39185423895 passes at `6d53541`, including image/service and all
 regression gates. Source is on main; merged branches are removed. No API, permission,
 data or architectural decision changes. See
 [select target verification](E6_SELECT_TARGET_VERIFICATION.md).
+
+
+NFR-MNT-001/OBS-001: frozen configuration backend passes1277 unit/contract,35 tooling
+and512 integration, but serial local Chromium fails two cases with HTTP500. Promotion
+remains pending. A bounded fake-only/owned-schema driver-error diagnostic is a separate
+local test-harness candidate; it logs fixed categories only, changes no timeout/retry
+and does not claim a fix. See E8_OPERATIONS_CONFIGURATION_READINESS.md.
+
+
+Complete hosted39322035839 is SUCCESS at exact configuration source3e6175b:1277
+unit/contract,512 integration,35 tooling and117 full browser executions plus every
+mandatory engineering gate. Recovery verifies71 tables/691 rows (logical531ms; actual
+PG/MinIO one42,060-byte object308ms), guards/scope/fault probes and empty cleanup.
+Local serial/browser diagnosis still reproduces an assessment500 with QUERY_CANCELLED;
+no cause/fix is claimed, and main promotion remains deferred. The separate bounded
+local diagnostic harness has24 focused/1301 unit cases but no own hosted acceptance.
+ADR-061 foundation1851740 is separately pushed for complete hosted39328044945; its
+head stays fixed and its acceptance remains pending. See configuration/erasure readiness.
+
+
+ADR-068 (NFR-MNT-001/PERF-001/002/SEC-002/OBS-001) is a separate browser-isolation
+candidate after observing11.3GB of shared system catalogs. Only a new owned bounded
+PostgreSQL service hosts the standard synthetic browser fixture; normal services and
+all existing schemas remain. Scope/cleanup/private-key tests and actual browser/hosted
+acceptance are pending. No prior HTTP500 or pointer failure is declared fixed.

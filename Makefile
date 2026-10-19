@@ -82,7 +82,7 @@ build:
 containers:
 	docker compose --profile application build
 security:
-	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py -q
+	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py scripts/e2e_failures.py scripts/browser_database.py -q
 	$(UV) python scripts/check_secrets.py
 	$(UV) pip-audit --local
 	$(PNPM) audit --audit-level=high
@@ -220,6 +220,12 @@ recovery-drill:
 	$(UV) python -m scripts.recovery_drill
 
 .PHONY: e2e-install e2e-list e2e-chromium e2e-firefox e2e-webkit
+.PHONY: test-e2e-failure-diagnosis
+test-e2e-failure-diagnosis:
+	$(UV) pytest tests/contract/test_e2e_failure_diagnosis.py
+.PHONY: test-browser-database
+test-browser-database:
+	$(UV) pytest tests/contract/test_browser_database.py tests/contract/test_object_recovery.py
 e2e-install:
 	$(PNPM) exec playwright install --with-deps chromium firefox webkit
 e2e-list:

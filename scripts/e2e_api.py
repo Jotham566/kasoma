@@ -13,7 +13,9 @@ from sqlalchemy.engine import make_url
 
 from apps.api.main import create_app
 from scripts.assessment_fixtures import seed_assessment
+from scripts.browser_database import browser_database, cleanup_on_termination
 from scripts.e2e_exports import install as install_exports
+from scripts.e2e_failures import install as install_failure_diagnosis
 from services.config import Settings
 from services.content_imports import process_imports
 from services.database import engine_for
@@ -26,8 +28,7 @@ from services.staff import provision
 from services.whatsapp_jobs import process_messages
 
 
-def main() -> None:
-    config = Settings()
+def run(config: Settings) -> None:
     engine = engine_for(config)
     schema = "e2e_" + uuid4().hex
     with engine.begin() as connection:
@@ -36,10 +37,15 @@ def main() -> None:
         {"options": f"-csearch_path={schema},public"}
     )
     config = Settings(
-        database_url=url.render_as_string(hide_password=False),
-        email_provider="fake",
-        model_provider="fake",
-        channel_preservation_enabled=True,
+        **(
+            config.model_dump()
+            | {
+                "database_url": SecretStr(url.render_as_string(hide_password=False)),
+                "email_provider": "fake",
+                "model_provider": "fake",
+                "channel_preservation_enabled": True,
+            }
+        )
     )
     subprocess.run(
         ["uv", "run", "--frozen", "alembic", "-c", "apps/api/alembic.ini", "upgrade", "head"],
@@ -50,6 +56,7 @@ def main() -> None:
     seed(config)
     engine.dispose()
     engine = engine_for(config)
+    install_failure_diagnosis(engine, config, schema)
     messages = FakeMessagingProvider()
     service = IdentityService(engine, config, messages, messages, code=lambda: "246810")
     clock = service.clock
@@ -104,6 +111,12 @@ def main() -> None:
         stop.set()
         worker.join(timeout=5)
         engine.dispose()
+
+
+def main() -> None:
+    config = Settings(model_provider="fake", email_provider="fake")
+    with cleanup_on_termination(), browser_database(config) as isolated:
+        run(isolated)
 
 
 if __name__ == "__main__":

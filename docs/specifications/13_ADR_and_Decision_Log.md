@@ -478,3 +478,12 @@ Accepted within delegated engineering discretion; implementation verification pe
 approved configuration route edits existing warning thresholds only, using immutable
 versions, ADMIN/recent OTP, exact retry authority and atomic existing staff audit.
 It grants no processing/retention/provider/academic or activation authority.
+
+
+## ADR-068: Fresh owned browser database services
+
+Accepted within delegated local engineering discretion; verification pending.
+[Record](../decisions/ADR/068-owned-browser-database-services.md): browser fixtures use
+one fresh approved-image PostgreSQL service with bounded tmpfs/memory, loopback/private
+credentials and exact returned-ID/label cleanup. Normal services/data and application
+contracts/deadlines stay unchanged; no shared developer resource cleanup is authorized.

@@ -128,3 +128,162 @@ The limited resource snapshot (PostgreSQL about40% CPU/892MiB;16GiB free host di
 a performance acceptance or reconstruction of the failure moment. Finish the unchanged
 backend run, then repeat full browser verification serially under unchanged gates.
 The hosted exact3e6175b run continues; do not replace its head or infer local acceptance.
+
+
+## Frozen local backend verification —20 October2026 Kampala
+
+make lint openapi-check build test completes successfully at the unchanged3e6175b
+runtime/test/Makefile tree (only approval Markdown follows).35 tooling,1277 unit/contract
+and512 integration cases pass; integration duration2290.76s. The expected Starlette
+httpx deprecation warning remains visible. This is a terminal exit0, unlike the earlier
+interrupted run. Hosted39322035839 has passed its backend gate and is in full browser
+verification; complete hosted acceptance is still pending.
+
+The earlier local Firefox three-case/HTTP500 failure remains FAILED and unexplained.
+Full local browsers will run serially after the isolated follow-up metadata/disabled-role
+checks finish. No SQL timeout, retry, assertion, database schema or cleanup policy is
+weakened; the previous failure is not attributed to concurrency without evidence.
+
+
+## Serial browser failure and bounded diagnosis candidate
+
+The serial make e2e run is terminal FAILED at Chromium shard1:15 passed/two failed.
+Assessment submission returns500 in2252.781ms and the resumed keyboard journey never
+reaches Answer saved. Export-request creation returns500 in2731.831ms before the
+intentional mid-transfer corruption scenario. No later shards/engines execute. The
+previous concurrency explanation is unproven and insufficient. The frozen backend
+pass does not accept this browser result. Main promotion remains blocked by verification.
+
+Read-only aggregate Docker log probes return no PostgreSQL log lines; empty capture
+cannot establish absence of SQL errors. Private transfer truncation errors occur in
+these logs but do not establish the cause of the earlier export-request creation500.
+
+A separate test-only candidate attaches an SQLAlchemy handle_error observer solely to
+scripts.e2e_api's fresh owned e2e UUID schema and fake provider profile. At most16 events
+per process contain only six static driver-error categories and elapsed milliseconds.
+No SQL, parameters, exception message/repr, body, credential, source ID or error details
+are inspected/output. Optional diagnosis never suppresses/replaces the original error.
+Normal API/worker entrypoints never import this helper. No timeout, retry, assertion,
+schema-retention policy or developer resource is changed. Focused denial/privacy/bound
+controls precede a diagnostic Chromium reproduction; this is not a claimed runtime fix.
+Hosted39322035839 remains pinned at3e6175b and cannot accept this new local harness.
+
+
+The final diagnostic source passes16 focused controls and1293 unit/contract cases,
+35 tooling, lint/types (209 checked sources), matching generated contracts, Bandit and
+dependency audits. The new helper is explicitly included in mypy/Bandit. Earlier
+interleaved local check output is not used as the final evidence; the serial final
+command has its own log and exits0.
+
+Diagnostic Chromium passes both17-case shards (36.2s/32.1s), with no database-failure
+event observed. Intentional corrupt-transfer pipe errors remain visible. This does not
+reproduce or fix the prior500s and does not establish their cause. Remaining browser
+engines/profiles are running serially with the same assertions and existing deadlines.
+
+
+## Complete hosted result at frozen configuration source
+
+Hosted39322035839 is SUCCESS at exact3e6175bfd8d4b501aa5a01c2432bbe32bbf33bc2.
+All required steps pass:1277 unit/contract,512 integration (1574.89s),35 tooling,
+117 full browser executions plus focused content/attachment/interception/assessment/
+rubric/role controls, setup/clean migrations/seed/quality/contracts/build/security/
+images/service smoke. Logical recovery verifies71 tables/691 rows in531ms; actual
+PG/MinIO verifies71/691/one42,060-byte encrypted object in308ms, correct scope,
+source services stopped, missing/corrupt rejection, immutable guards, retirement denied
+and no cleanup failures. Production RPO/RTO remains false. Optional registry-login
+skip is conditional; mandatory gates all succeed.
+
+Local diagnostic Firefox still fails one assessment case (16 pass) with a2056.774ms
+HTTP500; later engines/profiles are unexecuted. No fix is established. Playwright ignores
+server stdout by default, so the initial print observer was not visible in captured
+logs. The corrected candidate writes the same bounded fixed categories to stderr;
+privacy tests now assert stdout stays empty. This is a diagnostic visibility correction,
+not a new timeout, retry or runtime fix. Fresh checks/reproduction use separate logs.
+
+Main promotion remains deferred while the local failure is investigated. Hosted success
+at3e6175b cannot accept the separate diagnostic harness or ADR-061 foundation source.
+
+
+The stderr reproduction records QUERY_CANCELLED immediately before the assessment500
+(response start2106ms), then ends FAILED (16 passed/one failed). This establishes a
+cancelled database query in the failing request; it does not yet distinguish a user
+lock, expensive read/write, other cancellation or the source of waiting. No blanket
+concurrency or catalog-bloat explanation is claimed.
+
+A further bounded diagnostic tags only READ/fixed write classes from compiled SQLAlchemy
+metadata, plus exact equality with the fixed parameterized user-advisory-lock template.
+Neither parameter values nor SQL bodies are emitted; unknown tables/templates become
+WRITE/OTHER. Source names never become log labels.24 privacy/scope/operation controls,
+1301 unit/contract,35 tooling and quality/contracts/security pass. The first mypy attempt
+catches Join lacking a table name; explicit TableClause handling corrects it. A fresh
+Firefox reproduction is running with this source and unchanged deadlines/assertions.
+
+
+## ADR-068 browser database isolation candidate
+
+Read-only pg_catalog statistics estimate10842 namespaces and11,307,737,088 bytes across
+pg_class/pg_attribute/pg_constraint/pg_depend/pg_namespace with indexes/TOAST. Tuple
+estimates are3,226,840/15,456,539/3,806,169/22,997,306/10842 respectively. No learner
+row is selected. This is a shared catalog dependency/reproducibility risk, not proof
+of the cancelled query's cause. The operation-tag Firefox run passes shard1 but fails
+numeric worked-solution visibility in shard2 (16 pass), with no solution request or
+500 in that learner trace. It is a separate unresolved pointer/enablement transition.
+The unchanged focused assessment target passes all nine executions; this is no fix.
+
+[ADR-068](../decisions/ADR/068-owned-browser-database-services.md) gives only the standard
+synthetic browser API a fresh approved PostgreSQL/pgvector container per process. It
+reuses existing exact creation-ID/label/no-volume guards with a closed browser purpose
+and distinct labels;512m memory,256 pids,256m tmpfs and random loopback port. Private
+DB/encryption/lookup/JWT keys are fresh. The existing e2e UUID schema, fake providers,
+export fault routes and deadlines/assertions remain. No fallback or existing data/cache/
+volume/schema cleanup occurs. The configuration profile inherits the same API isolation; the separate short-text
+API keeps its existing scope.
+
+The current root branch is codex/browser-isolation; accepted configuration remote3e6175b
+is preserved. New bounded startup/cleanup/profile/private-key/purpose controls and all
+existing recovery resource controls precede actual browser verification and its own
+complete hosted source acceptance. No test-resource cleanup is account erasure.
+
+
+Shutdown inspection of the pinned Uvicorn source confirms it re-raises captured SIGTERM
+with original handlers after server shutdown. The browser entrypoint therefore uses a
+test-only handler that unwinds its owned context, and Playwright requests SIGTERM with
+a ten-second cleanup budget. HTTP/SQL/assertion/test deadlines are unchanged. An actual
+signal unit case verifies cleanup and previous-handler restoration. The controller emits
+only returned container ID/invocation and final cleanup failures as infrastructure
+metadata, never credentials or learner IDs; this records creation provenance for this
+run rather than discovering resources by name. Unexpected setup/body diagnostics are
+withheld after attempting owned cleanup. Actual container/browser acceptance is pending.
+
+
+ADR-068 foundation checks pass:78 combined browser-resource/existing object-recovery
+controls,24 failure-diagnostic controls,1320 unit/contract,35 tooling, lint/types (210
+sources), matching generated contracts and security/dependency checks. Fresh invocation
+DB/encryption/lookup/JWT keys are preserved when adding the existing e2e schema options.
+An unexpected setup/body exception is withheld after owned cleanup. The first actual
+fresh-container Firefox run is in progress; these unit controls alone do not accept it.
+
+
+The first actual fresh-container Firefox target passes both17-case shards (30.8s/29.5s),
+with two empty cleanup reports. Independent exact-ID inspection confirms both returned
+containers absent. The eight normal review services stay healthy. An ID/label-checked
+read-only snapshot of a live Chromium fixture finds the same five system catalogs total
+2,801,664 bytes, compared with the shared database's11,307,737,088-byte observation.
+These are separate environments/observations, not causal attribution or production
+performance evidence. Remaining browser profiles are running; no full acceptance yet.
+
+
+## Complete local browser cohort with owned fixture services
+
+The final unchanged source passes all117 executions: Chromium34, Firefox34, WebKit34,
+short-text12 and configuration3. The four remaining standard shards pass17 each in
+20.9s/20.6s/24.8s/24.5s; short-text four per engine31.3s/32.0s/32.7s; configuration
+one per engine10.9s/11.7s/10.7s. Together with the earlier Firefox34, the commands exit0.
+All nine standard/configuration returned containers report empty cleanup and independent
+exact-ID inspection confirms all nine absent. The separate short-text API retains its
+previous schema scope. Normal review services stay healthy; no existing resource is swept.
+
+This accepts the local browser-isolation behavior only. Previous failures and unknown
+causes remain recorded; source-preserving fresh isolation is not a proved historical
+root-cause fix. Complete combined backend/recovery/images/service and exact-source
+hosted verification remain required before main promotion. Main remains eb05457.

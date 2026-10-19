@@ -1563,3 +1563,21 @@ prior reference and one declared setting. Preserve0043 for already applied envir
 make migrate applies0044. The configuration reader refuses missing current-schema tables
 instead of falling through to public. Three-engine configuration mutation tests run in
 their own fresh synthetic schema and are included by make e2e.
+
+
+For unresolved synthetic browser HTTP500s, make test-e2e-failure-diagnosis verifies
+payload-free fixed driver-error categories and the16-event per-process bound. The
+observer exists only in scripts.e2e_api after fresh owned-schema/fake-profile checks.
+Use existing browser targets for a diagnosis run; no error-body logging, automatic
+retry, timeout increase or developer schema/image/volume cleanup is authorized by it.
+
+
+ADR-068 changes the standard browser API to a temporary, bounded PostgreSQL service
+from the already available approved Compose image. Docker must be running; there is
+no image pull or fallback to the configured database. make test-browser-database checks
+profile/private-key/ownership/cleanup controls alongside existing recovery guards.
+Normal review services keep running. A successful graceful run reports empty
+cleanup_failed; nonempty/uncertain creation requires inspection and fails verification.
+Do not discover cleanup targets by prefix or remove existing developer resources.
+The configuration browser profile inherits this API isolation. The separate short-text
+API keeps its existing scope.
