@@ -167,3 +167,14 @@ IDs in batch audit. Existing request-review holds take parent then leaf explicit
 Ownership/ACL stripping fails closed; privileged repair resets activation false.
 These are implementation choices within the approved bounded synthetic decision,
 not real-data authorization or completed application acceptance.
+
+## Executor operations implementation choices — candidate
+
+The [operations candidate](../../implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
+uses a separate 0600 ignored configuration and dedicated prefork maintenance consumer;
+ordinary worker settings carry only non-secret schedule switches. Provisioning is an
+explicit privileged local command that refuses existing roles/files. Normal review
+public is excluded independently. Count-only observations retain at most five minutes;
+ADMIN health is read-only. These implement the approved restricted-login, scheduling
+and minimized-health boundary without changing its four-table policy or granting
+production/account-erasure authority. Full candidate verification remains pending.

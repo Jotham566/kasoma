@@ -3714,7 +3714,9 @@
               "GRADING_STALLED",
               "MODEL_GATEWAY_VOLUME",
               "EXPORT_FAILED",
-              "EXPORT_STALLED"
+              "EXPORT_STALLED",
+              "RETIREMENT_FAILED",
+              "RETIREMENT_STALLED"
             ],
             "title": "Code",
             "type": "string"
@@ -3793,6 +3795,16 @@
           },
           "queued_imports": {
             "$ref": "#/components/schemas/Count"
+          },
+          "retirement": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RetirementCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "unresolved_flags": {
             "$ref": "#/components/schemas/Count"
@@ -3891,6 +3903,13 @@
             "maximum": 60000.0,
             "minimum": 1.0,
             "title": "Request P95 Ms",
+            "type": "integer"
+          },
+          "retirement_stall_seconds": {
+            "default": 600,
+            "maximum": 7200.0,
+            "minimum": 120.0,
+            "title": "Retirement Stall Seconds",
             "type": "integer"
           },
           "unresolved_flags": {
@@ -4701,6 +4720,121 @@
           "choices"
         ],
         "title": "ResponseSpec",
+        "type": "object"
+      },
+      "RetirementCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "best_effort": {
+            "const": true,
+            "default": true,
+            "title": "Best Effort",
+            "type": "boolean"
+          },
+          "database_enabled": {
+            "title": "Database Enabled",
+            "type": "boolean"
+          },
+          "due_requests": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "failure_interval_seconds": {
+            "const": 300,
+            "default": 300,
+            "title": "Failure Interval Seconds",
+            "type": "integer"
+          },
+          "failures_current_interval": {
+            "$ref": "#/components/schemas/Count"
+          },
+          "last_attempt_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Attempt At"
+          },
+          "last_attempt_status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "PROCESSED",
+                  "DISABLED",
+                  "BUSY",
+                  "FAILED"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Attempt Status"
+          },
+          "last_db_progress_seconds": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Last Db Progress Seconds",
+            "type": "integer"
+          },
+          "last_examined": {
+            "anyOf": [
+              {
+                "maximum": 200.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Examined"
+          },
+          "last_removed": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Removed"
+          },
+          "observation_available": {
+            "title": "Observation Available",
+            "type": "boolean"
+          },
+          "scheduled": {
+            "title": "Scheduled",
+            "type": "boolean"
+          },
+          "scope_allowed": {
+            "title": "Scope Allowed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "scheduled",
+          "database_enabled",
+          "scope_allowed",
+          "due_requests",
+          "last_db_progress_seconds",
+          "last_attempt_status",
+          "last_attempt_at",
+          "last_removed",
+          "last_examined",
+          "failures_current_interval",
+          "observation_available"
+        ],
+        "title": "RetirementCounts",
         "type": "object"
       },
       "RevealedHint": {

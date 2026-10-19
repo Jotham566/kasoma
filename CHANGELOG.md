@@ -1,5 +1,14 @@
 # Changelog
 
+## Candidate — isolated synthetic export retirement operations
+
+- FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001: add private least-privilege
+  executor provisioning, separate parameter-free maintenance consumer, gated scheduling,
+  finite aggregate observations and read-only ADMIN health. Add migration 0042 due index
+  and generated optional operations contracts. Review-stack execution remains disabled.
+  Tests, runbook and [candidate evidence](docs/implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
+  track verification; no full acceptance or real-data authority is claimed.
+
 ## Verified engineering — restricted synthetic export evidence retirement
 
 - FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001: implement approved ADR-060's

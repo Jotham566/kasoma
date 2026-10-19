@@ -63,6 +63,13 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
   await expect(exports).toContainText(
     "These local alerts do not measure legal fulfillment deadlines.",
   );
+  const retirement = page.getByRole("region", {
+    name: "Synthetic export evidence maintenance",
+  });
+  await expect(retirement).toBeVisible();
+  await expect(retirement.getByText("Disabled", { exact: true })).toBeVisible();
+  await expect(retirement).toContainText("Account deletion is not enabled.");
+  await expect(retirement.getByRole("button")).toHaveCount(0);
   const timing = page.getByRole("region", {
     name: "API response-start timing",
   });
@@ -203,6 +210,47 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
       await model.screenshot({ path: ".local/ui-review/model-usage-card.png" });
     await page.unroute("**/api/v1/admin/operations");
   }
+  await page.route("**/api/v1/admin/operations", (route) =>
+    route.fulfill({
+      json: {
+        ...baseline,
+        counts: {
+          ...baseline.counts,
+          retirement: {
+            ...baseline.counts.retirement,
+            scheduled: true,
+            database_enabled: true,
+            scope_allowed: true,
+            due_requests: { value: 10000, at_least: true },
+            last_attempt_status: "PROCESSED",
+            last_removed: 100,
+            last_examined: 200,
+            observation_available: false,
+          },
+        },
+      },
+    }),
+  );
+  await page.getByRole("button", { name: "Refresh operations" }).click();
+  await expect(retirement).toContainText(
+    "Enabled in an isolated synthetic scope",
+  );
+  await expect(retirement).toContainText("At least 10000");
+  await expect(retirement).toContainText("100 rows removed; 200 examined");
+  await expect(retirement).toContainText("Unavailable");
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await retirement.screenshot({
+    path: ".local/ui-review/export-retirement-card.png",
+  });
+  await page.unroute("**/api/v1/admin/operations");
   await page.route("**/api/v1/admin/operations", (route) =>
     route.abort("failed"),
   );

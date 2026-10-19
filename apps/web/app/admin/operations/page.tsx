@@ -29,6 +29,10 @@ const messages: Record<
   GRADING_STALLED: "Pending grading work exceeded the age threshold",
   EXPORT_FAILED: "Failed personal exports need investigation",
   EXPORT_STALLED: "Pending personal exports exceeded the age threshold",
+  RETIREMENT_FAILED:
+    "Synthetic export evidence maintenance needs investigation",
+  RETIREMENT_STALLED:
+    "Synthetic export evidence maintenance heartbeat is overdue",
 };
 
 export default function Operations() {
@@ -73,6 +77,7 @@ export default function Operations() {
   const channel = view?.counts?.channel;
   const exports = view?.counts?.exports;
   const grading = view?.counts?.grading;
+  const retirement = view?.counts?.retirement;
   const usage = view?.model_usage;
   const channelCounters = channel
     ? ([
@@ -129,6 +134,52 @@ export default function Operations() {
             }).format(new Date(view.generated_at))}{" "}
             (Africa/Kampala).
           </p>
+          {retirement && (
+            <section
+              className="surface-card operations-section"
+              aria-label="Synthetic export evidence maintenance"
+            >
+              <h2 className="text-xl font-semibold">Export evidence</h2>
+              <p>
+                {retirement.scheduled &&
+                retirement.database_enabled &&
+                retirement.scope_allowed
+                  ? "Enabled in an isolated synthetic scope"
+                  : "Disabled"}
+              </p>
+              <p>
+                Due completed exports:{" "}
+                {retirement.due_requests.at_least ? "At least " : ""}
+                {retirement.due_requests.value}. Exact holds and remaining
+                copies can retain this evidence.
+              </p>
+              <p>
+                Last database batch or activation:{" "}
+                {retirement.last_db_progress_seconds} seconds ago.
+              </p>
+              <p>
+                Last executor observation:{" "}
+                {retirement.last_attempt_status ?? "Unavailable"}.
+              </p>
+              {retirement.last_removed !== null && (
+                <p>
+                  Last batch: {retirement.last_removed} rows removed;{" "}
+                  {retirement.last_examined} examined.
+                </p>
+              )}
+              <p>
+                Failures in the current five-minute interval:{" "}
+                {retirement.observation_available
+                  ? `${retirement.failures_current_interval.at_least ? "At least " : ""}${retirement.failures_current_interval.value}`
+                  : "Unavailable"}
+                .
+              </p>
+              <p>
+                Observations are best effort and expire within five minutes.
+                Account deletion is not enabled.
+              </p>
+            </section>
+          )}
           <section
             className="surface-card operations-section"
             aria-label="Service health"

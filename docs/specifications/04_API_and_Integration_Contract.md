@@ -856,3 +856,21 @@ rate limits and pending-kind deduplication, potentially creating a fresh request
 It never restores the retired request or copy; retired owned GET uses existing404
 absence. No indefinite key tombstone or API-triggered retirement is added. This is
 synthetic-only; real-data execution/account erasure remains unauthorized.
+
+### ADR-060 synthetic maintenance operations (candidate)
+
+The existing ADMIN-only, rate-limited snapshot adds optional `counts.retirement`:
+non-secret schedule/database/scope booleans, capped due completed-EXPORT parent count,
+database progress age, closed last-attempt status/time and bounded removed/examined
+counts, plus a capped current five-minute failure count. `observation_available`
+distinguishes cache loss from zero; `failure_interval_seconds=300` and
+`best_effort=true` make its finite diagnostic scope explicit. No source IDs, executor
+DSN, receipt retry identity or payload is returned. Due counts do not establish
+removability. Existing authorization and operation-count schemas remain compatible.
+
+`RETIREMENT_FAILED` and `RETIREMENT_STALLED` are fixed WARNING codes, gated on all
+three activation/scope booleans. The former starts at one retained interval failure;
+the latter starts at twice the configured interval without a database batch/activation.
+There is no HTTP enablement, provisioning or deletion endpoint. Review-stack state
+stays false; the separately credentialed SQL execution is isolated synthetic only.
+See [candidate verification](../implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md).

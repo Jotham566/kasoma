@@ -44,7 +44,9 @@
         "EXPORT_STALLED",
         "REQUEST_RESPONSE_START_SLOW",
         "GRADING_STALLED",
-        "MODEL_GATEWAY_VOLUME"
+        "MODEL_GATEWAY_VOLUME",
+        "RETIREMENT_FAILED",
+        "RETIREMENT_STALLED"
       ]
     },
     "severity": {

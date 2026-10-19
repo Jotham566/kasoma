@@ -1,5 +1,14 @@
 # Requirements Traceability
 
+## Active synthetic retirement operations candidate
+
+FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001 / NFR-ACC-001:
+[private executor operations evidence](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
+maps separate credential provisioning, restricted authentication, parameter-free queue,
+default-off scheduler, finite count-only observations, ADMIN health and responsive
+read-only UI to runtime, integration, contract and browser checks. Migration 0042 is
+additive. Full verification remains pending; no review purge or account erasure.
+
 ## Verified bounded synthetic completed-EXPORT kernel
 
 FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:

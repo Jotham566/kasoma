@@ -1341,3 +1341,63 @@ Logical restore with --no-owner/--no-acl must leave execution refused until priv
 ownership/ACL repair and a fresh explicit isolated opt-in. The recovery drill verifies
 that denial and disposes only its generated databases/owner roles. Do not equate this
 with production backup acceptance. See [SQL evidence](../implementation/E8_EXPORT_RETIREMENT_VERIFICATION.md).
+
+## ADR-060 isolated synthetic evidence maintenance
+
+Requirements: FR-ID-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001.
+This candidate is restricted to owned `identity_test_<32 lowercase hex>` schemas or
+public schemas in the generated retirement/recovery databases named by ADR-060.
+It refuses ordinary review public. Never enable it for real data, account erasure,
+the running review stack, or a database whose ownership/purpose is unconfirmed.
+Use `make test-retirement-runtime` for automated isolated fake-provider verification.
+
+The operator commands are `make retirement-provision`, `make retirement-enable`,
+`make retirement-disable` and `make worker-retirement`. Set
+`KASOMA_RETIREMENT_CONFIG` to a new ignored `.local` file and
+`KASOMA_RETIREMENT_SCHEMA` to the exact existing owned synthetic schema for the first
+three commands. Shared `DATABASE_URL` selects the local privileged setup connection;
+never print it. Provisioning creates the restricted LOGIN and an exclusive 0600
+configuration, with both private switches false; it refuses an existing role/file.
+Do not retry provisioning by deleting roles or overwriting configuration. Resolve
+rotation/recovery explicitly. A transaction failure may leave a refused, non-usable
+configuration; preserve it for private diagnosis before another attempt.
+
+Inspect/edit the private file locally without copying its secret URL into commands,
+logs, source or client variables. To run in an approved isolated fixture, set its
+`EXPORT_RETIREMENT_ENABLED` and `EXPORT_RETIREMENT_HOLDS_ENABLED` true. Invoke
+`make retirement-enable` against that same privileged database/schema. It independently
+checks the actual restricted LOGIN/profile before enabling persisted SQL state and
+records a minimized configuration audit; it executes no batch. The private consumer
+reads only this file, not shared `.env`. `make worker-retirement` consumes only
+`privacy-maintenance`, with concurrency/prefetch one and no Beat. Native spawned
+children restore only this app's registration and private settings; ordinary tasks
+and shared credentials are excluded.
+
+Optional scheduling belongs to a separately configured ordinary worker for that
+same isolated fixture: `EXPORT_RETIREMENT_ENABLED=true`,
+`EXPORT_EVIDENCE_HOLDS_ENABLED=true`, and the matching synthetic `DATABASE_URL`.
+`EXPORT_RETIREMENT_INTERVAL_SECONDS` defaults 300 and is bounded 60–3600. Each
+parameter-free message expires after one interval; do not run multiple Beat schedulers.
+No scheduler is enabled by provisioning or by the private consumer command. The normal
+Docker review `.env` keeps its switches false and needs no executor credential.
+
+To stop: run `make retirement-disable` against the original matching privileged
+scope; new-creation hold enablement is not required to disable. Set the private flag
+false, stop its dedicated process and disable its isolated scheduler. Already-running
+transactions finish/roll back independently; no force deletion or receipt tombstones
+are introduced. Hold reads/releases and 24-hour copy cleanup remain independent.
+
+ADMIN operations show due parent counts (capped at 10,000), scope/activation and
+best-effort count-only observations. Exact holds, uncleared copies and dependencies
+can prevent removals. Failure observations use fixed five-minute intervals and expire;
+Redis loss must not trigger destructive retries or prove SQL failure. A failed task
+can be retried through the same SQL capability; committed batches are replay-safe.
+`RETIREMENT_FAILED` begins at one observed interval failure; `RETIREMENT_STALLED`
+begins at twice the configured schedule interval without a database batch/activation.
+Both require the scheduler, database switch and isolated scope. The dashboard grants
+no enable/delete control. Durable minimized SQL audit remains transaction-atomic;
+aggregate cache/UI observations are not an acceptance or compliance record.
+
+See [candidate verification](../implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
+for exact results and limitations. Production/privacy authority, full preservation,
+account erasure and finite disposal of other audit classes remain separate release gates.

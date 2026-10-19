@@ -10,8 +10,10 @@ Executor operations and real-data/release acceptance remain separate.
 has explicit user approval for bounded synthetic implementation. This increment
 builds on the [exact receipt/job hold foundation](E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md).
 Its prior full run finds three byte-fixture signature failures; corrected foundation
-source `be2735e` is running hosted39232307831. Source5fa939d/39229138880 is cancelled
-and not accepted. Neither pending foundation nor this candidate is promoted to main.
+source `be2735e` passes complete hosted39232307831. Source5fa939d/39229138880 is cancelled
+and not accepted. Foundation and SQL kernel are published through main `e9f688e`;
+their two merged owned branches are removed locally and remotely. Executor operations
+remain a [separate candidate](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md).
 
 Only the four approved tables may lose eligible rows: data_request_receipts,
 data_request_reviews, personal_export_jobs and data_subject_requests. The parent must
@@ -138,9 +140,9 @@ security test-unit` now passes1,096 unit/contract and 35 tooling cases, all type
 formatting, unchanged contracts and both dependency audits. Container builds, source
 secret scanning and high/critical image scans also pass.
 
-A complete local `make test` is running with 456 integration cases; it is not a pass.
-Full hosted acceptance and the pending configuration/scheduler/health step remain
-required. The review stack remains healthy on 0041, default disabled; no application
+The local `make test` run with 456 integration cases was interrupted and is not a pass.
+Complete hosted acceptance is recorded below; configuration/scheduler/health remain
+a separate candidate. The review stack remains healthy on 0041, default disabled; no application
 volumes or review-stack records are removed.
 
 ## Complete hosted acceptance and local interruption

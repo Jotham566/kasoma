@@ -55,6 +55,8 @@ class Settings(BaseSettings):
     ops_import_age_seconds: int = Field(default=300, ge=60, le=86400)
     ops_flag_backlog_threshold: int = Field(default=20, ge=1, le=10000)
     export_evidence_holds_enabled: bool = False
+    export_retirement_enabled: bool = False
+    export_retirement_interval_seconds: int = Field(default=300, ge=60, le=3600)
     channel_receipt_holds_enabled: bool = False
     channel_preservation_enabled: bool = False
     model_observation_enabled: bool = False
@@ -111,6 +113,29 @@ class Settings(BaseSettings):
             raise ValueError("Invalid identity encryption key; run make setup") from None
         if len(self.identity_lookup_key.get_secret_value()) < 32:
             raise ValueError("Identity lookup key must have at least 32 characters")
+        if self.export_retirement_enabled:
+            import re
+
+            from sqlalchemy.engine import make_url
+
+            from services.export_retirement_config import isolated_scope
+
+            url = make_url(self.database_url.get_secret_value())
+            options = url.query.get("options", "")
+            if not isinstance(options, str):
+                raise ValueError("Invalid retirement scheduling scope")
+            match = re.fullmatch(r"-csearch_path=(identity_test_[0-9a-f]{32}),public", options)
+            namespace = match.group(1) if match else "public"
+            if (
+                not self.export_evidence_holds_enabled
+                or not url.database
+                or not isolated_scope(url.database, namespace)
+                or options
+                and match is None
+            ):
+                raise ValueError(
+                    "Retirement scheduling requires exact holds and an isolated synthetic scope"
+                )
         require_local(self.database_url.get_secret_value(), {"postgres"})
         require_local(self.redis_url.get_secret_value(), {"redis"})
         require_local(self.object_storage_endpoint, {"minio"})

@@ -47,6 +47,7 @@ def thresholds(identity: IdentityService) -> OperationThresholds:
         model_gateway_attempts=settings.ops_model_gateway_attempts_threshold,
         export_failures=settings.ops_export_failure_threshold,
         export_age_seconds=settings.ops_export_age_seconds,
+        retirement_stall_seconds=settings.export_retirement_interval_seconds * 2,
     )
 
 
@@ -232,6 +233,27 @@ def evaluate(
                         }
                     )
                 )
+    if values and values.retirement:
+        value = values.retirement
+        if value.scheduled and value.database_enabled and value.scope_allowed:
+            if value.observation_available and value.failures_current_interval.value:
+                alerts.append(
+                    OperationAlert(
+                        code="RETIREMENT_FAILED",
+                        severity="WARNING",
+                        observed=value.failures_current_interval.value,
+                        threshold=1,
+                    )
+                )
+            if value.last_db_progress_seconds >= limits.retirement_stall_seconds:
+                alerts.append(
+                    OperationAlert(
+                        code="RETIREMENT_STALLED",
+                        severity="WARNING",
+                        observed=value.last_db_progress_seconds,
+                        threshold=limits.retirement_stall_seconds,
+                    )
+                )
     return alerts
 
 
@@ -272,6 +294,9 @@ def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> Opera
         try:
             with Session(identity.engine) as db:
                 values = counts(db, identity.clock())
+                from services.export_retirement_health import retirement_counts
+
+                values.retirement = retirement_counts(db, identity.settings)
         except Exception:
             health = health.model_copy(update={"database": "down", "status": "degraded"})
     worker = heartbeat(identity, write=worker_sample)

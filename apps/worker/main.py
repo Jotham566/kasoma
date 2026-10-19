@@ -123,6 +123,21 @@ def make_worker(settings: Settings) -> Celery:
         finally:
             engine.dispose()
 
+    if settings.export_retirement_enabled:
+        # Publish only; ordinary workers neither register the executor task nor load its credential.
+        from services.export_retirement import QUEUE, TASK_NAME
+
+        interval = settings.export_retirement_interval_seconds
+        app.conf.task_queues = {**app.conf.task_queues, QUEUE: {}}
+        app.conf.beat_schedule = {
+            **app.conf.beat_schedule,
+            "retire-export-evidence": {
+                "task": TASK_NAME,
+                "schedule": float(interval),
+                "options": {"queue": QUEUE, "expires": interval},
+            },
+        }
+
     from apps.worker.exports import register
 
     register(app, settings)

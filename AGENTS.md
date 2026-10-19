@@ -160,7 +160,9 @@ holds/receipt identity pass complete hosted 39232307831 at `be2735e`. The additi
 456 integration, 35 tooling and 108 browser executions plus all engineering gates.
 Hosted recovery verifies 69 tables/686 rows in 713 ms. The interrupted local full
 run is not a pass; existing volumes/images recover without data/cache cleanup. State remains
-false, scope excludes review public, and scheduler/configuration/health remain pending; ADR-057 does not authorize account erasure.
+false and scope excludes review public. Separate executor operations with additive0042,
+private configuration/AppLoader, finite count-only health and accessible UI are in
+verification: 25 focused cases and 69-table/686-row recovery pass; full gates remain pending; ADR-057 does not authorize account erasure.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

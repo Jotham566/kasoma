@@ -2619,7 +2619,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "MODEL_GATEWAY_VOLUME" | "EXPORT_FAILED" | "EXPORT_STALLED";
+            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "MODEL_GATEWAY_VOLUME" | "EXPORT_FAILED" | "EXPORT_STALLED" | "RETIREMENT_FAILED" | "RETIREMENT_STALLED";
             /** Observed */
             observed: number;
             /**
@@ -2640,6 +2640,7 @@ export interface components {
             /** Oldest Import Seconds */
             oldest_import_seconds: number;
             queued_imports: components["schemas"]["Count"];
+            retirement?: components["schemas"]["RetirementCounts"] | null;
             unresolved_flags: components["schemas"]["Count"];
         };
         /** OperationThresholds */
@@ -2698,6 +2699,11 @@ export interface components {
              * @default 500
              */
             request_p95_ms: number;
+            /**
+             * Retirement Stall Seconds
+             * @default 600
+             */
+            retirement_stall_seconds: number;
             /** Unresolved Flags */
             unresolved_flags: number;
         };
@@ -3052,6 +3058,41 @@ export interface components {
              * @constant
              */
             type: "SINGLE_CHOICE";
+        };
+        /** RetirementCounts */
+        RetirementCounts: {
+            /**
+             * Best Effort
+             * @default true
+             * @constant
+             */
+            best_effort: true;
+            /** Database Enabled */
+            database_enabled: boolean;
+            due_requests: components["schemas"]["Count"];
+            /**
+             * Failure Interval Seconds
+             * @default 300
+             * @constant
+             */
+            failure_interval_seconds: 300;
+            failures_current_interval: components["schemas"]["Count"];
+            /** Last Attempt At */
+            last_attempt_at: string | null;
+            /** Last Attempt Status */
+            last_attempt_status: ("PROCESSED" | "DISABLED" | "BUSY" | "FAILED") | null;
+            /** Last Db Progress Seconds */
+            last_db_progress_seconds: number;
+            /** Last Examined */
+            last_examined: number | null;
+            /** Last Removed */
+            last_removed: number | null;
+            /** Observation Available */
+            observation_available: boolean;
+            /** Scheduled */
+            scheduled: boolean;
+            /** Scope Allowed */
+            scope_allowed: boolean;
         };
         /** RevealedHint */
         RevealedHint: {

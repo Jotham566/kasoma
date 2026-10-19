@@ -80,6 +80,22 @@ class GradingCounts(Contract):
     disabled_bands: Count
 
 
+class RetirementCounts(Contract):
+    scheduled: bool
+    database_enabled: bool
+    scope_allowed: bool
+    due_requests: Count
+    last_db_progress_seconds: int = Field(ge=0, le=2**53 - 1)
+    last_attempt_status: Literal["PROCESSED", "DISABLED", "BUSY", "FAILED"] | None
+    last_attempt_at: datetime | None
+    last_removed: int | None = Field(ge=0, le=100)
+    last_examined: int | None = Field(ge=0, le=200)
+    failures_current_interval: Count
+    observation_available: bool
+    failure_interval_seconds: Literal[300] = 300
+    best_effort: Literal[True] = True
+
+
 class OperationCounts(Contract):
     queued_imports: Count
     oldest_import_seconds: int = Field(ge=0)
@@ -89,6 +105,7 @@ class OperationCounts(Contract):
     channel: ChannelCounts | None = None
     exports: ExportCounts | None = None
     grading: GradingCounts | None = None
+    retirement: RetirementCounts | None = None
 
 
 AlertCode = Literal[
@@ -108,6 +125,8 @@ AlertCode = Literal[
     "MODEL_GATEWAY_VOLUME",
     "EXPORT_FAILED",
     "EXPORT_STALLED",
+    "RETIREMENT_FAILED",
+    "RETIREMENT_STALLED",
 ]
 
 
@@ -132,6 +151,7 @@ class OperationThresholds(Contract):
     grading_age_seconds: int = Field(default=60, ge=1, le=86400)
     export_failures: int = Field(default=1, ge=1, le=10000)
     export_age_seconds: int = Field(default=300, ge=60, le=86400)
+    retirement_stall_seconds: int = Field(default=600, ge=120, le=7200)
 
 
 class OperationsView(Contract):

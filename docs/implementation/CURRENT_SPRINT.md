@@ -6,6 +6,20 @@ Updated 19 October 2026. This is not a completed MVP or production-release decla
 [the current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md)
 preserve the evidence and boundaries.
 
+## Active ADR-060 executor operations candidate
+
+FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001: separate private LOGIN/configuration,
+bounded queue scheduling, count-only finite observations, ADMIN health and read-only
+responsive presentation are in verification. See [candidate evidence](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md).
+Verified SQL and foundation are published through main `e9f688e`; both merged owned
+branches are removed locally/remotely. Accepted-main images rebuild and container smoke
+pass after power recovery, with all eight services healthy and state false on 0041.
+The operations candidate remains separate; no scheduled executor is enabled.
+Its 25 focused cases, 1,112 unit/contract and 35 tooling cases, six focused three-engine
+browser journeys and 69-table/686-row logical recovery pass locally. The native spawn
+registration defect is fixed by a private AppLoader; full backend/browser/hosted gates
+remain pending.
+
 ## Verified synthetic SQL retirement kernel
 
 Approved ADR-060 implementation through source `e5d3d986a66d37fb4e3ee294065c92173777c5dd`
@@ -148,7 +162,7 @@ no current agreed-load or provider latency claim follows from either measurement
 
 ## Running review stack and next boundary
 
-All eight Docker services are healthy on 0040 at http://localhost:3000; existing
+All eight Docker services are healthy on 0041 at http://localhost:3000; existing
 volumes are preserved. Capture and receipt creation remain false, and normal learner
 short-text scoring remains disabled. Host-native Ollama was down after power recovery;
 the pinned `make ollama-serve`, ready-state `make ollama-check` and API-container
@@ -159,11 +173,11 @@ The next narrow design boundary is completed EXPORT-request evidence retirement 
 its existing six-calendar-year deadline. Current immutable DELETE guards, key/receipt
 expiry semantics, exact holds and object-purge proof require a separately reviewed ADR
 before execution. Pending DELETE/snapshot parents have no invented completion or expiry.
-The concrete [ADR-060 proposal](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md)
+The approved [ADR-060 decision](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md)
 now specifies the table allowlist, exact receipt/job holds, restricted maintenance
 capability, cleanup prerequisites, finite retries and synthetic test sequence.
 Explicit bounded synthetic approval is recorded on 19 October 2026. The additive
-preservation foundation is in verification; no retirement processor exists yet.
+preservation foundation and SQL kernel pass full hosted verification; executor operations remain in verification.
 Complete main CI [39189901813](https://github.com/Jotham566/kasoma/actions/runs/39189901813)
 also passes at the prior documentation closeout `f1bd1ad`.
 Full preservation, erasure/anonymization and accountability processing remain incomplete.

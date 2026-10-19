@@ -443,3 +443,18 @@ test-export-recovery:
 .PHONY: test-export-retirement
 test-export-retirement:
 	$(UV) pytest tests/integration/test_export_retirement.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: retirement-provision retirement-enable retirement-disable worker-retirement
+retirement-provision:
+	KASOMA_RETIREMENT_ACTION=provision $(UV) python -m services.export_retirement_cli
+retirement-enable:
+	KASOMA_RETIREMENT_ACTION=enable $(UV) python -m services.export_retirement_cli
+retirement-disable:
+	KASOMA_RETIREMENT_ACTION=disable $(UV) python -m services.export_retirement_cli
+worker-retirement:
+	$(UV) celery -A apps.worker.retirement_entrypoint:app worker --pool=prefork --concurrency=1 --prefetch-multiplier=1 --queues=privacy-maintenance --hostname=privacy@%h --loglevel=warning
+
+export KASOMA_RETIREMENT_CONFIG KASOMA_RETIREMENT_SCHEMA
+.PHONY: test-retirement-runtime
+test-retirement-runtime:
+	$(UV) pytest tests/contract/test_retirement_executor_contract.py tests/integration/test_export_retirement_runtime.py --allow-hosts=localhost,127.0.0.1,::1
