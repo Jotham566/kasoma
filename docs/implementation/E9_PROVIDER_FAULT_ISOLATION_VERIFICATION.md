@@ -2,8 +2,8 @@
 
 Requirements: FR-GRD-003/004/005, FR-MST-001/004/005, NFR-SEC-002, NFR-MNT-001;
 supports NFR-REL-001 and the provider-failure test profile without proving availability.
-Status: corrected focused cases and local quality checks pass; full integration and
-hosted acceptance pending.
+Status: complete hosted engineering verification passes at `8a938dd`; broader
+provider-load and release acceptance remain open.
 
 ## Approved boundary and test design
 
@@ -48,8 +48,21 @@ boundaries and both dependency audits. Full integration/hosted acceptance is pen
 unit-only execution explicitly deselects the 415 integration cases.
 
 The parent [mixed-history load increment](E9_HISTORY_MIXED_LOAD_VERIFICATION.md)
-already passes native load but still awaits its separate hosted promotion. Keep the
+is separately verified and published to main. Keep the
 two increments and their exact source evidence distinct. Delayed/failed WhatsApp
 transport, mixed-provider workload, older/diagnostic histories, database resource
 measurement and external academic/privacy/provider/release gates remain open.
 ADR-060 approval remains pending; this test work grants no deletion authority.
+
+## Complete hosted verification
+
+[39220793602](https://github.com/Jotham566/kasoma/actions/runs/39220793602)
+completes successfully at exact source `8a938dd667b32844aed281b7f4a20e9c9409c543`:
+1,092 unit/contract, 415 integration, 35 tooling and 108 browser executions pass.
+Setup, migrations, seed, types, contracts, build, actual restricted logins, populated
+logical recovery, staff UI/native WebKit controls, security audits, image scans and
+container smoke also pass. Optional registry authentication is skipped without a
+credential; no application acceptance check is skipped. Subsequent closeout changes
+only Markdown and preserves the tested code, test, Makefile and workflow tree.
+This accepts the bounded regression increment, not production availability, academic
+scoring or full delayed-provider workload coverage.

@@ -1,6 +1,6 @@
 # Changelog
 
-## In verification — profile reverification visibility
+## Verified engineering — profile reverification visibility
 
 - FR-ID-001/005/NFR-ACC-001: show “Verify contact again” only with a loaded profile,
   keeping initial sign-in and logout focused on the contact form. Existing server
@@ -10,17 +10,20 @@
   All nine corrected three-engine identity executions, 1,092 unit/contract,
   35 tooling, contracts and security pass locally; a public signed-out screenshot
   is recorded. Images build and the corrected Docker web preview is verified with
-  all eight services healthy. Hosted acceptance remains pending at `44ae9ad`.
+  all eight services healthy. Complete hosted 39222489376 passes at `44ae9ad`:
+  415 integration, 108 browser executions and full recovery/role/security/image/
+  service checks.
   No architectural change.
 
-## In verification — stalled fake grading isolation
+## Verified engineering — stalled fake grading isolation
 
 - Add three FR-GRD-003/004/005 and FR-MST-001/004/005 regressions: 50 scheduled owned
   web reads finish while a fake model call is held; timeout/failure/fallback then
   produces exactly one neutral outcome with no grade/mastery/publication evidence.
   Add `make test-provider-fault-isolation`. Corrected focused tests, 1,092 unit/contract,
-  35 tooling, lint/types/contracts and security pass. Full hosted regression is
-  pending. No runtime, architecture or learner
+  35 tooling, lint/types/contracts and security pass. Complete hosted 39220793602
+  passes at `8a938dd`: 415 integration, 108 browser executions and full
+  recovery/role/security/image/service checks. No runtime, architecture or learner
   enablement changes; no full provider-load or availability acceptance claim.
 
 ## Verified engineering — synthetic history and numeric load

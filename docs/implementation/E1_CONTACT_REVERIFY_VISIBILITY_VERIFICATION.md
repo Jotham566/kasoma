@@ -1,8 +1,8 @@
 # E1 profile contact reverification visibility
 
 Requirements: FR-ID-001/005, NFR-ACC-001, NFR-MNT-001.
-Status: corrected three-engine journeys and running Docker preview verified locally;
-hosted acceptance pending.
+Status: complete hosted engineering verification passes at `44ae9ad`; Docker
+preview is verified. Physical/branded-browser release acceptance remains separate.
 
 ## Finding and bounded correction
 
@@ -42,7 +42,12 @@ Add `make test-web-identity` for the existing three identity journeys in each en
   in-app preview at `localhost:3000/onboarding` confirms the signed-out control is
   absent and the contact form visible. No contact or consent form is submitted.
 - Full hosted [39222489376](https://github.com/Jotham566/kasoma/actions/runs/39222489376)
-  at source `44ae9ad` is pending. Local preview success is not hosted acceptance.
+  passes at exact source `44ae9ad9b384aaf6b762d040def41df600c8f138`: 1,092 unit/
+  contract, 415 integration, 35 tooling and 108 browser executions, plus setup,
+  migrations/seed, roles, logical recovery, UI/native controls, contracts/types/build,
+  security audits, images and container smoke. Optional registry authentication
+  is skipped without credentials; application gates all pass. Subsequent closeout
+  changes only Markdown and preserves that exact code/test/Makefile/workflow tree.
 - Native Edge Beta selection through the UI tool times out; the subsequent review
   uses the existing in-app preview. No native Edge, stable/current-previous browser,
   physical-device or manual screen-reader acceptance is claimed.

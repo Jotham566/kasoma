@@ -148,8 +148,10 @@ service smoke. Both native objective profiles pass, including 25,000 prior grade
 and timed choice/numeric feedback; full provider/deployment/soak acceptance remains.
 Only Markdown/aggregate JSON closeout follows that verified code/test/Makefile tree.
 Publication through main `6ebdf71` is verified and its merged load branch is removed.
-Separately, provider-isolation tests at `8a938dd` and profile UI correction at
-`44ae9ad` await their own hosted acceptance. The latter passes nine local identity
+Separately, provider-isolation tests at `8a938dd` pass complete hosted 39220793602
+with 415 integration and 108 browser executions. Profile UI correction at
+`44ae9ad` passes complete hosted 39222489376 with 415 integration and
+108 browser executions plus full engineering gates. The latter passes nine local identity
 journeys and is running in the healthy Docker web preview; no acceptance is inferred
 for those branches from the load CI. Docker remains healthy on 0038 and host-native
 Ollama connectivity is restored without inference. Completed-export evidence retirement needs a separately

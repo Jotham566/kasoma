@@ -21,12 +21,12 @@ Its merged load branch is removed locally and remotely. Later closeout edits rem
 documentation-only and preserve the exact code/test/Makefile/workflow source above.
 
 Independent candidates retain their own acceptance boundaries: provider-fault
-isolation source `8a938dd` is running hosted
+isolation source `8a938dd` passes complete hosted
 [39220793602](https://github.com/Jotham566/kasoma/actions/runs/39220793602); profile
-visibility source `44ae9ad` is running
+visibility source `44ae9ad` passes complete hosted
 [39222489376](https://github.com/Jotham566/kasoma/actions/runs/39222489376). The latter
 passes nine local identity executions and is running in the healthy Docker web
-preview. Their full hosted results will be recorded separately from this load source.
+preview. Their complete hosted results are verified separately from this load source.
 
 ## Earlier verified application increments
 
@@ -47,14 +47,16 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
   three-engine verification now passes all nine identity executions, alongside
   1,092 unit/contract, 35 tooling, contracts and security. A public signed-out
   screenshot is recorded. Images build and the corrected Docker web preview is
-  verified with all eight services healthy. Hosted `44ae9ad` acceptance is pending.
+  verified with all eight services healthy. Complete hosted 39222489376 passes at `44ae9ad`, including 415 integration,
+  108 browser executions and full role/recovery/security/image/service checks.
 
 - FR-GRD-003/004/005, FR-MST-001/004/005, NFR-SEC-002 and NFR-MNT-001:
   [fake provider isolation](E9_PROVIDER_FAULT_ISOLATION_VERIFICATION.md) adds three
   bounded regressions for owned web reads during a stalled fake call and neutral
   publication after timeout/failure/fallback. Corrected focused cases, 1,092 unit/contract,
-  35 tooling, lint/types/contracts and security pass. Full integration/hosted verification
-  remains pending. Normal learner scoring remains off.
+  35 tooling, lint/types/contracts and security pass. Complete hosted 39220793602
+  passes with 415 integration, 108 browser executions and full recovery/role/security/
+  image/service checks. Normal learner scoring remains off.
 
 - NFR-PERF-001/002, NFR-SCL-001, FR-MST-004/005 and NFR-MNT-001: an independent
   synthetic history/mixed objective load profile is verified independently while ADR-060
