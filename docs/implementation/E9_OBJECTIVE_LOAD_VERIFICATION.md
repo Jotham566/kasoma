@@ -4,7 +4,7 @@ Requirements: NFR-PERF-001, NFR-PERF-002, NFR-SCL-001. Local objective baseline 
 full hosted regression passes; broader performance acceptance remains pending.
 
 An additional [history/mixed profile](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) passes
-native `make load-history-mixed` at `6b06c53`; hosted/main promotion remains pending.
+native `make load-history-mixed` at `6b06c53`; complete hosted 39217860618 also passes.
 It does not replace the historical empty-history results below or imply that broader
 performance gates have passed.
 
@@ -141,4 +141,6 @@ despite passing the specified p95 gate. No timeout, pool, authentication, clock 
 grading behavior is relaxed. See the [aggregate recheck report](evidence/E9_OBJECTIVE_LOAD_LOCAL_2026_10_19.json).
 The earlier 9 October result remains historical. These separate runs do not prove
 causal performance improvement or replace provider/deployment/soak acceptance.
-Full hosted regression at the new runner source remains pending.
+Complete hosted [39217860618](https://github.com/Jotham566/kasoma/actions/runs/39217860618)
+passes at the new runner source: 1,092 unit/contract, 412 integration, 35 tooling,
+108 browser executions and full role/recovery/security/image/service checks.

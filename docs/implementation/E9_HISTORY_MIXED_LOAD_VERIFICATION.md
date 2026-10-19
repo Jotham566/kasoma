@@ -1,7 +1,7 @@
 # E9 synthetic history and mixed objective HTTP load
 
 Requirements: NFR-PERF-001/002, NFR-SCL-001, supporting FR-MST-004/005 and NFR-MNT-001.
-Status: final-source native profile passes; hosted regression and promotion pending.
+Status: final-source native profiles and complete hosted regression pass at `6b06c53`.
 This is bounded local engineering evidence, not full performance/release acceptance.
 
 ## Scope and assumptions
@@ -79,7 +79,7 @@ only its own successfully created disposable database and fails on cleanup failu
   confirms the small numeric pool can be missed.
   Final fixture source `6b06c53` replaces it with the guaranteed 144/144 split;
   its separate full-size native run passes below. Superseded hosted
-  39217608868 is cancelled, not passed; final-source hosted 39217860618 is live.
+  39217608868 is cancelled, not passed; final-source hosted 39217860618 passes.
   This record is not application or performance acceptance from documentation checks.
 
 ## Final-source native result — 19 October 2026
@@ -120,9 +120,44 @@ and peak RSS including setup 137,134,080 bytes. START p99 is 1,115.791 ms; retai
 tail-latency risk. See the [baseline report](evidence/E9_OBJECTIVE_LOAD_LOCAL_2026_10_19.json).
 These sequential runs are not a controlled causal comparison of history cost.
 
-Native verification is complete for these two fixed profiles; full hosted source
+Native verification is complete for these two fixed profiles. Complete hosted source
 regression [39217860618](https://github.com/Jotham566/kasoma/actions/runs/39217860618)
-and main promotion remain pending. No destructive retention approval is inferred.
+passes at `6b06c5308f11d74dae465da5388f8bd8ada1639f`. No destructive retention approval
+is inferred.
+
+## Complete hosted regression and publication boundary
+
+All 1,092 unit/contract, 412 integration and 35 tooling cases pass, including actual
+restricted-role checks. Browser acceptance includes 96 ordinary plus 12 disabled
+fake short-text executions (108 total), three staff UI harness cases and three native
+WebKit attachment controls. Setup, clean migrations, seed, generated contracts,
+lint/format/types, builds, source/container security and service/export/request/model
+smoke all pass. Optional registry authentication is skipped because no credential is
+configured; no application acceptance check is skipped.
+
+Synthetic logical recovery verifies 68 tables/680 rows in 361 ms, pgvector, immutable
+guards and encrypted evidence. It is not production PITR/RPO/RTO or object-storage
+recovery. Cold question transfer is 178,022 bytes Chromium, 178,396 Firefox and
+177,998 WebKit, each below 250,000 bytes with 19 resources/nine scripts. These are
+media-free synthetic journeys, not physical-device or branded-browser acceptance.
+
+Documentation closeout changes only Markdown and aggregate JSON reports after this
+verified source. Verify that code, tests, Makefile and workflows remain identical to
+`6b06c53` when publishing; preserve the passing and failed native reports separately.
+
+## Files in this increment
+
+- `scripts/objective_load.py`, `tests/contract/test_objective_load.py`, `Makefile`.
+- `AGENTS.md`, `README.md`, `CHANGELOG.md`.
+- `docs/implementation/CURRENT_SPRINT.md`, `REQUIREMENTS_TRACEABILITY.md`,
+  `E9_HISTORY_MIXED_LOAD_VERIFICATION.md`, `E9_OBJECTIVE_LOAD_VERIFICATION.md`,
+  `RELEASE_GATES.md` (all in `docs/implementation/`).
+- `docs/runbooks/LOCAL_DEVELOPMENT.md` and
+  `docs/specifications/10_Testing_Acceptance_and_Release.md`.
+- Three aggregate JSON reports in `docs/implementation/evidence/`:
+  `E9_HISTORY_MIXED_LOCAL_2026_10_19.json`,
+  `E9_HISTORY_MIXED_MISSED_NUMERIC_2026_10_19.json` and
+  `E9_OBJECTIVE_LOAD_LOCAL_2026_10_19.json`.
 
 Remaining scope includes older/decayed and diagnostic histories, additional response
 formats, model/messaging delay/failure scenarios, database resource measurements,

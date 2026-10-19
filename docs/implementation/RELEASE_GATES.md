@@ -64,3 +64,17 @@ application source `6d53541` passes complete hosted [39185423895](https://github
 security/images and service smoke pass. This supplies bounded synthetic engineering
 evidence only. It does not waive remaining preservation/erasure/accountability,
 academic, privacy/provider, production recovery, physical/branded-device or pilot gates.
+
+## Synthetic history and numeric load — 19 October
+
+Native `make load-history-mixed` passes at `6b06c53`: 25,000 prior grades, 7,000 timed
+requests, 1,250 timed answers per format, 27,500 final grades, zero errors and successful
+cleanup. START p95 is 432.085 ms and numeric-answer p95 27.778 ms. The sequential
+original baseline also passes. Complete hosted
+[39217860618](https://github.com/Jotham566/kasoma/actions/runs/39217860618) passes
+1,092 unit/contract, 412 integration, 35 tooling, 108 browser executions and full
+role/recovery/security/image/service checks. See [scope and evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
+This supplies a fixed recent-history objective profile, not full older/diagnostic
+history, provider-failure, database resource, daily soak or production acceptance.
+Startup p99 remains close to/above one second. No external sign-off or ADR-060
+deletion authority is inferred; the release-gate table remains open.
