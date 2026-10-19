@@ -3,7 +3,7 @@
 Requirements: NFR-PERF-001/002, NFR-SCL-001, FR-DIAG-001–005,
 FR-MST-001–005, NFR-SEC-002, NFR-MNT-001.
 Decision: [ADR-066](../decisions/ADR/066-temporal-diagnostic-load-profile.md).
-Status: focused controls pass; native full-size measurement and final source gates pending.
+Status: final local tooling and all three sequential native profiles pass; own complete hosted acceptance pending.
 
 ## Profile boundary
 
@@ -155,3 +155,37 @@ No runtime change or weakening of thresholds, deadlines, pacing or auth policy.
 Public provider-recovery documentation research is recorded separately; it changes
 no code, dependency, provider choice, architecture approval or source CI head. It
 cannot supply production backup/RPO/RTO or legal/transfer sign-off.
+
+## Complete sequential original/recent rechecks
+
+The same make load-objective load-history-mixed process exits0 after both commands
+pass and both exact owned cleanups succeed. Neither native profile is restarted.
+The [recent-history report](evidence/E9_TEMPORAL_RECENT_HISTORY_RECHECK_2026_10_19.json)
+verifies25000 prior grades/5000 sessions,500 timed completions,7000 successful HTTP,
+1250 numeric/1250 choice timed answers and27500 final grades/5500 completed sessions.
+
+| Profile | Prior grades | Final grades | START p95 ms | ANSWER p95 ms | Errors | Cleanup failed |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| Original objective | 0 | 2500 | 428.329 | 29.174 | 0 | false |
+| Recent choice/numeric | 25000 | 27500 | 424.046 | 29.138 | 0 | false |
+| Temporal/diagnostic | 32500 | 35000 | 410.622 | 28.829 | 0 | false |
+
+All per-operation/per-format500ms p95 and1500ms deterministic-feedback gates pass
+on unchanged runtime logic represented by687d86c. Recent numeric p9528.989ms and
+choice29.630ms; START p99 remains1074.231ms, so this does not claim subsecond tails.
+Recent mixed p9544.366ms, duration125.371s, CPU53.208s, peak RSS136151040 bytes,
+observed answer dispatch19.992/s and lag p951.191ms. Database/container resource
+attribution, provider failures/daily soak, real-deployment/production acceptance
+remain unproved. Existing normal Docker services stay running.
+
+The only changes after pushed source687d86c are local Markdown and aggregate evidence.
+Local final image/security/service checks are now running; own full hosted39313955470
+and object-recovery39311093503 remain live at their unchanged remote heads. None of
+these native reports supplies academic/teacher approval or closes production gates.
+
+Final make containers security-containers container-smoke exits0 on the frozen
+candidate runtime after all native measurements. Rebuilt images pass high/critical
+vulnerability and secret checks; owned private export/request/model/service smoke
+passes. All8 normal Compose services are confirmed running/healthy again. No
+volumes/cache/images or unrelated data are swept. Only Markdown/aggregate evidence
+follows remote687d86c; own complete hosted acceptance remains pending.

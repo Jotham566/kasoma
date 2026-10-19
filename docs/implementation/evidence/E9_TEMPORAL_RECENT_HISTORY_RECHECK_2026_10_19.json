@@ -1,0 +1,89 @@
+{
+  "active_learners": 500,
+  "all_http": {
+    "p50_ms": 12.808,
+    "p95_ms": 44.366,
+    "p99_ms": 307.351,
+    "samples": 7000
+  },
+  "answer_dispatch_lag": {
+    "p50_ms": 1.057,
+    "p95_ms": 1.191,
+    "p99_ms": 12.498,
+    "samples": 2500
+  },
+  "answer_formats": {
+    "NUMERIC": {
+      "p50_ms": 19.934,
+      "p95_ms": 28.989,
+      "p99_ms": 149.241,
+      "samples": 1250
+    },
+    "SINGLE_CHOICE": {
+      "p50_ms": 19.902,
+      "p95_ms": 29.63,
+      "p99_ms": 115.921,
+      "samples": 1250
+    }
+  },
+  "attempts": 27500,
+  "cleanup_failed": false,
+  "completed_learners": 500,
+  "completed_sessions": 5500,
+  "concurrency_limit": 50,
+  "cpu_seconds_client_and_api": 53.208,
+  "database_resources_measured": false,
+  "duration_seconds": 125.371,
+  "errors": 0,
+  "grades": 27500,
+  "history_attempts": 25000,
+  "history_completed_sessions": 5000,
+  "history_grades": 25000,
+  "observed_answer_dispatch_per_second": 19.992,
+  "operations": {
+    "ANSWER": {
+      "p50_ms": 19.92,
+      "p95_ms": 29.138,
+      "p99_ms": 115.921,
+      "samples": 2500
+    },
+    "NEXT": {
+      "p50_ms": 10.645,
+      "p95_ms": 21.507,
+      "p99_ms": 307.351,
+      "samples": 2500
+    },
+    "PROFILE": {
+      "p50_ms": 4.145,
+      "p95_ms": 196.246,
+      "p99_ms": 228.83,
+      "samples": 500
+    },
+    "PROGRESS": {
+      "p50_ms": 11.997,
+      "p95_ms": 41.945,
+      "p99_ms": 61.455,
+      "samples": 500
+    },
+    "START": {
+      "p50_ms": 12.987,
+      "p95_ms": 424.046,
+      "p99_ms": 1074.231,
+      "samples": 500
+    },
+    "STATE": {
+      "p50_ms": 9.846,
+      "p95_ms": 44.823,
+      "p99_ms": 68.169,
+      "samples": 500
+    }
+  },
+  "peak_inflight_http": 50,
+  "peak_rss_bytes_client_api_and_fixture_setup": 136151040,
+  "production_acceptance": false,
+  "profile": "isolated-history-mixed-http-v1",
+  "registered_learners": 2000,
+  "reviewed_synthetic_items": 288,
+  "status": "PASSED",
+  "target_answer_dispatch_per_second": 20
+}

@@ -390,3 +390,15 @@ START p95428.329ms,cleanup_failed=false. Sequential recent-history recheck remai
 live. Main3cde8c2 is remotely verified and its merged metric branch is removed.
 Provider recovery documentation research changes no selection, cloud dependency,
 permission, architecture approval, retention or release gate.
+
+ADR-066 all three native profiles now pass on unchanged candidate runtime:
+temporal35000 grades/START p95410.622ms; original2500/428.329ms; recent27500/
+424.046ms. Each has7000 successful HTTP/zero errors and cleanup_failed=false.
+Recent START p991074.231ms remains visible; no subsecond-tail/production claim.
+Own hosted39313955470 and object39311093503 remain live, remote heads unchanged.
+Only Markdown/aggregate evidence follows; local final image/service checks run.
+
+Temporal candidate final local image/source/service gates pass and all8 normal
+Compose services are running/healthy after rebuild. Three native profiles and
+all local engineering gates pass; own687d86c hosted39313955470 remains pending,
+as does29f1ddc object39311093503. No full MVP or production approval is inferred.

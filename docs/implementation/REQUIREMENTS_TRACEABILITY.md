@@ -20,10 +20,9 @@ and203 typed source files pass; dependency/source security checks pass. The firs
 full-size temporal measurement passes; original/recent rechecks and own hosted
 verification remain pending.
 [Verification](E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md). First native profile PASSES:35000 grades,
-7000 HTTP/zero errors,START p95410.622ms,cleanup_failed=false. Original/recent rechecks
-and own hosted verification remain; no production acceptance. Original baseline
-recheck now passes (START p95428.329ms,zero errors,cleanup_failed=false); recent
-history is running. Own exactsource687d86c is live in hosted39313955470.
+7000 HTTP/zero errors,START p95410.622ms,cleanup_failed=false. Original and recent rechecks now both pass: START p95428.329/424.046ms,zero
+errors,cleanup_failed=false. Own exactsource687d86c remains live in hosted
+39313955470; no complete hosted or production acceptance is inferred.
 
 
 ## Isolated database/private-object recovery - candidate
