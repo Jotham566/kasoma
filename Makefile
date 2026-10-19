@@ -435,3 +435,7 @@ test-web-select-targets:
 .PHONY: test-export-evidence-holds
 test-export-evidence-holds:
 	$(UV) pytest tests/integration/test_export_evidence_holds.py tests/integration/test_export_evidence_runtime_role.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-export-recovery
+test-export-recovery:
+	$(UV) pytest tests/integration/test_export_recovery.py --allow-hosts=localhost,127.0.0.1,::1

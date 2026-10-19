@@ -12,6 +12,11 @@
   login, six three-engine privacy journeys, 1,094 unit/contract and 35 tooling cases
   pass. Logical recovery preserves 68 tables/685 synthetic rows and the exact receipt
   hold in 365 ms. Full integration/hosted acceptance is pending.
+- Correct the full-suite recovery fixture regression: retain the two-argument byte
+  export helper and populate the exact receipt hold through a separate authorized
+  helper in the complete drill. All original corruption checks remain. The previous
+  full run has 422 passes/three failures; no full acceptance is inferred. Add
+  `make test-export-recovery` for the affected byte-integrity cases.
 
 ## Verified engineering — profile reverification visibility
 

@@ -17,7 +17,11 @@ Source `5fa939d` is pushed on `codex/export-evidence-holds` and running complete
 hosted [39229138880](https://github.com/Jotham566/kasoma/actions/runs/39229138880).
 Ten focused integration cases, 1,094 unit/contract, 35 tooling, 15 consolidated
 privacy/identity browser executions, contracts/types/security/build and populated
-exact-hold recovery pass. The fresh 425-case integration suite is running locally.
+exact-hold recovery pass. The full local 425-case suite ends with 422 passes and three existing byte-recovery
+fixture failures (new mandatory authority argument). A correction separates authorized
+hold population from the original byte-export helper. All three corrected recovery
+cases and the complete exact-hold drill (68 tables/685 rows, 312 ms), lint/types/
+contracts/security pass. A fresh hosted source is required before promotion.
 This candidate is not accepted or promoted to main until full verification passes.
 Provider isolation is verified and published through main `41cbcc6`; its merged
 branch is removed locally/remotely. UI source `44ae9ad` passes complete hosted 39222489376 and is published through

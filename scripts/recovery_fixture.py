@@ -11,7 +11,7 @@ from scripts.assessment_fixtures import seed_assessment
 from scripts.grading_fixtures import unapproved_band
 from scripts.recovery_channel_preservation import populate_preservation
 from scripts.recovery_channel_receipts import populate_channel_receipts
-from scripts.recovery_exports import RecoveryExport, populate_export
+from scripts.recovery_exports import RecoveryExport, populate_export, populate_export_hold
 from scripts.recovery_short_text import populate_short_text
 from services.assessment import AssessmentService
 from services.assessment_contracts import ChoiceResponse, StartRevision, SubmitAnswer
@@ -160,6 +160,8 @@ def populate(settings: Settings) -> RecoveryExport:
         populate_short_text(identity, token, subject, topic)
         channel_authority = populate_channel_receipts(identity, token)
         populate_preservation(identity, token, channel_authority)
-        return populate_export(identity, token, channel_authority)
+        export = populate_export(identity, token)
+        populate_export_hold(identity, export, channel_authority)
+        return export
     finally:
         engine.dispose()

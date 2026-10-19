@@ -1312,6 +1312,10 @@ before any real-data deployment; do not broaden assessment or inspection privile
 
 ## ADR-060 additive export preservation candidate
 
+`make test-export-recovery` checks read-only verification and damaged-byte/object
+rejection for the original synthetic export fixture. The complete `make recovery-drill`
+adds separately authorized exact receipt holds.
+
 `make test-export-evidence-holds` exercises isolated synthetic schemas, exact owner
 checks, original retry binding, populated 0038-to-head upgrade and an actual
 restricted login. `make test-web-privacy` covers the three-engine operator controls;

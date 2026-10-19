@@ -116,3 +116,25 @@ preservation, investigation/audit retention and production release gates remain 
   The provider verification report receives the current approval-status correction.
 - The separately verified onboarding UI/source files enter through main's merge;
   their exact inventory and acceptance remain in the linked E1 report.
+
+## Complete local regression failure and fixture correction
+
+The consolidated 425-case local integration run finishes with 422 passes and three
+failures, all existing export-byte recovery cases. The new populate_export helper
+signature required channel hold authority even for byte-only fixtures. This is an
+implementation regression, not accepted behavior. Split exact hold population into
+a separately authorized populate_export_hold helper. The complete recovery fixture
+still invokes it explicitly; original byte-integrity fixtures retain their original
+responsibility and corruption assertions. No assertion, permission or guard is removed.
+Add the documented `make test-export-recovery` focused command. The old source
+`5fa939d`/hosted39229138880 is superseded by the corrected source; never count that
+source or the 422-pass/three-failure result as accepted. Corrected focused recovery,
+full drill and quality results are recorded after execution below.
+
+Corrected `make test-export-recovery` passes all three original corruption cases
+in 9.77 seconds. A direct uv/pytest attempt fails during fixture setup because it
+lacks Makefile's uv PATH; the documented command supplies the prescribed runtime
+and passes without changing assertions. `make recovery-drill lint openapi-check
+security` passes: 68 tables/685 rows, exact receipt hold, 312-ms logical restore,
+format/types/contracts, secret boundaries and dependency audits. Publish corrected
+source for a new complete hosted run; full acceptance is still pending.

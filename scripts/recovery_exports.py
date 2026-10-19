@@ -67,9 +67,7 @@ class RecoveryExport:
             raise RuntimeError("Restored synthetic export bytes differ")
 
 
-def populate_export(
-    identity: IdentityService, token: str, authority: ChannelHoldAuthority
-) -> RecoveryExport:
+def populate_export(identity: IdentityService, token: str) -> RecoveryExport:
     state = RecoveryExport()
     state.target = (
         DataRequestService(identity)
@@ -80,6 +78,14 @@ def populate_export(
     if not process_one(identity, state):
         raise RuntimeError("Synthetic export could not be prepared")
     state.frozen = state.read(identity)
+    return state
+
+
+def populate_export_hold(
+    identity: IdentityService, state: RecoveryExport, authority: ChannelHoldAuthority
+) -> None:
+    if state.target is None:
+        raise ValueError("Synthetic export target required")
     # The existing independent synthetic case authorizes this exact original receipt.
     holds = LegalHoldService(identity)
     admin = authority.token.get_secret_value()
@@ -103,4 +109,3 @@ def populate_export(
         )
     finally:
         identity.settings.export_evidence_holds_enabled = original
-    return state
