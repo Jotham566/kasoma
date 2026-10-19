@@ -13,6 +13,12 @@ ADR-060 now has explicit bounded synthetic approval (19 October 2026). The
 is under verification: additive 0039/0040 receipt UUIDs, two independently guarded exact
 targets, bounded claimed-case lookup and accessible controls. Creation stays false;
 no retirement processor, account erasure or review-stack purge is introduced.
+Source `5fa939d` is pushed on `codex/export-evidence-holds` and running complete
+hosted [39229138880](https://github.com/Jotham566/kasoma/actions/runs/39229138880).
+Ten focused integration cases, 1,094 unit/contract, 35 tooling, 15 consolidated
+privacy/identity browser executions, contracts/types/security/build and populated
+exact-hold recovery pass. The fresh 425-case integration suite is running locally.
+This candidate is not accepted or promoted to main until full verification passes.
 Provider isolation is verified and published through main `41cbcc6`; its merged
 branch is removed locally/remotely. UI source `44ae9ad` passes complete hosted 39222489376 and is published through
 main `29eaeee`; its merged branch is removed locally/remotely.

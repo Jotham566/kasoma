@@ -67,7 +67,8 @@ receipt identity, gated receipt/job holds and bounded source lookup with tests.
 Ten focused integration cases (including restricted LOGIN and upgrades), six
 three-engine privacy journeys, 1,094 unit/contract, 35 tooling, types/contracts/build
 and populated exact-hold recovery pass. Full integration/hosted acceptance remains
-pending; no retirement
+pending at source `5fa939d` in hosted 39229138880; its 425-case local suite is
+running and all 15 consolidated privacy/identity browser executions pass. No retirement
 permission, processor or account-erasure capability is introduced.
 Existing retention/erasure gaps remain open. Main closeout `f1bd1ad` separately
 passes complete hosted [39189901813](https://github.com/Jotham566/kasoma/actions/runs/39189901813).

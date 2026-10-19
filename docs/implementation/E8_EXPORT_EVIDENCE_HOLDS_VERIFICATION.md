@@ -81,8 +81,13 @@ remain healthy and creation remains false. No review-stack data is purged.
 
 The first broad local invocation is intentionally interrupted after 86 integration
 passes (no failure) to consolidate the final migration/test source and the separately
-verified UI merge. It is not a full-suite pass. A fresh complete invocation against
-the consolidated source and hosted acceptance remain pending. Documentation checks alone do not accept application behavior.
+verified UI merge. It is not a full-suite pass. The fresh consolidated source `5fa939d23d5cabfd317eeda75faf1250eba80cbd` passes
+1,094 unit/contract and 35 tooling checks; all 425 integration cases are running.
+`make build test-web-privacy test-web-identity` passes all 15 browser executions
+(six privacy plus nine identity) after incorporating the separately verified UI.
+Full hosted [39229138880](https://github.com/Jotham566/kasoma/actions/runs/39229138880)
+is running at that exact source. Neither running check is counted as a pass.
+Subsequent documentation-only closeout preserves that application/test/workflow tree. Documentation checks alone do not accept application behavior.
 
 ## Remaining work
 
