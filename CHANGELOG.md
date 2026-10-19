@@ -1,5 +1,16 @@
 # Changelog
 
+## Known request/model metric loss - candidate
+
+FR-OPS-002, NFR-OBS-001/SEC-002/MNT-001: two actual SDK/Redis regressions reproduce
+fresh zero after a lost nonempty export. ADR-064 extends the existing finite
+uncertainty marker to current request/model readers, preserving payloads, scopes,
+expiry and provider behavior. Local checks pass: 1,180 unit/contract, 35 tooling, 13 focused loss,
+51 request, 43 model, 35 OTP/identity, 24 operations and six browser executions;
+quality/contracts/build and security/images/service smoke pass. Own full hosted
+acceptance remains pending. No production, billing, complete ledger or mixed-reader acceptance.
+[Verification](docs/implementation/E8_METRIC_LOSS_VERIFICATION.md). Parent OTP source ceee401 remains live and unchanged.
+
 ## Local OTP adapter observations - candidate
 
 FR-OPS-002, FR-ID-001 and NFR-OBS-001/SEC-002/ACC-001/MNT-001: ADR-063 adds four

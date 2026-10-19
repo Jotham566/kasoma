@@ -502,3 +502,7 @@ test-web-otp-observations:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/otp-observations.spec.ts tests/e2e/operations.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/otp-observations.spec.ts tests/e2e/operations.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/otp-observations.spec.ts tests/e2e/operations.spec.ts
+
+.PHONY: test-metric-loss
+test-metric-loss:
+	$(UV) pytest tests/contract/test_metric_loss_contract.py tests/integration/test_metric_loss_recovery.py --allow-hosts=localhost,127.0.0.1,::1

@@ -36,3 +36,11 @@ or act as billing/quota enforcement. Unknown/expired/corrupt sources stay unavai
 No database, provider, model/inference profile or production privacy approval changes.
 Real data/production usage still requires the existing DPIA/provider/release gates.
 See [readiness](../../implementation/E8_MODEL_USAGE_READINESS.md) for acceptance.
+
+## Known-loss enforcement correction - 19 October
+
+[ADR-064](064-known-metric-export-loss-windows.md) records two actual Redis failures where an unacknowledged
+nonempty export can appear as fresh measured zero. The candidate adds a finite
+namespace uncertainty window and atomic reader guard; payload codecs, source scopes,
+retention bounds and provider behavior stay unchanged. Full current-reader deployment
+and its own hosted verification remain required; no production or ledger claim.

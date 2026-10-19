@@ -158,3 +158,7 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-063: Bounded local OTP adapter observations](063-local-otp-dispatch-observations.md)
   records four payload-free, default-disabled API counters with finite local retention;
   adapter returns are not delivery/billing evidence. Verification is pending.
+
+- [ADR-064: Known metric export loss windows](064-known-metric-export-loss-windows.md)
+  records finite unavailable windows for existing request/model observations after
+  failed exports, preserving payload codecs and no ledger/production claims.

@@ -914,3 +914,13 @@ Known OTP SDK/export loss makes the aggregate unavailable for its bounded five-m
 uncertainty window, including after an empty recovery pulse. A namespace-only marker
 contains no payload or source identifiers and cannot shorten another producer's window.
 This does not change request/model wire data or make the counter a complete ledger.
+
+### Known local metric export loss (ADR-064 candidate)
+
+Existing request_timing/model_usage projections return null through a bounded
+uncertainty window after known SDK/export failure, including after empty recovery
+pulses. The request/model/OTP namespaces remain separate. A marker contains only
+a fixed value and finite TTL, and does not alter canonical measurement bytes, frame
+expiry, API schema or provider execution. Current server readers must all honor the
+marker before accepting this guarantee; older readers are not covered. Capacity
+eviction stays explicitly capped, and the observations remain a best-effort subset.

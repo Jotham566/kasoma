@@ -1474,3 +1474,16 @@ After a known OTP collection/export failure, a finite uncertainty marker prevent
 recovered empty pulse from appearing as measured zero for up to five minutes. Let
 that window expire; do not delete markers to manufacture a healthy dashboard. Request/
 model instrumentation is not changed by this OTP-specific guard.
+
+## Request/model known-loss windows
+
+`make test-metric-loss` verifies finite loss windows across request/model/OTP stores.
+Run `make test-request-metrics test-model-metrics test-otp-observations` for original
+codecs, SDK, Redis, lifecycle, authorization and provider invariance. A known export
+failure makes the corresponding ADMIN metric unavailable for up to five minutes;
+recovered empty pulses cannot manufacture zero. Other metric namespaces stay separate.
+No SDK, Redis or provider diagnostics are exposed. Do not clear markers to make the
+dashboard appear healthy. Update API and operations-worker readers together; old
+server readers do not honor request/model markers. On rollback keep affected
+projections unavailable until markers expire. No production rollout is accepted by
+these local tests. [Verification](../implementation/E8_METRIC_LOSS_VERIFICATION.md).

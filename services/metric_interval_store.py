@@ -149,11 +149,28 @@ class BoundedIntervalStore:
         """Called only after a successful SDK collection, including an empty one."""
         self.cache.eval(PULSE, 1, self.fresh)
 
+    def mark_loss(self, remaining_ms: int) -> None:
+        if type(remaining_ms) is not int or not 1 <= remaining_ms <= RETENTION_MS:
+            raise ValueError("INVALID_METRIC_LOSS_WINDOW")
+        # One finite marker for the aggregate namespace; never shorten another
+        # producer's uncertainty window. READ checks it atomically before data.
+        self.cache.eval(
+            """
+          local ttl = redis.call('PTTL', KEYS[1])
+          if ttl < tonumber(ARGV[1]) then
+            redis.call('SET', KEYS[1], '1', 'PX', ARGV[1])
+          end
+          return 1
+        """,
+            1,
+            self.prefix + "incomplete",
+            remaining_ms,
+        )
+
     def read_raw(self) -> RawIntervalBatch | None:
         try:
             keys = [self.registry, self.capped, self.fresh]
-            if self.kind == "otp":
-                keys.append(self.prefix + "incomplete")
+            keys.append(self.prefix + "incomplete")
             raw = self.cache.eval(READ, len(keys), *keys, self.data_prefix)
             if not isinstance(raw, list) or not 2 <= len(raw) <= MAX_INTERVALS + 2:
                 return None

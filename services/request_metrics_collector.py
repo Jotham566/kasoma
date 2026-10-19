@@ -3,7 +3,9 @@
 import hashlib
 import hmac
 import json
+from math import ceil
 from threading import Event, Thread
+from time import monotonic
 from typing import Literal
 from uuid import uuid4
 
@@ -13,6 +15,7 @@ from redis.retry import Retry
 from sqlalchemy.engine import make_url
 
 from services.config import Settings
+from services.metric_interval_store import RETENTION_MS
 from services.metric_reader import DeltaReader as DeltaReader
 from services.request_metrics import RequestMetrics, project
 from services.request_metrics_store import RequestMetricStore
@@ -67,20 +70,32 @@ class RequestMetricCollector:
         self.metrics = RequestMetrics(self.reader)
         self.source = uuid4()
         self.stopping = Event()
+        self.loss_until = 0.0
         self.thread: Thread | None = None
 
     def collect_once(self) -> bool:
-        """Best-effort observed intervals, never an authoritative request ledger."""
+        """Known export loss is unavailable, never a newly measured zero."""
+        if self.stopping.is_set():
+            return False
         try:
             batch = self.reader.take()
             interval = project(batch) if batch is not None else None
+            if self.loss_until > monotonic():
+                self.store.mark_loss(
+                    max(1, min(RETENTION_MS, ceil((self.loss_until - monotonic()) * 1000)))
+                )
             if interval is None:
                 self.store.pulse()
                 return True
-            return self.store.write(self.source, interval)
+            if not self.store.write(self.source, interval):
+                raise ValueError("METRIC_EXPORT_UNAVAILABLE")
+            return True
         except Exception:
-            # SDK/Redis errors may include endpoint or payload details. Freshness
-            # expires naturally; requests never wait for or fail on this operation.
+            self.loss_until = monotonic() + RETENTION_MS / 1000
+            try:
+                self.store.mark_loss(RETENTION_MS)
+            except Exception:
+                return False
             return False
 
     def start(self) -> None:

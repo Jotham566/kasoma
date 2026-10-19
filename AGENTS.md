@@ -284,6 +284,13 @@ Its local integration of main changes Markdown only relative to sourceceee401;
 keep that remote head unchanged while hosted39304052749 runs. Do not infer OTP
 acceptance from the parent result. Earlier pending-main notes retain their historic
 state; current main is87a93d7. No ADR-061 approval or production acceptance is inferred.
+ADR-064 is a separate local known-metric-loss correction candidate. Two actual
+SDK/Redis request/model cases fail at parentceee401 because lost nonempty exports
+appear as fresh zero. Finite namespace uncertainty guards now cover all three kinds;
+13 focused cases pass. Payload/codecs, original expiry, API schemas and provider
+outcomes stay unchanged. Broad/own hosted acceptance and all current-reader rollout
+remain pending; parent OTP CI39304052749 stays live and unchanged. See
+E8_METRIC_LOSS_VERIFICATION.md; no complete ledger, production or ADR-061 authority.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
@@ -325,3 +332,9 @@ At the end of every coding task, report:
 - architectural decisions made;
 - unresolved risks or specification gaps;
 - recommended next task.
+
+ADR-064 local engineering verification passes: 1,180 unit/contract, 35 tooling,
+13 loss-window, 51 request, 43 model, 35 OTP/identity, 24 operations and six browser
+executions; quality/contracts/build/security/images/service checks pass. Its own
+complete hosted acceptance remains pending. Native Edge access times out after
+the Mac becomes visible; no physical/branded acceptance is inferred.

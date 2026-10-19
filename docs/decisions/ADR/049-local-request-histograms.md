@@ -89,3 +89,11 @@ Commit `46a0f8a` is on main. This supersedes earlier candidate/pending-hosted
 statements in this record. Acceptance covers the documented local synthetic
 implementation and engineering choices; real learner use, privacy/DPIA approval,
 production providers, performance SLOs and pilot sign-off retain their separate gates.
+
+## Known-loss enforcement correction - 19 October
+
+[ADR-064](064-known-metric-export-loss-windows.md) records two actual Redis failures where an unacknowledged
+nonempty export can appear as fresh measured zero. The candidate adds a finite
+namespace uncertainty window and atomic reader guard; payload codecs, source scopes,
+retention bounds and provider behavior stay unchanged. Full current-reader deployment
+and its own hosted verification remain required; no production or ledger claim.

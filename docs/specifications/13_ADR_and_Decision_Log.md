@@ -442,3 +442,12 @@ counters, no payload/identifier dimensions, an app-local observer and existing f
 Redis transport. Default-disabled; development/test only. ADMIN DTO/UI and inclusive
 local warning are additive; no authentication, quota, production provider, retention
 policy or billing/delivery authority changes. Implementation verification is pending.
+
+## ADR-064 - known metric export loss windows
+
+[ADR-064](../decisions/ADR/064-known-metric-export-loss-windows.md) corrects the
+existing request/model collectors' fresh-zero behavior after known export loss. One
+finite namespace marker blocks reads atomically while counts continue within their
+original expiry. Successful empty collection cannot hide the unknown window. This
+preserves API/payload schemas, authorization, provider/learner outcomes and scopes.
+Candidate verification is separate from ADR-063 and production release acceptance.
