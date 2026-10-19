@@ -451,3 +451,12 @@ finite namespace marker blocks reads atomically while counts continue within the
 original expiry. Successful empty collection cannot hide the unknown window. This
 preserves API/payload schemas, authorization, provider/learner outcomes and scopes.
 Candidate verification is separate from ADR-063 and production release acceptance.
+
+## ADR-065 - isolated database and private-object recovery
+
+[ADR-065](../decisions/ADR/065-isolated-database-object-recovery.md) extends local
+recovery preparation with a separate generated PostgreSQL/MinIO rehearsal. It restores
+private database/ciphertext backups after stopping the owned source, preserving exact
+storage scope and existing integrity/retirement controls. No developer data/volumes,
+production provider, retention/erasure policy or production recovery claim changes.
+Own local/hosted acceptance is recorded separately from ADR-042's logical evidence.

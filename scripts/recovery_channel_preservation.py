@@ -159,8 +159,19 @@ def populate_preservation(
         identity.settings.channel_preservation_enabled = original
 
 
-def verify_preservation(identity: IdentityService) -> None:
-    _isolated(identity, "dst")
+def verify_preservation(
+    identity: IdentityService, *, expected_source_database: str | None = None
+) -> None:
+    if expected_source_database is None:
+        _isolated(identity, "dst")
+    else:
+        # ADR-065 restores the same database name on a separate exclusively owned
+        # server, preserving the private export scope. This verifier is read-only.
+        if re.fullmatch(r"kasoma_drill_src_[0-9a-f]{32}", expected_source_database) is None:
+            raise ValueError("Exact generated recovery source name required")
+        with Session(identity.engine) as db:
+            if db.scalar(text("SELECT current_database()")) != expected_source_database:
+                raise ValueError("Restored recovery database identity mismatch")
     cipher = PreservationCipher(identity.settings.identity_encryption_key)
     with Session(identity.engine) as db:
         rows = list(db.scalars(select(ChannelSnapshot)))

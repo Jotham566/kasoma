@@ -1487,3 +1487,28 @@ dashboard appear healthy. Update API and operations-worker readers together; old
 server readers do not honor request/model markers. On rollback keep affected
 projections unavailable until markers expire. No production rollout is accepted by
 these local tests. [Verification](../implementation/E8_METRIC_LOSS_VERIFICATION.md).
+
+## Isolated database and private-object recovery
+
+Requirements NFR-REL-002/SEC-002/MNT-001, [ADR-065](../decisions/ADR/065-isolated-database-object-recovery.md).
+After normal make setup and make services have built the approved local images, use
+make test-recovery-objects for safety controls and make recovery-objects for the real
+synthetic rehearsal. No source/destination/credential override is accepted. It refuses
+nonstandard/production profiles, resolves approved configured image tags to local IDs
+and never pulls an image. The original make recovery-drill remains a separate gate.
+
+The command creates four bounded tmpfs containers on random loopback ports, migrates
+and populates a fresh synthetic source, privately backs up PostgreSQL and encrypted
+manifest-bound objects, stops both owned source services and restores on independent
+services with the same generated database name/keys. It verifies frozen bytes, existing
+SQL/encryption guards and missing/corrupt objects, then removes only exact returned
+creation IDs after checking ownership labels. No shared-volume/cache/image/role cleanup.
+A failed/ambiguous create does not authorize adopting a similarly named container.
+
+The report must say PASSED with cleanup_failed empty; any failure remains a failure.
+If cleanup reports an owned generated name, inspect that exact reported resource and
+creation evidence; do not sweep by prefix or delete running application services.
+Private temporary dump/ciphertext files are removed on exit. Existing Docker preview
+services keep running. This is synthetic logical/private-object preparation only;
+managed PITR, production RPO/RTO, escrow and regional recovery remain unproved.
+[Exact verification boundary](../implementation/E9_OBJECT_RECOVERY_VERIFICATION.md).

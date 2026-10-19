@@ -338,3 +338,10 @@ ADR-064 local engineering verification passes: 1,180 unit/contract, 35 tooling,
 executions; quality/contracts/build/security/images/service checks pass. Its own
 complete hosted acceptance remains pending. Native Edge access times out after
 the Mac becomes visible; no physical/branded acceptance is inferred.
+
+ADR-065 is a separate local database/private-object recovery candidate. One real
+69-table/686-row/one-object rehearsal passes after stopping both owned source
+services; missing/corrupt object rejection and empty cleanup are verified. Final local checks pass1,239 unit/contract,35 tooling,59 focused controls and
+quality/build/contracts/security; final real restore147ms cleans successfully. Own
+complete hosted verification remains pending.
+No production PITR/RPO/RTO, developer data cleanup or ADR-061 authority is inferred.

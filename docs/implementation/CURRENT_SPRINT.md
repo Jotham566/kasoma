@@ -1,5 +1,17 @@
 # Current sprint: practice-day and operational verification
 
+## Isolated database/private-object recovery - candidate
+
+NFR-REL-002, NFR-SEC-002/MNT-001: ADR-065 adds a separate synthetic rehearsal with
+four exclusively owned tmpfs services and no developer-data/volume access. One real
+local restore passes69 tables/686 rows/one encrypted object after both source
+services stop; missing/corrupt object probes fail closed and cleanup is empty.
+Final local checks pass1,239 unit/contract,35 tooling,59 focused controls,
+98 recovery-role and105 contract/34 integration preservation cases; quality/build/
+contracts/security and real restore pass. Own full hosted verification remains pending; production PITR, regional copies and RPO/RTO remain unproved.
+[Verification](E9_OBJECT_RECOVERY_VERIFICATION.md).
+
+
 ## Known request/model metric loss - candidate
 
 FR-OPS-002, NFR-OBS-001/SEC-002/MNT-001: two actual SDK/Redis regressions reproduce

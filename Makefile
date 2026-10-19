@@ -506,3 +506,9 @@ test-web-otp-observations:
 .PHONY: test-metric-loss
 test-metric-loss:
 	$(UV) pytest tests/contract/test_metric_loss_contract.py tests/integration/test_metric_loss_recovery.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: recovery-objects test-recovery-objects
+recovery-objects:
+	$(UV) python -m scripts.object_recovery_drill
+test-recovery-objects:
+	$(UV) pytest tests/contract/test_object_recovery.py

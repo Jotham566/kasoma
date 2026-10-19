@@ -162,3 +162,7 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-064: Known metric export loss windows](064-known-metric-export-loss-windows.md)
   records finite unavailable windows for existing request/model observations after
   failed exports, preserving payload codecs and no ledger/production claims.
+
+- [ADR-065: Isolated database and private-object recovery](065-isolated-database-object-recovery.md)
+  records a separate synthetic rehearsal restoring private temporary backups with source
+  services stopped, exact storage namespace and exclusively owned disposable services.
