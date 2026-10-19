@@ -92,6 +92,7 @@ make build
 # First browser installation only:
 make e2e-install
 make e2e
+make test-web-identity # focused three-engine identity/consent/logout journeys
 make test-web-mobile # focused 320-pixel synthetic touch journey; also included in e2e
 make test-load-profile # deterministic load-runner isolation/measurement checks
 make test-provider-fault-isolation # owned reads during a stalled fake grading call

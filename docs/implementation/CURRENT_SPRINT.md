@@ -18,6 +18,14 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
 
 ## Requirements and implementation
 
+- FR-ID-001/005, NFR-ACC-001 and NFR-MNT-001: the
+  [profile reverification visibility correction](E1_CONTACT_REVERIFY_VISIBILITY_VERIFICATION.md)
+  removes an unrelated action from the signed-out form. The new regression fails
+  before the presentation correction; lint/types/build pass afterward. Corrected
+  three-engine verification now passes all nine identity executions, alongside
+  1,092 unit/contract, 35 tooling, contracts and security. A public signed-out
+  screenshot is recorded. Hosted acceptance and review-image update remain pending.
+
 - FR-GRD-003/004/005, FR-MST-001/004/005, NFR-SEC-002 and NFR-MNT-001:
   [fake provider isolation](E9_PROVIDER_FAULT_ISOLATION_VERIFICATION.md) adds three
   bounded regressions for owned web reads during a stalled fake call and neutral

@@ -1,5 +1,17 @@
 # Changelog
 
+## In verification — profile reverification visibility
+
+- FR-ID-001/005/NFR-ACC-001: show “Verify contact again” only with a loaded profile,
+  keeping initial sign-in and logout focused on the contact form. Existing server
+  authorization and verification handlers are unchanged. Add signed-out/signed-in/
+  logout assertions to the real-API identity journey and `make test-web-identity`.
+  The Chromium regression fails before the correction; lint/types/build pass after it.
+  All nine corrected three-engine identity executions, 1,092 unit/contract,
+  35 tooling, contracts and security pass locally; a public signed-out screenshot
+  is recorded. Hosted acceptance and review-image update remain pending.
+  No architectural change.
+
 ## In verification — stalled fake grading isolation
 
 - Add three FR-GRD-003/004/005 and FR-MST-001/004/005 regressions: 50 scheduled owned

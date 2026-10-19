@@ -195,19 +195,21 @@ export default function Onboarding() {
       <p role="status" aria-live="polite" className="profile-status">
         {status}
       </p>
-      <button
-        className="ui-button ui-button-secondary"
-        disabled={busy}
-        onClick={() => {
-          setProfile(null);
-          setChallenge(null);
-          setStatus(
-            "Verify your existing contact again to continue sensitive actions.",
-          );
-        }}
-      >
-        Verify contact again
-      </button>
+      {profile && (
+        <button
+          className="ui-button ui-button-secondary"
+          disabled={busy}
+          onClick={() => {
+            setProfile(null);
+            setChallenge(null);
+            setStatus(
+              "Verify your existing contact again to continue sensitive actions.",
+            );
+          }}
+        >
+          Verify contact again
+        </button>
+      )}
       {!profile ? (
         <section aria-label="Sign in">
           <h2>Start with your contact</h2>

@@ -1,5 +1,16 @@
 # Requirements Traceability
 
+## Profile presentation candidate
+
+FR-ID-001/005 / NFR-ACC-001 / NFR-MNT-001:
+[reverification visibility evidence](E1_CONTACT_REVERIFY_VISIBILITY_VERIFICATION.md)
+records the reproduced unconditional signed-out action, a profile-bound rendering
+condition and retained authenticated handler. The real-API regression fails before
+the correction; lint/types/build pass afterward. All nine corrected three-engine
+identity cases, 1,092 unit/contract, 35 tooling, contracts and security pass locally.
+Public screenshot evidence is recorded; hosted/review-image acceptance is pending.
+No new permission, authentication rule, API or architectural decision.
+
 ## Independent provider fault candidate
 
 FR-GRD-003/004/005 / FR-MST-001/004/005 / NFR-SEC-002 / NFR-MNT-001:

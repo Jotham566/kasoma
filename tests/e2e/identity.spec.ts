@@ -4,8 +4,16 @@ import AxeBuilder from "@axe-core/playwright";
 test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", async ({
   page,
   context,
-}) => {
+}, testInfo) => {
   await page.goto("/onboarding");
+  await expect(page.getByRole("status")).toHaveText("Sign in to continue.");
+  await expect(
+    page.getByRole("button", { name: "Verify contact again", exact: true }),
+  ).toHaveCount(0);
+  await page.screenshot({
+    path: testInfo.outputPath("signed-out-profile.png"),
+    fullPage: true,
+  });
   await page
     .getByLabel("Email or mobile number", { exact: true })
     .fill("e2e-adult@example.invalid");
@@ -14,6 +22,9 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
   const verification = page.waitForResponse("**/api/v1/auth/otp/verify");
   await page.getByRole("button", { name: "Verify and continue" }).click();
   expect(await (await verification).json()).toEqual({ authenticated: true });
+  await expect(
+    page.getByRole("button", { name: "Verify contact again", exact: true }),
+  ).toBeVisible();
   await page
     .getByLabel("Display name", { exact: true })
     .fill("Synthetic adult");
@@ -60,6 +71,9 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
   ).toHaveCount(0);
   await page.getByRole("button", { name: "Sign out all devices" }).click();
   await expect(page.getByRole("status")).toHaveText("Signed out.");
+  await expect(
+    page.getByRole("button", { name: "Verify contact again", exact: true }),
+  ).toHaveCount(0);
 });
 
 test("FR-ID-003: minor remains blocked until distinct guardian consent and assent", async ({
