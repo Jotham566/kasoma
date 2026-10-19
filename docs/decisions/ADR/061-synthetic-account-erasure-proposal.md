@@ -1,7 +1,7 @@
 # ADR-061: Retention-aware synthetic learner account erasure
 
 Date: 19 October 2026
-Status: Proposed — no implementation or execution approval
+Status: Accepted by explicit human approval for bounded synthetic implementation and isolated tests; engineering verification pending
 Owners: Product/technical owner; privacy/safeguarding and academic release owners
 Requirements: FR-ID-003/005/006, FR-GRD-003/004/005, FR-WA-006, FR-OPS-003,
 BR-010, NFR-SEC-002, NFR-OBS-001, NFR-MNT-001
@@ -9,7 +9,7 @@ BR-010, NFR-SEC-002, NFR-OBS-001, NFR-MNT-001
 ## Context and requested decision
 
 The [readiness assessment](../../implementation/E8_ERASURE_TRANSFORM_READINESS.md)
-and [69-table source inventory](../../implementation/E8_ERASURE_SOURCE_INVENTORY.md)
+and [source inventory (69-table baseline plus0043/0044 addendum)](../../implementation/E8_ERASURE_SOURCE_INVENTORY.md)
 identify immutable learning records, finite legal preservation, shared grading authority
 and required identity references. Neither a changed UUID nor an empty preview is proof
 of erasure or anonymity. ADR-057 excludes contacts/message bodies; ADR-060 excludes
@@ -118,7 +118,7 @@ period or a promised data-request completion deadline.
 ## Exact disposition manifest
 
 The [implementation manifest](../../implementation/E8_ERASURE_DISPOSITION_PROPOSAL.md)
-is part of this proposed decision. It enumerates all 69 existing tables, exact ownership
+is part of this proposed decision. It enumerates69 baseline tables plus two0043/0044 shared controls, exact ownership
 paths and whole-row versus field transforms. Inventory unknowns, new columns/payload
 versions or malformed/cross-owner dependencies fail closed. SQL constraints remain
 active. Never infer permission from a COUNT limit, absence of an FK or expired hold.
@@ -348,17 +348,25 @@ Publish exact source/run evidence and docs before claiming bounded acceptance.
 
 ## Approval record
 
-Not approved. The owner must explicitly approve this bounded synthetic proposal,
-including exact profile/contact/reply preservation, restricted destructive execution,
-post-completion custody and affected-band disablement. Existing generic continue/commit
-instructions do not silently supersede the specific ADR-057/060 exclusions. Any
-unsupported requirement remains a gap; neither approval nor tests waive real-data,
-legal/privacy/safeguarding, academic, provider, device, pilot or release acceptance.
+Recorded20 October2026 (Africa/Kampala;19 October UTC). The human owner explicitly
+answered **"Approve this bounded synthetic implementation"** to the updated ADR-061
+question, including the0044 source addendum, eligible owned-row removal, exact holds and
+staff/shared provenance, encrypted profile/contact/reply capture only for exact authorized
+holds, and bounded post-completion hold custody. This approval includes this decision's
+affected-band disablement, restricted execution, finite retention and recovery boundaries.
+
+This resolves the specific implementation/privacy decision for the bounded synthetic lane.
+It authorizes implementation and isolated synthetic tests only: no real data, execution
+on the normal Docker review database, normal short-text enablement or production launch.
+The first phase cannot mark a DELETE request complete; all manifest/preservation/removal/
+verification/finite-retirement acceptance remains required. Staff/representative support,
+legal/privacy/safeguarding, academic, provider, device, pilot and release evidence stay open.
 
 ### Source drift requiring review before approval
 
 ADR-067's additive0043 configuration candidate extends the assessed source from69 to71
 tables. The source inventory and proposed disposition addendum explicitly cover the two
 shared controls and exact staff action operations.configuration.changed. Any future
-executor must validate the new source; this proposal and its addendum remain unapproved.
-Neither bounded ADR-057/060 approval nor configuration implementation grants erasure.
+executor must validate the new source. The explicit approval above includes this0043/0044
+addendum; the configuration implementation itself still needs its own verification.
+Neither ADR-057/060 nor configuration implementation independently grants erasure.

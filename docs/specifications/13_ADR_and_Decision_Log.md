@@ -416,9 +416,10 @@ These are bounded synthetic engineering results, not real-data/erasure or releas
 
 ## ADR-061: Retention-aware synthetic learner account erasure
 
-**Status:** Proposed; no implementation/execution approval. See
+**Status:** Explicit human approval recorded20 October2026 for bounded synthetic implementation
+and isolated tests, including the0044 source addendum; engineering acceptance pending. See
 [ADR-061](../decisions/ADR/061-synthetic-account-erasure-proposal.md) and its
-[69-table disposition manifest](../implementation/E8_ERASURE_DISPOSITION_PROPOSAL.md).
+[71-table disposition manifest including0043/0044 addendum](../implementation/E8_ERASURE_DISPOSITION_PROPOSAL.md).
 The proposal explicitly resolves the data-model replacement-identity ambiguity through
 eligible row removal, retains lawful exact evidence and proposes restricted finite
 execution, richer encrypted preservation and post-completion custody. These are new

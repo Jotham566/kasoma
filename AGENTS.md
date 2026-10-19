@@ -427,3 +427,11 @@ is refused; worker/API saved values agree. Normal Docker preview runs0044 with8 
 services and retirement/normal learner short-text disabled. Full own frozen backend/
 browser and hosted verification remain required. ADR-061 remains proposed/unapproved;
 source inventory/disposition explicitly track the two shared configuration tables.
+
+Explicit human approval of updated ADR-061 is recorded20 October2026 for bounded
+synthetic implementation and isolated tests, including0044 source addendum, exact richer
+profile/contact/reply preservation, eligible owned-row removal, affected-band disablement
+and finite custody/retirement. No normal Docker review database, real-data or production
+execution is authorized. This supersedes earlier unapproved-status snapshots only for
+that exact lane. Implementation starts with closed contracts, additive lifecycle and
+closure barriers/resumable jobs; no partial phase may complete a DELETE request.

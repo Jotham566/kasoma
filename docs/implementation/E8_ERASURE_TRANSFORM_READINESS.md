@@ -136,3 +136,13 @@ recommend explicit transforms and custody/retention rules, including the data-mo
 replacement-identity conflict; this does not retroactively change the factual assessment
 above or grant approval. Review the exact new personal-preservation fields, shared-band
 availability trade-off and restricted destructive/recovery boundary before approval.
+
+## Explicit bounded approval recorded20 October2026
+
+The human owner approves the updated ADR-061 and its0044 source addendum for bounded
+synthetic implementation and isolated tests. This resolves the proposed transform and
+exact preservation/custody decision; it does not retroactively turn this assessment into
+an executable policy or grant real-data/normal-review/production authority. Begin with
+strict contracts, additive lifecycle and closure barriers plus durable resumption. Keep
+requests IN_REVIEW until all subsequent manifest/removal/retirement gates pass. Configuration
+source3e6175b remains separately in verification; its source/roles must be accounted for.

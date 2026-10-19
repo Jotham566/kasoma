@@ -1,5 +1,16 @@
 # Changelog
 
+## ADR-061 bounded synthetic implementation approved
+
+The human owner explicitly approves the updated ADR-061, including0044 source coverage,
+for synthetic-only implementation and isolated tests. Approved choices include eligible
+owned-row removal, exact richer encrypted preservation, restricted execution, affected-band
+disablement and finite post-completion hold custody. The normal Docker review database,
+real data, normal short-text activation and production remain excluded. First implement
+closure barriers and resumable jobs; no partial phase may complete a DELETE request.
+Engineering implementation/acceptance and external release gates remain outstanding.
+
+
 ## Versioned operational warning configuration - implementation candidate
 
 FR-OPS-002/003, NFR-SEC-002/OBS-001/ACC-001/LOC-001/MNT-001: ADR-067 closes the

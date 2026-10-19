@@ -1,6 +1,8 @@
-# Proposed erasure disposition manifest — ADR-061
+# Erasure disposition manifest — ADR-061 bounded synthetic implementation
 
-Status: Proposed; no migration, executable manifest or execution authority.
+Status: Explicit human approval for bounded synthetic implementation, including0044
+source addendum; no executable manifest or engineering acceptance yet. Normal review
+database, real data and production execution remain excluded.
 Requirements: FR-ID-006, BR-010, FR-OPS-003, FR-GRD-003/004/005,
 NFR-SEC-002 and NFR-MNT-001.
 This is part of [ADR-061](../decisions/ADR/061-synthetic-account-erasure-proposal.md),
@@ -248,7 +250,7 @@ local 0042 catalog. `make check-docs` passes with 175 Markdown files/61 requirem
 verify proposal documentation only; no application acceptance, migration, destructive
 execution, API/schema permission change or new retention behavior is claimed.
 
-## Proposed0043 source extension — unapproved, ADR-067 candidate
+## Approved bounded0043/0044 source extension — ADR-067 implementation candidate
 
 The original69-table0042 baseline remains historical evidence. ADR-067 adds two shared
 controls and13 columns, observed in the isolated0043 catalog described in the factual
@@ -266,3 +268,9 @@ holds. It identifies the ADMIN actor and global configuration version; it must n
 removed merely because that staff member also has learner records. This exact addition
 requires ADR-061 review/approval with the rest of the proposed classification; no wildcard
 or inferred erasure, retention change or exception to staff provenance is authorized.
+
+Explicit human approval of the complete bounded ADR-061 decision, including this source
+addendum, is recorded20 October2026 in ADR-061. The historical wording above describes
+the choices submitted for that review; it grants no real-data or normal-review-database
+execution. Exact classification, preservation, removal and finite retirement still require
+implementation and passing engineering tests before any case completion.

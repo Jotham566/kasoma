@@ -89,3 +89,42 @@ Final0044 source repeats both populated drills successfully: logical71 tables/69
 cleanup, immutable guards and retirement denial. Actual restricted-login test passes
 10.39s. The frozen full unit/contract suite passes1,277 cases6.03s with35 tooling checks;
 512-case integration and full117-execution browser regression are running, not accepted.
+
+## Candidate publication and bounded native review
+
+Exact candidate3e6175bfd8d4b501aa5a01c2432bbe32bbf33bc2 is pushed for its own complete
+hosted [39322035839](https://github.com/Jotham566/kasoma/actions/runs/39322035839),
+confirmed in progress. Keep that remote head unchanged while it runs. Main is separately
+verifiedeb05457706ad70b3ebda4a16b41567ddfe542652: both completed parent branches have
+been removed locally/remotely after remote SHA and ancestry proof. The active configuration
+branch remains intentionally unmerged until its own required verification passes.
+
+Native Microsoft Edge Beta accessibility becomes available after the user's unlock.
+In a separate newly created local preview tab, the warning-settings layout and unauthorized
+load feedback are visibly correct; native F6/Tab entry reaches Skip to content and Return
+changes the fragment to#main-content and focuses its container. The active native window
+then changes during the next keyboard action, so review stops without further keyboard
+input or assumptions. No native full journey, physical device, screen-reader or branded
+release acceptance is inferred. No OTP, role grant, learner data or setting mutation is
+performed in that manual session. The native temporary tab is not closed after the active
+window changes; do not risk closing an unrelated user window. Existing user tabs are preserved.
+
+## Retained full-browser failure during overlapping local regression
+
+The first frozen make e2e run passes both17-case Chromium shards, then fails three
+Firefox shard1 journeys with14 passing: lost-acknowledgement assessment gets HTTP500,
+rubric creation returns no expected document, and diagnostic progression does not reach
+its third saved answer. It stops there; neither remaining browser coverage nor the full
+117-execution gate is accepted. HTTP500 response-start times include2104,2077 and2141ms,
+but that timing does not establish the exception or cause. Deliberate incomplete-export
+transport errors in other passing fault tests are separate expected probes.
+
+This browser run overlaps the512-case integration run against the same development
+PostgreSQL service. A read-only aggregate catalog probe finds10,222 retained identity_test
+schemas and about2,293,760 table/index bytes in the latest synthetic schema. No schema,
+role, volume, cache or data is removed. A20-minute aggregate Docker-log error probe finds
+no classified database errors; it does not establish absence of SQL errors or causality.
+The limited resource snapshot (PostgreSQL about40% CPU/892MiB;16GiB free host disk) is not
+a performance acceptance or reconstruction of the failure moment. Finish the unchanged
+backend run, then repeat full browser verification serially under unchanged gates.
+The hosted exact3e6175b run continues; do not replace its head or infer local acceptance.

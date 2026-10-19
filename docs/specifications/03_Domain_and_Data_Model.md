@@ -169,7 +169,20 @@ Candidate scores, selected target, human-readable reason, algorithm version, inp
 
 ## 10. Deletion/anonymization
 
-Deletion workflow removes authentication identifiers, channel links and direct profile data, then anonymizes permitted learning records using a non-reversible replacement identity. Records that must be retained for rights, security or financial obligations follow the approved retention schedule. Analytics events must never be the only location of personal data requiring deletion.
+[ADR-061](../decisions/ADR/061-synthetic-account-erasure-proposal.md), explicitly approved
+for bounded isolated synthetic implementation, supersedes replacement-identity anonymization
+**within that lane**. Remove eligible owned learning rows; retain only exact lawful originals,
+necessary dependencies or explicitly authorized encrypted exact-version preservation.
+Keep a minimized disabled identity anchor only while finite lawful references need it;
+never call that retained linkage anonymous or create a new learning aggregate. Identity,
+channel, worker and publication barriers precede bounded removal. The full disposition,
+preservation, custody and finite-retirement policy is part of ADR-061; no shortcut or
+partial completion is authorized. Ordinary append-only grading/override controls remain.
+
+Implementation/acceptance is pending. This decision excludes the normal Docker review
+database, real data and production execution. It does not approve production anonymization
+or legal sufficiency. Records requiring retention follow their approved exact schedules;
+analytics must never be the only location of personal data requiring deletion.
 
 ## Reviewed hint persistence (migration 0009)
 
