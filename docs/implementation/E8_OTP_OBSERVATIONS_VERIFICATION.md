@@ -1,8 +1,8 @@
-# Local API OTP adapter observations - candidate verification
+# Local API OTP adapter observations - verification
 
 Requirements: FR-OPS-002, FR-ID-001, NFR-OBS-001, NFR-SEC-002,
 NFR-ACC-001 and NFR-MNT-001. Decision: [ADR-063](../decisions/ADR/063-local-otp-dispatch-observations.md).
-Status: local engineering checks pass; own complete hosted acceptance pending.
+Status: local and complete exact-source hosted engineering verification pass.
 
 ## Requirement and implementation boundary
 
@@ -158,3 +158,29 @@ OTP source ceee401. Three informational conflicts retain both evidence histories
 The OTP remote head remains ceee401 while its own hosted39304052749 runs; parent
 acceptance does not accept the OTP API/SDK/UI. Normal Docker remains healthy with
 collection/retirement disabled. No required release or ADR-061 gate changes.
+
+## Complete own hosted acceptance
+
+[39304052749](https://github.com/Jotham566/kasoma/actions/runs/39304052749) completes
+SUCCESS at exact published source ceee4012c7f74dcc0c387a45ab112ed35d657f1b. All30
+executed workflow steps succeed; optional registry authentication is the expected
+credentials-absent skip. Full output is retained only under ignored .local.
+
+- 1,171 unit/contract and498 integration cases (1,453.76s integration),35 tooling.
+- 114 full browser executions:102 ordinary (34 per engine),12 synthetic short-text
+  (four per engine). Focused controls also pass:three staff-content,three native
+  WebKit attachment,12 commit-interception,nine stable assessment,eight rubric and
+  one actual restricted-login case.
+- Setup, clean migration/seed, lint/format/types, generated contract drift, build,
+  dependency/source/image security and owned export/request/model/service smoke pass.
+- Logical recovery verifies69 tables/686 rows in892ms, exact encrypted evidence and
+  stripped retirement denial, with cleanup_failed empty. Object-storage recovery and
+  production_rpo_rto remain false in this logical drill.
+
+This accepts the bounded default-disabled OTP implementation. The earlier scaffold,
+alert-enum, offline-harness and source-security failures remain recorded above. No
+academic/provider/privacy/billing/delivery or physical/branded acceptance is inferred.
+Main's verified parent is integrated through Markdown only relative to ceee401; this
+closeout also changes Markdown only. Verify remote ancestry before branch cleanup.
+The separate b5557a3 metric-loss and ADR-065 object-recovery trees require their own
+complete hosted acceptance. No ADR-061 approval or production enablement is inferred.

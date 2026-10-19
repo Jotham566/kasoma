@@ -59,3 +59,8 @@ No genuine delivery, billing, availability or academic acceptance follows these 
 
 Rollback disables the collector/card and lets all transient keys expire. It does not
 change or remove OTP challenges, credentials, learner history or audit evidence.
+
+Complete hosted39304052749 succeeds at exact sourceceee401:1,171 unit/contract,
+498 integration,35 tooling,114 full browser executions plus all engineering gates.
+This verifies the bounded synthetic implementation; collection remains defaultfalse
+and production/provider/delivery/billing/release gates remain unchanged.

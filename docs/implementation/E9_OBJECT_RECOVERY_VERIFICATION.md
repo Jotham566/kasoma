@@ -103,3 +103,13 @@ Final repeat make containers security-containers container-smoke exits zero afte
 the final tooling source changes. Owned export/request/model probes pass and all
 eight preview services remain healthy. Only documentation changes follow this
 checked tooling/test/Make/workflow tree before the candidate commit.
+
+## Verified parent integration
+
+OTP sourceceee401 passes complete hosted39304052749 and is published with Markdown
+closeout to main557f90fb02b2557cdd4ff8d6929e068cb4145153. Remote SHA/ancestry are
+verified before its owned branch is removed locally/remotely. Integrating main into
+this recovery candidate changes Markdown only relative to locally checked a4152b8.
+Four documentation conflicts retain both acceptance and candidate histories. No
+new runtime/test/workflow change follows those passing local checks. The pending
+metric-loss remote b5557a3 remains unchanged for hosted39308594889.
