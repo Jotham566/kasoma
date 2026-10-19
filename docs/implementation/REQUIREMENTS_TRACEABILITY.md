@@ -1,5 +1,19 @@
 # Requirements Traceability
 
+## ADR-061 lifecycle contracts — first slice in progress
+
+FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002 and NFR-MNT-001: closed internal
+plan/authorization/status types reject expanded caller authority, unbounded plan TTLs,
+private source/cursor fields and contradictory closure/completion. The private fake-only
+profile defaults disabled. A frozen71-source/501-column manifest and read-only catalog
+fence detect structural drift without granting execution. Local staff provisioning now
+refuses grants/regrants on existing disabled identities while retaining audited revocation.
+Final97 focused,1374 unit/contract,35 tooling and two actual integration cases pass
+with quality/contracts/build/security/source checks. Full first-slice/hosted acceptance
+remains pending. No route, migration, executor, account closure or DELETE completion
+is enabled. Verification and the full first vertical slice remain in progress; see
+[readiness](E8_ERASURE_LIFECYCLE_READINESS.md).
+
 ## ADR-061 bounded synthetic implementation approved
 
 The human owner explicitly approves the updated ADR-061, including0044 source coverage,

@@ -1563,3 +1563,23 @@ prior reference and one declared setting. Preserve0043 for already applied envir
 make migrate applies0044. The configuration reader refuses missing current-schema tables
 instead of falling through to public. Three-engine configuration mutation tests run in
 their own fresh synthetic schema and are included by make e2e.
+
+
+## ADR-061 account-erasure foundation under implementation
+
+Use make test-erasure-contracts for closed plan/status, private profile and frozen source
+manifest denials. make test-erasure-source exercises isolated synthetic catalog drift and disabled-role
+provisioning; its deliberate DDL drift probes roll back fixture savepoints. Status and
+role writes concern only that isolated synthetic test identity.
+Run it after other migration-heavy suites, not alongside the normal full browser run.
+
+The dedicated .local/account-erasure.env loader requires an owned0600 bounded regular
+file and refuses symlinks/FIFOs/interpolation. Ordinary Settings and .env do not load
+this capability. No provisioning, closure or erasure command exists yet; creating a file,
+using a matching isolated name or setting enabled=true cannot prove SQL authority.
+Do not enable account erasure or remove data in the Docker review database. Follow
+[the approved boundary and readiness](../implementation/E8_ERASURE_LIFECYCLE_READINESS.md).
+
+Local make staff-role rejects grants and regrants when the verified synthetic identity
+is DISABLED. Explicit revocation remains supported and audited; it never reactivates
+the identity. This guard does not implement permanent closure or account erasure.

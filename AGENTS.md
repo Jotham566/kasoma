@@ -435,3 +435,12 @@ and finite custody/retirement. No normal Docker review database, real-data or pr
 execution is authorized. This supersedes earlier unapproved-status snapshots only for
 that exact lane. Implementation starts with closed contracts, additive lifecycle and
 closure barriers/resumable jobs; no partial phase may complete a DELETE request.
+
+ADR-061 lifecycle work is isolated on codex/erasure-lifecycle. Closed plan/authorization/
+status types, a disabled private fake-only profile and a71-source/501-column0044 structural
+manifest pass97 focused and1374 unit/contract tests plus35 tooling, lint/types and
+security/source checks. Actual isolated catalog drift and disabled-role provisioning
+cases pass2/2. These are foundation checks only: no closure migration, provisioner, executor, routes or DELETE
+completion exists. Trigger/grant/payload/ownership validation,
+permanent closure and full first-slice/hosted acceptance remain pending. Keep review
+execution disabled; see docs/implementation/E8_ERASURE_LIFECYCLE_READINESS.md.

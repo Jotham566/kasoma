@@ -33,6 +33,12 @@ test: test-unit
 	$(UV) pytest -m integration --allow-hosts=localhost,127.0.0.1,::1
 test-unit: test-tooling
 	$(UV) pytest -m 'not integration'
+.PHONY: test-erasure-contracts
+test-erasure-contracts:
+	$(UV) pytest tests/contract/test_erasure_contracts.py tests/contract/test_erasure_config.py tests/contract/test_erasure_manifest.py
+.PHONY: test-erasure-source
+test-erasure-source:
+	$(UV) pytest tests/integration/test_erasure_source_shape.py tests/integration/test_erasure_staff_barrier.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: test-operations-configuration
 test-operations-configuration:
 	$(UV) pytest tests/contract/test_operations_configuration_contract.py tests/integration/test_operations_configuration.py --allow-hosts=localhost,127.0.0.1,::1
