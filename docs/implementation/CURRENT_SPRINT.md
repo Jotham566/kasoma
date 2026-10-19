@@ -7,10 +7,11 @@ This is not a completed MVP or production-release declaration.
 
 ## Verified source on main
 
-Application source is `5d95f9d`; complete hosted
-[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022) passes. The documentation-only closeout
-preserves that exact application tree. All merged implementation/review branches are
-removed locally/remotely. See [checkpoint](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
+Application source is `25b44b1`; complete hosted
+[39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670) passes. The documentation-only closeout
+preserves that exact application tree. The format branch is merged; its merged branch
+is removed locally/remotely. The active capture branch remains separate. Earlier
+checkpoint: [5d95f9d](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
 
 Terminal receipt source 397f562 also passes complete hosted 39165896953. Receipt
 creation remains false; live-state preservation and erasure remain incomplete.
@@ -46,7 +47,7 @@ Source `5d95f9d` passes every step of the complete hosted pipeline, including ac
 
 Local verification passes 940 unit/contract, 35 tooling and 378 integration cases,
 actual restricted logins, 65-table/648-row populated logical recovery (287 ms), source/
-dependency/image security, rebuilt Docker smoke, 105 ordinary browser executions,
+dependency/image security, rebuilt Docker smoke, 105 browser executions,
 three UI harness/navigation cases and 31 full-Chromium executions. These are named
 runs with overlapping cases. No real model or messaging provider is exercised.
 
@@ -65,11 +66,19 @@ On 19 October the user explicitly approved this bounded synthetic implementation
 Real-data processing and erasure were excluded in the approval request and remain
 unauthorized. The first increment is an offline strict evidence format and independently
 derived Fernet encryption bound to snapshot/request/owner/source/revision/version.
-All 82 focused socket-disabled tests pass. See
+All 82 focused socket-disabled, 1,022 unit/contract, 378 integration and35 tooling cases
+pass locally, alongside lint/type/generated-contract/security/image/service checks.
+Complete hosted 39176205670 passes at `25b44b1`. See
 [increment verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md).
 Capture transactions, SQL guards, exact observed-version generation, finite cleanup,
 authorization, API/capabilities, preview, UI and recovery are next; no capture is enabled.
 Full coverage, erasure/anonymization and accountability expiry remain incomplete.
+
+The separate capture candidate is under implementation. Its real-time browser path
+exposes an existing clock defect: conversation updated_at and exact 24-hour expiry used
+different clock reads. Two deterministic advancing-clock cases reproduce it. A fix
+using one instant and new browser/role/capture coverage are under separate verification;
+no real-time conversation or full capture acceptance is inferred from this format gate.
 
 ## Review stack and remaining gates
 

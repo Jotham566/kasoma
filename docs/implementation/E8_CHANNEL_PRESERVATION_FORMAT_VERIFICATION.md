@@ -49,8 +49,8 @@ retrieval. Production key management/rotation remains governed by the existing g
 The first focused lint run caught an overlong test assertion; formatting corrected it.
 `make lint` passes Python/TypeScript lint, formatting and type checks (177 mypy source
 files), all 156 Markdown link checks, 61-requirement coverage and whitespace checks.
-`make test` passes all 1,022 unit/contract and 35 tooling cases; its 378 integration
-cases are still running. Existing Starlette and tooling module-type warnings remain;
+`make test` passes all 1,022 unit/contract, 378 integration (992.69 seconds) and 35 tooling
+cases. Existing Starlette and tooling module-type warnings remain;
 the socket-guard warnings come from intentional network-denial tests.
 
 `make openapi-check` passes with no generated contract diff. `make security
@@ -58,8 +58,19 @@ security-source` passes Bandit, local secret checks, Python/JavaScript dependenc
 audits and Gitleaks. `make containers`, application-profile Compose up with `--wait`,
 and `make container-smoke security-containers` pass; all eight services are healthy,
 synthetic worker/export/metrics smoke passes and API/web images have zero HIGH/CRITICAL
-findings. No real model or messaging provider is called. No new hosted or full
-ADR-057 application acceptance is claimed here.
+findings. No real model or messaging provider is called.
+
+Exact source `25b44b1` passes complete hosted
+[39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670), including
+the full backend/browser/security/recovery/image/service pipeline. This verifies the
+private format increment; no usable capture or full ADR-057 application acceptance is
+claimed. The documentation-only closeout preserves the exact application tree.
+
+Subsequent capture development exposed an existing conversation timestamp defect with
+an advancing clock: updated_at and its exact 24-hour expiry used different clock reads.
+Two deterministic regressions fail on this source; the correction and real-time
+conversation browser coverage remain under separate capture-branch verification. Prior
+fixed-clock fixture acceptance does not prove real-time channel acceptance.
 
 ## Next complete application slice
 

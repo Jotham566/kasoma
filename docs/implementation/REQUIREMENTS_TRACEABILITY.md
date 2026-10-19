@@ -2,14 +2,17 @@
 
 ## Current accepted checkpoint — 19 October 2026
 
-Application source `5d95f9d` passes complete
-[39171302022](https://github.com/Jotham566/kasoma/actions/runs/39171302022) and is on main; the closeout changes only
+Application source `25b44b1` passes complete
+[39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670) and is on main; the closeout changes only
 documentation. ADR-056/058/059 are accepted for their bounded local/hosted engineering
-scope. Full 940 unit/contract, 378 integration, 35 tooling, 105 ordinary browser and
+scope. Full 1,022 unit/contract, 378 integration, 35 tooling, 105 browser and
 UI/transport/security/recovery/image/service gates pass. This supersedes older
 candidate/pending engineering status below, without changing any production, academic,
 privacy, preservation/erasure or physical-device release gate. ADR-057 now has explicit
 bounded synthetic implementation approval; application acceptance remains pending.
+The private-format increment is verified; full capture/lifecycle acceptance remains
+separate. Subsequent real-time channel testing finds a conversation timestamp mismatch;
+its correction and new advancing-clock/browser coverage remain on the capture branch.
 [Checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
 
 
@@ -38,6 +41,8 @@ canonicalization, bounded independently derived authenticated encryption and 82
 socket-disabled format/binding/tampering tests; see
 [verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md). Capture, SQL/lifecycle,
 access/API/UI and full application acceptance remain pending. No real-data/erasure authority.
+Format source `25b44b1` passes full local and complete hosted 39176205670. This closes
+only its format acceptance, not these full functional requirements.
 NFR-REL-002 local recovery instructions now include nondestructive power-interruption
 restart; this does not replace the separately required production recovery evidence.
 

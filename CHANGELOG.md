@@ -1,6 +1,6 @@
 # Changelog
 
-## In progress — approved synthetic channel preservation
+## Verified format — approved synthetic channel preservation
 
 - Record the user's explicit bounded ADR-057 implementation approval. Real-data
   processing, account erasure and production privacy/release gates remain separate.
@@ -9,6 +9,11 @@
   No runtime capture, storage, endpoint, permission or retention change is enabled.
 - Add 82 offline format/tampering/allowlist/binding cases and the prescribed
   `make test-channel-preservation-format` command. Full ADR-057 acceptance remains pending.
+- Source `25b44b1` passes complete hosted [39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670),
+  all 1,022 unit/contract, 378 integration and35 tooling cases, full browser/security/
+  recovery/image/service gates. This is format acceptance only; capture is separate.
+- Capture development exposes a real advancing-clock conversation expiry mismatch;
+  correction and its new real-time browser coverage remain on the capture branch.
 
 ## Accepted engineering checkpoint — 19 October 2026
 
@@ -28,7 +33,7 @@
   ADR-059 hosted-only fixed SDK preparation, initial/phase capacity gates and read-only
   diagnostics; no local cleanup or reduction in application checks.
 - Replace the obsolete absent-Audit navigation guard with its implemented exact target.
-  All 105 ordinary browser executions, 22 storage safety and 940 unit/contract cases
+  All 105 browser executions, 22 storage safety and 940 unit/contract cases
   pass locally; corrected full-source hosted acceptance remains required.
 
 ## Verified — bounded ADMIN audit activity
