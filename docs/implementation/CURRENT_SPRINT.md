@@ -1,5 +1,16 @@
 # Current sprint: verified disposable load-role lifecycle
 
+## Erasure proposal assessment — schema and academic dependencies
+
+FR-ID-006/BR-010/FR-GRD-003/004/005/NFR-SEC-002/NFR-MNT-001: schema-only inspection
+records 69 tables, 488 columns, 120 foreign keys and 97 triggers. Shared grading counters
+and the last 100-review disablement window require an explicit preservation/fail-closed
+decision before learner-review destruction. [Readiness](E8_ERASURE_TRANSFORM_READINESS.md)
+records these factual dependencies without choosing an erasure transform, new anonymous
+dataset or changed academic policy. No learner rows are selected or changed. The [complete catalog inventory](E8_ERASURE_SOURCE_INVENTORY.md) now records all columns/FKs and guard names, independently compared
+with live 0042. Readiness also records completed-case hold access, overlapping flag
+provenance and unbound OTP ownership gaps. No execution or permission changes.
+
 ## Verified bounded disposable load-role lifecycle — 19 October 2026
 
 [Complete hosted39267916272](https://github.com/Jotham566/kasoma/actions/runs/39267916272)
@@ -14,7 +25,7 @@ recovery, production RPO/RTO or external release approval is inferred.
 NFR-MNT-001/NFR-SEC-002: both load profiles now clean only a confirmed, exclusively
 created role with the same OID, safe attributes and no memberships, after successful
 owned database drop. A real two-connection red regression and replacement tests prove
-the stronger boundary. All69 focused native cases pass. No API/schema, grading,
+the stronger boundary. All 69 focused native cases pass. No API/schema, grading,
 mastery, provider or architecture change; no existing orphan/debug/application resource
 cleanup. The normal Docker review stack stays healthy on0042 with retirement false.
 

@@ -48,6 +48,60 @@ subject references and staff provenance survive until their approved deadlines.
 This assessment chooses neither a retained user stub nor rewritten subject links,
 and does not label either approach anonymous.
 
+## Full schema and shared academic state inspection
+
+Schema metadata at main `ebbf00c`/0042 contains 69 tables, 488 columns, 120 foreign keys
+and 97 non-internal triggers. The inventory selects catalog structure and migration
+metadata only, not learner rows. The [versioned source inventory](E8_ERASURE_SOURCE_INVENTORY.md) records every column,
+foreign-key definition, CHECK name and non-internal trigger name/function. A second
+read-only catalog inspection matches the original snapshot field-for-field. This is
+not a reviewed erasure manifest or permission to mutate any of those sources.
+
+The [publication counter guards](../../apps/api/migrations/versions/0030_grading_audit_assignments.py)
+prohibit resetting lifetime publication/audit counts. The
+[expert review guards](../../apps/api/migrations/versions/0033_expert_grading_reviews.py)
+use immutable completion ordinals and the latest 100 completed expert reviews per band
+for sticky below 90%-agreement/critical-error disablement. Those are shared academic
+controls, not disposable per-learner projections. Erasing a learner's review rows could
+change a subsequent rolling window even if foreign-key deletion were permitted.
+
+The proposal must therefore resolve deletion's effect on shared calibration authority:
+retain the approved monotonic counters, preserve or explicitly fail closed on affected
+quality authority, and never silently improve an active band's agreement by removing
+reviews. A new source-unlinked projection would itself need a defined field/retention
+policy and re-identification review; it cannot simply be called anonymous. No option,
+new retained dataset, counter reset or grading-policy change is chosen here.
+
+This adds FR-GRD-003/004/005 to the affected requirements for the forthcoming proposal,
+under [ADR-051](../decisions/ADR/051-blinded-review-and-release-unit-sampling.md).
+It does not authorize deletion of the original learner, grade or review records.
+
+## Verified authorization and ownership gaps
+
+The [hold service](../../services/legal_holds.py) requires a pending DELETE case and
+its original independent ADMIN claimant. Its access check rejects completed requests
+with REQUEST_COMPLETED. Therefore existing lawful post-closure retention cannot simply
+reuse a completed case for new preservation decisions or release operations. The
+proposal must resolve custody before enabling DELETE completion; it must not silently
+extend ADMIN permissions, reassign the original claim or fabricate another completion
+clock. Current holds require a finite future expiry, not a fixed approved maximum term.
+
+The [preview inventory](../../services/deletion_preview.py) deliberately counts both
+owned flag histories/receipts and staff actor links, with overlap. A learner's original
+report can therefore also appear in STAFF_PROVENANCE_REVIEW. That category alone cannot
+establish staff activity or justify excluding the entire account from fulfillment.
+Conversely a real author/reviewer/ADMIN relationship must not be treated as ownership
+of the other learners' records it touches.
+
+The same preview includes unbound OTP challenges by a matching identifier hash.
+The actual otp_challenges schema has no created_at field. A future transform cannot
+infer creation time, historical ownership or safe deletion from that advisory match;
+OTP expiry and bound user ownership need separate treatment. Shared channel sender
+barriers similarly need provenance, not an opaque-hash match alone.
+
+No new policy or authority is inferred from these gaps. They constrain the exact
+execution proposal and its negative/race tests; they do not justify weakening controls.
+
 ## Required assessment before an execution proposal
 
 | Boundary | Exact evidence needed |
