@@ -1,5 +1,16 @@
 # Requirements Traceability
 
+## Current independent load candidate
+
+NFR-PERF-001/002 / NFR-SCL-001 / FR-MST-004/005 / NFR-MNT-001:
+[history/mixed load evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) defines a
+50-prior-answer synthetic history profile, varied trajectories and numeric timed
+submissions under unchanged operation/format latency gates. All 37 harness cases,
+1,092 unit/contract, lint/types/contracts and security pass. Initial history setup
+fails before timing with successful cleanup; the refresh correction is being run
+at full size. Native/hosted acceptance evidence remains pending.
+No runtime, retention, provider or academic enablement changes.
+
 ## Proposed retention boundary — not implemented
 
 FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:

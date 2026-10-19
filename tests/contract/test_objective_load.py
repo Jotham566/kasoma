@@ -43,6 +43,18 @@ def test_slow_operation_cannot_hide_in_the_mixed_percentile():
     assert not load.latency_passes(measured)
 
 
+def test_slow_numeric_subset_cannot_hide_in_choice_answers():
+    measured = load.Measurements()
+    for operation in load.OPERATIONS:
+        measured.timings[operation] = [10.0] * 100
+    measured.answer_formats["SINGLE_CHOICE"] = [10.0] * 99
+    measured.answer_formats["NUMERIC"] = [501.0]
+    assert measured.report()["all_http"]["p95_ms"] == 10
+    assert not load.latency_passes(measured)
+    measured.answer_formats["NUMERIC"] = [499.0]
+    assert load.latency_passes(measured)
+
+
 def local(settings):
     return settings.model_copy(
         update={
@@ -63,19 +75,21 @@ def local(settings):
         },
     ],
 )
-def test_rejects_unsafe_profile_before_connect(settings, monkeypatch, changed):
+@pytest.mark.parametrize("history_mixed", [False, True])
+def test_rejects_unsafe_profile_before_connect(settings, monkeypatch, changed, history_mixed):
     connect = Mock(side_effect=AssertionError("must not connect"))
     monkeypatch.setattr(load, "create_engine", connect)
     with pytest.raises(ValueError):
-        load.run(local(settings).model_copy(update=changed))
+        load.run(local(settings).model_copy(update=changed), history_mixed=history_mixed)
     connect.assert_not_called()
 
 
 @pytest.mark.parametrize(
     "creation_fails,cleanup_fails", [(True, False), (False, False), (False, True)]
 )
+@pytest.mark.parametrize("history_mixed", [False, True])
 def test_cleanup_only_created_database_and_redacts_failures(
-    settings, monkeypatch, creation_fails, cleanup_fails
+    settings, monkeypatch, creation_fails, cleanup_fails, history_mixed
 ):
     engine = MagicMock()
     execute = engine.connect.return_value.__enter__.return_value.execute
@@ -87,7 +101,7 @@ def test_cleanup_only_created_database_and_redacts_failures(
     monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
     migrate = Mock(side_effect=RuntimeError("sensitive"))
     monkeypatch.setattr(load.subprocess, "run", migrate)
-    result = load.run(local(settings))
+    result = load.run(local(settings), history_mixed=history_mixed)
     assert result["status"] == "FAILED"
     assert result["cleanup_failed"] is cleanup_fails
     statements = [str(call.args[0]) for call in execute.call_args_list]
@@ -99,6 +113,24 @@ def test_cleanup_only_created_database_and_redacts_failures(
         assert "keep_me" not in migrate.call_args.kwargs["env"]["DATABASE_URL"]
     assert "sensitive" not in str(result)
     assert "secret" not in str(result)
+
+
+@pytest.mark.parametrize(
+    "code,expected", [("OTP_INVALID", "OTP_INVALID"), ("secret-token", "DOMAIN_REJECTED")]
+)
+def test_domain_failure_diagnostics_are_closed_and_cleanup_still_runs(
+    settings, monkeypatch, code, expected
+):
+    from services.identity import IdentityError
+
+    engine = MagicMock()
+    monkeypatch.setattr(load, "create_engine", lambda *a, **k: engine)
+    monkeypatch.setattr(load.subprocess, "run", Mock(side_effect=IdentityError(code)))
+    result = load.run(local(settings), history_mixed=True)
+    assert result["failure_code"] == expected
+    assert result["cleanup_failed"] is False
+    assert "secret" not in str(result)
+    assert engine.connect.return_value.__enter__.return_value.execute.call_count == 2
 
 
 @pytest.mark.parametrize(
@@ -203,3 +235,94 @@ def test_normal_timer_jitter_does_not_reduce_the_offered_rate(monkeypatch):
         assert dispatched == pytest.approx([1.001, 1.051, 1.101])
 
     asyncio.run(exercise())
+
+
+@pytest.mark.parametrize("kind", ["SHORT_TEXT", "MULTIPLE_CHOICE", "unknown"])
+def test_fixture_solver_refuses_unregistered_formats(kind):
+    with pytest.raises(ValueError, match="Unsupported synthetic objective format"):
+        load.fixture_response(kind)
+
+
+@pytest.mark.parametrize("kind", sorted(load.OBJECTIVE_FORMATS))
+@pytest.mark.parametrize("correct", [True, False])
+def test_objective_fixture_responses_are_valid_contracts(kind, correct):
+    from uuid import uuid4
+
+    from services.assessment_contracts import SubmitAnswer
+
+    value = load.fixture_response(kind, correct)
+    parsed = SubmitAnswer.model_validate({"session_item_id": uuid4(), "response": value})
+    assert parsed.response.model_dump() == value
+    assert load.fixture_response(kind, not correct) != value
+
+
+def test_history_has_strong_weak_inconsistent_and_improving_cohorts():
+    rows = [
+        [load.history_correct(cohort, position) for position in range(50)] for cohort in range(4)
+    ]
+    assert rows[0] == [True] * 50
+    assert rows[1] == [False] * 50
+    assert rows[2] == [True, False] * 25
+    assert rows[3] == [False] * 25 + [True] * 25
+
+
+@pytest.mark.parametrize("unsupported", [False, True])
+def test_http_journeys_bind_each_plan_and_measure_numeric_without_external_calls(
+    monkeypatch, unsupported
+):
+    requests = []
+    positions = {"math": 0, "physics": 0}
+
+    def handle(request):
+        requests.append(request)
+        token = request.headers["Authorization"].split()[1]
+        if request.url.path.endswith("revision-sessions"):
+            import json
+
+            assert json.loads(request.content)["subject_id"] == token
+            return httpx.Response(200, json={"id": token})
+        if request.url.path.endswith("next-item"):
+            kind = "NUMERIC" if token == "physics" else "SINGLE_CHOICE"
+            if unsupported:
+                kind = "SHORT_TEXT"
+            return httpx.Response(
+                200, json={"session_item_id": "fixture", "response_spec": {"type": kind}}
+            )
+        if request.url.path.endswith("attempts"):
+            import json
+
+            body = json.loads(request.content)
+            expected = load.fixture_response("NUMERIC" if token == "physics" else "SINGLE_CHOICE")
+            assert body["response"] == expected
+            positions[token] += 1
+            return httpx.Response(200, json={"score": 1, "mastery_update_status": "COMPLETED"})
+        if request.url.path.endswith("progress"):
+            assert request.url.params["subject_id"] == token
+        return httpx.Response(200, json={"status": "COMPLETED", "answered_count": 5})
+
+    original = httpx.AsyncClient
+    monkeypatch.setattr(
+        load.httpx,
+        "AsyncClient",
+        lambda **kwargs: original(**kwargs, transport=httpx.MockTransport(handle)),
+    )
+
+    async def no_pacing(self):
+        return 0
+
+    monkeypatch.setattr(load.AnswerPacer, "wait", no_pacing)
+    measured = load.Measurements()
+    plans = [{"subject_id": token} for token in positions]
+    asyncio.run(load.exercise(1, list(positions), {}, measured, plans))
+    assert all(request.url.host == "127.0.0.1" for request in requests)
+    if unsupported:
+        assert measured.errors == 2
+        assert measured.completed == 0
+        assert not measured.answer_formats
+    else:
+        assert positions == {"math": 5, "physics": 5}
+        assert measured.completed == 2
+        assert measured.errors == 0
+        assert measured.report()["answer_formats"]["NUMERIC"]["samples"] == 5
+        assert measured.report()["answer_formats"]["SINGLE_CHOICE"]["samples"] == 5
+    assert "fixture" not in str(measured.report())

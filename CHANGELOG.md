@@ -1,5 +1,16 @@
 # Changelog
 
+## In verification — synthetic history and numeric load
+
+- Extend the isolated objective harness for NFR-PERF-001/002/NFR-SCL-001 with
+  50 prior answers per active learner, varied evidence trajectories, Mathematics/
+  Physics plans and numeric answers. Add `make load-history-mixed` and per-format
+  latency gates without changing runtime limits or empty-history baseline behavior.
+  All 37 harness cases, 1,092 unit/contract, lint/types/contracts and security pass;
+  initial history setup fails safely and is corrected to normal refresh rotation.
+  Corrected full-size and hosted
+  verification remain pending. No production performance or academic claim.
+
 ## Proposed — completed export accountability retirement
 
 - Prepare ADR-060 for FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001:

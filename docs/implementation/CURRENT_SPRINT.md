@@ -18,6 +18,12 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
 
 ## Requirements and implementation
 
+- NFR-PERF-001/002, NFR-SCL-001, FR-MST-004/005 and NFR-MNT-001: an independent
+  synthetic history/mixed objective load profile is under verification while ADR-060
+  awaits approval. It uses normal domain histories and real loopback HTTP without
+  runtime changes. See [scope and evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
+  No load acceptance is claimed before the full-size command finishes.
+
 - FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002 and NFR-MNT-001:
   approved ADR-057 exact owned encrypted link/conversation snapshots, additive 0038,
   independent API/SQL guards, atomic finite decisions, replay, disposal, inventory

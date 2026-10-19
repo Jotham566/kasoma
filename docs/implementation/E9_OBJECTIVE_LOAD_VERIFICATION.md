@@ -3,6 +3,10 @@
 Requirements: NFR-PERF-001, NFR-PERF-002, NFR-SCL-001. Local objective baseline passes;
 full hosted regression passes; broader performance acceptance remains pending.
 
+An additional [history/mixed profile](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) is under
+verification through `make load-history-mixed`; it does not replace the historical
+empty-history results below or imply that broader performance gates have passed.
+
 `make load-objective` creates a fresh randomly named local database, applies the repository
 migrations and seeds original synthetic content. Only the standard development PostgreSQL profile
 on loopback port 55432 is accepted. There is no supplied application URL, database-name override,
