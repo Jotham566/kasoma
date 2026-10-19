@@ -90,3 +90,19 @@ This is local combined-source evidence only; full hosted verification is pending
 Neither feature is accepted from the other's CI. No performance threshold or release
 gate changes. Normal Docker remains healthy; the recovery helper is verification
 tooling, with no additional application, schema or provider behavior.
+
+## Hosted source and unrelated browser failure retained
+
+Combined source adf432879a8b55eeb1f9e8d59f5d6b053f76bf56 is pushed on
+codex/recovery-role-ownership; its exact full hosted run is
+[39299684285](https://github.com/Jotham566/kasoma/actions/runs/39299684285), currently
+in progress. Keep that remote head unchanged while it runs. Only Markdown evidence
+closeout follows this runtime/test/Make tree.
+
+Earlier activity source 78ca959's full run 39294126038 passes backend checks but fails
+a WebKit data-request journey at the 30-second total test timeout, with no reported
+failing-action stack. Unchanged `make test-web-privacy` passes all six native cases
+on the combined source, including the long journey in 7.7/10.0/8.6s across the engines.
+This does not explain or repair the hosted timeout. No timeout/assertion/retry change
+is made, neither branch is promoted, and the new full run is required independently.
+See [the exact failure boundary](E6_PRACTICE_ACTIVITY_VERIFICATION.md).

@@ -135,3 +135,31 @@ unchanged. Only Markdown/aggregate JSON closeout follows runtime/test/Make sourc
 - Evidence/tracking: AGENTS.md, CHANGELOG.md, current sprint, requirements traceability,
   this verification and the two aggregate reports. No migration, dependency or provider
   implementation/configuration change.
+
+## Hosted failure and unchanged focused diagnosis
+
+Full hosted [39294126038](https://github.com/Jotham566/kasoma/actions/runs/39294126038)
+at exact source 78ca959 is terminal FAILED. Setup/migrations/seed, focused controls,
+1,146 unit/contract, 484 integration (1,512.52s), 35 tooling, lint/types/contracts/build,
+restricted login and logical recovery pass. Recovery verifies 69 tables/686 rows in
+548ms, no cleanup failures and stripped retirement execution denied.
+
+The ordinary browser stage passes Chromium 33, Firefox 33 and 16 WebKit cases, then
+fails WebKit's data-requests.spec.ts:167 journey at the unchanged 30-second total
+test timeout. There is no failing-action stack in the hosted report. The remaining
+16 ordinary WebKit cases, 12 short-text cases and later security/image/service stages
+are not executed; this is not complete hosted acceptance. Deliberate truncated-export
+transport errors appear in the fault tests and do not identify this timeout's cause.
+
+Unchanged `make test-web-privacy` on the combined recovery candidate passes six native
+browser executions. The long journey takes 7.7s Chromium, 10.0s Firefox and 8.6s WebKit;
+whole commands take 21.0/23.8/21.7s including setup. These focused native passes do not
+explain the hosted failure or prove a fix. No timeout, assertion, retry, action or
+product behavior is changed. The failed result remains failed.
+
+Separate combined runtime/test/Make source adf432879a8b55eeb1f9e8d59f5d6b053f76bf56
+includes the independently needed recovery-role correction and this activity feature.
+Its full hosted [39299684285](https://github.com/Jotham566/kasoma/actions/runs/39299684285)
+started before the preceding timeout result was inspected and remains in progress.
+Neither branch is promoted; main remains e7a4fc0. Do not replace the live combined
+head for Markdown closeout. Full MVP/release gates and the unresolved timeout remain.

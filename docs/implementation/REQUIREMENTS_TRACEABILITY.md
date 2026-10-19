@@ -1,5 +1,15 @@
 # Requirements Traceability
 
+## Activity hosted timeout retained; combined verification active
+
+Full source78ca959 run39294126038 passes 1,146 unit/contract,484 integration,35 tooling,
+quality/build and 69-table/686-row recovery (548ms), but fails one WebKit privacy
+journey at its unchanged 30-second test timeout. Later browser/security/image gates
+are not run. Unchanged six-case native privacy diagnosis passes; no cause or fix is
+inferred. Combined recovery/activity source adf4328 is pushed for complete hosted
+39299684285, which is in progress. Main remains e7a4fc0; neither feature is promoted.
+[Exact scope and evidence](E6_PRACTICE_ACTIVITY_VERIFICATION.md). No timeouts, retries or assertions change.
+
 ## Recovery role ownership correction - candidate
 
 NFR-REL-002, NFR-SEC-002 and NFR-MNT-001: [verification](E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md)
@@ -466,7 +476,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-MST-001 | Unique append-only attempt/skill evidence; synchronous deterministic grading; consented legacy reconciliation | Duplicate replay, rollback, immutable DB records and integration tests | Local deterministic path implemented |
 | FR-MST-002 | Specified weighted prior, score, coverage/recency confidence and display state | Hand calculations, property tests and diagnostic UI | Local implemented |
 | FR-MST-003 | Versioned configuration, original inputs, hashes, estimate history and offline replay | make replay-mastery; nonempty current/history replay integration tests | Local implemented; no authenticated admin replay UI yet |
-| FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history; roadmap 3.5 practice-day candidate | Progress engine/API/browser tests; [verified baseline](E6_PROGRESS_VERIFICATION.md); [activity candidate](E6_PRACTICE_ACTIVITY_VERIFICATION.md) | Baseline synthetic implementation; activity source 78ca959 awaits own full hosted/combined-load verification. Academic aggregation and full release performance approval remain pending |
+| FR-MST-004 | Evidence-derived subject/topic/competency rollups, coverage, recent change and owned session history; roadmap 3.5 practice-day candidate | Progress engine/API/browser tests; [verified baseline](E6_PROGRESS_VERIFICATION.md); [activity candidate](E6_PRACTICE_ACTIVITY_VERIFICATION.md) | Baseline synthetic implementation; activity source 78ca959 passes both native loads but hosted 39294126038 fails a WebKit privacy timeout. Combined source adf4328 full hosted verification is pending. Academic aggregation and release approval remain pending |
 | FR-MST-005 | Confidence/coverage shown throughout progress; numeric mastery hidden below 0.25; unfinished diagnostic evidence excluded | Sparse/established engine tests, sealed diagnostic API/browser checks and axe/keyboard retry | Local diagnostic and general progress implemented; no absolute academic claims |
 | FR-MST-006 | `services/recommendation_engine.py`, immutable inputs/configuration/plan snapshots; prerequisite graph from approved synthetic metadata | Factor direction, prerequisite redirection, cycle rejection, bounds, deterministic replay, API/browser flow | Local synthetic implemented; reviewed curriculum importance/graph, scenario metadata and teacher calibration remain release gates |
 | FR-WA-001 | `services/whatsapp_linking.py`, migration 0018, owned web channel UI | [E7 evidence](E7_LINKING_READINESS.md); expiry/replay/concurrency, consent/minor and sender-collision tests | Local fake linking verified; production provider/pilot gates remain |

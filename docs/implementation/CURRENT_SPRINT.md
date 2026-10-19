@@ -1,5 +1,15 @@
 # Current sprint: verified disposable load-role lifecycle
 
+## Activity hosted timeout retained; combined verification active
+
+Full source78ca959 run39294126038 passes 1,146 unit/contract,484 integration,35 tooling,
+quality/build and 69-table/686-row recovery (548ms), but fails one WebKit privacy
+journey at its unchanged 30-second test timeout. Later browser/security/image gates
+are not run. Unchanged six-case native privacy diagnosis passes; no cause or fix is
+inferred. Combined recovery/activity source adf4328 is pushed for complete hosted
+39299684285, which is in progress. Main remains e7a4fc0; neither feature is promoted.
+[Exact scope and evidence](E6_PRACTICE_ACTIVITY_VERIFICATION.md). No timeouts, retries or assertions change.
+
 ## Recovery role ownership correction - candidate
 
 NFR-REL-002, NFR-SEC-002 and NFR-MNT-001: [verification](E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md)

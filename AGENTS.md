@@ -242,6 +242,14 @@ requests, zero errors and owned cleanup. Full hosted 39294126038 is in progress;
 replace its branch head or infer acceptance from the earlier performance CI. Only
 Markdown/aggregate JSON closeout follows that runtime/test/Make tree. ADR-061 approval
 and physical/branded review remain pending; unlock was requested once from the owner.
+Hosted 39294126038 at activity source 78ca959 is terminal FAILED: backend 1,146
+unit/contract,484 integration,35 tooling and69-table/686-row recovery (548ms) pass,
+but WebKit data-requests.spec.ts:167 reaches the unchanged30-second total timeout.
+No failing-action stack establishes the cause. Later browser/security/image stages
+are unexecuted. Unchanged six-case native privacy diagnosis passes; no fix is inferred.
+Combined recovery/activity source adf4328 is pushed for full hosted39299684285, now
+in progress. Main remains e7a4fc0; neither branch is promoted. Preserve the active
+remote head; only Markdown closeout follows that runtime/test/Make tree.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at
