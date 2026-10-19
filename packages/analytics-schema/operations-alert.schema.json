@@ -29,6 +29,7 @@
     },
     "code": {
       "enum": [
+        "OPERATIONS_CONFIGURATION_UNAVAILABLE",
         "DATABASE_DOWN",
         "REDIS_DOWN",
         "WORKER_HEARTBEAT_MISSING",

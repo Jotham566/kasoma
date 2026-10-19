@@ -33,6 +33,14 @@ test: test-unit
 	$(UV) pytest -m integration --allow-hosts=localhost,127.0.0.1,::1
 test-unit: test-tooling
 	$(UV) pytest -m 'not integration'
+.PHONY: test-operations-configuration
+test-operations-configuration:
+	$(UV) pytest tests/contract/test_operations_configuration_contract.py tests/integration/test_operations_configuration.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-web-operations-configuration
+test-web-operations-configuration:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --config=playwright.operations-configuration.config.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --config=playwright.operations-configuration.config.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --config=playwright.operations-configuration.config.ts
 .PHONY: test-request-metrics
 test-request-metrics:
 	$(UV) pytest tests/contract/test_request_metrics.py tests/contract/test_request_metrics_collector.py tests/integration/test_request_metrics_store.py --allow-hosts=localhost,127.0.0.1,::1
@@ -68,6 +76,7 @@ e2e:
 	$(MAKE) e2e-firefox
 	$(MAKE) e2e-webkit
 	$(MAKE) test-web-short-text
+	$(MAKE) test-web-operations-configuration
 build:
 	$(PNPM) build
 containers:

@@ -1529,3 +1529,37 @@ historical work. Only a PASSED terminal report with cleanup_failed false is a pa
 measurement. Preserve failures, per-operation/per-format p50/p95/p99 and error/dispatch
 counts; do not substitute the mixed percentile for a slow operation. Existing review
 services remain running. [Evidence and limits](../implementation/E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md).
+
+### Versioned warning configuration (ADR-067 candidate)
+
+Additive0043 introduces the current warning configuration and immutable version history.
+Before the first explicit edit, revision0 resolves validated startup warning defaults.
+GET /api/v1/admin/configuration requires current ADMIN. PATCH its /{key} route also
+requires OTP authentication within10 minutes, UUID Idempotency-Key, exact current
+version and a closed reason: INCREASE_SENSITIVITY, REDUCE_NOISE or REVIEWED_BASELINE.
+Unknown fields/keys, noninteger/out-of-range values and bodies above1KiB are refused.
+
+Use Operations → Review warning settings. Load the current snapshot, select one setting,
+enter its bounded integer and choose an audit reason. A save freezes all15 effective
+warning values; later API/worker warnings share that version. Reload after success to
+see the current snapshot. Lost acknowledgement keeps the original intent/key in this
+tab for Retry same change; do not close the tab before resolving an uncertain result.
+A stale/conflicting command requires a new load and explicit review, never automatic
+application against a newer version. The retry receipt reports its originally recorded
+revision, which can be older than the current state.
+
+Configuration unavailable means editing fails503. Operational snapshots explicitly
+report UNAVAILABLE_DEFAULTS_APPLIED and a warning while evaluating startup warning
+defaults; dependency/high-priority alarms stay unconditional. These warnings never alter
+processing budgets, privacy, academic decisions or feature activation. Forward fixes
+must preserve immutable history, nonce and staff audit; do not delete versions to revert.
+
+Checks: make test-operations-configuration, make test-web-operations-configuration,
+make recovery-drill, make recovery-objects, make openapi/openapi-check and normal full
+quality/security/image/service/hosted checks. This candidate is not yet accepted.
+
+The later0044 forward migration tightens subsequent version appends to the exact saved
+prior reference and one declared setting. Preserve0043 for already applied environments;
+make migrate applies0044. The configuration reader refuses missing current-schema tables
+instead of falling through to public. Three-engine configuration mutation tests run in
+their own fresh synthetic schema and are included by make e2e.

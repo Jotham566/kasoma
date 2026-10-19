@@ -1085,3 +1085,47 @@ by publishing this assessment. Full MVP privacy fulfillment remains incomplete.
 format checks. The catalog equality assertion passes for all table metadata described
 above. No application, migration, API, provider or architecture changes are made.
 Application acceptance remains tied to its separately recorded exact source/CI evidence.
+
+## Additive0043 candidate catalog assessment — ADR-067
+
+A read-only catalog inspection of an isolated actual0043 integration schema on19 October
+finds71 tables,501 columns,121 foreign keys and102 non-internal triggers. The13 new
+columns, one FK and five triggers below are additive; the public review DB is still0042
+at this observation. This is not erasure authority or a new approved manifest. Two broad
+catalog-count attempts hit the existing statement timeout while tests ran; indexed
+per-relation catalog inspection succeeds without increasing timeouts or removing schemas.
+No learner rows or credentials are read by the inventory query.
+
+### operations_configuration_versions
+
+Group: Shared controls. PK id. All columns non-null:
+id uuid, revision integer, thresholds jsonb, version_ref text, previous_ref text,
+command_hash text, changed_key text, reason text, created_at timestamptz.
+No FK or actor/contact/answer/free-text field. command_hash is a hash of the closed
+numeric command, not a raw retry key. Staff linkage exists in the existing AuditLog only.
+
+CHECK names: operations_configuration_versions_revision_check,
+operations_configuration_versions_thresholds_check,
+operations_configuration_versions_version_ref_check,
+operations_configuration_versions_previous_ref_check,
+operations_configuration_versions_command_hash_check,
+operations_configuration_versions_reason_check. Unique revision/version_ref and id PK.
+Triggers: operations_configuration_versions_immutable and
+operations_configuration_versions_no_truncate → operations_configuration_version_guard;
+operations_configuration_atomic → operations_configuration_commit_guard (deferred).
+Inspect0043 for full closed15-key bounds, atomic staff-audit/pointer and immutable behavior.
+
+### operations_configuration_state
+
+Group: Shared controls. PK id. Columns: id integer, nonce uuid, revision integer
+(all non-null), current_id nullable uuid. FK operations_configuration_state_current_id_fkey
+references operations_configuration_versions(id). nonce unique. CHECK names:
+operations_configuration_state_id_check, operations_configuration_state_revision_check,
+operations_configuration_state_check. Triggers: operations_configuration_pointer_monotonic
+and operations_configuration_state_no_truncate → operations_configuration_pointer_guard.
+The immutable random namespace is shared configuration provenance, not a learner identity.
+Neither row grants subject ownership or deletion of administrative audit evidence.
+
+0044 forward repair changes only operations_configuration_version_guard, not these
+71-table/501-column/121-FK/102-trigger catalog counts. The normal synthetic preview is
+subsequently migrated through0044; no erasure or retention authority follows.

@@ -563,6 +563,111 @@
         "title": "ChoiceResponse",
         "type": "object"
       },
+      "ConfigurationChange": {
+        "additionalProperties": false,
+        "description": "Recorded version, which may be older than the independently read current state.",
+        "properties": {
+          "recorded": {
+            "$ref": "#/components/schemas/ConfigurationView"
+          },
+          "replayed": {
+            "title": "Replayed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "recorded",
+          "replayed"
+        ],
+        "title": "ConfigurationChange",
+        "type": "object"
+      },
+      "ConfigurationPatch": {
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "enum": [
+              "INCREASE_SENSITIVITY",
+              "REDUCE_NOISE",
+              "REVIEWED_BASELINE"
+            ],
+            "title": "Reason",
+            "type": "string"
+          },
+          "value": {
+            "maximum": 86400.0,
+            "minimum": 1.0,
+            "title": "Value",
+            "type": "integer"
+          },
+          "version": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "value",
+          "reason"
+        ],
+        "title": "ConfigurationPatch",
+        "type": "object"
+      },
+      "ConfigurationView": {
+        "additionalProperties": false,
+        "properties": {
+          "revision": {
+            "maximum": 2147483647.0,
+            "minimum": 0.0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "source": {
+            "enum": [
+              "ENVIRONMENT_DEFAULTS",
+              "VERSIONED"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "values": {
+            "$ref": "#/components/schemas/WarningValues"
+          },
+          "version": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "revision",
+          "version",
+          "source",
+          "values",
+          "updated_at"
+        ],
+        "title": "ConfigurationView",
+        "type": "object"
+      },
       "ConsentInput": {
         "additionalProperties": false,
         "properties": {
@@ -3773,6 +3878,7 @@
         "properties": {
           "code": {
             "enum": [
+              "OPERATIONS_CONFIGURATION_UNAVAILABLE",
               "REQUEST_RESPONSE_START_SLOW",
               "DATABASE_DOWN",
               "REDIS_DOWN",
@@ -4018,6 +4124,16 @@
             },
             "title": "Alerts",
             "type": "array"
+          },
+          "configuration_state": {
+            "default": "ENVIRONMENT_DEFAULTS",
+            "enum": [
+              "ENVIRONMENT_DEFAULTS",
+              "VERSIONED",
+              "UNAVAILABLE_DEFAULTS_APPLIED"
+            ],
+            "title": "Configuration State",
+            "type": "string"
           },
           "counts": {
             "anyOf": [
@@ -6072,6 +6188,120 @@
         "title": "VersionView",
         "type": "object"
       },
+      "WarningValues": {
+        "additionalProperties": false,
+        "properties": {
+          "channel_dispatch_min_samples": {
+            "default": 20,
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Channel Dispatch Min Samples",
+            "type": "integer"
+          },
+          "channel_dispatch_p95_ms": {
+            "default": 1500,
+            "maximum": 60000.0,
+            "minimum": 1.0,
+            "title": "Channel Dispatch P95 Ms",
+            "type": "integer"
+          },
+          "channel_failures": {
+            "default": 1,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Channel Failures",
+            "type": "integer"
+          },
+          "channel_queue_age_seconds": {
+            "default": 60,
+            "maximum": 86400.0,
+            "minimum": 1.0,
+            "title": "Channel Queue Age Seconds",
+            "type": "integer"
+          },
+          "export_age_seconds": {
+            "default": 300,
+            "maximum": 86400.0,
+            "minimum": 60.0,
+            "title": "Export Age Seconds",
+            "type": "integer"
+          },
+          "export_failures": {
+            "default": 1,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Export Failures",
+            "type": "integer"
+          },
+          "failed_imports": {
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Failed Imports",
+            "type": "integer"
+          },
+          "grading_age_seconds": {
+            "default": 60,
+            "maximum": 86400.0,
+            "minimum": 1.0,
+            "title": "Grading Age Seconds",
+            "type": "integer"
+          },
+          "import_age_seconds": {
+            "maximum": 86400.0,
+            "minimum": 60.0,
+            "title": "Import Age Seconds",
+            "type": "integer"
+          },
+          "model_gateway_attempts": {
+            "default": 100,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Model Gateway Attempts",
+            "type": "integer"
+          },
+          "otp_failures": {
+            "default": 1,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Otp Failures",
+            "type": "integer"
+          },
+          "request_min_samples": {
+            "default": 20,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Request Min Samples",
+            "type": "integer"
+          },
+          "request_p95_ms": {
+            "default": 500,
+            "maximum": 60000.0,
+            "minimum": 1.0,
+            "title": "Request P95 Ms",
+            "type": "integer"
+          },
+          "retirement_stall_seconds": {
+            "default": 600,
+            "maximum": 7200.0,
+            "minimum": 120.0,
+            "title": "Retirement Stall Seconds",
+            "type": "integer"
+          },
+          "unresolved_flags": {
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Unresolved Flags",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "failed_imports",
+          "import_age_seconds",
+          "unresolved_flags"
+        ],
+        "title": "WarningValues",
+        "type": "object"
+      },
       "WebhookAccepted": {
         "additionalProperties": false,
         "properties": {
@@ -6139,6 +6369,200 @@
           }
         },
         "summary": "Audit"
+      }
+    },
+    "/api/v1/admin/configuration": {
+      "get": {
+        "operationId": "configuration_api_v1_admin_configuration_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Configuration"
+      }
+    },
+    "/api/v1/admin/configuration/{key}": {
+      "patch": {
+        "operationId": "configure_api_v1_admin_configuration__key__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "enum": [
+                "request_p95_ms",
+                "request_min_samples",
+                "failed_imports",
+                "import_age_seconds",
+                "unresolved_flags",
+                "channel_failures",
+                "channel_queue_age_seconds",
+                "channel_dispatch_p95_ms",
+                "channel_dispatch_min_samples",
+                "otp_failures",
+                "model_gateway_attempts",
+                "grading_age_seconds",
+                "export_failures",
+                "export_age_seconds",
+                "retirement_stall_seconds"
+              ],
+              "title": "Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigurationPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigurationChange"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request Entity Too Large"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Configure"
       }
     },
     "/api/v1/admin/content-context": {

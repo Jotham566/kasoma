@@ -9,6 +9,8 @@ const messages: Record<
   components["schemas"]["OperationAlert"]["code"],
   string
 > = {
+  OPERATIONS_CONFIGURATION_UNAVAILABLE:
+    "Saved warning configuration unavailable; startup warning defaults apply",
   REQUEST_RESPONSE_START_SLOW:
     "Observed API response-start timing exceeded its threshold",
   DATABASE_DOWN: "Database unavailable",
@@ -113,6 +115,9 @@ export default function Operations() {
         Content workspace
       </Link>
       <h1 className="text-3xl font-semibold">Operations health</h1>
+      <Link className="ui-text-link" href="/admin/configuration">
+        Review warning settings
+      </Link>
       <p>
         Local service and queue monitoring. Refresh for current values; this
         page does not refresh automatically.
@@ -127,6 +132,12 @@ export default function Operations() {
       <p role="status">{status}</p>
       {view && (
         <>
+          {view.configuration_state === "UNAVAILABLE_DEFAULTS_APPLIED" && (
+            <p role="alert">
+              Saved warning settings unavailable. This snapshot uses startup
+              warning defaults.
+            </p>
+          )}
           <p>
             Sampled{" "}
             {new Intl.DateTimeFormat("en-UG", {

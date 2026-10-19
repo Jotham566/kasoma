@@ -131,6 +131,7 @@ class OperationCounts(Contract):
 
 
 AlertCode = Literal[
+    "OPERATIONS_CONFIGURATION_UNAVAILABLE",
     "REQUEST_RESPONSE_START_SLOW",
     "DATABASE_DOWN",
     "REDIS_DOWN",
@@ -185,6 +186,9 @@ class OperationsView(Contract):
     worker: Literal["up", "unavailable"]
     counts: OperationCounts | None
     thresholds: OperationThresholds
+    configuration_state: Literal[
+        "ENVIRONMENT_DEFAULTS", "VERSIONED", "UNAVAILABLE_DEFAULTS_APPLIED"
+    ] = "ENVIRONMENT_DEFAULTS"
     alerts: list[OperationAlert]
     request_timing: RequestTiming | None = None
     model_usage: ModelUsage | None = None

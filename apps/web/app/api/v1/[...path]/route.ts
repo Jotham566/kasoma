@@ -4,6 +4,7 @@ import type { components } from "@kasoma/api-client";
 import { apiUrl } from "../../../config";
 import { ExportUnavailable, fetchExport } from "../../export-stream";
 import { exportFailureLocation } from "../../../privacy/export-notice";
+import { settings as warningSettings } from "../../../admin/configuration/settings";
 
 type Credentials = components["schemas"]["Credentials"];
 const allowed: Record<string, string[]> = {
@@ -26,6 +27,7 @@ const allowed: Record<string, string[]> = {
   diagnostics: ["POST"],
   "sessions/active": ["GET"],
   "admin/operations": ["GET"],
+  "admin/configuration": ["GET"],
   "admin/audit": ["GET"],
   "admin/content-context": ["GET"],
   "admin/items": ["GET", "POST"],
@@ -133,6 +135,11 @@ async function gateway(
   if (exportJob) methods = ["GET", "POST"];
   if (channelPreservation) methods = ["POST"];
   if (exportFile) methods = ["GET"];
+  const configurationKey = path.startsWith("admin/configuration/")
+    ? path.slice("admin/configuration/".length)
+    : "";
+  const configuration = Object.hasOwn(warningSettings, configurationKey);
+  if (configuration) methods = ["PATCH"];
   if (!methods?.includes(request.method))
     return fail(404, "RESOURCE_NOT_FOUND");
   if (
@@ -155,7 +162,8 @@ async function gateway(
   try {
     let body: string | undefined;
     if (request.method !== "GET") {
-      if (Number(request.headers.get("content-length") ?? 0) > 65536)
+      const maximum = configuration ? 1024 : 65536;
+      if (Number(request.headers.get("content-length") ?? 0) > maximum)
         return fail(413, "VALIDATION_FAILED");
       const reader = request.body?.getReader();
       const decoder = new TextDecoder();
@@ -166,7 +174,7 @@ async function gateway(
           const chunk = await reader.read();
           if (chunk.done) break;
           bytes += chunk.value.byteLength;
-          if (bytes > 65536) {
+          if (bytes > maximum) {
             await reader.cancel();
             return fail(413, "VALIDATION_FAILED");
           }

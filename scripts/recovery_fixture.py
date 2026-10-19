@@ -24,6 +24,9 @@ from services.grading_publications import publish
 from services.grading_work_store import claim_next, enqueue, finish_neutral
 from services.identity import IdentityService
 from services.identity_contracts import ConsentInput, OTPRequest, OTPVerify, ProfilePatch
+from services.operations_configuration import change as change_warning_configuration
+from services.operations_configuration import read as read_warning_configuration
+from services.operations_configuration_contracts import ConfigurationPatch
 from services.providers import FakeMessagingProvider
 from services.seed import seed
 from services.short_text_eligibility import GradingScope
@@ -159,6 +162,18 @@ def populate(settings: Settings) -> RecoveryExport:
             )
         populate_short_text(identity, token, subject, topic)
         channel_authority = populate_channel_receipts(identity, token)
+        # populate_channel_receipts has already independently refused every database
+        # outside this exact generated recovery-source namespace.
+        admin_token = channel_authority.token.get_secret_value()
+        warnings = read_warning_configuration(identity, admin_token)
+        change_warning_configuration(
+            identity,
+            admin_token,
+            "failed_imports",
+            ConfigurationPatch(version=warnings.version, value=2, reason="REVIEWED_BASELINE"),
+            uuid4(),
+            uuid4(),
+        )
         populate_preservation(identity, token, channel_authority)
         export = populate_export(identity, token)
         populate_export_hold(identity, export, channel_authority)

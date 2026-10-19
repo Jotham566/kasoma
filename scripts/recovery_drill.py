@@ -15,6 +15,7 @@ from pydantic import SecretStr
 from sqlalchemy import Engine, create_engine, inspect, text
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy.orm import Session
 
 from scripts.disposable_owner import cleanup_owner, create_owner
 from scripts.recovery_channel_preservation import verify_preservation
@@ -74,7 +75,21 @@ def inventory(engine: Engine) -> dict[str, tuple[int, str]]:
 
 
 def check_guards(engine: Engine) -> None:
+    from services.domain.operations_configuration import WarningConfigurationState
+    from services.operations_configuration import recorded
+
+    with Session(engine) as db:
+        pointer = db.get(WarningConfigurationState, 1)
+        if pointer is None or pointer.current_id is None:
+            raise RuntimeError("Restored warning configuration missing")
+        view = recorded(db, pointer, pointer.current_id)
+        if view.revision != 1 or view.values.failed_imports != 2:
+            raise RuntimeError("Restored warning configuration mismatch")
     for statement in (
+        "UPDATE operations_configuration_versions SET reason='REDUCE_NOISE'",
+        "DELETE FROM operations_configuration_versions",
+        "DELETE FROM operations_configuration_state",
+        "UPDATE operations_configuration_state SET revision=0,current_id=NULL",
         "UPDATE channel_preservation_snapshots SET source_version=source_version",
         "UPDATE channel_preservation_bodies SET encrypted_payload=encrypted_payload",
         "DELETE FROM channel_preservation_bodies",

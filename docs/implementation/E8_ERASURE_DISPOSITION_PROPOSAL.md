@@ -247,3 +247,22 @@ local 0042 catalog. `make check-docs` passes with 175 Markdown files/61 requirem
 `make lint` passes, including Python/TypeScript formatting/type checks. These checks
 verify proposal documentation only; no application acceptance, migration, destructive
 execution, API/schema permission change or new retention behavior is claimed.
+
+## Proposed0043 source extension — unapproved, ADR-067 candidate
+
+The original69-table0042 baseline remains historical evidence. ADR-067 adds two shared
+controls and13 columns, observed in the isolated0043 catalog described in the factual
+inventory. A future closed manifest must cover71 tables and explicitly verify0043; a
+0042-only executor must refuse the changed source. No executor is authorized here.
+
+| Additional table | Actual primary key | Proposed action | Boundary |
+| --- | --- | --- | --- |
+| operations_configuration_versions | id | K | Global immutable numeric warning history; no learner/actor ownership |
+| operations_configuration_state | id | K | Global current pointer and preserved namespace; no subject ownership |
+
+Propose classifying exact action operations.configuration.changed as existing material
+administrative staff evidence, closure/withdrawal plus six years and applicable exact
+holds. It identifies the ADMIN actor and global configuration version; it must never be
+removed merely because that staff member also has learner records. This exact addition
+requires ADR-061 review/approval with the rest of the proposed classification; no wildcard
+or inferred erasure, retention change or exception to staff provenance is authorized.

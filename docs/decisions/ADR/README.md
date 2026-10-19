@@ -170,3 +170,7 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-066: Temporal diagnostic load profile](066-temporal-diagnostic-load-profile.md)
   records a fixed old-evidence/completed-diagnostic synthetic profile using independent
   clocks and normal OTP/domain processing, retaining all existing latency/isolation gates.
+
+- [ADR-067: Versioned operational warning configuration](067-versioned-operational-warning-configuration.md)
+  records an ADMIN/recent-auth closed numeric editor, atomic staff audit/version checks,
+  original-command retries and explicit warning-only fallback. Verification pending.

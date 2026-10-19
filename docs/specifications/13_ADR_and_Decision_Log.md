@@ -469,3 +469,11 @@ historical clocks and normal OTP re-authentication. Original/recent commands, sc
 application behavior, secrecy/consent/immutable guards and latency/deadline gates stay
 unchanged. Native and own hosted verification are separate requirements; no production,
 academic, support-access, real-data or erasure authority is inferred.
+
+## ADR-067: Versioned operational warning configuration
+
+Accepted within delegated engineering discretion; implementation verification pending.
+[Record](../decisions/ADR/067-versioned-operational-warning-configuration.md): the
+approved configuration route edits existing warning thresholds only, using immutable
+versions, ADMIN/recent OTP, exact retry authority and atomic existing staff audit.
+It grants no processing/retention/provider/academic or activation authority.

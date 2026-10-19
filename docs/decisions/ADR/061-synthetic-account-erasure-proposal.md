@@ -354,3 +354,11 @@ post-completion custody and affected-band disablement. Existing generic continue
 instructions do not silently supersede the specific ADR-057/060 exclusions. Any
 unsupported requirement remains a gap; neither approval nor tests waive real-data,
 legal/privacy/safeguarding, academic, provider, device, pilot or release acceptance.
+
+### Source drift requiring review before approval
+
+ADR-067's additive0043 configuration candidate extends the assessed source from69 to71
+tables. The source inventory and proposed disposition addendum explicitly cover the two
+shared controls and exact staff action operations.configuration.changed. Any future
+executor must validate the new source; this proposal and its addendum remain unapproved.
+Neither bounded ADR-057/060 approval nor configuration implementation grants erasure.

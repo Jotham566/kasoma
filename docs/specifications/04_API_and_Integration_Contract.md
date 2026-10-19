@@ -924,3 +924,24 @@ a fixed value and finite TTL, and does not alter canonical measurement bytes, fr
 expiry, API schema or provider execution. Current server readers must all honor the
 marker before accepting this guarantee; older readers are not covered. Capacity
 eviction stays explicitly capped, and the observations remain a best-effort subset.
+
+## ADR-067 warning-configuration implementation binding
+
+The section9 configuration route is implemented only for the15 existing numeric
+OperationThresholds keys, not secret/provider/feature/academic/retention settings.
+GET /admin/configuration returns a revision, opaque64-hex concurrency reference,
+ENVIRONMENT_DEFAULTS or VERSIONED source, complete numeric values and nullable saved time.
+Revision0 has no stored change time. First explicit change freezes all resolved values.
+
+PATCH /admin/configuration/{key} requires ADMIN, recent OTP, UUID Idempotency-Key,
+{version,value,reason}, strict integer/range validation and a1KiB body limit.
+Reasons are INCREASE_SENSITIVITY, REDUCE_NOISE or REVIEWED_BASELINE. Unknown keys/fields
+fail422 (the local web gateway refuses unknown routes404). Atomic version/audit/pointer
+commit returns {recorded,replayed}. Exact retries reauthorize and return the original
+recorded version even when newer versions exist. Reused intent or stale versions fail409;
+unavailable configuration fails503. Raw retry keys and arbitrary reason notes are not stored.
+The schema-generated OpenAPI/client define precise bounds and responses. The existing
+OperationsView adds configuration_state and OPERATIONS_CONFIGURATION_UNAVAILABLE;
+UNAVAILABLE_DEFAULTS_APPLIED labels warning-only startup fallback explicitly.
+Implementation/acceptance status is tracked in ADR-067 and current sprint, not inferred
+from this contract description. Existing processing/authorization policies remain binding.

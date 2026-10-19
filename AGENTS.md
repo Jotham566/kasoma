@@ -418,3 +418,12 @@ native profiles pass7000 HTTP/zero errors each: temporal35000 grades/START p95
 410.622ms, original2500/428.329ms, recent27500/424.046ms. Cleanup=false for all;
 recent START p991074.231ms retained. Only Markdown/aggregate evidence follows.
 Production/provider/daily soak, academic/privacy release and ADR-061 remain gated.
+
+ADR-067 bounded warning configuration is an unmerged implementation candidate under
+FR-OPS-002/003. Additive0043 plus forward0044, ADMIN/recent OTP, immutable global numeric
+versions and existing staff audit support exact retry/version authority.34 focused SQL/
+contract and three dedicated narrow/a11y browser executions pass. Partial schema fallback
+is refused; worker/API saved values agree. Normal Docker preview runs0044 with8 healthy
+services and retirement/normal learner short-text disabled. Full own frozen backend/
+browser and hosted verification remain required. ADR-061 remains proposed/unapproved;
+source inventory/disposition explicitly track the two shared configuration tables.

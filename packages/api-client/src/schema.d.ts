@@ -21,6 +21,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/configuration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Configuration */
+        get: operations["configuration_api_v1_admin_configuration_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/configuration/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Configure */
+        patch: operations["configure_api_v1_admin_configuration__key__patch"];
+        trace?: never;
+    };
     "/api/v1/admin/content-context": {
         parameters: {
             query?: never;
@@ -1274,6 +1308,48 @@ export interface components {
              * @constant
              */
             type: "SINGLE_CHOICE";
+        };
+        /**
+         * ConfigurationChange
+         * @description Recorded version, which may be older than the independently read current state.
+         */
+        ConfigurationChange: {
+            recorded: components["schemas"]["ConfigurationView"];
+            /** Replayed */
+            replayed: boolean;
+        };
+        /** ConfigurationPatch */
+        ConfigurationPatch: {
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "INCREASE_SENSITIVITY" | "REDUCE_NOISE" | "REVIEWED_BASELINE";
+            /** Value */
+            value: number;
+            /** Version */
+            version: string;
+        };
+        /** ConfigurationView */
+        ConfigurationView: {
+            /** Revision */
+            revision: number;
+            /**
+             * Schema Version
+             * @default 1
+             * @constant
+             */
+            schema_version: 1;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "ENVIRONMENT_DEFAULTS" | "VERSIONED";
+            /** Updated At */
+            updated_at: string | null;
+            values: components["schemas"]["WarningValues"];
+            /** Version */
+            version: string;
         };
         /** ConsentInput */
         ConsentInput: {
@@ -2654,7 +2730,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "MODEL_GATEWAY_VOLUME" | "OTP_ADAPTER_FAILURES" | "EXPORT_FAILED" | "EXPORT_STALLED" | "RETIREMENT_FAILED" | "RETIREMENT_STALLED";
+            code: "OPERATIONS_CONFIGURATION_UNAVAILABLE" | "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "MODEL_GATEWAY_VOLUME" | "OTP_ADAPTER_FAILURES" | "EXPORT_FAILED" | "EXPORT_STALLED" | "RETIREMENT_FAILED" | "RETIREMENT_STALLED";
             /** Observed */
             observed: number;
             /**
@@ -2751,6 +2827,12 @@ export interface components {
         OperationsView: {
             /** Alerts */
             alerts: components["schemas"]["OperationAlert"][];
+            /**
+             * Configuration State
+             * @default ENVIRONMENT_DEFAULTS
+             * @enum {string}
+             */
+            configuration_state: "ENVIRONMENT_DEFAULTS" | "VERSIONED" | "UNAVAILABLE_DEFAULTS_APPLIED";
             counts: components["schemas"]["OperationCounts"] | null;
             /**
              * Generated At
@@ -3645,6 +3727,75 @@ export interface components {
             /** Version */
             version: number;
         };
+        /** WarningValues */
+        WarningValues: {
+            /**
+             * Channel Dispatch Min Samples
+             * @default 20
+             */
+            channel_dispatch_min_samples: number;
+            /**
+             * Channel Dispatch P95 Ms
+             * @default 1500
+             */
+            channel_dispatch_p95_ms: number;
+            /**
+             * Channel Failures
+             * @default 1
+             */
+            channel_failures: number;
+            /**
+             * Channel Queue Age Seconds
+             * @default 60
+             */
+            channel_queue_age_seconds: number;
+            /**
+             * Export Age Seconds
+             * @default 300
+             */
+            export_age_seconds: number;
+            /**
+             * Export Failures
+             * @default 1
+             */
+            export_failures: number;
+            /** Failed Imports */
+            failed_imports: number;
+            /**
+             * Grading Age Seconds
+             * @default 60
+             */
+            grading_age_seconds: number;
+            /** Import Age Seconds */
+            import_age_seconds: number;
+            /**
+             * Model Gateway Attempts
+             * @default 100
+             */
+            model_gateway_attempts: number;
+            /**
+             * Otp Failures
+             * @default 1
+             */
+            otp_failures: number;
+            /**
+             * Request Min Samples
+             * @default 20
+             */
+            request_min_samples: number;
+            /**
+             * Request P95 Ms
+             * @default 500
+             */
+            request_p95_ms: number;
+            /**
+             * Retirement Stall Seconds
+             * @default 600
+             */
+            retirement_stall_seconds: number;
+            /** Unresolved Flags */
+            unresolved_flags: number;
+        };
         /** WebhookAccepted */
         WebhookAccepted: {
             /**
@@ -3701,6 +3852,153 @@ export interface operations {
             };
             /** @description Too Many Requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    configuration_api_v1_admin_configuration_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfigurationView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    configure_api_v1_admin_configuration__key__patch: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                key: "request_p95_ms" | "request_min_samples" | "failed_imports" | "import_age_seconds" | "unresolved_flags" | "channel_failures" | "channel_queue_age_seconds" | "channel_dispatch_p95_ms" | "channel_dispatch_min_samples" | "otp_failures" | "model_gateway_attempts" | "grading_age_seconds" | "export_failures" | "export_age_seconds" | "retirement_stall_seconds";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfigurationPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfigurationChange"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

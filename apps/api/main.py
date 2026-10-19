@@ -17,7 +17,7 @@ from apps.api.export_jobs import router as export_jobs_router
 from apps.api.flags import router as flags_router
 from apps.api.grading_reviews import router as grading_reviews_router
 from apps.api.identity import router
-from apps.api.import_limit import ImportBodyLimit
+from apps.api.import_limit import ConfigurationBodyLimit, ImportBodyLimit
 from apps.api.operations import router as operations_router
 from apps.api.whatsapp import router as whatsapp_router
 from apps.api.whatsapp import webhook_router
@@ -114,6 +114,7 @@ def create_app(
     app.include_router(whatsapp_router)
     app.include_router(webhook_router)
     app.add_middleware(ImportBodyLimit)
+    app.add_middleware(ConfigurationBodyLimit)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[settings.app_public_url] if settings else [],

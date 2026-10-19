@@ -1,5 +1,24 @@
 # Changelog
 
+## Versioned operational warning configuration - implementation candidate
+
+FR-OPS-002/003, NFR-SEC-002/OBS-001/ACC-001/LOC-001/MNT-001: ADR-067 closes the
+missing configuration route for the15 existing numeric warning thresholds only.
+Additive0043 records immutable complete versions with a preserved namespace nonce,
+atomic existing staff audit and a monotonic current pointer. ADMIN/recent OTP,
+strict values, exact version checks and audit-backed retry authority apply. API and
+worker warning snapshots resolve the same saved values; unavailable configuration
+is explicitly labelled when startup warning defaults apply. Hard processing limits,
+consent/retention/provider controls and feature activation are outside this allowlist.
+
+An Operations-linked editor preserves an uncertain command for exact retry and requires
+fresh review after conflicts. The first30 contract/SQL/concurrency/authorization checks
+pass locally; the expanded34-case suite and dedicated three-engine journey now pass.
+Forward0044 tightens single-key/prior-reference SQL guards. Full regression and own hosted
+verification remain in progress.
+This candidate has no own hosted acceptance and is not ready for main promotion.
+See [readiness](docs/implementation/E8_OPERATIONS_CONFIGURATION_READINESS.md).
+
 ## Verified temporal diagnostic and history load profile
 
 Complete hosted [39313955470](https://github.com/Jotham566/kasoma/actions/runs/39313955470)

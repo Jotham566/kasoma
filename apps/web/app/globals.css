@@ -822,3 +822,32 @@ select.ui-input:not([multiple]):not([size]) {
   background-size: 1rem;
   padding-inline-end: 2.25rem;
 }
+
+.configuration-page,
+.configuration-page .operations-section,
+.configuration-page fieldset {
+  min-inline-size: 0;
+}
+.configuration-page {
+  overflow-wrap: anywhere;
+}
+.configuration-page fieldset {
+  border: 1px solid var(--kasoma-line);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+.configuration-page legend {
+  max-inline-size: 100%;
+  font-weight: 600;
+}
+.configuration-page .ui-input,
+.configuration-page .ui-select {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  inline-size: 100%;
+}
+
+.configuration-page select {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

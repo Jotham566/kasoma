@@ -16,6 +16,8 @@ from services.domain.flags import ContentFlag
 from services.health import Health, dependency_health
 from services.identity import IdentityError, IdentityService
 from services.observability import logger
+from services.operations_configuration import current as current_configuration
+from services.operations_configuration import defaults as configuration_defaults
 from services.operations_contracts import (
     Count,
     ExportCounts,
@@ -33,24 +35,7 @@ from services.staff import authorize
 
 
 def thresholds(identity: IdentityService) -> OperationThresholds:
-    settings = identity.settings
-    return OperationThresholds(
-        request_p95_ms=settings.ops_request_p95_ms,
-        request_min_samples=settings.ops_request_min_samples,
-        failed_imports=settings.ops_failed_import_threshold,
-        import_age_seconds=settings.ops_import_age_seconds,
-        unresolved_flags=settings.ops_flag_backlog_threshold,
-        channel_failures=settings.ops_channel_failure_threshold,
-        channel_queue_age_seconds=settings.ops_channel_queue_age_seconds,
-        channel_dispatch_p95_ms=settings.ops_channel_dispatch_p95_ms,
-        channel_dispatch_min_samples=settings.ops_channel_dispatch_min_samples,
-        grading_age_seconds=settings.ops_grading_age_seconds,
-        model_gateway_attempts=settings.ops_model_gateway_attempts_threshold,
-        otp_failures=settings.ops_otp_failures_threshold,
-        export_failures=settings.ops_export_failure_threshold,
-        export_age_seconds=settings.ops_export_age_seconds,
-        retirement_stall_seconds=settings.export_retirement_interval_seconds * 2,
-    )
+    return configuration_defaults(identity.settings)
 
 
 def bounded_count(db: Session, query: Select[tuple[int]]) -> Count:
@@ -305,6 +290,10 @@ def heartbeat(identity: IdentityService, *, write: bool = False) -> Literal["up"
 def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> OperationsView:
     health = dependency_health(identity.settings)
     values = None
+    limits = thresholds(identity)
+    configuration_state: Literal[
+        "ENVIRONMENT_DEFAULTS", "VERSIONED", "UNAVAILABLE_DEFAULTS_APPLIED"
+    ] = "UNAVAILABLE_DEFAULTS_APPLIED"
     if health.database == "up":
         try:
             with Session(identity.engine) as db:
@@ -312,10 +301,16 @@ def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> Opera
                 from services.export_retirement_health import retirement_counts
 
                 values.retirement = retirement_counts(db, identity.settings)
+                try:
+                    configuration = current_configuration(db, identity.settings)
+                    limits = configuration.values
+                    configuration_state = configuration.source
+                except Exception:
+                    # Only warning defaults apply here; no processing/security policy.
+                    configuration_state = "UNAVAILABLE_DEFAULTS_APPLIED"
         except Exception:
             health = health.model_copy(update={"database": "down", "status": "degraded"})
     worker = heartbeat(identity, write=worker_sample)
-    limits = thresholds(identity)
     timing = request_timing(identity)
     usage = model_usage(identity)
     otp = otp_dispatch(identity)
@@ -325,11 +320,21 @@ def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> Opera
         worker=worker,
         counts=values,
         thresholds=limits,
+        configuration_state=configuration_state,
         alerts=evaluate(health, worker, values, limits, timing, usage, otp),
         otp_dispatch=otp,
         model_usage=usage,
         request_timing=timing,
     )
+    if configuration_state == "UNAVAILABLE_DEFAULTS_APPLIED":
+        view.alerts.append(
+            OperationAlert(
+                code="OPERATIONS_CONFIGURATION_UNAVAILABLE",
+                severity="WARNING",
+                observed=1,
+                threshold=1,
+            )
+        )
     if otp is not None:
         view.unavailable_metrics = [m for m in view.unavailable_metrics if m != "OTP_DISPATCH"]
     if usage is not None:
