@@ -1,8 +1,8 @@
-# E9 isolated database and private-object recovery - candidate
+# E9 isolated database and private-object recovery
 
 Requirements: NFR-REL-002, NFR-SEC-002, NFR-MNT-001.
 Decision: [ADR-065](../decisions/ADR/065-isolated-database-object-recovery.md).
-Status: final local engineering/real recovery checks pass; own complete hosted verification pending.
+Status: complete exact-source hosted and local engineering verification pass; production recovery remains gated.
 
 ## Scope and evidence
 
@@ -130,3 +130,20 @@ finds no remaining recovery containers; it authorizes no prefix-based cleanup.
 No cache, application volume or unrelated resource has been removed. Only Markdown
 closeout follows the new hosted candidate. Remaining academic/privacy/provider,
 production, physical-device and explicit ADR-061 approval gates stay open.
+
+## Verified database and private-object recovery
+
+Complete hosted [39311093503](https://github.com/Jotham566/kasoma/actions/runs/39311093503)
+succeeds at exact source29f1ddc8c57d8bbb2c0dae138c6dcb233972c2f5:1,239 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused checks and
+all setup/migration/role/quality/contracts/build/security/image/service gates.
+The separate actual database/MinIO recovery restores69 tables/686 rows and one
+42,084-byte encrypted object in241ms, with both source services stopped. Exact
+storage scope, missing/corrupt-object rejection, immutable guards and cleanup pass.
+The unchanged logical restore separately passes504ms. Retirement execution remains denied.
+
+This accepts ADR-065's isolated synthetic engineering rehearsal under NFR-REL-002,
+NFR-SEC-002 and NFR-MNT-001. Production PITR, concurrent backup consistency, regional
+copies, escrow and RPO/RTO remain unproved. Only Markdown integration/closeout follows
+the verified source; the temporal-load candidate still needs its own complete hosted
+acceptance. No ADR-061 approval or production release is inferred.

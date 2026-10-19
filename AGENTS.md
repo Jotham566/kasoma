@@ -346,6 +346,7 @@ quality/build/contracts/security; final real restore147ms cleans successfully. O
 complete hosted verification remains pending.
 No production PITR/RPO/RTO, developer data cleanup or ADR-061 authority is inferred.
 
+
 ADR-063 OTP observations pass complete hosted39304052749 at exactceee401:1,171
 unit/contract,498 integration,35 tooling and114 browser executions plus all focused
 and engineering gates. Logical recovery69 tables/686 rows892ms cleans successfully;
@@ -359,3 +360,15 @@ recovery exactsource29f1ddc is pushed for own live39311093503; metric-loss sourc
 b5557a3 stays unchanged for live39308594889. Only Markdown closeout follows these
 heads; neither pending feature is accepted yet. Docker8/8healthy; read-only
 ownership-label audit finds no leftover recovery containers.
+
+ADR-064 known metric-loss windows pass complete hosted39308594889 at b5557a3:
+1,180 unit/contract,502 integration,35 tooling,114 full browser executions plus
+all focused/engineering gates. Logical69-table/686-row restore425ms cleans without
+failure and retirement stays denied. Only Markdown follows that verified tree;
+object-recovery and temporal-load candidates need separate own acceptance.
+
+ADR-065 exact29f1ddc passes complete hosted39311093503:1,239 unit/contract,502
+integration,35 tooling,114 browser executions and all engineering gates. Actual
+quiescent database/MinIO restore69 tables/686 rows/one42,084-byte object241ms verifies
+sources stopped, integrity/failure probes and empty cleanup. Logical restore504ms.
+Only Markdown follows. Production recovery and ADR-061 remain unapproved.

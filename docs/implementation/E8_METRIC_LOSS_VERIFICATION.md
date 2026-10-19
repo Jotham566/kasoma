@@ -1,8 +1,8 @@
-# Known metric-export loss - candidate verification
+# Known metric-export loss - verification
 
 Requirements: FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-MNT-001.
 Decision: [ADR-064](../decisions/ADR/064-known-metric-export-loss-windows.md).
-Status: local targeted and engineering checks pass; own full hosted acceptance pending.
+Status: local and complete exact-source hosted engineering verification pass.
 
 ## Reproduced defect
 
@@ -97,3 +97,27 @@ not native Edge, screen-reader, physical/mobile or current/previous branded acce
 
 Only Markdown closeout follows b5557a3 locally while its remote runtime head remains
 fixed. No application acceptance is inferred from this closeout.
+
+## Complete own hosted acceptance
+
+[39308594889](https://github.com/Jotham566/kasoma/actions/runs/39308594889) completes
+SUCCESS at exact b5557a373f42bf24241f7034d4068b0d1a86da3f. Required steps succeed;
+optional registry authentication remains the expected credential-absent skip.
+
+- 1,180 unit/contract,502 integration (979.08s),35 tooling.
+- 114 full browser executions:102 ordinary/12 synthetic short-text, plus three
+  staff-content,three native WebKit attachment,12 interception,nine stable assessment,
+  eight reviewed-rubric and one actual restricted-login focused controls.
+- Setup/migration/seed, formatting/lint/types, unchanged generated contracts/build,
+  dependency/source/image security and owned export/request/model/service smoke pass.
+- Logical restore verifies69 tables/686 rows in425ms, exact encrypted evidence,
+  retirement denial and cleanup_failed empty. Object-storage recovery and production
+  RPO/RTO remain false in this logical drill.
+
+The two reproduced real SDK/Redis failures, corrected fixtures and phased earlier
+results remain above. This accepts the bounded known-loss change, not a complete fleet
+ledger or billing guarantee. All current readers must honor the marker; production/
+mixed-version rollout remains unapproved. Only Markdown closeout/integration of the
+verified OTP parent's main557f90f follows b5557a3. Source29f1ddc object recovery and
+8a4e09a temporal tooling require their own full acceptance. No ADR-061, academic,
+privacy/provider, physical-device or production release gate is inferred closed.

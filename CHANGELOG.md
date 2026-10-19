@@ -1,5 +1,23 @@
 # Changelog
 
+## Verified database and private-object recovery
+
+Complete hosted [39311093503](https://github.com/Jotham566/kasoma/actions/runs/39311093503)
+succeeds at exact source29f1ddc8c57d8bbb2c0dae138c6dcb233972c2f5:1,239 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused checks and
+all setup/migration/role/quality/contracts/build/security/image/service gates.
+The separate actual database/MinIO recovery restores69 tables/686 rows and one
+42,084-byte encrypted object in241ms, with both source services stopped. Exact
+storage scope, missing/corrupt-object rejection, immutable guards and cleanup pass.
+The unchanged logical restore separately passes504ms. Retirement execution remains denied.
+
+This accepts ADR-065's isolated synthetic engineering rehearsal under NFR-REL-002,
+NFR-SEC-002 and NFR-MNT-001. Production PITR, concurrent backup consistency, regional
+copies, escrow and RPO/RTO remain unproved. Only Markdown integration/closeout follows
+the verified source; the temporal-load candidate still needs its own complete hosted
+acceptance. No ADR-061 approval or production release is inferred.
+
+
 ## Isolated database/private-object recovery - candidate
 
 NFR-REL-002, NFR-SEC-002/MNT-001: ADR-065 adds a separate synthetic rehearsal with
@@ -11,6 +29,21 @@ Final local checks pass1,239 unit/contract,35 tooling,59 focused controls,
 contracts/security and real restore pass. Own full hosted verification remains pending; production PITR, regional copies and RPO/RTO remain unproved.
 [Verification](docs/implementation/E9_OBJECT_RECOVERY_VERIFICATION.md). Source29f1ddc is pushed for own
 full hosted39311093503, confirmed live; keep its remote head unchanged.
+
+## Verified known-export-loss metric windows
+
+Complete hosted [39308594889](https://github.com/Jotham566/kasoma/actions/runs/39308594889)
+succeeds at exact source b5557a373f42bf24241f7034d4068b0d1a86da3f:1,180 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused and all
+setup/migration/role/quality/contracts/build/security/image/service gates. Logical
+recovery verifies69 tables/686 rows in425ms with cleanup empty and retirement denied.
+
+This accepts ADR-064's finite namespace loss guard under FR-OPS-002 and NFR-OBS-001/
+SEC-002/MNT-001. Known export loss cannot recover as measured zero; stored payloads,
+scopes and expiry stay unchanged. All server readers must honor the marker; no mixed-
+version or production rollout/completeness/billing claim. Only Markdown follows the
+verified source. Object-recovery/temporal-load candidates need their own acceptance.
+[Verification](docs/implementation/E8_METRIC_LOSS_VERIFICATION.md).
 
 
 ## Known request/model metric loss - candidate
