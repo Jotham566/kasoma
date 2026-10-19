@@ -2,12 +2,18 @@
 
 ## Active synthetic retirement operations candidate
 
-FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001 / NFR-ACC-001:
+FR-ID-006 / FR-OPS-002/003 / BR-010 / NFR-SEC-002 / NFR-MNT-001 / NFR-ACC-001:
 [private executor operations evidence](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
 maps separate credential provisioning, restricted authentication, parameter-free queue,
 default-off scheduler, finite count-only observations, ADMIN health and responsive
 read-only UI to runtime, integration, contract and browser checks. Migration 0042 is
-additive. Full verification remains pending; no review purge or account erasure.
+additive. Local full verification passes 1,112 unit/contract, 465 integration,
+35 tooling and 108 browser executions, plus recovery/security/image/service checks.
+Exact source `94b40a6` fails hosted39243195783 in one Chromium channel interception
+socket reset, after all 465 hosted integration and 1,112 unit/contract cases pass.
+The FR-WA-001/004/006 / NFR-MNT-001 / NFR-SEC-002 correction adds guarded single-reset
+transport handling, private failure diagnostics and exact committed-code/key assertions.
+Complete hosted acceptance and main promotion remain pending. No review purge or account erasure.
 
 ## Verified bounded synthetic completed-EXPORT kernel
 

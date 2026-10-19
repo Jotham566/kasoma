@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { createHmac, randomUUID } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
+import { fetchCommitted } from "./support/committed-intercept";
 
 test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unlink retry", async ({
   page,
@@ -41,12 +42,22 @@ test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unli
     fullPage: true,
   });
   let lostCode = false;
+  let committedCode = "";
+  let codeKey = "";
   await page.route("**/api/v1/channels/whatsapp/link-code", async (route) => {
     if (!lostCode) {
       lostCode = true;
-      expect((await route.fetch()).status()).toBe(201);
+      codeKey = route.request().headers()["idempotency-key"];
+      const committed = await fetchCommitted(route);
+      expect(committed.status()).toBe(201);
+      committedCode = (await committed.json()).code;
       await route.abort();
-    } else await route.continue();
+    } else {
+      expect(route.request().headers()["idempotency-key"] === codeKey).toBe(
+        true,
+      );
+      await route.continue();
+    }
   });
   await page.getByRole("button", { name: "Get a link code" }).click();
   await expect(page.getByRole("status")).toContainText(
@@ -54,6 +65,7 @@ test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unli
   );
   await page.getByRole("button", { name: "Retry code request" }).click();
   const instruction = await page.locator("code").innerText();
+  expect(instruction === `LINK ${committedCode}`).toBe(true);
   expect(instruction).toMatch(/^LINK [0-9A-F]{12}$/);
   const expiry = page.getByRole("region", { name: "One-time link code" });
   await expect(expiry).toContainText("(Kampala). Keep this code private.");
@@ -150,7 +162,7 @@ test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unli
   await page.route("**/api/v1/channels/whatsapp/link", async (route) => {
     if (route.request().method() === "DELETE" && !lostUnlink) {
       lostUnlink = true;
-      expect((await route.fetch()).status()).toBe(200);
+      expect((await fetchCommitted(route)).status()).toBe(200);
       await route.abort();
     } else await route.continue();
   });

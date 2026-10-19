@@ -17,8 +17,13 @@ pass after power recovery, with all eight services healthy and state false on 00
 The operations candidate remains separate; no scheduled executor is enabled.
 Its 25 focused cases, 1,112 unit/contract and 35 tooling cases, six focused three-engine
 browser journeys and 69-table/686-row logical recovery pass locally. The native spawn
-registration defect is fixed by a private AppLoader; full backend/browser/hosted gates
-remain pending.
+registration defect is fixed by a private AppLoader. Final full native verification
+passes 465 integration and 108 browser executions, plus image/security/service gates;
+source `94b40a6` fails hosted39243195783 in one Chromium `route.fetch` socket reset
+during interception; commit status is unknown. All hosted backend/role/recovery/UI/transport gates preceding
+that browser step pass. A bounded, guarded test-transport correction and exact
+committed-code/retry-key checks are in verification; no application policy changes
+or main promotion occur. Complete hosted acceptance remains pending. Review stack is now 0042 with persisted retirement false.
 
 ## Verified synthetic SQL retirement kernel
 

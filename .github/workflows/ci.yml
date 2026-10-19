@@ -69,6 +69,8 @@ jobs:
         env:
           KASOMA_E2E_BROWSER: webkit
         run: make test-export-download-control
+      - name: Verify bounded synthetic commit interception
+        run: make test-commit-interception
       - run: make services migrate seed
       - run: make test-reviewed-rubrics
       - run: make recovery-drill

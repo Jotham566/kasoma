@@ -1401,3 +1401,14 @@ aggregate cache/UI observations are not an acceptance or compliance record.
 See [candidate verification](../implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
 for exact results and limitations. Production/privacy authority, full preservation,
 account erasure and finite disposal of other audit classes remain separate release gates.
+
+### Synthetic lost-response interception controls
+
+`make test-commit-interception` runs three-engine loopback reset/HTTP/missing-key
+controls; `make test-web-whatsapp` runs the real local fake-channel journey in each
+engine. The interception helper retries one ECONNRESET only for a UUID-keyed local
+API mutation, retaining its exact body and headers. It never retries an HTTP error,
+follows redirects or changes application/test retry policy. Persistent failure is
+reported through a fixed diagnostic without request headers. The channel test still
+confirms the first committed response before aborting it and verifies exact code/key
+recovery. A failed hosted attempt remains failed until a complete corrected run passes.

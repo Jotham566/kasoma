@@ -162,7 +162,10 @@ Hosted recovery verifies 69 tables/686 rows in 713 ms. The interrupted local ful
 run is not a pass; existing volumes/images recover without data/cache cleanup. State remains
 false and scope excludes review public. Separate executor operations with additive0042,
 private configuration/AppLoader, finite count-only health and accessible UI are in
-verification: 25 focused cases and 69-table/686-row recovery pass; full gates remain pending; ADR-057 does not authorize account erasure.
+verification: 25 focused cases, 1,112 unit/contract, 465 integration, 108 browser
+executions and 69-table/686-row recovery pass locally. Hosted39243195783 at `94b40a6`
+passes backend gates but fails one Chromium intercepted transport reset; a bounded
+synthetic-only harness correction is in verification. Complete hosted gates remain pending; ADR-057 does not authorize account erasure.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

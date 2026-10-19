@@ -289,7 +289,7 @@ test-export-download:
 
 .PHONY: test-export-download-control
 test-export-download-control:
-	$(PNPM) exec playwright test --config=playwright.export-control.config.ts
+	$(PNPM) exec playwright test tests/browser-control/download.spec.ts --config=playwright.export-control.config.ts
 
 .PHONY: test-export-download-control-linux
 test-export-download-control-linux:
@@ -299,7 +299,7 @@ test-export-download-control-linux:
 		-v "$(CURDIR)/tests/browser-control:/work/tests/browser-control:ro" \
 		-v "$(CURDIR)/playwright.export-control.config.ts:/work/playwright.export-control.config.ts:ro" \
 		-w /work mcr.microsoft.com/playwright@sha256:6446946a1d9fd62d9ae501312a2d76a43ee688542b21622056a372959b65d63d \
-		node node_modules/@playwright/test/cli.js test --config=playwright.export-control.config.ts --output=/tmp/control-results
+		node node_modules/@playwright/test/cli.js test tests/browser-control/download.spec.ts --config=playwright.export-control.config.ts --output=/tmp/control-results
 
 .PHONY: test-firefox-native-download
 test-firefox-native-download:
@@ -458,3 +458,13 @@ export KASOMA_RETIREMENT_CONFIG KASOMA_RETIREMENT_SCHEMA
 .PHONY: test-retirement-runtime
 test-retirement-runtime:
 	$(UV) pytest tests/contract/test_retirement_executor_contract.py tests/integration/test_export_retirement_runtime.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-commit-interception test-web-whatsapp
+test-commit-interception:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/browser-control/committed-intercept.spec.ts --config=playwright.export-control.config.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/browser-control/committed-intercept.spec.ts --config=playwright.export-control.config.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/browser-control/committed-intercept.spec.ts --config=playwright.export-control.config.ts
+test-web-whatsapp:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/whatsapp.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/whatsapp.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/whatsapp.spec.ts

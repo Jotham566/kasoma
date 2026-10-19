@@ -175,3 +175,15 @@ database resource measurements or production acceptance.
 ## 10. Post-release validation
 
 Within 24 hours review errors, feedback latency, duplicate rate, grade fallbacks, content flags, AI cost and mastery lag. Within the pilot window review diagnostic completion, recommended-session completion, unseen reassessment gain and learner/teacher feedback.
+
+## Bounded synthetic commit interception controls
+
+FR-WA-001/004/006, NFR-SEC-002 and NFR-MNT-001: local lost-response harnesses may use
+`fetchCommitted` only for loopback API POST/DELETE with a canonical UUID idempotency
+key. A single transport ECONNRESET may replay identical body/headers; HTTP errors,
+redirects and whole-test retries are excluded. Persistent failures withhold raw
+request diagnostics. Application retry semantics remain unchanged. Four deterministic
+loopback controls per browser engine prove single-reset recovery, persistent refusal,
+HTTP503 non-retry and missing-key refusal; exact committed code/key recovery remains
+asserted by the channel journey. Use `make test-commit-interception` and
+`make test-web-whatsapp`; complete hosted release gates are still mandatory.
