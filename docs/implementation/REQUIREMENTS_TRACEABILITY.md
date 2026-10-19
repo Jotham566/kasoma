@@ -1,18 +1,21 @@
 # Requirements Traceability
 
-## Restricted completed-EXPORT SQL candidate — not accepted
+## Verified bounded synthetic completed-EXPORT kernel
 
 FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
 [SQL retirement evidence](E8_EXPORT_RETIREMENT_VERIFICATION.md) records approved
 ADR-060's exact four-table due/hold policy, actual EXECUTE-only LOGIN boundary,
-default-off isolated scope, bounded fair scanning and atomic minimized audit.
-Final 31 focused,10 existing hold and 3 byte-recovery cases, six browser journeys,
-1,096 unit/contract and 35 tooling, types/contracts/security/build/image scans pass.
-The full 456-case local integration suite is running and not counted as a pass. Clean/populated
-migration and 69-table/686-row recovery include stripped-owner execution denial.
-Full local/hosted acceptance, scheduler/configuration/health and other lifecycle/
-external release gates remain pending. No review-stack purge or account erasure.
-
+default-off isolated scope, fair 100/200 bounds and atomic minimized audit.
+Complete hosted [39234377840](https://github.com/Jotham566/kasoma/actions/runs/39234377840)
+passes at `e5d3d98`: 1,096 unit/contract, 456 integration, 35 tooling, 108 browser
+executions and complete role/recovery/security/image/service gates. Hosted recovery
+verifies 69 tables/686 rows in 713 ms and refuses stripped-owner execution.
+[Exact holds](E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md) separately pass complete
+hosted 39232307831 at `be2735e` (425 integration); the prior recovery-helper failure
+is corrected without relaxing tests. The later local full SQL run is interrupted,
+not accepted as a pass. Executor configuration/scheduling/health, other lifecycle
+classes and external release gates remain pending. No review-stack purge, real-data
+processing or account erasure is authorized or enabled.
 
 ## Verified profile presentation correction
 

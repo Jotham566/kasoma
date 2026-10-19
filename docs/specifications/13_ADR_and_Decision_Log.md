@@ -406,3 +406,8 @@ The approved bounded synthetic slice covers due completed EXPORT accountability,
 two exact hold targets, restricted SQL execution and finite retry semantics. No
 real-data processing, account-erasure or production activation is granted.
 Implementation acceptance requires the decision’s migration, role and test gates.
+
+ADR-060 preservation and SQL kernel sources `be2735e` and `e5d3d98` pass complete
+hosted39232307831/39234377840 respectively. The latter passes456 integration and108
+browser executions. Executor operations remain pending; review state stays false.
+These are bounded synthetic engineering results, not real-data/erasure or release approval.

@@ -1,7 +1,7 @@
 # E8 exact export evidence preservation foundation
 
 Requirements: FR-ID-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001.
-Status: implementation candidate; complete acceptance pending.
+Status: exact hold foundation verified by complete hosted39232307831 at `be2735e`.
 
 ## Authorization and boundary
 
@@ -138,3 +138,15 @@ and passes without changing assertions. `make recovery-drill lint openapi-check
 security` passes: 68 tables/685 rows, exact receipt hold, 312-ms logical restore,
 format/types/contracts, secret boundaries and dependency audits. Publish corrected
 source for a new complete hosted run; full acceptance is still pending.
+
+## Corrected complete hosted acceptance
+
+[39232307831](https://github.com/Jotham566/kasoma/actions/runs/39232307831) succeeds
+at exact corrected source `be2735eb9653b23a06ea6c66fdd11e52918f671f`: 1,094
+unit/contract, 425 integration, 35 tooling and 108 browser executions plus all
+UI/native transport, role, migration/seed, contract/type/build, security/image and
+container-smoke gates. Populated recovery verifies 68 tables/685 rows in 602 ms.
+The earlier 422-pass/three-failure local result remains failed, and5fa939d's cancelled
+hosted run is not accepted. This corrects the fixture regression while retaining
+byte-damage and exact-hold recovery checks. The descendant SQL kernel separately
+passes complete hosted39234377840 at `e5d3d98`; no real-data or account-erasure approval.

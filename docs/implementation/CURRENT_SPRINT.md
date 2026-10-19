@@ -6,45 +6,37 @@ Updated 19 October 2026. This is not a completed MVP or production-release decla
 [the current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md)
 preserve the evidence and boundaries.
 
-## Current SQL retirement candidate
+## Verified synthetic SQL retirement kernel
 
-The [ADR-060 SQL capability](E8_EXPORT_RETIREMENT_VERIFICATION.md) is in verification:
-additive 0041, minimal NOLOGIN owner and EXECUTE-only maintenance boundary, independent
-eligibility/hold guards, fair 100/200 bounds, explicit parent/leaf locking and atomic
-count-only audit. The default-disabled scope guard rejects review public/production.
-Final 31 focused cases plus10 hold and 3 byte-recovery regressions pass; all six
-three-engine privacy journeys, 1,096 unit/contract and 35 tooling, types/contracts/
-security/build/image scans pass. The full 456-case local integration suite is running. Migration,
-seed and logical recovery pass 69 tables/686 rows in 423 ms, including fail-closed
-execution after stripped ownership. Scheduling/configuration/health and full source
-acceptance remain pending. The running review stack remains disabled.
+Approved ADR-060 implementation through source `e5d3d986a66d37fb4e3ee294065c92173777c5dd`
+passes complete hosted [39234377840](https://github.com/Jotham566/kasoma/actions/runs/39234377840):
+1,096 unit/contract, 456 integration, 35 tooling and 108 browser executions, plus
+staff UI/native transport controls, actual restricted logins, migration/seed,
+contracts/types/build, recovery, security/image scans and container smoke. Recovery
+verifies 69 tables/686 rows in 713 ms, including exact receipt holds and refused
+retirement after stripped ownership. The [SQL evidence](E8_EXPORT_RETIREMENT_VERIFICATION.md)
+records its four-table scope, bounds and default-disabled isolated execution.
 
-The corrected foundation source `be2735e` is running complete hosted39232307831;
-old5fa939d/39229138880 is cancelled after its known three local fixture failures.
-No passing full regression is claimed for either pending candidate.
+The corrected [hold foundation](E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md) separately
+passes complete hosted [39232307831](https://github.com/Jotham566/kasoma/actions/runs/39232307831)
+at `be2735e`: 1,094 unit/contract, 425 integration, 35 tooling, 108 browser executions
+and all engineering gates; logical recovery is 68 tables/685 rows in 602 ms.
+Old `5fa939d`/39229138880 remains cancelled after its known three local recovery-helper
+failures. The corrected fixture retains all original corruption assertions.
 
-## Current approved implementation
+The local full SQL suite was interrupted near its final WhatsApp tests when the
+local processes and Docker services stopped. It has no terminal success and is not
+counted as a pass. PostgreSQL and all eight services have recovered with existing
+volumes/images; no application data, SDK or cache cleanup occurs. Schema is 0041,
+retirement state remains false and review public is excluded. Executor operations
+are a separate unfinished implementation; no scheduled executor is enabled.
 
-ADR-060 now has explicit bounded synthetic approval (19 October 2026). The
-[exact export evidence hold foundation](E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md)
-is under verification: additive 0039/0040 receipt UUIDs, two independently guarded exact
-targets, bounded claimed-case lookup and accessible controls. Creation stays false;
-no retirement processor, account erasure or review-stack purge is introduced.
-Source `5fa939d` is pushed on `codex/export-evidence-holds` and running complete
-hosted [39229138880](https://github.com/Jotham566/kasoma/actions/runs/39229138880).
-Ten focused integration cases, 1,094 unit/contract, 35 tooling, 15 consolidated
-privacy/identity browser executions, contracts/types/security/build and populated
-exact-hold recovery pass. The full local 425-case suite ends with 422 passes and three existing byte-recovery
-fixture failures (new mandatory authority argument). A correction separates authorized
-hold population from the original byte-export helper. All three corrected recovery
-cases and the complete exact-hold drill (68 tables/685 rows, 312 ms), lint/types/
-contracts/security pass. A fresh hosted source is required before promotion.
-This candidate is not accepted or promoted to main until full verification passes.
-Provider isolation is verified and published through main `41cbcc6`; its merged
-branch is removed locally/remotely. UI source `44ae9ad` passes complete hosted 39222489376 and is published through
-main `29eaeee`; its merged branch is removed locally/remotely.
+Only Markdown acceptance closeout follows the exact tested SQL/code/test/Makefile/
+workflow tree. Full preservation, other retention classes, account erasure, real-data
+and external academic/privacy/provider/production release gates remain incomplete.
+Provider and UI corrections are already verified/published through main `29eaeee`.
 
-## Latest verified engineering source
+## Earlier verified load source
 
 Load tooling/test source `6b06c53` passes complete hosted
 [39217860618](https://github.com/Jotham566/kasoma/actions/runs/39217860618): 1,092

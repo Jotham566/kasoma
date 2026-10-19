@@ -1,7 +1,8 @@
 # E8 bounded synthetic export accountability retirement
 
 Requirements: FR-ID-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001.
-Status: SQL capability candidate; complete integration/hosted acceptance pending.
+Status: SQL capability verified at `e5d3d98` by complete hosted39234377840.
+Executor operations and real-data/release acceptance remain separate.
 
 ## Authority and exact scope
 
@@ -141,3 +142,22 @@ A complete local `make test` is running with 456 integration cases; it is not a 
 Full hosted acceptance and the pending configuration/scheduler/health step remain
 required. The review stack remains healthy on 0041, default disabled; no application
 volumes or review-stack records are removed.
+
+## Complete hosted acceptance and local interruption
+
+[39234377840](https://github.com/Jotham566/kasoma/actions/runs/39234377840) succeeds
+at exact source `e5d3d986a66d37fb4e3ee294065c92173777c5dd`: 1,096 unit/contract,
+456 integration, 35 tooling and 108 browser executions, plus staff UI/native WebKit
+controls, actual restricted logins, clean/additive migration, seed, contracts/types/
+build, security/dependency/image scans and container smoke. Logical recovery restores
+69 tables/686 rows in 713 ms, including exact receipt holds and refused stripped-owner
+execution. Optional registry authentication is skipped without credentials; no
+application acceptance gate is skipped. This verifies the bounded synthetic SQL
+kernel, not the still-pending runtime executor operations or full MVP/release.
+
+The native full run stops near its final WhatsApp tests during a local process/Docker
+interruption; its handle is gone and no pytest success exists. It is not a full pass.
+All eight services recover on existing images/volumes; PostgreSQL accepts connections
+and schema0041/default false are retained. No application-volume, SDK or build-cache
+cleanup is used. Subsequent acceptance closeout changes only Markdown, preserving
+the exact hosted code, SQL, tests, Makefile and workflow source above.

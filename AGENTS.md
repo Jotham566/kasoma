@@ -153,11 +153,13 @@ with 415 integration and 108 browser executions. Profile UI correction at
 `44ae9ad` passes complete hosted 39222489376 with 415 integration and
 108 browser executions plus full engineering gates. The latter passes nine local identity
 journeys and is running in the healthy Docker web preview; no acceptance is inferred
-for those branches from the load CI. Docker remains healthy on 0040 and host-native
+for those branches from the load CI. Docker has recovered healthy on 0041 and host-native
 Ollama connectivity is restored without inference. ADR-060 has explicit bounded synthetic approval; additive exact export evidence
-holds and receipt identity are under verification. The additive 0041 restricted SQL
-retirement candidate passes 31 focused cases, 1,096 unit/contract, six privacy journeys
-and logical recovery of 69 tables/686 rows; full verification is pending. State remains
+holds/receipt identity pass complete hosted 39232307831 at `be2735e`. The additive
+0041 SQL kernel passes complete hosted 39234377840 at `e5d3d98`: 1,096 unit/contract,
+456 integration, 35 tooling and 108 browser executions plus all engineering gates.
+Hosted recovery verifies 69 tables/686 rows in 713 ms. The interrupted local full
+run is not a pass; existing volumes/images recover without data/cache cleanup. State remains
 false, scope excludes review public, and scheduler/configuration/health remain pending; ADR-057 does not authorize account erasure.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See

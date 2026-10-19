@@ -1,6 +1,6 @@
 # Changelog
 
-## In verification — restricted synthetic export evidence retirement
+## Verified engineering — restricted synthetic export evidence retirement
 
 - FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001: implement approved ADR-060's
   parameter-free SQL capability, minimal NOLOGIN owner, independent due/hold guards,
@@ -11,12 +11,14 @@
   rollback and stripped-owner recovery. Final 31 focused cases, ten existing
   hold cases, three byte-recovery cases and six three-engine privacy journeys pass.
   Lint/types/contracts/security, 1,096 unit/contract, 35 tooling and image scans pass;
-  the full 456-case integration suite is running. Migration/seed and 69-table/686-row
-  logical recovery pass (423 ms); full acceptance remains pending. No scheduler,
+  complete hosted 39234377840 passes at `e5d3d98`: 456 integration, 108 browser
+  executions and all role/recovery/security/image/service gates. Hosted logical
+  recovery verifies 69 tables/686 rows in 713 ms; the interrupted local full run
+  is not counted as a pass. No scheduler,
   account erasure or review-stack retirement is enabled.
 
 
-## In verification — exact export evidence holds
+## Verified engineering — exact export evidence holds
 
 - Record explicit bounded synthetic ADR-060 approval for FR-ID-006/FR-OPS-003/BR-010/
   NFR-SEC-002/NFR-MNT-001. Add migration 0039 stable receipt UUIDs while preserving
@@ -27,7 +29,8 @@
   or processor exists yet. Ten focused integration cases, including a real restricted
   login, six three-engine privacy journeys, 1,094 unit/contract and 35 tooling cases
   pass. Logical recovery preserves 68 tables/685 synthetic rows and the exact receipt
-  hold in 365 ms. Full integration/hosted acceptance is pending.
+  hold in 365 ms. Corrected source `be2735e` passes complete hosted 39232307831:
+  425 integration, 108 browser executions and all engineering gates.
 - Correct the full-suite recovery fixture regression: retain the two-argument byte
   export helper and populate the exact receipt hold through a separate authorized
   helper in the complete drill. All original corruption checks remain. The previous
