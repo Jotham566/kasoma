@@ -181,9 +181,9 @@ three staff UI and three native WebKit controls plus all engineering gates. Reco
 verifies 69 tables/686 rows in 465 ms. This supersedes the preceding pending operations
 acceptance only; earlier failures remain failures. Only Markdown closeout follows the
 verified application/test/Makefile/workflow tree `e33ec69`. Review Docker is healthy on
-0042 with retirement false. Disposable load-role source `a23e9bc` passes complete hosted39267916272:1,130 unit/contract,
-479 integration,35 tooling and111 browser executions plus all focused/engineering gates.
-Recovery verifies69 tables/686 rows in561ms. Exclusive committed creation and exact OID
+0042 with retirement false. Disposable load-role source `a23e9bc` passes complete hosted 39267916272:1,130 unit/contract,
+479 integration,35 tooling and 111 browser executions plus all focused/engineering gates.
+Recovery verifies 69 tables/686 rows in561ms. Exclusive committed creation and exact OID
 checks protect concurrent creators/replacements;69 focused native cases pass. Only
 Markdown/aggregate JSON closeout follows that verified code/test/Make/workflow tree.
 Corrected native objective/history recheck pass, but the initial history START p95
@@ -201,11 +201,13 @@ Independent fresh-revision response source 58d598e passes 40 focused integration
 1,130 unit/contract, 35 tooling and nine assessment browser executions plus quality,
 contracts/build, source/dependency/images and container smoke. It removes only two
 known-empty response reads for this transaction's new revision; existing resumes and
-reassessment provenance remain current. Hosted 39286019222 is in progress; source is not yet
-promoted to main. The new objective profile passes with START p95 408.061ms, 7,000 requests,
+reassessment provenance remain current. Complete hosted 39286019222 at 58d598e passes 1,130 unit/contract, 483 integration,
+35 tooling and 111 browser executions plus all focused/engineering gates. Recovery
+verifies 69 tables/686 rows in 477ms. Only Markdown/aggregate JSON closeout follows
+the verified runtime/test/Make tree. The new objective profile passes with START p95 408.061ms, 7,000 requests,
 zero errors and owned cleanup. Mixed-history also passes with 25,000 prior grades,
-START p95 422.913ms, 7,000 successful requests and owned cleanup. Full hosted acceptance
-and explanation of earlier variance remain pending. All eight Docker services are
+START p95 422.913ms, 7,000 successful requests and owned cleanup. Full hosted engineering acceptance now passes;
+explanation of earlier variance and full release gates remain pending. All eight Docker services are
 healthy on 0042; export retirement remains disabled.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See

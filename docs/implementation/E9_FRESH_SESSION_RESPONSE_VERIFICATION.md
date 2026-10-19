@@ -2,7 +2,7 @@
 
 Requirements: NFR-PERF-001/002, FR-REV-001/002/005/006, FR-GRD-008,
 FR-WA-003, NFR-MNT-001 and NFR-SEC-002.
-Status: native checks and both load profiles pass; full hosted acceptance pending.
+Status: bounded synthetic engineering verified by complete hosted 39286019222 at 58d598e.
 
 ## Change and boundary
 
@@ -66,7 +66,7 @@ Normal Docker services remain running on 0042, with review retirement false.
 ## Native candidate source and first load result
 
 Application/test/Make source `58d598eb77196d28844f156165488175e26a1dcb` is committed
-and pushed. Hosted 39286019222 is now in progress, not accepted. Main 4377da5 publishes only the
+and pushed. Complete hosted 39286019222 now passes at that exact source; see acceptance below. Main 4377da5 publishes only the
 checked Proposed ADR-061/readiness/inventory documents; its runtime tree is unchanged
 from the previously verified main baseline. The merged proposal branch is removed.
 No erasure implementation approval has arrived.
@@ -98,3 +98,23 @@ Only Markdown and aggregate JSON closeout follows runtime/test/Make source 58d59
 Do not push a replacement branch head while its exact hosted verification is running.
 Promote runtime to main and remove its branch only after full hosted verification;
 the proposal on main remains unapproved independently of these engineering checks.
+
+## Complete hosted acceptance — 19 October 2026
+
+[39286019222](https://github.com/Jotham566/kasoma/actions/runs/39286019222) completes
+successfully at exact application/test/Make source 58d598eb77196d28844f156165488175e26a1dcb.
+It passes 1,130 unit/contract, 483 integration (1,530.77s), 35 tooling and 111 full browser
+executions, plus nine focused assessment, 12 transport controls, three staff UI, three
+native WebKit, eight reviewed-rubric and one actual restricted-runtime-role checks.
+Setup/migration/seed, lint/types/contracts/build, dependency/source/image security and
+container/service smoke all pass. The optional registry-authentication step is skipped
+when credentials are unavailable, as configured; no required gate is skipped.
+
+Logical recovery verifies 69 tables/686 rows in 477ms, with no cleanup failures and
+stripped-retirement execution denied. This is isolated synthetic logical recovery,
+not object-storage recovery, production PITR/RPO/RTO or real-data authorization.
+Only Markdown/aggregate JSON closeout follows this verified runtime/test/Make tree.
+The separate practice-day API/UI candidate is not covered by this CI. ADR-061 remains
+Proposed and unapproved. Native results remain observations, with the prior 559.306ms
+history miss and unexplained variance retained; broad provider/deployment/soak and
+production/academic/privacy release acceptance remain open.

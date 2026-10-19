@@ -1,6 +1,6 @@
 # Requirements Traceability
 
-## Fresh revision response candidate — no empty evidence reads
+## Verified fresh revision response — no empty evidence reads
 
 NFR-PERF-001/002, FR-REV-001/002/005/006, FR-GRD-008, FR-WA-003, NFR-SEC-002
 and NFR-MNT-001: the shared start transaction uses its known empty evidence only for
@@ -10,8 +10,10 @@ and the passing answered-resume control become four focused passes with full com
 serialization parity. Expanded 40 integration, 1,130 unit/contract, 35 tooling and nine
 three-engine browser cases pass, plus quality/contracts/build and source security.
 [Verification](E9_FRESH_SESSION_RESPONSE_VERIFICATION.md) records both passing native profiles (START p95 408.061/422.913ms),
-image/service checks and source-pinned aggregate reports. Hosted39286019222 at58d598e
-is in progress; runtime is not promoted. No claimed p95-variance fix or ADR-061 implementation.
+image/service checks and source-pinned aggregate reports. Complete hosted 39286019222 at 58d598e passes 1,130 unit/contract, 483 integration,
+35 tooling and 111 browser executions plus all focused/engineering gates. Recovery
+verifies 69 tables/686 rows in 477ms. Only documentation/aggregate closeout follows
+that verified runtime/test/Make tree. No claimed p95-variance fix or ADR-061 implementation.
 
 ## Proposed synthetic erasure decision — awaiting owner approval
 
@@ -40,12 +42,12 @@ provenance and unbound OTP ownership gaps. No execution or permission changes.
 
 ## Verified bounded disposable load-role lifecycle — 19 October 2026
 
-[Complete hosted39267916272](https://github.com/Jotham566/kasoma/actions/runs/39267916272)
+[Complete hosted 39267916272](https://github.com/Jotham566/kasoma/actions/runs/39267916272)
 passes at `a23e9bc020014271e8e697bd2518beda9b3a3393`:1,130 unit/contract,
-479 integration,35 tooling and111 full browser executions, plus9 focused assessment,
+479 integration,35 tooling and 111 full browser executions, plus9 focused assessment,
 12 interception controls,3 staff UI and3 native WebKit controls. Setup/migration/seed,
 restricted logins, lint/types/contracts/build, recovery, dependency/source/image security
-and container smoke pass. Logical recovery verifies69 tables/686 rows in561ms, with
+and container smoke pass. Logical recovery verifies 69 tables/686 rows in561ms, with
 no cleanup failure and refused execution after stripped ownership. No object-storage
 recovery, production RPO/RTO or external release approval is inferred.
 
@@ -169,7 +171,7 @@ default-off scheduler, finite count-only observations, ADMIN health and responsi
 read-only UI to runtime, integration, contract and browser checks. Migration 0042 is
 additive. Local full verification passes 1,112 unit/contract, 465 integration,
 35 tooling and 108 browser executions, plus recovery/security/image/service checks.
-Exact source `94b40a6` fails hosted39243195783 in one Chromium channel interception
+Exact source `94b40a6` fails hosted 39243195783 in one Chromium channel interception
 socket reset, after all 465 hosted integration and 1,112 unit/contract cases pass.
 The FR-WA-001/004/006 / NFR-MNT-001 / NFR-SEC-002 correction adds guarded single-reset
 transport handling, private failure diagnostics and exact committed-code/key assertions.
