@@ -287,3 +287,18 @@ This accepts the local browser-isolation behavior only. Previous failures and un
 causes remain recorded; source-preserving fresh isolation is not a proved historical
 root-cause fix. Complete combined backend/recovery/images/service and exact-source
 hosted verification remain required before main promotion. Main remains eb05457.
+
+
+The local-only provisioner additionally refuses TCP/SSH Docker endpoints, including a
+remote selected context, before daemon/image/resource commands. It pins the verified
+Unix endpoint for child commands and restores the original process environment on exit;
+no global Docker context is changed.86 combined browser/recovery controls and1328 unit/
+contract plus35 tooling/lint/types pass; a mocked content UI target also passes3 cases; actual three-engine assessment controls
+are now running before integration with separately hosted-verified ADR-061 source1851740. The existing
+recovery profile/55432 guard is unchanged. No remote Docker/cloud provisioning is added.
+
+
+The pinned-local-endpoint source passes all nine actual assessment executions across
+Chromium/Firefox/WebKit (14.8s/16.9s/16.5s), with three returned creation IDs and three
+empty cleanup reports. The mocked content target's earlier3-case pass was only a UI
+control, not database acceptance. Full combined-source verification still follows.

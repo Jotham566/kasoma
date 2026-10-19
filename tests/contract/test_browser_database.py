@@ -1,6 +1,7 @@
 """ADR-068: only exclusively owned synthetic resources; no review-data fallback."""
 
 import json
+import os
 import signal
 from types import SimpleNamespace
 from unittest.mock import MagicMock, Mock
@@ -9,7 +10,12 @@ import pytest
 from pydantic import SecretStr
 from sqlalchemy.engine import make_url
 
-from scripts.browser_database import browser_database, cleanup_on_termination
+from scripts.browser_database import (
+    browser_database,
+    cleanup_on_termination,
+    pinned_local_docker,
+    unix_endpoint,
+)
 from scripts.recovery_containers import BROWSER_LABEL, LABEL, OwnedServices
 
 INVOCATION = "a" * 32
@@ -61,6 +67,11 @@ def test_unsafe_profile_never_resolves_images_or_creates_resources(settings, mon
 
 
 def mocked_services(monkeypatch):
+    monkeypatch.delenv("DOCKER_HOST", raising=False)
+    monkeypatch.delenv("DOCKER_CONTEXT", raising=False)
+    monkeypatch.setattr(
+        "scripts.browser_database.command", lambda args: "unix:///var/run/docker.sock"
+    )
     services = Mock()
     services.create.return_value = CID
     services.port.return_value = 55433
@@ -209,3 +220,54 @@ def test_private_body_exception_is_withheld_after_owned_cleanup(settings, monkey
     captured = capsys.readouterr()
     assert "canary-private" not in captured.err + captured.out
     services.cleanup.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "tcp://remote.invalid:2376",
+        "tcp://127.0.0.1:2375",
+        "ssh://private@remote.invalid",
+        "unix://remote/a",
+        "unix:///a?x=y",
+        "unix:///a\n",
+    ],
+)
+def test_remote_or_ambiguous_docker_host_refuses_before_metadata_or_creation(monkeypatch, endpoint):
+    assert not unix_endpoint(endpoint)
+    monkeypatch.setenv("DOCKER_HOST", endpoint)
+    metadata = Mock(side_effect=AssertionError("Must not inspect"))
+    monkeypatch.setattr("scripts.browser_database.command", metadata)
+    with pytest.raises(ValueError, match="local Unix"):
+        with pinned_local_docker():
+            pytest.fail("No remote endpoint")
+    metadata.assert_not_called()
+
+
+def test_selected_remote_context_refuses_before_daemon_commands(monkeypatch):
+    monkeypatch.delenv("DOCKER_HOST", raising=False)
+    monkeypatch.setenv("DOCKER_CONTEXT", "remote-profile")
+    metadata = Mock(return_value="ssh://private@remote.invalid")
+    monkeypatch.setattr("scripts.browser_database.command", metadata)
+    with pytest.raises(ValueError, match="local Unix") as failure:
+        with pinned_local_docker():
+            pytest.fail("No remote endpoint")
+    assert "private@" not in str(failure.value)
+    metadata.assert_called_once_with(
+        ["docker", "context", "inspect", "--format", "{{.Endpoints.docker.Host}}"]
+    )
+
+
+def test_local_endpoint_is_pinned_and_original_environment_restored_on_failure(monkeypatch):
+    monkeypatch.delenv("DOCKER_HOST", raising=False)
+    monkeypatch.setenv("DOCKER_CONTEXT", "desktop-linux")
+    monkeypatch.setattr(
+        "scripts.browser_database.command", lambda args: "unix:///var/run/docker.sock"
+    )
+    with pytest.raises(RuntimeError):
+        with pinned_local_docker():
+            assert os.environ["DOCKER_HOST"] == "unix:///var/run/docker.sock"
+            assert "DOCKER_CONTEXT" not in os.environ
+            raise RuntimeError("synthetic")
+    assert "DOCKER_HOST" not in os.environ
+    assert os.environ["DOCKER_CONTEXT"] == "desktop-linux"

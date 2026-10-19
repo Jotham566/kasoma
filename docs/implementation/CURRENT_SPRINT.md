@@ -615,3 +615,10 @@ candidate after observing11.3GB of shared system catalogs. Only a new owned boun
 PostgreSQL service hosts the standard synthetic browser fixture; normal services and
 all existing schemas remain. Scope/cleanup/private-key tests and actual browser/hosted
 acceptance are pending. No prior HTTP500 or pointer failure is declared fixed.
+
+
+ADR-068 local transport guard rejects remote Docker hosts/contexts before daemon calls,
+pins a Unix endpoint for the synthetic harness and restores process environment.86
+resource controls and1328 unit/contract checks pass; actual final-source/native and
+combined hosted acceptance remain pending. Normal services/global Docker context stay
+unchanged.

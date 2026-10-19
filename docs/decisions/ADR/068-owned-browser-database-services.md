@@ -25,6 +25,10 @@ Extend ADR-065's existing OwnedServices guard with a closed browser purpose that
 only source-db. Use a distinct generated browser name and ownership-label key, memory512m,
 pids256, database tmpfs256m, random IPv4 loopback port and no persistent mounts. Unknown
 purposes/components and nonstandard/remote/production profiles fail before creation.
+Reject TCP/SSH Docker hosts/contexts before daemon commands. Context inspection reads
+local metadata; pin the selected Unix socket in this harness process environment for
+all creation/inspection/cleanup commands, removing the context override and restoring
+the original environment afterward. Do not change the user's global Docker context.
 Generate private database/encryption/lookup/signing credentials per invocation; pass
 child credentials through environment/configuration, never command arguments/logs.
 

@@ -1,6 +1,7 @@
 """ADR-068: one exclusively owned local PostgreSQL service per browser API process."""
 
 import json
+import os
 import secrets
 import signal
 import sys
@@ -8,6 +9,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from time import monotonic, sleep
 from types import FrameType
+from urllib.parse import urlsplit
 from uuid import uuid4
 
 from cryptography.fernet import Fernet
@@ -15,7 +17,7 @@ from pydantic import SecretStr
 from sqlalchemy import text
 from sqlalchemy.engine import URL
 
-from scripts.recovery_containers import OwnedServices, compose_image
+from scripts.recovery_containers import OwnedServices, command, compose_image
 from scripts.recovery_drill import local_database_url
 from services.config import Settings
 from services.database import engine_for
@@ -36,6 +38,44 @@ def cleanup_on_termination() -> Iterator[None]:
         signal.signal(signal.SIGTERM, previous)
 
 
+def unix_endpoint(value: str) -> bool:
+    parsed = urlsplit(value)
+    return bool(
+        parsed.scheme == "unix"
+        and not parsed.netloc
+        and parsed.path.startswith("/")
+        and not parsed.query
+        and not parsed.fragment
+        and not any(character in value for character in "\x00\r\n")
+    )
+
+
+@contextmanager
+def pinned_local_docker() -> Iterator[None]:
+    """Context inspection reads local metadata; pin one Unix endpoint for child commands."""
+    previous_host = os.environ.get("DOCKER_HOST")
+    previous_context = os.environ.get("DOCKER_CONTEXT")
+    if previous_host and not unix_endpoint(previous_host):
+        raise ValueError("Browser fixtures require a local Unix Docker endpoint")
+    endpoint = (
+        previous_host
+        if previous_host and not previous_context
+        else command(["docker", "context", "inspect", "--format", "{{.Endpoints.docker.Host}}"])
+    )
+    if not unix_endpoint(endpoint):
+        raise ValueError("Browser fixtures require a local Unix Docker endpoint")
+    os.environ["DOCKER_HOST"] = endpoint
+    os.environ.pop("DOCKER_CONTEXT", None)
+    try:
+        yield
+    finally:
+        for key, value in [("DOCKER_HOST", previous_host), ("DOCKER_CONTEXT", previous_context)]:
+            if value is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = value
+
+
 @contextmanager
 def browser_database(settings: Settings) -> Iterator[Settings]:
     # Preserve the existing standard local Compose guard; never connect to its data.
@@ -48,6 +88,11 @@ def browser_database(settings: Settings) -> Iterator[Settings]:
         or settings.allow_external_api_calls
     ):
         raise ValueError("Browser fixtures require fake providers")
+    with pinned_local_docker():
+        yield from _isolated_database(settings)
+
+
+def _isolated_database(settings: Settings) -> Iterator[Settings]:
     invocation = uuid4().hex
     owned = OwnedServices(invocation, purpose="browser")
     engine = None
