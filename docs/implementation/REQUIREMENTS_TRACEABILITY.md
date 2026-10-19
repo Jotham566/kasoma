@@ -1,5 +1,16 @@
 # Requirements Traceability
 
+## Proposed retention boundary — not implemented
+
+FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
+[ADR-060](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md)
+defines a reviewable synthetic completed-EXPORT accountability retirement slice.
+It identifies exact receipt/job holds, six-year eligibility, object cleanup and
+restricted SQL prerequisites, finite retry semantics and acceptance tests. Human
+approval is pending; no runtime, migration or application acceptance is supplied.
+Existing retention/erasure gaps remain open. Main closeout `f1bd1ad` separately
+passes complete hosted [39189901813](https://github.com/Jotham566/kasoma/actions/runs/39189901813).
+
 ## Current accepted checkpoint — 19 October 2026
 
 Application/test source `6d53541` passes complete hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895) and is pushed to main

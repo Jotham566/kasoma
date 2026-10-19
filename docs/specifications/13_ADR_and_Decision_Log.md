@@ -396,3 +396,11 @@ diagnostics. No local/application data cleanup or acceptance reduction is permit
 
 ADR-056 is also accepted through the same complete integrated run at 5d95f9d. The
 older standalone disk-exhaustion run remains failed; no real-data/erasure approval.
+
+## ADR-060: Completed export accountability retirement
+
+**Status:** Proposed; human approval pending. See
+[ADR-060](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md).
+The proposed bounded synthetic slice covers due completed EXPORT accountability,
+two exact hold targets, restricted SQL execution and finite retry semantics. No
+deletion permission, runtime implementation or real-data approval is granted.

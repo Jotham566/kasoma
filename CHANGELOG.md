@@ -1,5 +1,15 @@
 # Changelog
 
+## Proposed — completed export accountability retirement
+
+- Prepare ADR-060 for FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001:
+  exact eligible tables, six-year deadline, independent holds, object-cleanup
+  prerequisites, restricted SQL execution, finite receipt retry semantics and
+  synthetic acceptance gates. Human approval is pending; no runtime, migration,
+  permission or deletion behavior changes. ADR-057 approval remains separate.
+- Confirm complete main CI 39189901813 succeeds at `f1bd1ad`; all eight review
+  services remain healthy. This increment supplies documentation readiness only.
+
 ## Verified — shared native select touch targets
 
 - Extend the proven WebKit menu styling to shared single-select inputs, preserving

@@ -73,6 +73,12 @@ The next narrow design boundary is completed EXPORT-request evidence retirement 
 its existing six-calendar-year deadline. Current immutable DELETE guards, key/receipt
 expiry semantics, exact holds and object-purge proof require a separately reviewed ADR
 before execution. Pending DELETE/snapshot parents have no invented completion or expiry.
+The concrete [ADR-060 proposal](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md)
+now specifies the table allowlist, exact receipt/job holds, restricted maintenance
+capability, cleanup prerequisites, finite retries and synthetic test sequence.
+Approval is pending; this documentation increment implements no deletion path.
+Complete main CI [39189901813](https://github.com/Jotham566/kasoma/actions/runs/39189901813)
+also passes at the prior documentation closeout `f1bd1ad`.
 Full preservation, erasure/anonymization and accountability processing remain incomplete.
 Academic inventory/rights/benchmark/calibration, privacy/safeguarding and provider/budget
 approvals, production recovery, physical/branded devices and pilot sign-offs remain

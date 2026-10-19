@@ -142,3 +142,6 @@ This directory location follows the user-requested repository organization. It d
 
 - [ADR-059: Disposable CI runner storage](059-disposable-ci-runner-storage.md)
   records fixed-SDK hosted-only preparation, capacity gates and diagnostics.
+
+- [ADR-060: Completed export accountability retirement](060-completed-export-accountability-retirement-proposal.md)
+  proposes a default-disabled synthetic retention slice; explicit approval is pending.
