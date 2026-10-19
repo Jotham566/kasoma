@@ -255,3 +255,48 @@ ADR-069 records the test-resource choice; CI invokes the same owned-source targe
 Complete combined backend/browser/recovery/image/service and own hosted acceptance
 remain pending. This is identity coordination, not a permanent closed_at/SQL session
 guard, account-closure authorization, actual erasure or DELETE fulfillment.
+
+Combined source12c6b60 passes local quality/types,1,444 unit/contract,35 tooling,
+105 resource/controller,11 owned-database identity cases, contracts/build and full
+source/dependency/secret checks. Only two reviewed constant-command findings are annotated; Bandit's commentary
+parsing warnings do not suppress any additional check. A comment-only cleanup attempt
+fails import-order lint and is reverted before freezing source12c6b60. Complete
+hosted/native browser/recovery acceptance is pending.
+
+The first managed-checkout browser attempt has12 launch failures before any journey:
+the checkout has no local Playwright executable cache. Its owned API source cleans
+up successfully. No application failure or pass is inferred. The rerun uses the
+existing verified root browser cache through the standard Make variable, after an
+exact pnpm-lock.yaml comparison; source and test deadlines remain unchanged.
+
+The shared-cache rerun passes Chromium36 and Firefox shard1 twelve cases, but
+Firefox shard2 has11 passes/one native attachment verifier RuntimeError. That helper
+resolves its repository-local Firefox1509 path, which is absent in this checkout;
+a Playwright cache override does not cover it. The run is failed, not full browser
+acceptance. Run the prescribed make e2e-install locally, preserve all existing caches
+and rerun the complete matrix without an override. No application/source change.
+
+## Frozen identity/UI source12c6b60 — complete local browser and recovery results
+
+The default-cache complete matrix passes123 browser executions:108 standard,12
+short-text and three configuration. Twelve owned standard/configuration PostgreSQL
+containers have empty cleanup reports and independently confirmed exact-ID absence.
+The separate short-text runner retains its existing schema scope; no cleanup of
+older developer schemas/roles/caches occurs. Recovery passes71 tables/691 rows318ms
+logically and71/691/one42,084-byte ciphertext163ms with actual MinIO, stopped source
+services, fault/immutable guards, denied stripped retirement and empty cleanup.
+Actual restricted-login verification passes. Production RPO/RTO remains false.
+
+Full own hosted39337786063 remains in progress at exact12c6b60d3a76a82c5e10ee15fc51122f4a130fcb.
+Only Markdown closeout follows that runtime/test/Make/workflow tree. Earlier missing
+browser/native-cache failures remain failed and are not application acceptance.
+
+Separately, verified foundation source2966bab is published through main64e1f72ee10a3ed39a344525f49b9252341224b6
+after complete hosted39334774152. Its configuration, erasure-foundation and browser
+branches are proven merged and removed locally/remotely. A remote deletion response
+reported ref errors, but independent ls-remote and fetch/prune confirm all three
+remote refs absent; no unmerged source is discarded. The main follow-up39339512181
+remains live. Docker is8/8 healthy on0044, with the locally verified viewport preview
+36cb6e9 and retirement/normal short-text disabled. Host-native Ollama connectivity
+is restored without inference. Account closure, erasure and DELETE fulfillment remain
+unimplemented; approved ADR-061's SQL barrier/resumable job is the next vertical slice.

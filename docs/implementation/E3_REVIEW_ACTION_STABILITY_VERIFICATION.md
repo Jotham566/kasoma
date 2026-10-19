@@ -92,3 +92,28 @@ Files: `apps/web/app/revise/page.tsx`, `tests/e2e/assessment.spec.ts`, `Makefile
 `.github/workflows/ci.yml`, changelog/sprint/traceability, the local runbook/testing
 specification and this verification record. The privacy operations candidate retains
 its [separate evidence](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md).
+
+## Frozen identity/UI source12c6b60 — complete local browser and recovery results
+
+The default-cache complete matrix passes123 browser executions:108 standard,12
+short-text and three configuration. Twelve owned standard/configuration PostgreSQL
+containers have empty cleanup reports and independently confirmed exact-ID absence.
+The separate short-text runner retains its existing schema scope; no cleanup of
+older developer schemas/roles/caches occurs. Recovery passes71 tables/691 rows318ms
+logically and71/691/one42,084-byte ciphertext163ms with actual MinIO, stopped source
+services, fault/immutable guards, denied stripped retirement and empty cleanup.
+Actual restricted-login verification passes. Production RPO/RTO remains false.
+
+Full own hosted39337786063 remains in progress at exact12c6b60d3a76a82c5e10ee15fc51122f4a130fcb.
+Only Markdown closeout follows that runtime/test/Make/workflow tree. Earlier missing
+browser/native-cache failures remain failed and are not application acceptance.
+
+Separately, verified foundation source2966bab is published through main64e1f72ee10a3ed39a344525f49b9252341224b6
+after complete hosted39334774152. Its configuration, erasure-foundation and browser
+branches are proven merged and removed locally/remotely. A remote deletion response
+reported ref errors, but independent ls-remote and fetch/prune confirm all three
+remote refs absent; no unmerged source is discarded. The main follow-up39339512181
+remains live. Docker is8/8 healthy on0044, with the locally verified viewport preview
+36cb6e9 and retirement/normal short-text disabled. Host-native Ollama connectivity
+is restored without inference. Account closure, erasure and DELETE fulfillment remain
+unimplemented; approved ADR-061's SQL barrier/resumable job is the next vertical slice.

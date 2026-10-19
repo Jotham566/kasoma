@@ -1620,3 +1620,8 @@ The standard browser matrix runs three fresh API shards per engine. Each gets it
 own generated database and production OTP peer budget; adding journeys must not
 be accommodated by raising the application rate limit or test deadline. Separate
 short-text and configuration profiles retain their existing commands.
+
+A managed checkout must run `make e2e-install` before the full browser matrix. The
+native Firefox attachment verifier resolves its repository-local pinned cache; a
+Playwright cache-variable override alone does not cover that verifier. Preserve other
+checkouts' browser/SDK caches; do not remove or replace them to resolve missing binaries.
