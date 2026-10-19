@@ -468,3 +468,9 @@ test-web-whatsapp:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/whatsapp.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/whatsapp.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/whatsapp.spec.ts
+
+.PHONY: test-web-assessment
+test-web-assessment:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/assessment.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/assessment.spec.ts

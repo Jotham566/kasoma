@@ -187,3 +187,9 @@ loopback controls per browser engine prove single-reset recovery, persistent ref
 HTTP503 non-retry and missing-key refusal; exact committed code/key recovery remains
 asserted by the channel journey. Use `make test-commit-interception` and
 `make test-web-whatsapp`; complete hosted release gates are still mandatory.
+
+The focused `make test-web-assessment` gate additionally holds a real post-grade hint
+response until feedback actions render, releases it, then checks that Next stays in
+place and a real pointer click advances. The one-pixel tolerance is a specific
+regression's rounding allowance, not a new product-wide layout SLO. Original resume,
+keyboard, pointer/touch, hint/solution and bandwidth assertions remain required.

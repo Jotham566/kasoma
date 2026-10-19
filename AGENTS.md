@@ -165,7 +165,11 @@ private configuration/AppLoader, finite count-only health and accessible UI are 
 verification: 25 focused cases, 1,112 unit/contract, 465 integration, 108 browser
 executions and 69-table/686-row recovery pass locally. Hosted39243195783 at `94b40a6`
 passes backend gates but fails one Chromium intercepted transport reset; a bounded
-synthetic-only harness correction is in verification. Complete hosted gates remain pending; ADR-057 does not authorize account erasure.
+synthetic-only harness correction passes12 controls and108 local browser executions at
+`b6aea35`. Hosted39249423592 passes backend/transport gates but fails a WebKit resumed
+pointer transition. A deterministic delayed-hints layout regression reproduces a
+47.421875-pixel shift; moving review hints below actions passes nine focused cases.
+Complete hosted gates remain pending; ADR-057 does not authorize account erasure.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

@@ -1,5 +1,14 @@
 # Changelog
 
+## Candidate — stable feedback actions during review-hint loading
+
+- NFR-ACC-001/FR-REV-005/FR-GRD-006/NFR-MNT-001: reproduce a 47.421875-pixel
+  displacement of Next when delayed post-grade hints load. Move optional review hints
+  below feedback actions, preserving grading, weighting, permissions and pointer/keyboard
+  journeys. Nine focused three-engine cases pass after the red regression. Add an
+  early focused CI gate and payload-free failure diagnostics. Full verification remains
+  pending; [evidence](docs/implementation/E3_REVIEW_ACTION_STABILITY_VERIFICATION.md).
+
 ## Candidate correction — bounded synthetic interception transport
 
 - FR-WA-001/004/006, NFR-MNT-001 and NFR-SEC-002: retain the hosted39243195783
@@ -7,8 +16,10 @@
   during interception; commit status is unknown). Introduce a loopback-only, idempotency-key-guarded interception
   helper with one ECONNRESET retry and fixed private diagnostics; HTTP failures are
   not retried. Strengthen the channel journey to compare its exact committed code
-  and retry key without printing them. New three-engine transport controls and full
-  hosted re-verification are required. No application retry or runtime policy changes.
+  and retry key without printing them. Twelve three-engine transport controls,
+  three focused channel journeys and the corrected full 108-execution browser matrix
+  pass locally at `b6aea35`; hosted39249423592 passes backend/transport but fails a
+  different WebKit resumed-practice transition. See the layout correction above. No application retry or runtime policy changes.
 
 ## Candidate — isolated synthetic export retirement operations
 

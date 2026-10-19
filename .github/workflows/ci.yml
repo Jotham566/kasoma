@@ -72,6 +72,8 @@ jobs:
       - name: Verify bounded synthetic commit interception
         run: make test-commit-interception
       - run: make services migrate seed
+      - name: Verify stable review actions and resumed practice
+        run: make test-web-assessment
       - run: make test-reviewed-rubrics
       - run: make recovery-drill
       - run: make test-runtime-role

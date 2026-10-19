@@ -13,7 +13,12 @@ Exact source `94b40a6` fails hosted39243195783 in one Chromium channel intercept
 socket reset, after all 465 hosted integration and 1,112 unit/contract cases pass.
 The FR-WA-001/004/006 / NFR-MNT-001 / NFR-SEC-002 correction adds guarded single-reset
 transport handling, private failure diagnostics and exact committed-code/key assertions.
-Complete hosted acceptance and main promotion remain pending. No review purge or account erasure.
+Corrected `b6aea35` passes 12 transport controls and the full local 108-execution
+browser matrix. Hosted39249423592 passes backend/transport gates but fails a WebKit
+resumed-practice transition after79 ordinary passes. NFR-ACC-001 / FR-REV-005 /
+FR-GRD-006 / NFR-MNT-001: [stable review-action evidence](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md)
+records a deterministic47.421875-pixel red regression and nine green focused cases
+with review hints below actions. Full hosted acceptance/main promotion remain pending. No review purge or account erasure.
 
 ## Verified bounded synthetic completed-EXPORT kernel
 

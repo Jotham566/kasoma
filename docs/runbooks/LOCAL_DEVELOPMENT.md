@@ -1412,3 +1412,13 @@ follows redirects or changes application/test retry policy. Persistent failure i
 reported through a fixed diagnostic without request headers. The channel test still
 confirms the first committed response before aborting it and verifies exact code/key
 recovery. A failed hosted attempt remains failed until a complete corrected run passes.
+
+### Feedback action stability
+
+`make test-web-assessment` runs the resumed pointer/keyboard flow, withdrawal barrier
+and delayed post-grade hint-response stability regression in all three engines.
+Optional review hints render below feedback actions so loading cannot move their
+pointer targets. The regression retains a real pointer click and the existing cold
+question transfer budget. Failure-only diagnostics report capped endpoint-kind/status
+counts and scalar focus/visibility state, without request IDs, payloads or credentials.
+See [verification](../implementation/E3_REVIEW_ACTION_STABILITY_VERIFICATION.md).

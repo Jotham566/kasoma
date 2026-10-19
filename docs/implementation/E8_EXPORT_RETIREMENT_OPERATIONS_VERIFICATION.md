@@ -164,4 +164,13 @@ controls, `make lint openapi-check build`, `make security security-source` and
 1,112 unit/contract plus 35 tooling checks. Application/migration/contract source
 remains byte-identical to `94b40a6`; the earlier complete 465-case native backend pass
 is runtime evidence, not a claim of a new complete hosted run. The corrected full
-browser matrix is running. No main promotion occurs while hosted acceptance is absent.
+browser matrix now passes all 108 executions. Corrected source
+`b6aea35d653cd0f13e0aef301013d174c08e4c0f` fails complete hosted
+[39249423592](https://github.com/Jotham566/kasoma/actions/runs/39249423592).
+All backend/role/recovery and 12 interception controls pass, then a different WebKit
+resumed-assessment transition fails after79 ordinary passes. Later gates do not run.
+No main promotion or complete hosted acceptance is claimed. The
+[layout correction](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md) independently reproduces
+and corrects a47.421875-pixel action shift from delayed review hints. Its exact
+relationship to that unretained hosted pointer trace remains unconfirmed. Application
+change is limited to feedback layout; backend/migrations/contracts remain unchanged. No main promotion occurs while hosted acceptance is absent.

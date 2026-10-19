@@ -23,7 +23,14 @@ source `94b40a6` fails hosted39243195783 in one Chromium `route.fetch` socket re
 during interception; commit status is unknown. All hosted backend/role/recovery/UI/transport gates preceding
 that browser step pass. A bounded, guarded test-transport correction and exact
 committed-code/retry-key checks are in verification; no application policy changes
-or main promotion occur. Complete hosted acceptance remains pending. Review stack is now 0042 with persisted retirement false.
+or main promotion occur. Corrected source `b6aea35` passes 12 transport controls,
+three focused channel journeys, three native Linux attachment controls and all 108
+browser executions locally. Hosted39249423592 passes all backend and transport controls but fails a different
+WebKit resumed-session pointer transition after 79 ordinary browser passes. No main
+promotion occurs. A [review-action layout correction](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md)
+reproduces a 47.421875-pixel shift under delayed hints, moves optional review hints
+below actions and passes nine focused three-engine cases. Full verification remains
+pending; no grading, permissions, API or storage change. Review stack is now 0042 with persisted retirement false.
 
 ## Verified synthetic SQL retirement kernel
 

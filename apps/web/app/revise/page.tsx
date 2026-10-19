@@ -638,14 +638,6 @@ export default function Revise() {
                 key={`flag-${grade.attempt_id}`}
                 attemptId={grade.attempt_id}
               />
-              {session.kind !== "REASSESSMENT" && (
-                <Hints
-                  key={`hints-${grade.attempt_id}`}
-                  sessionId={session.id}
-                  attemptId={grade.attempt_id}
-                  disabled={busy}
-                />
-              )}
               <button
                 className={button}
                 disabled={busy}
@@ -704,6 +696,14 @@ export default function Revise() {
                 >
                   Next question
                 </button>
+              )}
+              {session.kind !== "REASSESSMENT" && (
+                <Hints
+                  key={`hints-${grade.attempt_id}`}
+                  sessionId={session.id}
+                  attemptId={grade.attempt_id}
+                  disabled={busy}
+                />
               )}
             </section>
           )}
