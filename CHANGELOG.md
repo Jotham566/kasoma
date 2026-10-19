@@ -10,6 +10,9 @@
   initial history setup fails safely and is corrected to normal refresh rotation.
   Corrected full-size and hosted
   verification remain pending. No production performance or academic claim.
+- Make format coverage independent of random item UUID order: the final fixture
+  pool has 144 Mathematics choice and 144 Physics numeric items. The earlier
+  293-item candidate run is observation only; final-source full-size evidence is required.
 
 ## Proposed — completed export accountability retirement
 

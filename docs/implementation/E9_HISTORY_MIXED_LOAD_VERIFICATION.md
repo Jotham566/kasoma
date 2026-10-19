@@ -27,15 +27,17 @@ pool and real domain transactions. Normal refresh-token rotation before each his
 and after setup avoids expired preparation tokens; token lifetimes, OTP cooldowns and
 the application clock are unchanged. Credentials remain in memory and out of reports.
 Only the runner's original choice/numeric fixtures have a solver; other formats fail
-closed. There are 288 original reviewed choice fixtures and five reviewed numeric
-fixtures. Synthetic review contributes nothing to academic release inventory.
+closed. There are 288 original reviewed fixtures: 144 choice in Mathematics and 144
+numeric in Physics, using the existing combined fixture switches. This guarantees
+both formats without relying on random UUID ordering in a mostly-choice pool.
+Synthetic review contributes nothing to academic release inventory.
 
 ## Timed workload and gates
 
 Reuse 50 concurrent journeys, the 20-answer/second pacer, six operations, five timed
 answers per learner, 300-second workload deadline and ten-second client timeout.
 Mathematics and Physics plans are bound independently to their authenticated learner;
-Physics targets Electricity and Magnetism so numeric questions can be selected by the
+Physics targets Electricity and Magnetism with numeric questions selected by the
 unchanged engine. The run must observe both SINGLE_CHOICE and NUMERIC submissions.
 Every timed answer must score one with its mastery update completed.
 
@@ -69,6 +71,9 @@ only its own successfully created disposable database and fails on cleanup failu
   cases, lint/format, Python/TypeScript types and unchanged generated contracts.
   `make security` passes, including secret-boundary checks and both dependency audits.
 - The corrected full-size native load and hosted verification are pending.
+  The live second command started from `21ccb9b` with 293 items. Subsequent fixture
+  review replaces its small numeric pool with the guaranteed 144/144 split; that
+  final source needs a separate full-size run after the earlier process finishes.
   This record is not application or performance acceptance from documentation checks.
 
 Remaining scope includes older/decayed and diagnostic histories, additional response

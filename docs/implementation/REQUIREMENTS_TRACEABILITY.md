@@ -10,6 +10,8 @@ submissions under unchanged operation/format latency gates. All 37 harness cases
 fails before timing with successful cleanup; the refresh correction is being run
 at full size. Native/hosted acceptance evidence remains pending.
 No runtime, retention, provider or academic enablement changes.
+Final fixture generation guarantees both formats with 144 items per subject; the
+earlier 293-item load candidate is separate from final-source acceptance.
 
 ## Proposed retention boundary — not implemented
 

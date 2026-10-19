@@ -204,10 +204,9 @@ def populate(
     identity: IdentityService, history_mixed: bool = False
 ) -> tuple[list[Credentials], dict[str, object]]:
     seed(identity.settings)
-    # 288 reviewed original fixtures, spanning all six configured topic clusters.
-    seed_assessment(identity, reassessment=True)
-    if history_mixed:
-        seed_assessment(identity, numeric=True)
+    # Diagnostic fixtures make Physics numeric; reassessment supplies 48 items/topic.
+    # Thus random UUID ordering cannot omit numeric load from the mixed profile.
+    seed_assessment(identity, reassessment=True, diagnostic=history_mixed)
     subject = next(value.id for value in identity.subjects() if value.name == "Mathematics")
     subjects = [value.id for value in identity.subjects()] if history_mixed else [subject]
     tokens = []
