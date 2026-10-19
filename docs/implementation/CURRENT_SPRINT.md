@@ -6,6 +6,16 @@ Updated 19 October 2026. This is not a completed MVP or production-release decla
 [the current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md)
 preserve the evidence and boundaries.
 
+## Current approved implementation
+
+ADR-060 now has explicit bounded synthetic approval (19 October 2026). The
+[exact export evidence hold foundation](E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md)
+is under verification: additive 0039/0040 receipt UUIDs, two independently guarded exact
+targets, bounded claimed-case lookup and accessible controls. Creation stays false;
+no retirement processor, account erasure or review-stack purge is introduced.
+Provider isolation is verified and published through main `41cbcc6`; its merged
+branch is removed locally/remotely. UI source `44ae9ad` retains its separate hosted gate.
+
 ## Latest verified engineering source
 
 Load tooling/test source `6b06c53` passes complete hosted
@@ -50,7 +60,7 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
 
 - NFR-PERF-001/002, NFR-SCL-001, FR-MST-004/005 and NFR-MNT-001: an independent
   synthetic history/mixed objective load profile is verified independently while ADR-060
-  awaits approval. It uses normal domain histories and real loopback HTTP without
+  was awaiting approval. It uses normal domain histories and real loopback HTTP without
   runtime changes. See [scope and evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
   Native profile and complete hosted engineering verification now pass.
   Final fixture coverage is deterministic by subject (144 choice/144 numeric);
@@ -108,7 +118,7 @@ no current agreed-load or provider latency claim follows from either measurement
 
 ## Running review stack and next boundary
 
-All eight Docker services are healthy on 0038 at http://localhost:3000; existing
+All eight Docker services are healthy on 0040 at http://localhost:3000; existing
 volumes are preserved. Capture and receipt creation remain false, and normal learner
 short-text scoring remains disabled. Host-native Ollama was down after power recovery;
 the pinned `make ollama-serve`, ready-state `make ollama-check` and API-container
@@ -122,7 +132,8 @@ before execution. Pending DELETE/snapshot parents have no invented completion or
 The concrete [ADR-060 proposal](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md)
 now specifies the table allowlist, exact receipt/job holds, restricted maintenance
 capability, cleanup prerequisites, finite retries and synthetic test sequence.
-Approval is pending; this documentation increment implements no deletion path.
+Explicit bounded synthetic approval is recorded on 19 October 2026. The additive
+preservation foundation is in verification; no retirement processor exists yet.
 Complete main CI [39189901813](https://github.com/Jotham566/kasoma/actions/runs/39189901813)
 also passes at the prior documentation closeout `f1bd1ad`.
 Full preservation, erasure/anonymization and accountability processing remain incomplete.

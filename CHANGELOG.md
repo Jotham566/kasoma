@@ -1,5 +1,19 @@
 # Changelog
 
+## In verification — exact export evidence holds
+
+- Record explicit bounded synthetic ADR-060 approval for FR-ID-006/FR-OPS-003/BR-010/
+  NFR-SEC-002/NFR-MNT-001. Add migration 0039 stable receipt UUIDs while preserving
+  composite retry identity, forward 0040 receipt subject ownership, two gated exact
+  hold targets, owner-checked paginated
+  references and accessible operator selection. API and SQL independently validate
+  ownership/terminal state; active holds use database time. No retirement permission
+  or processor exists yet. Ten focused integration cases, including a real restricted
+  login, six three-engine privacy journeys, 1,094 unit/contract and 35 tooling cases
+  pass. Logical recovery preserves 68 tables/685 synthetic rows and the exact receipt
+  hold in 365 ms. Full integration/hosted acceptance is pending.
+
+
 ## Verified engineering — stalled fake grading isolation
 
 - Add three FR-GRD-003/004/005 and FR-MST-001/004/005 regressions: 50 scheduled owned

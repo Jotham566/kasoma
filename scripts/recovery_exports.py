@@ -1,10 +1,12 @@
 """Synthetic encrypted objects held only in memory for the logical recovery drill."""
 
 from dataclasses import dataclass, field
+from datetime import timedelta
 from uuid import UUID, uuid4
 
 from sqlalchemy.orm import Session
 
+from scripts.recovery_channel_receipts import ChannelHoldAuthority
 from services.data_request_contracts import DataRequestInput
 from services.data_requests import DataRequestService
 from services.domain.data_requests import DataRequest
@@ -13,6 +15,8 @@ from services.export_artifacts import read_artifact
 from services.export_jobs import queue
 from services.export_processing import process_one
 from services.identity import IdentityService
+from services.legal_hold_contracts import HoldInput
+from services.legal_holds import LegalHoldService
 
 
 @dataclass(repr=False)
@@ -63,7 +67,9 @@ class RecoveryExport:
             raise RuntimeError("Restored synthetic export bytes differ")
 
 
-def populate_export(identity: IdentityService, token: str) -> RecoveryExport:
+def populate_export(
+    identity: IdentityService, token: str, authority: ChannelHoldAuthority
+) -> RecoveryExport:
     state = RecoveryExport()
     state.target = (
         DataRequestService(identity)
@@ -74,4 +80,27 @@ def populate_export(identity: IdentityService, token: str) -> RecoveryExport:
     if not process_one(identity, state):
         raise RuntimeError("Synthetic export could not be prepared")
     state.frozen = state.read(identity)
+    # The existing independent synthetic case authorizes this exact original receipt.
+    holds = LegalHoldService(identity)
+    admin = authority.token.get_secret_value()
+    references = holds.export_sources(admin, authority.request_id, state.target, None, 50, uuid4())
+    original = identity.settings.export_evidence_holds_enabled
+    identity.settings.export_evidence_holds_enabled = True
+    try:
+        holds.create(
+            admin,
+            authority.request_id,
+            HoldInput(
+                record_type="DATA_REQUEST_RECEIPT",
+                record_id=references.receipt_ids[0],
+                decision_reference=uuid4(),
+                reason="LEGAL_OBLIGATION",
+                expires_at=identity.clock() + timedelta(days=1),
+                affirmative=True,
+            ),
+            uuid4(),
+            uuid4(),
+        )
+    finally:
+        identity.settings.export_evidence_holds_enabled = original
     return state

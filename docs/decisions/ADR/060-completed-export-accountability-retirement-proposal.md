@@ -1,7 +1,7 @@
 # ADR-060: Completed export accountability retirement
 
 Date: 19 October 2026
-Status: Proposed — awaiting explicit bounded synthetic implementation approval
+Status: Approved for bounded synthetic implementation — 19 October 2026
 Requirements: FR-ID-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Context and authorization
@@ -19,8 +19,8 @@ DELETE/UPDATE guards or authorizes deletion.” The
 [source-of-truth change protocol](../../specifications/00_README_Source_of_Truth.md)
 requires human approval before changing security, data or learner-visible behavior.
 ADR-057's approved minimized channel snapshots grant no authority for this change.
-This proposal supplies the concrete next decision; it is not an accepted exception
-to any current guard or permission.
+The explicit approval below authorizes this bounded synthetic exception only.
+Existing guards remain effective until the separately verified implementation replaces them.
 
 ## Options and recommendation
 
@@ -33,7 +33,7 @@ to any current guard or permission.
 3. General DELETE privileges or a caller-set trigger bypass: rejected. Either would
    permit deletion outside the reviewed policy and weaken existing immutability.
 
-## Proposed first vertical slice
+## Approved first vertical slice
 
 Implement only against isolated synthetic databases, with explicit enablement and
 default-disabled configuration. No real-data processing, running review-stack purge,
@@ -68,7 +68,7 @@ hold targets for a request receipt and a cleared EXPIRED export-job summary; do 
 freeze active jobs or temporary authentication grants. A receipt currently has an
 actor/key composite primary key, so add an immutable generated unique receipt UUID
 without changing its existing retry identity. The job's exact identity is its existing
-request UUID. These are proposed new hold targets, not implied coverage from ADR-057.
+request UUID. These are explicitly approved new hold targets, not implied coverage from ADR-057.
 
 Reuse independent recent-OTP ADMIN claim, pending DELETE case, reason/decision,
 finite expiry and source-owner verification. For source identification, provide a
@@ -142,13 +142,16 @@ Use fake providers and synthetic data. No inference or external delivery is need
 
 ## Consequences and remaining gates
 
-This is additional retention machinery and two narrowly defined hold permissions,
-not an accepted architectural change until reviewed. Approval would authorize only
-the bounded synthetic implementation above. Full preservation coverage, account
+This approved decision adds retention machinery and two narrowly defined hold
+permissions only within the bounded synthetic implementation above. Full preservation coverage, account
 deletion/anonymization, other retention classes, legal sufficiency and real-data
 release remain incomplete. The six-year policy and 24-hour export access rule do not
 change. An implementation failure cannot justify weakening holds, ownership or SQL
 guards; return for a revised decision if the proposed boundary cannot be enforced.
 
-Approval record: pending. No processor, migration, API change or runtime enablement
-is included in this documentation increment.
+Approval record: on 19 October 2026 the user explicitly answered “Approve this
+bounded synthetic implementation” to the ADR-060 approval question covering exact
+receipt/job holds, restricted six-year expiry after copy cleanup and finite retry-key
+retention. This records implementation authorization, not application acceptance,
+legal sufficiency, real-data processing, account erasure or production activation.
+Implementation evidence belongs in the current sprint and requirements traceability.

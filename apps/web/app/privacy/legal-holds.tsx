@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { apiClient, type components } from "@kasoma/api-client";
+import { ExportHoldSources } from "./export-hold-sources";
 import { ChannelPreservation } from "./channel-preservation";
 
 type S = components["schemas"];
@@ -25,6 +26,9 @@ export function LegalHolds({
   target: string;
   onChange: () => void;
 }) {
+  const [recordType, setRecordType] =
+    useState<S["HoldInput"]["record_type"]>("DATA_REQUEST");
+  const [recordId, setRecordId] = useState(target);
   const [opened, setOpened] = useState(false);
   const [rows, setRows] = useState<S["HoldView"][]>([]);
   const [supported, setSupported] = useState<S["HoldInput"]["record_type"][]>(
@@ -149,7 +153,11 @@ export function LegalHolds({
       >
         {opened ? "Reload holds" : "Manage record holds"}
       </button>
-      {status && <p role="status">{status}</p>}
+      {status && (
+        <p role="status" aria-label="Hold operation status">
+          {status}
+        </p>
+      )}
       {pending && (
         <button
           className={button}
@@ -174,6 +182,16 @@ export function LegalHolds({
             reference. Each hold covers only the named record. For an existing
             channel snapshot, use its snapshot UUID, not its source link ID.
           </p>
+          {supported.includes("DATA_REQUEST_RECEIPT") && (
+            <ExportHoldSources
+              target={target}
+              disabled={busy || !!pending}
+              onSelect={(kind, id) => {
+                setRecordType(kind);
+                setRecordId(id);
+              }}
+            />
+          )}
           <form
             key={formVersion}
             onSubmit={(event) => {
@@ -205,7 +223,12 @@ export function LegalHolds({
                 Record type
                 <select
                   name="record_type"
-                  defaultValue="DATA_REQUEST"
+                  value={recordType}
+                  onChange={(event) =>
+                    setRecordType(
+                      event.target.value as S["HoldInput"]["record_type"],
+                    )
+                  }
                   className="ui-select"
                 >
                   <option value="DATA_REQUEST">Data request</option>
@@ -246,6 +269,16 @@ export function LegalHolds({
                       Existing conversation snapshot (snapshot UUID)
                     </option>
                   )}
+                  {supported.includes("DATA_REQUEST_RECEIPT") && (
+                    <option value="DATA_REQUEST_RECEIPT">
+                      Export request receipt (receipt UUID)
+                    </option>
+                  )}
+                  {supported.includes("EXPORT_JOB_RECEIPT") && (
+                    <option value="EXPORT_JOB_RECEIPT">
+                      Cleared expired export job (request reference)
+                    </option>
+                  )}
                   <option value="DATA_REQUEST_REVIEW">
                     Data request review (request reference)
                   </option>
@@ -264,7 +297,8 @@ export function LegalHolds({
                 Record reference
                 <input
                   name="record_id"
-                  defaultValue={target}
+                  value={recordId}
+                  onChange={(event) => setRecordId(event.target.value)}
                   required
                   pattern="[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
                   className="ui-input"

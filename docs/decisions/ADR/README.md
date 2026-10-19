@@ -144,4 +144,5 @@ This directory location follows the user-requested repository organization. It d
   records fixed-SDK hosted-only preparation, capacity gates and diagnostics.
 
 - [ADR-060: Completed export accountability retirement](060-completed-export-accountability-retirement-proposal.md)
-  proposes a default-disabled synthetic retention slice; explicit approval is pending.
+  has explicit user approval for a default-disabled bounded synthetic retention slice;
+  implementation verification and real-data/release approval remain separate.

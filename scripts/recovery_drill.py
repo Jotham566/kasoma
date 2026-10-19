@@ -78,6 +78,9 @@ def check_guards(engine: Engine) -> None:
         "DELETE FROM channel_preservation_bodies",
         "DELETE FROM channel_preservation_disposals",
         "DELETE FROM outbound_messages",
+        "UPDATE data_request_receipts SET id=gen_random_uuid()",
+        "DELETE FROM data_request_receipts WHERE id IN (SELECT record_id FROM legal_holds "
+        "WHERE record_type='DATA_REQUEST_RECEIPT')",
         "UPDATE inbound_messages SET command='STOP'",
         "UPDATE outbound_messages SET recipient_hash='synthetic-tampering'",
         "UPDATE attempts SET channel = 'WHATSAPP'",
@@ -253,6 +256,7 @@ def drill(settings: Settings) -> dict[str, object]:
             immutable_guards_verified=True,
             pgvector_verified=True,
             populated_export_verified=True,
+            exact_export_receipt_hold_verified=True,
             encrypted_short_text_verified=True,
             encrypted_channel_preservation_verified=True,
             object_storage_recovery_verified=False,

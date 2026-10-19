@@ -63,3 +63,13 @@ def test_channel_receipt_kind_is_explicitly_opted_in(kind):
     assert kind not in supported_record_types(False)
     assert kind in supported_record_types(True)
     assert Settings.model_fields["channel_receipt_holds_enabled"].default is False
+
+
+@pytest.mark.parametrize("kind", ["DATA_REQUEST_RECEIPT", "EXPORT_JOB_RECEIPT"])
+def test_export_evidence_is_separately_gated(kind):
+    from services.config import Settings
+    from services.legal_hold_contracts import supported_record_types
+
+    assert kind not in supported_record_types(True, True)
+    assert kind in supported_record_types(False, False, True)
+    assert Settings.model_fields["export_evidence_holds_enabled"].default is False

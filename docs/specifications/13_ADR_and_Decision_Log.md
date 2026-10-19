@@ -399,8 +399,10 @@ older standalone disk-exhaustion run remains failed; no real-data/erasure approv
 
 ## ADR-060: Completed export accountability retirement
 
-**Status:** Proposed; human approval pending. See
+**Status:** Approved by explicit user response on 19 October 2026 for bounded
+synthetic implementation only. See
 [ADR-060](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md).
-The proposed bounded synthetic slice covers due completed EXPORT accountability,
+The approved bounded synthetic slice covers due completed EXPORT accountability,
 two exact hold targets, restricted SQL execution and finite retry semantics. No
-deletion permission, runtime implementation or real-data approval is granted.
+real-data processing, account-erasure or production activation is granted.
+Implementation acceptance requires the decision’s migration, role and test gates.

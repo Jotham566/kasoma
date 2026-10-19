@@ -1308,3 +1308,14 @@ does not mutate conversations or require that grant; the assessment role is not 
 channel-writing role. Actual restricted capture/assessment tests do not establish a
 production channel-worker role profile. Verify that distinct role and forward rollout
 before any real-data deployment; do not broaden assessment or inspection privileges.
+
+## ADR-060 additive export preservation candidate
+
+`make test-export-evidence-holds` exercises isolated synthetic schemas, exact owner
+checks, original retry binding, populated 0038-to-head upgrade and an actual
+restricted login. `make test-web-privacy` covers the three-engine operator controls;
+its advertised-option test does not enable the server flag. Keep
+EXPORT_EVIDENCE_HOLDS_ENABLED=false in the running review stack until acceptance.
+This increment adds no maintenance routine or retirement schedule. No review-stack
+purge, real data, inference or external delivery is needed or authorized. See
+[verification](../implementation/E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md).

@@ -160,6 +160,6 @@ def populate(settings: Settings) -> RecoveryExport:
         populate_short_text(identity, token, subject, topic)
         channel_authority = populate_channel_receipts(identity, token)
         populate_preservation(identity, token, channel_authority)
-        return populate_export(identity, token)
+        return populate_export(identity, token, channel_authority)
     finally:
         engine.dispose()

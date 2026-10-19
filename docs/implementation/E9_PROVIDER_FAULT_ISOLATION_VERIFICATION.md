@@ -52,7 +52,8 @@ is separately verified and published to main. Keep the
 two increments and their exact source evidence distinct. Delayed/failed WhatsApp
 transport, mixed-provider workload, older/diagnostic histories, database resource
 measurement and external academic/privacy/provider/release gates remain open.
-ADR-060 approval remains pending; this test work grants no deletion authority.
+ADR-060 now has separate bounded synthetic approval; this test work itself grants
+no deletion authority.
 
 ## Complete hosted verification
 

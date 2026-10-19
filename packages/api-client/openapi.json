@@ -1686,6 +1686,51 @@
         "title": "ExportCounts",
         "type": "object"
       },
+      "ExportHoldSources": {
+        "additionalProperties": false,
+        "properties": {
+          "export_job_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Export Job Id"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "receipt_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Receipt Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "receipt_ids",
+          "next_cursor",
+          "export_job_id"
+        ],
+        "title": "ExportHoldSources",
+        "type": "object"
+      },
       "ExportJobCommand": {
         "additionalProperties": false,
         "properties": {},
@@ -2533,6 +2578,8 @@
               "MASTERY_HISTORY",
               "FLAG_HISTORY",
               "DATA_REQUEST_REVIEW",
+              "DATA_REQUEST_RECEIPT",
+              "EXPORT_JOB_RECEIPT",
               "GRADING_HISTORY",
               "GRADING_PUBLICATION",
               "GRADING_AUDIT",
@@ -2591,6 +2638,8 @@
                 "MASTERY_HISTORY",
                 "FLAG_HISTORY",
                 "DATA_REQUEST_REVIEW",
+                "DATA_REQUEST_RECEIPT",
+                "EXPORT_JOB_RECEIPT",
                 "GRADING_HISTORY",
                 "GRADING_PUBLICATION",
                 "GRADING_AUDIT",
@@ -2681,6 +2730,8 @@
               "MASTERY_HISTORY",
               "FLAG_HISTORY",
               "DATA_REQUEST_REVIEW",
+              "DATA_REQUEST_RECEIPT",
+              "EXPORT_JOB_RECEIPT",
               "GRADING_HISTORY",
               "GRADING_PUBLICATION",
               "GRADING_AUDIT",
@@ -7443,6 +7494,155 @@
           }
         },
         "summary": "Create Hold"
+      }
+    },
+    "/api/v1/admin/data-requests/{target}/holds/export-sources/{source}": {
+      "get": {
+        "operationId": "export_hold_sources_api_v1_admin_data_requests__target__holds_export_sources__source__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "source",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Source",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportHoldSources"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Export Hold Sources"
       }
     },
     "/api/v1/admin/data-requests/{target}/holds/{hold}/release": {

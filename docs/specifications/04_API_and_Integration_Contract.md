@@ -825,3 +825,23 @@ The exact web proxy admits only POST for the two new paths. Operator controls se
 check the source and confirm an authorized finite capture, preserve the same key/body
 after an uncertain response, and clear stale selections before a new capture. No
 source version, payload or internal ciphertext is displayed. Browser acceptance remains pending.
+
+### Exact export evidence references (ADR-060 additive candidate)
+
+`GET /api/v1/admin/data-requests/{target}/holds/export-sources/{source}` requires
+recent independent ADMIN ownership of the pending DELETE case target and an exact
+EXPORT source owned by its requester. It shares the 60/minute hold-read pool and
+returns no-store ExportHoldSources: receipt_ids (at most50), next_cursor and optional
+export_job_id. limit defaults20/max50; cursor is an exclusive receipt UUID, ordered
+ascending. No keys, hashes, grants, contacts or source bodies are disclosed. Missing,
+foreign and non-EXPORT sources return404; unauthenticated/unauthorized access uses
+existing401/403 policy. Lookup remains readable independently of the creation flag.
+
+Existing hold POST additionally accepts DATA_REQUEST_RECEIPT (receipt UUID) and
+EXPORT_JOB_RECEIPT (request UUID). Both require EXPORT_EVIDENCE_HOLDS_ENABLED, false
+by default, otherwise409 HOLD_TARGET_UNAVAILABLE. Receipt ownership follows its EXPORT parent; a staff claim actor is not the
+subject owner. Jobs must be EXPIRED with no grant/current generation or generation rows.
+Finite dates use database wall clock and exact ownership is independently guarded in
+SQL. Missing/ineligible sources return404; release/listing remain independent of the
+creation flag. Existing exact retry semantics and DELETE guards are unchanged.
+The approved finite retry-retirement boundary awaits the separate processor increment.

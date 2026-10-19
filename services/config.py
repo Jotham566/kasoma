@@ -54,6 +54,7 @@ class Settings(BaseSettings):
     ops_request_min_samples: int = Field(default=20, ge=1, le=10000)
     ops_import_age_seconds: int = Field(default=300, ge=60, le=86400)
     ops_flag_backlog_threshold: int = Field(default=20, ge=1, le=10000)
+    export_evidence_holds_enabled: bool = False
     channel_receipt_holds_enabled: bool = False
     channel_preservation_enabled: bool = False
     model_observation_enabled: bool = False

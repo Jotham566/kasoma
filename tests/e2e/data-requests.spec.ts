@@ -385,7 +385,9 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
       name: /^Record legal holds for request /,
     });
     await holds.getByRole("button", { name: "Manage record holds" }).click();
-    await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await expect(
+      holds.getByRole("status", { name: "Hold operation status" }),
+    ).toHaveText("Holds loaded.");
     await expect(holds).toContainText(
       "Existing retention rules can remove eligible records",
     );
@@ -421,13 +423,17 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
               ...body.supported_record_types,
               "CHANNEL_INBOUND_RECEIPT",
               "CHANNEL_OUTBOUND_RECEIPT",
+              "DATA_REQUEST_RECEIPT",
+              "EXPORT_JOB_RECEIPT",
             ],
           },
         });
       },
     );
     await holds.getByRole("button", { name: "Reload holds" }).click();
-    await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await expect(
+      holds.getByRole("status", { name: "Hold operation status" }),
+    ).toHaveText("Holds loaded.");
     await expect(
       holds
         .getByLabel("Record type")
@@ -441,6 +447,80 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     await expect(holds).toContainText(
       "Queued messages, live contacts, link codes and conversations are not supported",
     );
+    const originalRecord = await holds
+      .getByLabel("Record reference", { exact: true })
+      .inputValue();
+    const holdExportReference = randomUUID();
+    const receiptReference = randomUUID();
+    const nextReceipt = randomUUID();
+    await admin.route(
+      "**/api/v1/admin/data-requests/*/holds/export-sources/*",
+      async (route) => {
+        const next = new URL(route.request().url()).searchParams.has("cursor");
+        await route.fulfill({
+          json: {
+            receipt_ids: [next ? nextReceipt : receiptReference],
+            next_cursor: next ? null : receiptReference,
+            export_job_id: holdExportReference,
+          },
+        });
+      },
+    );
+    const lookup = holds.getByRole("region", {
+      name: "Find exact export evidence",
+    });
+    await lookup
+      .getByLabel("Export request reference", { exact: true })
+      .fill(holdExportReference);
+    await lookup
+      .getByRole("button", { name: "Find export evidence", exact: true })
+      .click();
+    await expect(lookup.getByRole("status")).toHaveText(
+      "Export evidence references loaded.",
+    );
+    await lookup
+      .getByRole("button", {
+        name: `Use receipt ${receiptReference}`,
+        exact: true,
+      })
+      .click();
+    await expect(holds.getByLabel("Record type")).toHaveValue(
+      "DATA_REQUEST_RECEIPT",
+    );
+    await expect(
+      holds.getByLabel("Record reference", { exact: true }),
+    ).toHaveValue(receiptReference);
+    await lookup
+      .getByRole("button", { name: "Next receipt references", exact: true })
+      .click();
+    await expect(
+      lookup.getByRole("button", {
+        name: `Use receipt ${nextReceipt}`,
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      lookup.getByRole("button", {
+        name: `Use receipt ${receiptReference}`,
+        exact: true,
+      }),
+    ).toHaveCount(0);
+    await lookup
+      .getByRole("button", {
+        name: `Use expired job ${holdExportReference}`,
+        exact: true,
+      })
+      .click();
+    await expect(holds.getByLabel("Record type")).toHaveValue(
+      "EXPORT_JOB_RECEIPT",
+    );
+    await expect(
+      holds.getByLabel("Record reference", { exact: true }),
+    ).toHaveValue(holdExportReference);
+    await holds.getByLabel("Record type").selectOption("DATA_REQUEST");
+    await holds
+      .getByLabel("Record reference", { exact: true })
+      .fill(originalRecord);
     const priorViewport = admin.viewportSize();
     await admin.setViewportSize({ width: 320, height: 740 });
     await admin.evaluate(() => {
@@ -466,7 +546,9 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     if (priorViewport) await admin.setViewportSize(priorViewport);
     await admin.unroute("**/api/v1/admin/data-requests/*/holds?*");
     await holds.getByRole("button", { name: "Reload holds" }).click();
-    await expect(holds.getByRole("status")).toHaveText("Holds loaded.");
+    await expect(
+      holds.getByRole("status", { name: "Hold operation status" }),
+    ).toHaveText("Holds loaded.");
     await expect(
       holds
         .getByLabel("Record type")
@@ -501,16 +583,16 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     await holds
       .getByRole("button", { name: "Create hold", exact: true })
       .click();
-    await expect(holds.getByRole("status")).toContainText(
-      "Could not confirm the operation",
-    );
+    await expect(
+      holds.getByRole("status", { name: "Hold operation status" }),
+    ).toContainText("Could not confirm the operation");
     await expect(
       holds.getByLabel("Record reference", { exact: true }),
     ).toBeDisabled();
     await holds.getByRole("button", { name: "Retry hold operation" }).click();
-    await expect(holds.getByRole("status")).toHaveText(
-      "Hold decision recorded. Deletion remains disabled.",
-    );
+    await expect(
+      holds.getByRole("status", { name: "Hold operation status" }),
+    ).toHaveText("Hold decision recorded. Deletion remains disabled.");
     await expect(holds.getByRole("listitem")).toHaveCount(1);
     await holds.getByLabel("Record type").selectOption("DATA_REQUEST_REVIEW");
     await expect(
@@ -577,9 +659,9 @@ test("FR-ID-006: request without learning consent, recover receipt and independe
     await holds
       .getByRole("button", { name: "Confirm release", exact: true })
       .click();
-    await expect(holds.getByRole("status")).toContainText(
-      "Could not confirm the operation",
-    );
+    await expect(
+      holds.getByRole("status", { name: "Hold operation status" }),
+    ).toContainText("Could not confirm the operation");
     await holds.getByRole("button", { name: "Retry hold operation" }).click();
     await expect(holds.getByText(/— RELEASED/)).toHaveCount(1);
     await deletion

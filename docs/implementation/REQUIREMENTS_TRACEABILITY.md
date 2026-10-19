@@ -40,14 +40,21 @@ locally/remotely. Independent provider/UI candidate acceptance remains separate.
 The local runbook and testing specification document both optional isolated profiles
 and their unchanged thresholds; documenting the command grants no new acceptance.
 
-## Proposed retention boundary — not implemented
+## Approved synthetic retention boundary — implementation in progress
 
 FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
 [ADR-060](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md)
 defines a reviewable synthetic completed-EXPORT accountability retirement slice.
 It identifies exact receipt/job holds, six-year eligibility, object cleanup and
 restricted SQL prerequisites, finite retry semantics and acceptance tests. Human
-approval is pending; no runtime, migration or application acceptance is supplied.
+approval is recorded on 19 October 2026; application acceptance remains separate.
+The [exact preservation foundation](E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md) adds
+receipt identity, gated receipt/job holds and bounded source lookup with tests.
+Ten focused integration cases (including restricted LOGIN and upgrades), six
+three-engine privacy journeys, 1,094 unit/contract, 35 tooling, types/contracts/build
+and populated exact-hold recovery pass. Full integration/hosted acceptance remains
+pending; no retirement
+permission, processor or account-erasure capability is introduced.
 Existing retention/erasure gaps remain open. Main closeout `f1bd1ad` separately
 passes complete hosted [39189901813](https://github.com/Jotham566/kasoma/actions/runs/39189901813).
 

@@ -18,6 +18,8 @@ RecordType = Literal[
     "MASTERY_HISTORY",
     "FLAG_HISTORY",
     "DATA_REQUEST_REVIEW",
+    "DATA_REQUEST_RECEIPT",
+    "EXPORT_JOB_RECEIPT",
     "GRADING_HISTORY",
     "GRADING_PUBLICATION",
     "GRADING_AUDIT",
@@ -27,18 +29,20 @@ RecordType = Literal[
     "CHANNEL_LINK_SNAPSHOT",
     "CHANNEL_CONVERSATION_SNAPSHOT",
 ]
+EXPORT_EVIDENCE_TYPES = frozenset({"DATA_REQUEST_RECEIPT", "EXPORT_JOB_RECEIPT"})
 CHANNEL_RECEIPT_TYPES = frozenset({"CHANNEL_INBOUND_RECEIPT", "CHANNEL_OUTBOUND_RECEIPT"})
 CHANNEL_SNAPSHOT_TYPES = frozenset({"CHANNEL_LINK_SNAPSHOT", "CHANNEL_CONVERSATION_SNAPSHOT"})
 
 
 def supported_record_types(
-    channel_receipts: bool, channel_snapshots: bool = False
+    channel_receipts: bool, channel_snapshots: bool = False, export_evidence: bool = False
 ) -> list[RecordType]:
     return [
         kind
         for kind in get_args(RecordType)
         if (channel_receipts or kind not in CHANNEL_RECEIPT_TYPES)
         and (channel_snapshots or kind not in CHANNEL_SNAPSHOT_TYPES)
+        and (export_evidence or kind not in EXPORT_EVIDENCE_TYPES)
     ]
 
 
@@ -80,3 +84,9 @@ class HoldPage(Contract):
     data: list[HoldView]
     next_cursor: UUID | None
     supported_record_types: list[RecordType] = Field(default_factory=list)
+
+
+class ExportHoldSources(Contract):
+    receipt_ids: list[UUID] = Field(max_length=50)
+    next_cursor: UUID | None
+    export_job_id: UUID | None

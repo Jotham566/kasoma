@@ -425,3 +425,7 @@ test-web-select-targets:
 	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/mobile-reflow.spec.ts
+
+.PHONY: test-export-evidence-holds
+test-export-evidence-holds:
+	$(UV) pytest tests/integration/test_export_evidence_holds.py tests/integration/test_export_evidence_runtime_role.py --allow-hosts=localhost,127.0.0.1,::1

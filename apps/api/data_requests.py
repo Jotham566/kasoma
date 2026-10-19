@@ -22,7 +22,13 @@ from services.data_request_contracts import (
     DeletionPreview,
 )
 from services.data_requests import DataRequestService
-from services.legal_hold_contracts import HoldInput, HoldPage, HoldRelease, HoldView
+from services.legal_hold_contracts import (
+    ExportHoldSources,
+    HoldInput,
+    HoldPage,
+    HoldRelease,
+    HoldView,
+)
 from services.legal_holds import LegalHoldService
 
 router = APIRouter(
@@ -163,4 +169,20 @@ def capture_channel_source(
 ) -> HoldView:
     return ChannelPreservationService(service(request)).capture(
         bearer(request), target, body, idempotency_key, UUID(request.state.request_id)
+    )
+
+
+@router.get(
+    "/admin/data-requests/{target}/holds/export-sources/{source}",
+    response_model=ExportHoldSources,
+)
+def export_hold_sources(
+    target: UUID,
+    source: UUID,
+    request: Request,
+    cursor: UUID | None = None,
+    limit: Annotated[int, Query(ge=1, le=50)] = 20,
+) -> ExportHoldSources:
+    return LegalHoldService(service(request)).export_sources(
+        bearer(request), target, source, cursor, limit, UUID(request.state.request_id)
     )

@@ -6,16 +6,19 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.elements import ColumnElement
 
 from services.data_requests import DataRequestService
 from services.domain.assessment import Attempt, Grade
 from services.domain.channel_preservation import ChannelSnapshot, ChannelSnapshotBody
 from services.domain.data_requests import (
     DataRequest,
+    DataRequestReceipt,
     DataRequestReview,
     LegalHold,
     LegalHoldReceipt,
 )
+from services.domain.export_jobs import ExportGeneration, ExportJob
 from services.domain.flags import ContentFlag, FlagHistory
 from services.domain.grading_audits import (
     GradingAuditAssignment,
@@ -30,6 +33,8 @@ from services.identity import IdentityError, IdentityService
 from services.legal_hold_contracts import (
     CHANNEL_RECEIPT_TYPES,
     CHANNEL_SNAPSHOT_TYPES,
+    EXPORT_EVIDENCE_TYPES,
+    ExportHoldSources,
     HoldInput,
     HoldPage,
     HoldRelease,
@@ -38,6 +43,8 @@ from services.legal_hold_contracts import (
     supported_record_types,
 )
 from services.staff import authorize
+
+WALL_CLOCK_TYPES = CHANNEL_SNAPSHOT_TYPES | EXPORT_EVIDENCE_TYPES
 
 
 def active(db: Session, kind: RecordType, target: UUID, at: datetime) -> bool:
@@ -53,7 +60,7 @@ def database_now(db: Session) -> datetime:
 
 def active_count(db: Session, user: UUID, at: datetime) -> tuple[int, bool]:
     observed_at = case(
-        (LegalHold.record_type.in_(CHANNEL_SNAPSHOT_TYPES), func.clock_timestamp()), else_=at
+        (LegalHold.record_type.in_(WALL_CLOCK_TYPES), func.clock_timestamp()), else_=at
     )
     limited = (
         select(LegalHold.id)
@@ -69,6 +76,18 @@ def active_count(db: Session, user: UUID, at: datetime) -> tuple[int, bool]:
     )
     count = db.scalar(select(func.count()).select_from(limited)) or 0
     return min(count, 10_000), count > 10_000
+
+
+def cleared_job_predicates() -> tuple[ColumnElement[bool], ...]:
+    return (
+        ExportJob.status == "EXPIRED",
+        ExportJob.grant_family.is_(None),
+        ExportJob.grant_authenticated_at.is_(None),
+        ExportJob.generation_id.is_(None),
+        ~select(ExportGeneration.id)
+        .where(ExportGeneration.request_id == ExportJob.request_id)
+        .exists(),
+    )
 
 
 class LegalHoldService:
@@ -147,6 +166,10 @@ class LegalHoldService:
             actor, request = self.access(db, token, target)
             channel_receipt = body.record_type in CHANNEL_RECEIPT_TYPES
             snapshot = body.record_type in CHANNEL_SNAPSHOT_TYPES
+            export_evidence = body.record_type in EXPORT_EVIDENCE_TYPES
+            wall_clock = snapshot or export_evidence
+            if export_evidence and not self.identity.settings.export_evidence_holds_enabled:
+                raise IdentityError("HOLD_TARGET_UNAVAILABLE", 409)
             if channel_receipt and not self.identity.settings.channel_receipt_holds_enabled:
                 raise IdentityError("HOLD_TARGET_UNAVAILABLE", 409)
             if snapshot and not self.identity.settings.channel_preservation_enabled:
@@ -157,16 +180,37 @@ class LegalHoldService:
                 channel_lock(self.identity, db)
             old = self.replay(db, actor, key, digest)
             if old:
-                return self.view(old, database_now(db) if snapshot else None)
+                return self.view(old, database_now(db) if wall_clock else None)
             at = self.identity.clock()
-            if channel_receipt or snapshot:
+            if channel_receipt or wall_clock:
                 observed = database_now(db)
-                at = observed if snapshot else min(at, observed)
+                at = observed if wall_clock else min(at, observed)
                 review = db.get(DataRequestReview, target)
                 if review is None or review.created_at > at:
                     raise IdentityError("HOLD_TARGET_UNAVAILABLE", 503)
             if body.expires_at <= at:
                 raise IdentityError("HOLD_END_REQUIRED", 422)
+            if export_evidence:
+                source_id = (
+                    db.scalar(
+                        select(DataRequestReceipt.request_id).where(
+                            DataRequestReceipt.id == body.record_id
+                        )
+                    )
+                    if body.record_type == "DATA_REQUEST_RECEIPT"
+                    else body.record_id
+                )
+                source = db.scalar(
+                    select(DataRequest)
+                    .where(
+                        DataRequest.id == source_id,
+                        DataRequest.user_id == request.user_id,
+                        DataRequest.kind == "EXPORT",
+                    )
+                    .with_for_update()
+                )
+                if source is None:
+                    raise IdentityError("RESOURCE_NOT_FOUND", 404)
             snapshot_query = (
                 select(ChannelSnapshot.id)
                 .join(ChannelSnapshotBody, ChannelSnapshotBody.snapshot_id == ChannelSnapshot.id)
@@ -246,6 +290,13 @@ class LegalHoldService:
                 .where(
                     FlagHistory.id == body.record_id, ContentFlag.reporter_id == request.user_id
                 ),
+                "DATA_REQUEST_RECEIPT": select(DataRequestReceipt.id).where(
+                    DataRequestReceipt.id == body.record_id,
+                ),
+                "EXPORT_JOB_RECEIPT": select(ExportJob.request_id).where(
+                    ExportJob.request_id == body.record_id,
+                    *cleared_job_predicates(),
+                ),
                 "DATA_REQUEST_REVIEW": select(DataRequestReview.request_id)
                 .join(DataRequest, DataRequest.id == DataRequestReview.request_id)
                 .where(
@@ -259,7 +310,11 @@ class LegalHoldService:
             locked = (
                 query.with_for_update(of=ChannelSnapshotBody)
                 if snapshot
-                else query.with_for_update(read=True, key_share=True)
+                else (
+                    query.with_for_update()
+                    if export_evidence
+                    else query.with_for_update(read=True, key_share=True)
+                )
             )
             if db.scalar(locked) is None:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
@@ -283,7 +338,7 @@ class LegalHoldService:
                 self.evidence(
                     db, actor, row, key, digest, "legal_hold.created", request.user_id, request_id
                 )
-            return self.view(row, at if snapshot else None)
+            return self.view(row, at if wall_clock else None)
 
     def release(
         self, token: str, target: UUID, hold: UUID, body: HoldRelease, key: UUID, request_id: UUID
@@ -296,12 +351,12 @@ class LegalHoldService:
             old = self.replay(db, actor, key, digest)
             if old:
                 return self.view(
-                    old, database_now(db) if old.record_type in CHANNEL_SNAPSHOT_TYPES else None
+                    old, database_now(db) if old.record_type in WALL_CLOCK_TYPES else None
                 )
             row = db.get(LegalHold, hold)
             if row is None or row.request_id != target:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
-            snapshot = row.record_type in CHANNEL_SNAPSHOT_TYPES
+            snapshot = row.record_type in WALL_CLOCK_TYPES
             at = database_now(db) if snapshot else self.identity.clock()
             if row.released_at or row.expires_at <= at:
                 raise IdentityError("HOLD_NOT_ACTIVE", 409)
@@ -328,18 +383,62 @@ class LegalHoldService:
             rows = list(db.scalars(query.order_by(LegalHold.id).limit(limit + 1)))
             observed = (
                 database_now(db)
-                if any(row.record_type in CHANNEL_SNAPSHOT_TYPES for row in rows[:limit])
+                if any(row.record_type in WALL_CLOCK_TYPES for row in rows[:limit])
                 else None
             )
             self.requests.audit(db, actor, target, "legal_hold.queue_read", request_id)
             return HoldPage(
                 data=[
-                    self.view(r, observed if r.record_type in CHANNEL_SNAPSHOT_TYPES else None)
+                    self.view(r, observed if r.record_type in WALL_CLOCK_TYPES else None)
                     for r in rows[:limit]
                 ],
                 next_cursor=rows[limit - 1].id if len(rows) > limit else None,
                 supported_record_types=supported_record_types(
                     self.identity.settings.channel_receipt_holds_enabled,
                     self.identity.settings.channel_preservation_enabled,
+                    self.identity.settings.export_evidence_holds_enabled,
                 ),
+            )
+
+    def export_sources(
+        self,
+        token: str,
+        target: UUID,
+        source: UUID,
+        cursor: UUID | None,
+        limit: int,
+        request_id: UUID,
+    ) -> ExportHoldSources:
+        with self.identity.transaction() as db:
+            actor, case = self.access(db, token, target)
+            if not self.identity.rate(db, f"legal-hold-read:{actor}", 60, 60):
+                raise IdentityError("RATE_LIMITED", 429)
+            parent = db.scalar(
+                select(DataRequest)
+                .where(
+                    DataRequest.id == source,
+                    DataRequest.user_id == case.user_id,
+                    DataRequest.kind == "EXPORT",
+                )
+                .with_for_update()
+            )
+            if parent is None:
+                raise IdentityError("RESOURCE_NOT_FOUND", 404)
+            query = select(DataRequestReceipt.id).where(
+                DataRequestReceipt.request_id == source,
+            )
+            if cursor is not None:
+                query = query.where(DataRequestReceipt.id > cursor)
+            receipts = list(db.scalars(query.order_by(DataRequestReceipt.id).limit(limit + 1)))
+            job = db.scalar(
+                select(ExportJob.request_id).where(
+                    ExportJob.request_id == source,
+                    *cleared_job_predicates(),
+                )
+            )
+            self.requests.audit(db, actor, target, "legal_hold.export_sources_read", request_id)
+            return ExportHoldSources(
+                receipt_ids=receipts[:limit],
+                next_cursor=receipts[limit - 1] if len(receipts) > limit else None,
+                export_job_id=job,
             )

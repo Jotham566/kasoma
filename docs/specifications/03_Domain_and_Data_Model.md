@@ -533,3 +533,16 @@ The preview inventories metadata, encrypted bodies and disposal receipts separat
 bodies use ACTIVE_EXACT_PRESERVATION_ONLY. Existing export projection excludes this
 internal evidence. LEGAL_HOLD_COVERAGE_INCOMPLETE and execution=false remain. Full
 candidate acceptance is pending; see [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md).
+
+## Exact export evidence identity and holds (ADR-060 additive candidate)
+
+Migration 0039 adds data_request_receipts.id, a generated unique non-null UUID; the
+actor_id/key composite primary key and immutable retry binding remain unchanged.
+DATA_REQUEST_RECEIPT names this exact UUID with ownership through its EXPORT parent. Forward 0040 ensures staff-claim receipts
+follow the same subject ownership; the staff actor is not the data subject.
+EXPORT_JOB_RECEIPT uses request_id for an EXPIRED job with no grants, current
+generation or remaining generation rows. Ownership follows the EXPORT request.
+Parent then leaf locking is shared by service/SQL; existing immutability is retained.
+These holds use database wall clock. Creation defaults disabled; existing reads and
+release remain available. No processor or delete authority is added in this increment.
+See [verification](../implementation/E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md).

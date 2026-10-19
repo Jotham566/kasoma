@@ -211,6 +211,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/data-requests/{target}/holds/export-sources/{source}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Hold Sources */
+        get: operations["export_hold_sources_api_v1_admin_data_requests__target__holds_export_sources__source__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/data-requests/{target}/holds/{hold}/release": {
         parameters: {
             query?: never;
@@ -1738,6 +1755,15 @@ export interface components {
             queued: components["schemas"]["Count"];
             running: components["schemas"]["Count"];
         };
+        /** ExportHoldSources */
+        ExportHoldSources: {
+            /** Export Job Id */
+            export_job_id: string | null;
+            /** Next Cursor */
+            next_cursor: string | null;
+            /** Receipt Ids */
+            receipt_ids: string[];
+        };
         /** ExportJobCommand */
         ExportJobCommand: Record<string, never>;
         /** ExportJobView */
@@ -2123,7 +2149,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT" | "CHANNEL_LINK_SNAPSHOT" | "CHANNEL_CONVERSATION_SNAPSHOT";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "DATA_REQUEST_RECEIPT" | "EXPORT_JOB_RECEIPT" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT" | "CHANNEL_LINK_SNAPSHOT" | "CHANNEL_CONVERSATION_SNAPSHOT";
         };
         /** HoldPage */
         HoldPage: {
@@ -2132,7 +2158,7 @@ export interface components {
             /** Next Cursor */
             next_cursor: string | null;
             /** Supported Record Types */
-            supported_record_types?: ("CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT" | "CHANNEL_LINK_SNAPSHOT" | "CHANNEL_CONVERSATION_SNAPSHOT")[];
+            supported_record_types?: ("CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "DATA_REQUEST_RECEIPT" | "EXPORT_JOB_RECEIPT" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT" | "CHANNEL_LINK_SNAPSHOT" | "CHANNEL_CONVERSATION_SNAPSHOT")[];
         };
         /** HoldRelease */
         HoldRelease: {
@@ -2183,7 +2209,7 @@ export interface components {
              * Record Type
              * @enum {string}
              */
-            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT" | "CHANNEL_LINK_SNAPSHOT" | "CHANNEL_CONVERSATION_SNAPSHOT";
+            record_type: "CONSENT" | "ATTEMPT" | "CONTENT_FLAG" | "DATA_REQUEST" | "GRADE" | "MASTERY_EVIDENCE" | "MASTERY_HISTORY" | "FLAG_HISTORY" | "DATA_REQUEST_REVIEW" | "DATA_REQUEST_RECEIPT" | "EXPORT_JOB_RECEIPT" | "GRADING_HISTORY" | "GRADING_PUBLICATION" | "GRADING_AUDIT" | "GRADING_REVIEW" | "CHANNEL_INBOUND_RECEIPT" | "CHANNEL_OUTBOUND_RECEIPT" | "CHANNEL_LINK_SNAPSHOT" | "CHANNEL_CONVERSATION_SNAPSHOT";
             /** Release Reference */
             release_reference: string | null;
             /** Released At */
@@ -4760,6 +4786,104 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HoldView"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    export_hold_sources_api_v1_admin_data_requests__target__holds_export_sources__source__get: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                target: string;
+                source: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportHoldSources"];
                 };
             };
             /** @description Unauthorized */

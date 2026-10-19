@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, ForeignKey
+from sqlalchemy import DateTime, ForeignKey, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from services.database import Base
@@ -34,6 +34,11 @@ class DataRequestReview(Base):
 
 class DataRequestReceipt(Base):
     __tablename__ = "data_request_receipts"
+    # Deferred defaults keep historical upgrade fixtures usable before 0039.
+    __mapper_args__ = {"eager_defaults": False}
+    id: Mapped[UUID] = mapped_column(
+        unique=True, server_default=text("gen_random_uuid()"), deferred=True
+    )
     actor_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), primary_key=True)
     key: Mapped[UUID] = mapped_column(primary_key=True)
     request_hash: Mapped[str]
