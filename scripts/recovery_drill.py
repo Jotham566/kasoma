@@ -32,6 +32,7 @@ from services.domain.grading_audits import (
 )
 from services.domain.identity import Consent
 from services.domain.mastery import MasteryEvidence
+from services.export_retirement_install import owner_name
 from services.identity import IdentityError, IdentityService
 from services.providers import FakeMessagingProvider
 
@@ -110,6 +111,21 @@ def check_guards(engine: Engine) -> None:
                 db.rollback()
         if not rejected:
             raise RuntimeError("Restored immutable evidence guard did not reject a mutation")
+
+
+def verify_retirement_disabled(engine: Engine) -> None:
+    with engine.connect() as db:
+        if db.scalar(text("SELECT enabled FROM export_retirement_state")) is not False:
+            raise RuntimeError("Restored retirement must require explicit activation")
+        try:
+            db.execute(text("SELECT retire_completed_export_evidence()"))
+        except DBAPIError as rejected:
+            if getattr(rejected.orig, "sqlstate", None) != "42501":
+                raise RuntimeError("Restored retirement boundary is invalid") from None
+        else:
+            raise RuntimeError("Stripped retirement ownership must fail closed")
+        finally:
+            db.rollback()
 
 
 def drill(settings: Settings) -> dict[str, object]:
@@ -235,6 +251,7 @@ def drill(settings: Settings) -> dict[str, object]:
             ):
                 raise RuntimeError("Restored audit activity index is missing")
         check_guards(restored_engine)
+        verify_retirement_disabled(restored_engine)
         stage = "VERIFY_RESTORED_EXPORT"
         fake = FakeMessagingProvider()
         restored_settings = synthetic.model_copy(
@@ -257,6 +274,7 @@ def drill(settings: Settings) -> dict[str, object]:
             pgvector_verified=True,
             populated_export_verified=True,
             exact_export_receipt_hold_verified=True,
+            stripped_retirement_execution_denied=True,
             encrypted_short_text_verified=True,
             encrypted_channel_preservation_verified=True,
             object_storage_recovery_verified=False,
@@ -289,6 +307,21 @@ def drill(settings: Settings) -> dict[str, object]:
                     db.execute(text(f'DROP DATABASE "{validate_name(name)}"'))
             except Exception:
                 cleanup_failed.append(name)
+        # These role names derive only from the fresh databases created above.
+        # Preserve their roles if database cleanup failed; never alter shared roles.
+        for name in created:
+            if name in cleanup_failed:
+                continue
+            role = owner_name(name, "public")
+            try:
+                with admin.connect() as db:
+                    if db.scalar(
+                        text("SELECT EXISTS(SELECT 1 FROM pg_roles WHERE rolname=:role)"),
+                        {"role": role},
+                    ):
+                        db.execute(text(f'DROP ROLE "{role}"'))
+            except Exception:
+                cleanup_failed.append(role)
         admin.dispose()
     result["cleanup_failed"] = cleanup_failed
     if cleanup_failed:

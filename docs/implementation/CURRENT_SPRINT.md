@@ -6,6 +6,23 @@ Updated 19 October 2026. This is not a completed MVP or production-release decla
 [the current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md)
 preserve the evidence and boundaries.
 
+## Current SQL retirement candidate
+
+The [ADR-060 SQL capability](E8_EXPORT_RETIREMENT_VERIFICATION.md) is in verification:
+additive 0041, minimal NOLOGIN owner and EXECUTE-only maintenance boundary, independent
+eligibility/hold guards, fair 100/200 bounds, explicit parent/leaf locking and atomic
+count-only audit. The default-disabled scope guard rejects review public/production.
+Final 31 focused cases plus10 hold and 3 byte-recovery regressions pass; all six
+three-engine privacy journeys, 1,096 unit/contract and 35 tooling, types/contracts/
+security/build/image scans pass. The full 456-case local integration suite is running. Migration,
+seed and logical recovery pass 69 tables/686 rows in 423 ms, including fail-closed
+execution after stripped ownership. Scheduling/configuration/health and full source
+acceptance remain pending. The running review stack remains disabled.
+
+The corrected foundation source `be2735e` is running complete hosted39232307831;
+old5fa939d/39229138880 is cancelled after its known three local fixture failures.
+No passing full regression is claimed for either pending candidate.
+
 ## Current approved implementation
 
 ADR-060 now has explicit bounded synthetic approval (19 October 2026). The

@@ -1,5 +1,21 @@
 # Changelog
 
+## In verification — restricted synthetic export evidence retirement
+
+- FR-ID-006/FR-OPS-003/BR-010/NFR-SEC-002/NFR-MNT-001: implement approved ADR-060's
+  parameter-free SQL capability, minimal NOLOGIN owner, independent due/hold guards,
+  bounded fair scanning and atomic count-only audit. Default false and isolated
+  synthetic scope checks exclude the normal review database and real processing.
+  Preserve original UPDATE/grant/worker guards and align review-hold lock order.
+- Test through real EXECUTE-only LOGINs, exact holds/races, held-prefix bounds,
+  rollback and stripped-owner recovery. Final 31 focused cases, ten existing
+  hold cases, three byte-recovery cases and six three-engine privacy journeys pass.
+  Lint/types/contracts/security, 1,096 unit/contract, 35 tooling and image scans pass;
+  the full 456-case integration suite is running. Migration/seed and 69-table/686-row
+  logical recovery pass (423 ms); full acceptance remains pending. No scheduler,
+  account erasure or review-stack retirement is enabled.
+
+
 ## In verification — exact export evidence holds
 
 - Record explicit bounded synthetic ADR-060 approval for FR-ID-006/FR-OPS-003/BR-010/

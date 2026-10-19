@@ -1,5 +1,19 @@
 # Requirements Traceability
 
+## Restricted completed-EXPORT SQL candidate — not accepted
+
+FR-ID-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
+[SQL retirement evidence](E8_EXPORT_RETIREMENT_VERIFICATION.md) records approved
+ADR-060's exact four-table due/hold policy, actual EXECUTE-only LOGIN boundary,
+default-off isolated scope, bounded fair scanning and atomic minimized audit.
+Final 31 focused,10 existing hold and 3 byte-recovery cases, six browser journeys,
+1,096 unit/contract and 35 tooling, types/contracts/security/build/image scans pass.
+The full 456-case local integration suite is running and not counted as a pass. Clean/populated
+migration and 69-table/686-row recovery include stripped-owner execution denial.
+Full local/hosted acceptance, scheduler/configuration/health and other lifecycle/
+external release gates remain pending. No review-stack purge or account erasure.
+
+
 ## Verified profile presentation correction
 
 FR-ID-001/005 / NFR-ACC-001 / NFR-MNT-001:

@@ -95,6 +95,7 @@ def test_create_failure_never_drops_uncreated_database(settings, monkeypatch):
 
 def test_partial_creation_cleans_only_the_owned_source(settings, monkeypatch):
     engine = MagicMock()
+    engine.connect.return_value.__enter__.return_value.scalar.return_value = False
     execute = engine.connect.return_value.__enter__.return_value.execute
     execute.side_effect = [None, RuntimeError("existing destination"), None]
     monkeypatch.setattr("scripts.recovery_drill.create_engine", lambda *a, **k: engine)
@@ -118,6 +119,7 @@ def test_partial_creation_cleans_only_the_owned_source(settings, monkeypatch):
 
 def test_migration_failure_and_cleanup_failure_are_reported_safely(settings, monkeypatch):
     engine = MagicMock()
+    engine.connect.return_value.__enter__.return_value.scalar.return_value = False
     execute = engine.connect.return_value.__enter__.return_value.execute
     execute.side_effect = [None, None, RuntimeError("private DB diagnostic"), None]
     monkeypatch.setattr("scripts.recovery_drill.create_engine", lambda *a, **k: engine)
@@ -142,3 +144,46 @@ def test_migration_failure_and_cleanup_failure_are_reported_safely(settings, mon
     statements = [str(call.args[0]) for call in execute.call_args_list]
     assert statements[2] == statements[1].replace("CREATE", "DROP")
     assert statements[3] == statements[0].replace("CREATE", "DROP")
+
+
+@pytest.mark.parametrize("source_drop_fails", [False, True])
+def test_cleanup_drops_only_derived_owner_after_its_created_database_is_gone(
+    settings, monkeypatch, source_drop_fails
+):
+    from services.export_retirement_install import owner_name
+
+    engine = MagicMock()
+    connection = engine.connect.return_value.__enter__.return_value
+    statements = []
+
+    def execute(statement):
+        value = str(statement)
+        statements.append(value)
+        if source_drop_fails and value.startswith('DROP DATABASE "kasoma_drill_src_'):
+            raise RuntimeError("Synthetic retained database")
+
+    connection.execute.side_effect = execute
+    # Source has the installer-created role; destination never ran migrations.
+    connection.scalar.side_effect = [False] if source_drop_fails else [True, False]
+    monkeypatch.setattr("scripts.recovery_drill.create_engine", lambda *a, **k: engine)
+    monkeypatch.setattr("scripts.recovery_drill.subprocess.run", Mock())
+    monkeypatch.setattr(
+        "scripts.recovery_drill.populate", Mock(side_effect=RuntimeError("fixture"))
+    )
+    result = drill(
+        settings.model_copy(
+            update={
+                "app_env": "development",
+                "database_url": SecretStr(
+                    "postgresql+psycopg://kasoma:secret@localhost:55432/keep_me"
+                ),
+            }
+        )
+    )
+    source = statements[0].split('"')[1]
+    role_drop = f'DROP ROLE "{owner_name(source, "public")}"'
+    if source_drop_fails:
+        assert role_drop not in statements and result["cleanup_failed"] == [source]
+    else:
+        assert statements[-1] == role_drop and result["cleanup_failed"] == []
+    assert all("keep_me" not in statement for statement in statements)

@@ -1324,3 +1324,20 @@ EXPORT_EVIDENCE_HOLDS_ENABLED=false in the running review stack until acceptance
 This increment adds no maintenance routine or retirement schedule. No review-stack
 purge, real data, inference or external delivery is needed or authorized. See
 [verification](../implementation/E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md).
+
+## ADR-060 restricted SQL retirement candidate
+
+`make test-export-retirement` uses owned isolated synthetic schemas and an actual
+EXECUTE-only maintenance LOGIN. It creates historical synthetic exports through
+normal fake identity/export flows and normal copy cleanup, then exercises due/hold/
+privilege/scan/audit/race boundaries. Tests deliberately inject isolated malformed
+fixtures and ownership damage; no review-stack purge or external provider runs.
+`make migrate` installs 0041 default-disabled; it creates only a minimal NOLOGIN owner,
+not a review-stack executor LOGIN. Keep export_retirement_state.enabled=false.
+The routine independently rejects the normal public review scope even if that state
+flag is altered. Runtime configuration/scheduling/health are a separate pending step.
+
+Logical restore with --no-owner/--no-acl must leave execution refused until privileged
+ownership/ACL repair and a fresh explicit isolated opt-in. The recovery drill verifies
+that denial and disposes only its generated databases/owner roles. Do not equate this
+with production backup acceptance. See [SQL evidence](../implementation/E8_EXPORT_RETIREMENT_VERIFICATION.md).

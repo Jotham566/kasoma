@@ -439,3 +439,7 @@ test-export-evidence-holds:
 .PHONY: test-export-recovery
 test-export-recovery:
 	$(UV) pytest tests/integration/test_export_recovery.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-export-retirement
+test-export-retirement:
+	$(UV) pytest tests/integration/test_export_retirement.py --allow-hosts=localhost,127.0.0.1,::1

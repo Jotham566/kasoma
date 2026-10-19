@@ -155,3 +155,15 @@ receipt/job holds, restricted six-year expiry after copy cleanup and finite retr
 retention. This records implementation authorization, not application acceptance,
 legal sufficiency, real-data processing, account erasure or production activation.
 Implementation evidence belongs in the current sprint and requirements traceability.
+
+## Implementation notes — pending full verification
+
+The [SQL capability candidate](../../implementation/E8_EXPORT_RETIREMENT_VERIFICATION.md)
+uses a separate database/schema-derived NOLOGIN owner, a parameter-free EXECUTE-only
+routine, fixed UTC policy arithmetic and default-disabled persisted activation.
+Both guards and routine reject unapproved scopes and owner-role drift. Four bounded
+existing-source pointers support fair wrap; no removed-ID retry tombstones or source
+IDs in batch audit. Existing request-review holds take parent then leaf explicitly.
+Ownership/ACL stripping fails closed; privileged repair resets activation false.
+These are implementation choices within the approved bounded synthetic decision,
+not real-data authorization or completed application acceptance.

@@ -845,3 +845,14 @@ Finite dates use database wall clock and exact ownership is independently guarde
 SQL. Missing/ineligible sources return404; release/listing remain independent of the
 creation flag. Existing exact retry semantics and DELETE guards are unchanged.
 The approved finite retry-retirement boundary awaits the separate processor increment.
+
+### Finite request retry evidence (ADR-060 synthetic SQL candidate)
+
+The bounded SQL processor can retire only eligible completed EXPORT evidence after
+its six-year deadline, exact hold checks and completed24-hour copy cleanup. During
+retention existing actor/key retry binding is unchanged. After lawful receipt removal,
+a subsequent current recently authenticated POST with that key follows ordinary
+rate limits and pending-kind deduplication, potentially creating a fresh request.
+It never restores the retired request or copy; retired owned GET uses existing404
+absence. No indefinite key tombstone or API-triggered retirement is added. This is
+synthetic-only; real-data execution/account erasure remains unauthorized.

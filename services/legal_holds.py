@@ -190,6 +190,18 @@ class LegalHoldService:
                     raise IdentityError("HOLD_TARGET_UNAVAILABLE", 503)
             if body.expires_at <= at:
                 raise IdentityError("HOLD_END_REQUIRED", 422)
+            if body.record_type == "DATA_REQUEST_REVIEW":
+                # ADR-060: lock the parent before its review, also for existing hold kinds.
+                parent = db.scalar(
+                    select(DataRequest.id)
+                    .where(
+                        DataRequest.id == body.record_id,
+                        DataRequest.user_id == request.user_id,
+                    )
+                    .with_for_update()
+                )
+                if parent is None:
+                    raise IdentityError("RESOURCE_NOT_FOUND", 404)
             if export_evidence:
                 source_id = (
                     db.scalar(

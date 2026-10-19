@@ -546,3 +546,14 @@ Parent then leaf locking is shared by service/SQL; existing immutability is reta
 These holds use database wall clock. Creation defaults disabled; existing reads and
 release remain available. No processor or delete authority is added in this increment.
 See [verification](../implementation/E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md).
+
+### Bounded synthetic export retirement (ADR-060 SQL candidate)
+
+Migration 0041 adds operational export_retirement_state: one default-disabled row,
+round-robin phase 1–4, up to four existing-source UUID pointers and UTC updated_at.
+It stores no learner/receipt payload or idempotency key. A parameter-free restricted
+routine applies the exact approved due/hold/dependency policy,100 removals/200 distinct
+candidates, five-second cooperative budget and existing database timeouts. An atomic
+NULL-actor audit carries batch UUID/counts only. UPDATE immutability and all nonallowlist
+records remain protected. The normal review public schema cannot execute retirement.
+See [candidate boundary/tests](../implementation/E8_EXPORT_RETIREMENT_VERIFICATION.md).
