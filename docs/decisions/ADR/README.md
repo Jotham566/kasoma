@@ -180,3 +180,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-068: Owned browser database services](068-owned-browser-database-services.md)
   records one bounded fresh PostgreSQL/pgvector service for the standard synthetic browser
   API, distinct ownership labels and exact-ID cleanup; verification pending.
+
+- [ADR-069: Owned synthetic identity verification source](069-owned-erasure-identity-verification.md)

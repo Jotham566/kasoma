@@ -209,3 +209,49 @@ implementation only. It does not implement permanent account closure, routes, pr
 erasure, richer preservation, finite retirement or DELETE completion. Only Markdown
 closeout follows the verified source; main integration still requires combined-source
 verification with the separate browser-isolation work. Normal review execution stays off.
+
+## Existing-login coordination candidate
+
+The next implementation addresses the OTP race from the matrix above. Verification
+pre-reads only a challenge's LOGIN type/lookup selector and current identifier owner,
+then takes the existing keyed user transaction lock before consume/identifier locks.
+It does not cache a Challenge ORM object before its locking consume query, which
+would risk stale single-use state. LINK already holds its authenticated user's lock.
+The serialized lookup must match that selected user; a changed/new binding refuses
+credentials with the existing generic authentication error. The user status is
+reloaded after the lock. This avoids a lookup-to-user lock inversion with LINK.
+
+Tests add a real transaction holding the user barrier while verification starts,
+a controlled concurrent new identifier binding and a second single-use concurrency
+profile for an already registered user. Existing identity and LINK tests remain.
+No SQL session-insert guard, immutable closure marker, OTP dispatch lease, erasure
+capability, export/model/channel barrier or request completion is supplied by this
+change. Those remain part of the required first vertical slice. Results are pending.
+
+ADR-069 adds make test-erasure-identity-isolated: the closed identity/race target runs
+on one freshly owned local PostgreSQL source with separate purpose/label, private
+keys, fake providers and exact-ID cleanup. Existing browser/recovery defaults remain.
+The first103 resource/controller controls pass; native before/after and complete
+engineering acceptance remain pending. No execution capability or review-data access.
+
+## Identity coordination and owned-source verification — local results
+
+FR-ID-003/005/006, NFR-SEC-002/MNT-001: the existing-source baseline fails both
+new barrier/binding regressions (two fail, nine pass,34.78s). The candidate passes
+all11 identity/LINK/single-use/provisioning cases in19.64s and, after the final
+supervisor/diagnostic correction,17.37s. Both completed sources report empty cleanup;
+the initial two exact IDs are independently confirmed absent. First invocation refused
+the normal Mailpit setting before creating any resource; the test entrypoint now
+explicitly selects fake model/email adapters, matching the existing browser entrypoint.
+
+Quality/types215 files,1,444 unit/contract,35 tooling,105 resource/controller controls
+and generated-contract checks pass. Initial Bandit reports three low-severity command
+findings. A fixed absolute /usr/bin/make removes path selection; two narrowly documented
+B404/B603 annotations cover only the reviewed constant argv/no-shell child boundary.
+Subsequent full source/dependency/secret checks pass (5.71MB secret scan, no leaks).
+No global scanner exclusion or application security gate changes.
+
+ADR-069 records the test-resource choice; CI invokes the same owned-source target.
+Complete combined backend/browser/recovery/image/service and own hosted acceptance
+remain pending. This is identity coordination, not a permanent closed_at/SQL session
+guard, account-closure authorization, actual erasure or DELETE fulfillment.

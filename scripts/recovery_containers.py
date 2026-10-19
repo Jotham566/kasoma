@@ -9,6 +9,7 @@ from typing import Literal
 
 LABEL = "org.kasoma.synthetic-recovery"
 BROWSER_LABEL = "org.kasoma.synthetic-browser"
+ERASURE_LABEL = "org.kasoma.synthetic-erasure-test"
 PARTS = {"source-db", "destination-db", "source-objects", "destination-objects"}
 
 
@@ -91,23 +92,23 @@ class OwnedServices:
     invocation: str
     created: dict[str, str] = field(default_factory=dict)
     uncertain: list[str] = field(default_factory=list)
-    purpose: Literal["recovery", "browser"] = field(default="recovery", kw_only=True)
+    purpose: Literal["recovery", "browser", "erasure"] = field(default="recovery", kw_only=True)
 
     def __post_init__(self) -> None:
         invocation_id(self.invocation)
-        if self.purpose not in {"recovery", "browser"}:
+        if self.purpose not in {"recovery", "browser", "erasure"}:
             raise ValueError("RECOVERY_PURPOSE_INVALID")
 
     @property
     def label(self) -> str:
-        if self.purpose not in {"recovery", "browser"}:
+        if self.purpose not in {"recovery", "browser", "erasure"}:
             raise ValueError("RECOVERY_PURPOSE_INVALID")
-        return LABEL if self.purpose == "recovery" else BROWSER_LABEL
+        return {"recovery": LABEL, "browser": BROWSER_LABEL, "erasure": ERASURE_LABEL}[self.purpose]
 
     def name(self, part: str) -> str:
-        if self.purpose not in {"recovery", "browser"}:
+        if self.purpose not in {"recovery", "browser", "erasure"}:
             raise ValueError("RECOVERY_PURPOSE_INVALID")
-        if part not in PARTS or (self.purpose == "browser" and part != "source-db"):
+        if part not in PARTS or (self.purpose != "recovery" and part != "source-db"):
             raise ValueError("RECOVERY_COMPONENT_INVALID")
         return f"kasoma-{self.purpose}-{part}-{self.invocation}"
 

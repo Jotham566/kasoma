@@ -13,6 +13,7 @@ from sqlalchemy.engine import make_url
 from scripts.browser_database import (
     browser_database,
     cleanup_on_termination,
+    erasure_test_database,
     pinned_local_docker,
     unix_endpoint,
 )
@@ -32,6 +33,7 @@ def standard(settings):
     )
 
 
+@pytest.mark.parametrize("database_fixture", [browser_database, erasure_test_database])
 @pytest.mark.parametrize(
     "changes",
     [
@@ -54,13 +56,15 @@ def standard(settings):
         },
     ],
 )
-def test_unsafe_profile_never_resolves_images_or_creates_resources(settings, monkeypatch, changes):
+def test_unsafe_profile_never_resolves_images_or_creates_resources(
+    settings, monkeypatch, changes, database_fixture
+):
     create = Mock(side_effect=AssertionError("Must not create"))
     image = Mock(side_effect=AssertionError("Must not resolve"))
     monkeypatch.setattr("scripts.browser_database.OwnedServices", create)
     monkeypatch.setattr("scripts.browser_database.compose_image", image)
     with pytest.raises(ValueError):
-        with browser_database(standard(settings).model_copy(update=changes)):
+        with database_fixture(standard(settings).model_copy(update=changes)):
             pytest.fail("No unsafe fixture")
     create.assert_not_called()
     image.assert_not_called()
@@ -271,3 +275,43 @@ def test_local_endpoint_is_pinned_and_original_environment_restored_on_failure(m
             raise RuntimeError("synthetic")
     assert "DOCKER_HOST" not in os.environ
     assert os.environ["DOCKER_CONTEXT"] == "desktop-linux"
+
+
+def test_erasure_identity_source_has_distinct_owned_scope_without_execution(
+    settings, monkeypatch, capsys
+):
+    services, factory, engine, db, _ = mocked_services(monkeypatch)
+    db.scalar.return_value = "kasoma_erasure_test_" + INVOCATION
+    with erasure_test_database(standard(settings)) as config:
+        url = make_url(config.database_url.get_secret_value())
+        assert url.database == "kasoma_erasure_test_" + INVOCATION
+        assert url.host == "127.0.0.1"
+        factory.assert_called_once_with(INVOCATION, purpose="erasure")
+        assert config.identity_lookup_key != settings.identity_lookup_key
+    engine.dispose.assert_called_once()
+    services.cleanup.assert_called_once()
+    events = [json.loads(line) for line in capsys.readouterr().err.splitlines()]
+    assert events[0]["event"] == "erasure.test.database_created"
+    assert events[1] == {"event": "erasure.test.database_cleanup", "cleanup_failed": []}
+
+
+def test_erasure_purpose_never_adopts_browser_or_recovery_services(monkeypatch):
+    from scripts.recovery_containers import ERASURE_LABEL
+
+    services = OwnedServices(INVOCATION, {"source-db": CID}, purpose="erasure")
+    assert services.label == ERASURE_LABEL
+    assert services.label not in {LABEL, BROWSER_LABEL}
+    for part in ["destination-db", "source-objects", "destination-objects"]:
+        with pytest.raises(ValueError, match="COMPONENT_INVALID"):
+            services.name(part)
+    removed = []
+
+    def fake_command(args, **kwargs):
+        if args[1] == "inspect":
+            return json.dumps([{"Id": CID, "Config": {"Labels": {BROWSER_LABEL: INVOCATION}}}])
+        removed.append(args)
+        return ""
+
+    monkeypatch.setattr("scripts.recovery_containers.command", fake_command)
+    assert services.cleanup() == [services.name("source-db")]
+    assert removed == []

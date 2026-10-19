@@ -79,6 +79,8 @@ jobs:
       - name: Restore isolated synthetic database and private objects
         run: make recovery-objects
       - run: make test-runtime-role
+      - name: Verify synthetic identity closure prerequisites in an owned source
+        run: make test-erasure-identity-isolated
       - run: make lint test openapi-check build
       - run: make e2e-install
       - run: make ci-storage-check e2e

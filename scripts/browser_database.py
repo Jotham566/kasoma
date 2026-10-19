@@ -9,6 +9,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from time import monotonic, sleep
 from types import FrameType
+from typing import Literal
 from urllib.parse import urlsplit
 from uuid import uuid4
 
@@ -76,8 +77,7 @@ def pinned_local_docker() -> Iterator[None]:
                 os.environ[key] = value
 
 
-@contextmanager
-def browser_database(settings: Settings) -> Iterator[Settings]:
+def require_test_profile(settings: Settings) -> None:
     # Preserve the existing standard local Compose guard; never connect to its data.
     local_database_url(settings)
     if (
@@ -87,18 +87,36 @@ def browser_database(settings: Settings) -> Iterator[Settings]:
         or settings.whatsapp_provider != "fake"
         or settings.allow_external_api_calls
     ):
-        raise ValueError("Browser fixtures require fake providers")
+        raise ValueError("Synthetic fixtures require fake providers")
+
+
+@contextmanager
+def browser_database(settings: Settings) -> Iterator[Settings]:
+    require_test_profile(settings)
     with pinned_local_docker():
         yield from _isolated_database(settings)
 
 
-def _isolated_database(settings: Settings) -> Iterator[Settings]:
+@contextmanager
+def erasure_test_database(settings: Settings) -> Iterator[Settings]:
+    """ADR-061/069 test source only; creates no execution capability or activation."""
+    require_test_profile(settings)
+    with pinned_local_docker():
+        yield from _isolated_database(settings, purpose="erasure")
+
+
+def _isolated_database(
+    settings: Settings, *, purpose: Literal["browser", "erasure"] = "browser"
+) -> Iterator[Settings]:
     invocation = uuid4().hex
-    owned = OwnedServices(invocation, purpose="browser")
+    owned = OwnedServices(invocation, purpose=purpose)
+    prefix = "e2e" if purpose == "browser" else "erasure.test"
     engine = None
     try:
         password = secrets.token_urlsafe(32)
-        database = "kasoma_browser_" + invocation
+        database = (
+            "kasoma_browser_" if purpose == "browser" else "kasoma_erasure_test_"
+        ) + invocation
         container_id = owned.create(
             "source-db",
             compose_image("postgres"),
@@ -111,7 +129,7 @@ def _isolated_database(settings: Settings) -> Iterator[Settings]:
         print(
             json.dumps(
                 {
-                    "event": "e2e.database_created",
+                    "event": prefix + ".database_created",
                     "container_id": container_id,
                     "invocation": invocation,
                 },
@@ -144,24 +162,26 @@ def _isolated_database(settings: Settings) -> Iterator[Settings]:
             except Exception:
                 if monotonic() >= deadline:
                     raise RuntimeError(
-                        "Browser database startup unavailable; diagnostics withheld"
+                        "Synthetic test database startup unavailable; diagnostics withheld"
                     ) from None
                 sleep(0.1)
             else:
                 if observed != database:
-                    raise ValueError("Browser database identity mismatch")
+                    raise ValueError("Synthetic test database identity mismatch")
                 break
         yield isolated
     except Exception:
-        raise RuntimeError("Synthetic browser database unavailable; diagnostics withheld") from None
+        raise RuntimeError("Synthetic test database unavailable; diagnostics withheld") from None
     finally:
         if engine is not None:
             engine.dispose()
         failed = owned.cleanup()
         print(
-            json.dumps({"event": "e2e.database_cleanup", "cleanup_failed": failed}, sort_keys=True),
+            json.dumps(
+                {"event": prefix + ".database_cleanup", "cleanup_failed": failed}, sort_keys=True
+            ),
             file=sys.stderr,
             flush=True,
         )
         if failed:
-            raise RuntimeError("Owned browser database cleanup failed; review reported ownership")
+            raise RuntimeError("Owned test database cleanup failed; review reported ownership")

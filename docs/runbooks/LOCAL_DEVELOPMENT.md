@@ -1603,3 +1603,15 @@ Do not enable account erasure or remove data in the Docker review database. Foll
 Local make staff-role rejects grants and regrants when the verified synthetic identity
 is DISABLED. Explicit revocation remains supported and audited; it never reactivates
 the identity. This guard does not implement permanent closure or account erasure.
+
+Use `make test-erasure-identity` for the ADR-061 identity prerequisite and existing
+identity integration regressions; `make test` includes the same cases. It uses only synthetic identities
+and fake OTP delivery. Passing it does not authorize erasure or create a private
+execution profile. Run broad database suites serially on the development host.
+
+Use `make test-erasure-identity-isolated` for the approved ADR-061 identity/LINK/race
+checks against a new owned local PostgreSQL source. It forces fake providers, supplies
+new private keys through the child environment and cleans only its returned full ID
+with the matching erasure-test label. Failed or uncertain cleanup fails verification.
+It neither provisions an executor nor touches the normal review database. The source
+uses the existing approved local image without pulling; all eight review services stay.

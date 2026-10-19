@@ -244,6 +244,29 @@ class IdentityService:
                 if body.purpose == "LINK"
                 else None
             )
+            # Keep the same user-before-challenge/identifier lock order as LINK.
+            # Pre-reading selects a lock, never grants authority: recheck the bound
+            # identifier and fresh user after consume/lookup serialization below.
+            locked_user = owner
+            candidate = (
+                db.execute(
+                    select(Challenge.type, Challenge.lookup_hash).where(
+                        Challenge.id == body.challenge_id, Challenge.purpose == "LOGIN"
+                    )
+                ).one_or_none()
+                if owner is None
+                else None
+            )
+            if candidate is not None:
+                bound = db.scalar(
+                    select(Identifier.user_id).where(
+                        Identifier.type == candidate.type,
+                        Identifier.lookup_hash == candidate.lookup_hash,
+                    )
+                )
+                if bound is not None:
+                    self.lock(db, str(bound))
+                    locked_user = bound
             challenge = self.consume(db, body, {"LINK"} if owner else {"LOGIN"}, owner)
             self.lock(db, challenge.lookup_hash)
             identifier = db.scalar(
@@ -256,10 +279,16 @@ class IdentityService:
                 raise IdentityError("IDENTIFIER_UNAVAILABLE", 409)
             if identifier:
                 user = identifier.user_id
-                existing_user = db.get(User, user)
+                # A concurrently newly bound identifier requires fresh verification;
+                # never acquire a user lock after the identifier lock (LINK inversion).
+                if user != locked_user:
+                    raise IdentityError("AUTH_REQUIRED", 401)
+                existing_user = db.get(User, user, populate_existing=True)
                 if existing_user is None or existing_user.status != "ACTIVE":
                     raise IdentityError("AUTH_REQUIRED", 401)
             else:
+                if owner is None and locked_user is not None:
+                    raise IdentityError("AUTH_REQUIRED", 401)
                 user = owner or uuid4()
                 if not owner:
                     db.add(User(id=user, status="ACTIVE", created_at=self.clock()))

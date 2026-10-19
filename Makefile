@@ -39,6 +39,12 @@ test-unit: test-tooling
 .PHONY: test-erasure-contracts
 test-erasure-contracts:
 	$(UV) pytest tests/contract/test_erasure_contracts.py tests/contract/test_erasure_config.py tests/contract/test_erasure_manifest.py
+.PHONY: test-erasure-identity-isolated
+test-erasure-identity-isolated:
+	$(UV) python -m scripts.erasure_identity_check
+.PHONY: test-erasure-identity
+test-erasure-identity:
+	$(UV) pytest tests/integration/test_identity.py tests/integration/test_erasure_staff_barrier.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: test-erasure-source
 test-erasure-source:
 	$(UV) pytest tests/integration/test_erasure_source_shape.py tests/integration/test_erasure_staff_barrier.py --allow-hosts=localhost,127.0.0.1,::1
@@ -91,7 +97,7 @@ build:
 containers:
 	docker compose --profile application build
 security:
-	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py scripts/e2e_failures.py scripts/browser_database.py -q
+	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py scripts/e2e_failures.py scripts/browser_database.py scripts/erasure_identity_check.py -q
 	$(UV) python scripts/check_secrets.py
 	$(UV) pip-audit --local
 	$(PNPM) audit --audit-level=high
@@ -234,7 +240,7 @@ test-e2e-failure-diagnosis:
 	$(UV) pytest tests/contract/test_e2e_failure_diagnosis.py
 .PHONY: test-browser-database
 test-browser-database:
-	$(UV) pytest tests/contract/test_browser_database.py tests/contract/test_object_recovery.py
+	$(UV) pytest tests/contract/test_browser_database.py tests/contract/test_object_recovery.py tests/contract/test_erasure_identity_check.py
 e2e-install:
 	$(PNPM) exec playwright install --with-deps chromium firefox webkit
 e2e-list:

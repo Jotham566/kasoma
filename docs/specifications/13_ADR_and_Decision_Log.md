@@ -487,3 +487,10 @@ Accepted within delegated local engineering discretion; verification pending.
 one fresh approved-image PostgreSQL service with bounded tmpfs/memory, loopback/private
 credentials and exact returned-ID/label cleanup. Normal services/data and application
 contracts/deadlines stay unchanged; no shared developer resource cleanup is authorized.
+
+## ADR-069: Owned synthetic identity verification source
+
+Status: Accepted within delegated engineering discretion; verification pending.
+[Record](../decisions/ADR/069-owned-erasure-identity-verification.md): reuse the exact-ID,
+distinct-label local fixture for the closed ADR-061 identity test target. Fresh fake
+source only; no review data, executor, erasure or application policy change.

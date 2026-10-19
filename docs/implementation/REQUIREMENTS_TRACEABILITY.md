@@ -1,5 +1,19 @@
 # Requirements Traceability
 
+## OTP verification and the user barrier — unverified candidate
+
+FR-ID-003/005/006 and NFR-SEC-002: an existing LOGIN now selects its user lock before
+consuming the challenge or taking the identifier lock, matching LINK's user-first
+order. The pre-read contains only the lookup selector and grants no authority. A
+fresh identifier/user recheck refuses changed bindings or disabled identities; a
+concurrently newly bound identifier requires fresh verification instead of taking
+a user lock in reverse order. Existing generic errors, OTP single use and attempt
+accounting remain. No API/schema, closure marker, activation or completion changes.
+Three new executions cover barrier serialization, concurrent identifier binding and
+single-use verification for an existing identity. Actual database verification and
+full acceptance remain pending; this is a prerequisite within approved ADR-061.
+
+
 ## Explicit private-profile parser dependency
 
 NFR-MNT-001: declare the already locked python-dotenv1.2.3 dependency directly for
@@ -1810,3 +1824,31 @@ the transport follow-up passes nine actual assessment executions with empty clea
 The merge changes no application schema beyond0044. Combined-source backend/browser/
 recovery/security/image/service and complete hosted acceptance are still required.
 Main remains eb05457; review execution stays off and no account closure/removal exists.
+
+ADR-069 adds make test-erasure-identity-isolated: the closed identity/race target runs
+on one freshly owned local PostgreSQL source with separate purpose/label, private
+keys, fake providers and exact-ID cleanup. Existing browser/recovery defaults remain.
+The first103 resource/controller controls pass; native before/after and complete
+engineering acceptance remain pending. No execution capability or review-data access.
+
+## Identity coordination and owned-source verification — local results
+
+FR-ID-003/005/006, NFR-SEC-002/MNT-001: the existing-source baseline fails both
+new barrier/binding regressions (two fail, nine pass,34.78s). The candidate passes
+all11 identity/LINK/single-use/provisioning cases in19.64s and, after the final
+supervisor/diagnostic correction,17.37s. Both completed sources report empty cleanup;
+the initial two exact IDs are independently confirmed absent. First invocation refused
+the normal Mailpit setting before creating any resource; the test entrypoint now
+explicitly selects fake model/email adapters, matching the existing browser entrypoint.
+
+Quality/types215 files,1,444 unit/contract,35 tooling,105 resource/controller controls
+and generated-contract checks pass. Initial Bandit reports three low-severity command
+findings. A fixed absolute /usr/bin/make removes path selection; two narrowly documented
+B404/B603 annotations cover only the reviewed constant argv/no-shell child boundary.
+Subsequent full source/dependency/secret checks pass (5.71MB secret scan, no leaks).
+No global scanner exclusion or application security gate changes.
+
+ADR-069 records the test-resource choice; CI invokes the same owned-source target.
+Complete combined backend/browser/recovery/image/service and own hosted acceptance
+remain pending. This is identity coordination, not a permanent closed_at/SQL session
+guard, account-closure authorization, actual erasure or DELETE fulfillment.

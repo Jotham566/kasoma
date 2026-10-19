@@ -261,8 +261,12 @@ def test_linking_requires_recent_auth_and_does_not_duplicate_user(identity):
     assert client.get("/api/v1/me", headers=headers).status_code == 401
 
 
-def test_concurrent_verification_only_one_wins(identity):
+@pytest.mark.parametrize("existing", [False, True])
+def test_concurrent_verification_only_one_wins(identity, existing):
     service, client, messages, now = identity
+    if existing:
+        login(client, "race@example.invalid")
+        now[0] += timedelta(seconds=61)
     challenge = service.request_otp(
         OTPRequest(identifier="race@example.invalid", device_id=uuid4()), "peer", None
     )
