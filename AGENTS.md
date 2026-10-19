@@ -352,3 +352,10 @@ and engineering gates. Logical recovery69 tables/686 rows892ms cleans successful
 object-storage and production recovery remain unproved by that run. Only Markdown
 closeout follows; separate metric-loss/object-recovery candidates need own acceptance.
 Collection stays defaultfalse and no ADR-061 or production enablement is inferred.
+
+OTP engineering is published on main557f90f after complete own39304052749; its
+merged local/remote branch is removed after remote SHA/ancestry proof. Object
+recovery exactsource29f1ddc is pushed for own live39311093503; metric-loss source
+b5557a3 stays unchanged for live39308594889. Only Markdown closeout follows these
+heads; neither pending feature is accepted yet. Docker8/8healthy; read-only
+ownership-label audit finds no leftover recovery containers.

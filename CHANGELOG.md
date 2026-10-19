@@ -9,7 +9,8 @@ services stop; missing/corrupt object probes fail closed and cleanup is empty.
 Final local checks pass1,239 unit/contract,35 tooling,59 focused controls,
 98 recovery-role and105 contract/34 integration preservation cases; quality/build/
 contracts/security and real restore pass. Own full hosted verification remains pending; production PITR, regional copies and RPO/RTO remain unproved.
-[Verification](docs/implementation/E9_OBJECT_RECOVERY_VERIFICATION.md).
+[Verification](docs/implementation/E9_OBJECT_RECOVERY_VERIFICATION.md). Source29f1ddc is pushed for own
+full hosted39311093503, confirmed live; keep its remote head unchanged.
 
 
 ## Known request/model metric loss - candidate

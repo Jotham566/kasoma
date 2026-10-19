@@ -113,3 +113,20 @@ this recovery candidate changes Markdown only relative to locally checked a4152b
 Four documentation conflicts retain both acceptance and candidate histories. No
 new runtime/test/workflow change follows those passing local checks. The pending
 metric-loss remote b5557a3 remains unchanged for hosted39308594889.
+
+## Published exact candidate
+
+Combined source29f1ddc8c57d8bbb2c0dae138c6dcb233972c2f5 is pushed to
+codex/object-recovery for its own complete hosted
+[39311093503](https://github.com/Jotham566/kasoma/actions/runs/39311093503), confirmed
+in progress. Do not update that remote head for Markdown closeout. Metric-loss
+[39308594889](https://github.com/Jotham566/kasoma/actions/runs/39308594889) remains live
+at its unchanged b5557a3 head. Neither pending candidate is promoted or accepted.
+
+Remote main is verified557f90f; only the two unmerged candidate branches remain on
+GitHub, and the merged OTP branch is absent. All eight normal Compose services are
+running/healthy after final rebuild/smoke. A read-only Docker ownership-label audit
+finds no remaining recovery containers; it authorizes no prefix-based cleanup.
+No cache, application volume or unrelated resource has been removed. Only Markdown
+closeout follows the new hosted candidate. Remaining academic/privacy/provider,
+production, physical-device and explicit ADR-061 approval gates stay open.
