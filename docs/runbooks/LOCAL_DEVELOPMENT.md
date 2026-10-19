@@ -1268,3 +1268,11 @@ decision ends; immutable disposal/capture accountability follows the parent's ex
 policy. Keep creation disabled on rollback while preserving readers, release, guards
 and cleanup. Never drop evidence tables, reset volumes or reinterpret this subset as
 full legal-hold coverage or permission to erase an account.
+
+### Progress replay regression
+
+`make test-progress` checks the frozen synthetic progress-rollup-v1 outputs,
+request-local replay-work bound and existing consent/sealed-diagnostic/read-only
+API cases. Every progress request builds a fresh replay context at its own explicit
+time; no persistent/shared cache or environment flag is added. See
+[verification](../implementation/E6_PROGRESS_REUSE_VERIFICATION.md).

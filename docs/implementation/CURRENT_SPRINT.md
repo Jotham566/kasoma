@@ -116,3 +116,18 @@ reviewed erasure authority, production PITR/RPO/RTO and pilot/device sign-offs r
 Gemini remains manual and explicitly opt-in; it was not run. No production cloud
 application dependency is introduced. Historical objective ANSWER p95 27.221 ms is
 recorded accurately; no current-source/provider/long-history performance is inferred.
+
+## Next unblocked slice: progress replay reuse
+
+Capture source `0a8f674` is pushed on its dedicated branch; complete hosted
+[39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) is in progress.
+Main remains the verified format source. The merged format branch and the temporary
+owned capture stash are removed; the active capture and child progress branches
+remain until their exact-source gates pass and main promotion is complete.
+
+`codex/progress-rollup-reuse` addresses FR-MST-004/005 and NFR-PERF-001 within ADR-024.
+All 31 frozen legacy summary fingerprints and 1,074 unit/contract cases pass. The
+pure dense overlapping-scope case reuses eight distinct skill replays instead of
+24, with no shared cache, data/API/math or authorization changes. Fresh-read API,
+browser and broad/hosted verification are pending; see
+[verification](E6_PROGRESS_REUSE_VERIFICATION.md).

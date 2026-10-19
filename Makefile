@@ -409,3 +409,7 @@ ci-storage-check:
 	$(PYTHON) scripts/ci_runner_storage.py --check
 test-ci-storage:
 	$(UV) pytest tests/contract/test_ci_runner_storage.py
+
+.PHONY: test-progress
+test-progress:
+	$(UV) pytest tests/contract/test_progress_engine.py tests/contract/test_progress_reuse.py tests/integration/test_progress.py --allow-hosts=localhost,127.0.0.1,::1

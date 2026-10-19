@@ -73,3 +73,9 @@ and the full browser/device accessibility matrix require release-stage validatio
 Next slice: FR-GRD-009/FR-CNT-006 learner question/grade flags with owned immutable
 item/attempt linkage, safe optional comments and auditable staff triage. No automated
 regrading or retrospective evidence mutation is implied.
+
+## Subsequent implementation candidate
+
+The 19 October [request-local reuse candidate](E6_PROGRESS_REUSE_VERIFICATION.md)
+preserves this exact progress-rollup-v1 behavior and has separate acceptance evidence.
+It does not retroactively change the original checkpoint or close production load gates.

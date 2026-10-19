@@ -27,7 +27,17 @@ def read(client, headers, subject):
     return response.json()
 
 
-def test_progress_coverage_history_and_read_immutability(assessment):
+def test_progress_coverage_history_and_read_immutability(assessment, monkeypatch):
+    from services import progress_engine
+
+    actual = progress_engine.estimate
+    calls = []
+
+    def observed(concept, competency, evidence, at):
+        calls.append((concept, competency, tuple(e.input_hash for e in evidence), at))
+        return actual(concept, competency, evidence, at)
+
+    monkeypatch.setattr(progress_engine, "estimate", observed)
     identity, client, actors, body, versions, plan = assessment
     headers = actors["learner"]
     subject = body["subject_id"]
@@ -39,13 +49,18 @@ def test_progress_coverage_history_and_read_immutability(assessment):
     assert client.get("/api/v1/me/session-history", headers=headers).json()["data"] == []
     session = start(client, headers, plan).json()["id"]
     assert answer(client, headers, session, next_item(client, headers, session)).status_code == 200
+    calls.clear()
     after = read(client, headers, subject)
+    assert calls and len(calls) == len(set(calls))
+    first_read_calls = len(calls)
     assert after["subject"]["evidence_count"] == 1
     assert after["subject"]["display_state"] == "NOT_ENOUGH_EVIDENCE"
     assert sum(t["evidence_count"] for t in after["topics"]) == 1
     with Session(identity.engine) as db:
         count = db.scalar(select(func.count()).select_from(MasteryHistory))
+    calls.clear()
     assert read(client, headers, subject) == after
+    assert len(calls) == first_read_calls  # Fresh authorization/read, fresh replay context.
     history = client.get("/api/v1/me/session-history", headers=headers).json()
     assert history["data"][0]["id"] == session
     assert history["data"][0]["answered_count"] == 1

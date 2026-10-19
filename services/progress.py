@@ -22,7 +22,7 @@ from services.progress_contracts import (
     SessionHistoryEntry,
     SessionHistoryPage,
 )
-from services.progress_engine import summarize
+from services.progress_engine import RollupContext
 
 if TYPE_CHECKING:
     from services.assessment import AssessmentService
@@ -76,7 +76,8 @@ def progress(service: "AssessmentService", token: str, subject_id: UUID) -> Prog
             if concept is not None
         }
         skills.update((e.source.concept_id, e.source.competency_id) for e in evidence)
-        summary = summarize(subject.id, subject.name, skills, evidence, at)
+        rollups = RollupContext(evidence, at)
+        summary = rollups.summarize(subject.id, subject.name, skills)
         active = db.scalar(
             select(AssessmentSession).where(
                 AssessmentSession.learner_id == actor,
@@ -100,11 +101,11 @@ def progress(service: "AssessmentService", token: str, subject_id: UUID) -> Prog
         return ProgressView(
             subject=summary,
             topics=[
-                summarize(t.id, t.name, {s for s in skills if concepts[s[0]] == t.id}, evidence, at)
+                rollups.summarize(t.id, t.name, {s for s in skills if concepts[s[0]] == t.id})
                 for t in topics
             ],
             competencies=[
-                summarize(c.id, c.name, {s for s in skills if s[1] == c.id}, evidence, at)
+                rollups.summarize(c.id, c.name, {s for s in skills if s[1] == c.id})
                 for c in db.scalars(
                     select(Competency)
                     .where(Competency.id.in_({s[1] for s in skills}))

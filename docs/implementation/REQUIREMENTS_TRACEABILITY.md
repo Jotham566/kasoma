@@ -1225,3 +1225,10 @@ All 108 browser executions, three UI harness and three
 WebKit transport controls pass; the subsequent 44-pixel select regression reproduces
 23-pixel native WebKit output and passes after scoped styling in all three engines
 at normal and 200% text. Hosted application acceptance remains pending.
+
+FR-MST-004 / FR-MST-005 / NFR-PERF-001 / NFR-MNT-001 candidate: request-local
+immutable skill replay reuse under unchanged ADR-024, calculation time, hashes and
+confidence/change semantics. Frozen 31 complete legacy summary fingerprints and
+1,074 unit/contract cases pass; dense scoped replay work falls from 24 to eight
+distinct calls. Per-read consent/isolation, browser and complete hosted acceptance
+remain required. See [progress verification](E6_PROGRESS_REUSE_VERIFICATION.md).

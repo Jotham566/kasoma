@@ -1,5 +1,14 @@
 # Changelog
 
+## In progress — request-local progress replay reuse
+
+- Reuse immutable skill estimates only within one progress read under ADR-024
+  (FR-MST-004/005, NFR-PERF-001). Exact legacy summary/hash/change fingerprints remain
+  unchanged; authorization, consent, evidence filtering and calculation time remain
+  per request. No shared cache, migration, algorithm or API change.
+- Add frozen legacy output and replay-work/isolation regressions; all 1,074 unit/contract
+  cases pass. API/browser and complete hosted verification remain pending.
+
 ## In progress — bounded synthetic channel capture
 
 - Add candidate 0038 source/capture, finite disposal, generated contracts, advisory
