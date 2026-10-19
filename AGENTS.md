@@ -250,6 +250,19 @@ are unexecuted. Unchanged six-case native privacy diagnosis passes; no fix is in
 Combined recovery/activity source adf4328 is pushed for full hosted39299684285, now
 in progress. Main remains e7a4fc0; neither branch is promoted. Preserve the active
 remote head; only Markdown closeout follows that runtime/test/Make tree.
+ADR-063 is a separate local OTP observation candidate: four payload-free static
+API email/SMS return/failure counters, an app-local observer, default-disabled and
+development/test only. It reuses finite OTel/Redis bounds with a separate namespace.
+ADMIN DTO/UI and local warnings add no delivery/billing/quota or production authority.
+Initial SDK/Redis/API checks pass; final local and its own full hosted verification
+remain pending. Parent adf4328 CI39299684285 stays live and unchanged; it cannot accept
+the OTP feature. Final native quality/build/contracts, 1,171 unit/contract,35 tooling,
+35 OTP/identity,24 operations and43 model cases, six browser executions and
+security/images/service smoke pass. A finite namespace uncertainty marker prevents
+known export loss from becoming a false zero after recovery; production/disabled
+readers never connect. Normal Docker stays healthy with collection/retirement false.
+See E8_OTP_OBSERVATIONS_VERIFICATION.md for retained schema, security
+and presentation-test failures/corrections. No ADR-061 approval is inferred.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

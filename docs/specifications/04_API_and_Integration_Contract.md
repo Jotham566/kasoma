@@ -890,3 +890,27 @@ null schema compatibility supports older servers/readers only: missing data is
 unavailable, never a fabricated zero. Generated OpenAPI/client contracts accompany
 implementation. [ADR-062](../decisions/ADR/062-owned-practice-activity.md) defines
 calendar boundaries and count semantics. Candidate verification is not API acceptance.
+
+### Local OTP adapter observations (ADR-063 candidate)
+
+The existing ADMIN-only operations snapshot gains nullable `otp_dispatch` with
+`observed_attempts`, `email_returned`, `email_failed`, `sms_returned`, `sms_failed`,
+`interval_count`, `capped`, `retention_seconds=300`,
+`measure=LOCAL_API_OTP_ADAPTER_ATTEMPTS` and `best_effort=true`. The four counts sum
+to observed_attempts. They represent actual local API adapter invocations only, not
+delivery, unique recipients, billing or fleet-complete use. Suppressed sends are
+excluded; no identifier, message, code, token, purpose or provider diagnostics appear.
+
+Disabled/production/stale/corrupt data is null and OTP_DISPATCH remains unavailable.
+A fresh successful empty collection can show zero. Older servers omitting the field
+remain compatible; the client shows unavailable. General MESSAGING_USAGE stays pending.
+`thresholds.otp_failures` and `OTP_ADAPTER_FAILURES` use the existing local periodic
+warning mechanism; they change no authentication/quota behavior. Both new settings
+are typed: OTP_OBSERVATION_ENABLED defaults false; OPS_OTP_FAILURES_THRESHOLD defaults
+to one and accepts 1-10000. Production never starts or reads this instrumentation.
+The public OTP request/response contract, generic responses and cleanup are unchanged.
+
+Known OTP SDK/export loss makes the aggregate unavailable for its bounded five-minute
+uncertainty window, including after an empty recovery pulse. A namespace-only marker
+contains no payload or source identifiers and cannot shorten another producer's window.
+This does not change request/model wire data or make the counter a complete ledger.

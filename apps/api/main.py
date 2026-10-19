@@ -27,6 +27,13 @@ from services.database import engine_for
 from services.health import Health, dependency_health
 from services.identity import IdentityError, IdentityService
 from services.observability import correlation_id, emit, tracer
+from services.otp_metric_collector import (
+    OTPMetricCollector,
+)
+from services.otp_metric_collector import close_collector as close_otp_collector
+from services.otp_metric_collector import (
+    create_collector as create_otp_collector,
+)
 from services.providers import FakeMessagingProvider, MailpitEmailProvider
 from services.request_metrics_collector import (
     RequestMetricCollector,
@@ -48,6 +55,7 @@ def create_app(
     metrics_factory: Callable[[Settings], RequestMetricCollector] | None = None,
     short_text_policy: ShortTextPolicy | None = None,
     grading_wakeup: Callable[[Settings, str], None] | None = None,
+    otp_metrics_factory: Callable[[Settings], OTPMetricCollector] | None = None,
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -70,12 +78,29 @@ def create_app(
         app.state.short_text_policy = short_text_policy or ShortTextPolicy(app.state.identity)
         collector = (metrics_factory or create_collector)(config)
         app.state.request_metrics = collector.metrics
+        otp_collector = None
+        app.state.otp_observer = None
         try:
+            if config.otp_observation_enabled and config.app_env in {"development", "test"}:
+                try:
+                    otp_collector = (otp_metrics_factory or create_otp_collector)(config)
+                    otp_collector.start()
+                    app.state.otp_observer = otp_collector.metrics
+                except Exception:
+                    # Optional telemetry must not prevent local OTP service startup.
+                    close_otp_collector(otp_collector)
+                    otp_collector = None
             collector.start()
             yield
         finally:
-            collector.close()
-            engine.dispose()
+            app.state.otp_observer = None
+            try:
+                close_otp_collector(otp_collector)
+            finally:
+                try:
+                    collector.close()
+                finally:
+                    engine.dispose()
 
     app = FastAPI(title="Kasoma API", version="0.1.0", lifespan=lifespan)
     app.include_router(router)

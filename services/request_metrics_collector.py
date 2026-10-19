@@ -19,7 +19,9 @@ from services.request_metrics_store import RequestMetricStore
 
 
 def metric_scope(
-    settings: Settings, *, purpose: Literal["request-metrics", "model-metrics"] = "request-metrics"
+    settings: Settings,
+    *,
+    purpose: Literal["request-metrics", "model-metrics", "otp-metrics"] = "request-metrics",
 ) -> str:
     url = make_url(settings.database_url.get_secret_value())
     scope = json.dumps(

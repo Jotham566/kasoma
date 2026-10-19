@@ -490,3 +490,15 @@ test-fresh-session-response:
 .PHONY: test-recovery-role-cleanup
 test-recovery-role-cleanup:
 	$(UV) pytest tests/contract/test_recovery_drill.py tests/contract/test_objective_load.py tests/contract/test_disposable_owner.py tests/integration/test_recovery_role_lifecycle.py tests/integration/test_load_role_lifecycle.py --allow-hosts=localhost,127.0.0.1,::1
+
+.PHONY: test-otp-observations
+test-otp-observations:
+	$(UV) pytest tests/contract/test_otp_metrics.py tests/integration/test_otp_observations.py tests/integration/test_otp_metric_store.py tests/integration/test_identity.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-otp-observations-api
+test-otp-observations-api:
+	$(UV) pytest tests/integration/test_otp_observations.py -k disabled --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-web-otp-observations
+test-web-otp-observations:
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test tests/e2e/otp-observations.spec.ts tests/e2e/operations.spec.ts
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test tests/e2e/otp-observations.spec.ts tests/e2e/operations.spec.ts
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test tests/e2e/otp-observations.spec.ts tests/e2e/operations.spec.ts

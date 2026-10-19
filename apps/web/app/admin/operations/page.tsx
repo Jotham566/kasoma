@@ -24,6 +24,7 @@ const messages: Record<
   CHANNEL_STALLED: "Pending channel messages exceeded the age threshold",
   CHANNEL_DISPATCH_SLOW:
     "Local feedback dispatch exceeded its timing threshold",
+  OTP_ADAPTER_FAILURES: "Observed OTP adapter failures need investigation",
   MODEL_GATEWAY_VOLUME:
     "Observed local model attempts reached the volume threshold",
   GRADING_STALLED: "Pending grading work exceeded the age threshold",
@@ -79,6 +80,7 @@ export default function Operations() {
   const grading = view?.counts?.grading;
   const retirement = view?.counts?.retirement;
   const usage = view?.model_usage;
+  const otp = view?.otp_dispatch;
   const channelCounters = channel
     ? ([
         ["Queued incoming messages", channel.queued_inbound],
@@ -319,6 +321,53 @@ export default function Operations() {
             ) : (
               <p>
                 Channel metrics unavailable. Missing values do not mean zero.
+              </p>
+            )}
+          </section>
+          <section
+            aria-label="Local OTP adapter observations"
+            className="surface-card operations-section"
+          >
+            <h2 className="text-xl font-semibold">OTP adapter outcomes</h2>
+            {otp ? (
+              <>
+                <dl>
+                  {(
+                    [
+                      ["Observed attempts", otp.observed_attempts],
+                      ["Email adapter returned", otp.email_returned],
+                      ["Email adapter failed", otp.email_failed],
+                      ["SMS adapter returned", otp.sms_returned],
+                      ["SMS adapter failed", otp.sms_failed],
+                    ] as const
+                  ).map(([label, value]) => (
+                    <div key={label}>
+                      <dt>{label}</dt>
+                      <dd>{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p>
+                  Best-effort local API observations retained for up to five
+                  minutes across {otp.interval_count} intervals.
+                  {otp.capped
+                    ? " The interval limit was reached; some observations were dropped."
+                    : ""}
+                </p>
+                <p>
+                  Includes fake and Mailpit adapters. A return is not delivery
+                  or receipt. Suppressed sends are excluded; billing and
+                  complete messaging usage remain unavailable.
+                </p>
+                <p>
+                  Local warning threshold: {view.thresholds.otp_failures}{" "}
+                  observed adapter failures. This does not enforce a quota.
+                </p>
+              </>
+            ) : (
+              <p>
+                OTP adapter observations unavailable. Missing values do not mean
+                zero.
               </p>
             )}
           </section>

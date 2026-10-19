@@ -46,7 +46,8 @@
         "GRADING_STALLED",
         "MODEL_GATEWAY_VOLUME",
         "RETIREMENT_FAILED",
-        "RETIREMENT_STALLED"
+        "RETIREMENT_STALLED",
+        "OTP_ADAPTER_FAILURES"
       ]
     },
     "severity": {

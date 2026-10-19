@@ -1,5 +1,19 @@
 # Requirements Traceability
 
+## Local OTP adapter observations - candidate
+
+FR-OPS-002, FR-ID-001 and NFR-OBS-001/SEC-002/ACC-001/MNT-001: ADR-063 adds four
+payload-free API adapter counters using the existing finite OTel/Redis pattern.
+Default-disabled, development/test only, app-local and ADMIN-only; no delivery/billing,
+quota, auth policy, migration or production permission changes. Initial SDK/Redis/API
+controls pass; final local and own hosted verification remain pending. Closed alert
+schema and offline presentation-harness failures are retained and corrected without
+relaxing gates. Final local quality/contracts/build, 1,171 unit/contract, 35 tooling,
+35 OTP/identity, 24 operations and 43 model cases, six browser executions and
+security/images/service smoke pass. Known export loss stays unavailable across empty
+recovery pulses through a finite marker. Own hosted acceptance remains pending.
+[Exact scope and evidence](E8_OTP_OBSERVATIONS_VERIFICATION.md).
+
 ## Activity hosted timeout retained; combined verification active
 
 Full source78ca959 run39294126038 passes 1,146 unit/contract,484 integration,35 tooling,

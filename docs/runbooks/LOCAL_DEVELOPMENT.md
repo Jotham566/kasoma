@@ -1448,3 +1448,29 @@ database removal and safe attribute/membership checks; the destination owns no r
 A collision or refused cleanup fails closed. Do not delete, repair or sweep roles to
 make a retry pass. Existing developer data, schemas, images, volumes and SDKs remain
 outside this command's authority. [Candidate evidence](../implementation/E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md).
+
+## Bounded local OTP observations
+
+ADR-063 adds optional development/test API adapter counters. Keep
+`OTP_OBSERVATION_ENABLED=false` by default; set true in the ignored local environment
+and restart the local API and ordinary operations worker to observe synthetic fake/Mailpit attempts. Never use real
+contacts or infer delivery from a normal adapter return. Production ignores enablement.
+`OPS_OTP_FAILURES_THRESHOLD` is a local warning threshold (default one), not a quota.
+
+Use `make test-otp-observations` for actual SDK, Redis and API isolation/expiry/failure
+checks, `make test-operations test-model-metrics` for related regressions and
+`make test-web-otp-observations` for three-engine zero/capped/unavailable/offline and
+accessibility states. Existing `make test-web-privacy` diagnoses the separate retained
+WebKit timeout; do not relax its timeout or infer a fix from focused passes.
+
+ADMIN Operations labels these as best-effort local API outcomes. Counters have no
+recipient/code/token/answer data or labels. At most 256 frames remain for at most
+five minutes from earliest observation; missing freshness/lost/corrupt data is
+unavailable. Redis/SDK/startup/cleanup failure cannot change the OTP outcome. Disable
+the flag to roll back and let the scoped keys expire; never sweep shared Redis state.
+[Verification](../implementation/E8_OTP_OBSERVATIONS_VERIFICATION.md) records exact scope.
+
+After a known OTP collection/export failure, a finite uncertainty marker prevents a
+recovered empty pulse from appearing as measured zero for up to five minutes. Let
+that window expire; do not delete markers to manufacture a healthy dashboard. Request/
+model instrumentation is not changed by this OTP-specific guard.

@@ -433,3 +433,12 @@ consistency indicator is a read-only count of visible graded-practice dates in t
 selected subject's last seven Kampala calendar days. No stored streak/reward system,
 new authorization, retention class or change to mastery/diagnostic sealing. This is
 independent of unapproved ADR-061 and grants no real-data/production authority.
+
+## ADR-063 - bounded local OTP adapter observations
+
+[ADR-063](../decisions/ADR/063-local-otp-dispatch-observations.md) records the approved
+MVP's local messaging-observation extension: four static API email/SMS return/failure
+counters, no payload/identifier dimensions, an app-local observer and existing finite
+Redis transport. Default-disabled; development/test only. ADMIN DTO/UI and inclusive
+local warning are additive; no authentication, quota, production provider, retention
+policy or billing/delivery authority changes. Implementation verification is pending.

@@ -65,6 +65,7 @@ def main() -> None:
         "privacy-admin": ["ADMIN"],
         "preservation-admin": ["ADMIN"],
         "operations-admin": ["ADMIN"],
+        "otp-admin": ["ADMIN"],
         "audit-admin": ["ADMIN"],
     }.items():
         email = f"e2e-content-{label}@example.invalid"

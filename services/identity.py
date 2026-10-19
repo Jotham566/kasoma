@@ -37,6 +37,7 @@ from services.identity_contracts import (
     ProfileView,
     SubjectView,
 )
+from services.otp_observation import OTPObserver, observe
 from services.providers import MessagingProvider
 
 
@@ -144,7 +145,9 @@ class IdentityService:
             raise IdentityError("REAUTH_REQUIRED", 401)
         return session
 
-    def request_otp(self, body: OTPRequest, peer: str, token: str | None) -> OTPAccepted:
+    def request_otp(
+        self, body: OTPRequest, peer: str, token: str | None, *, observer: OTPObserver | None = None
+    ) -> OTPAccepted:
         kind, identifier = normalize(body.identifier)
         lookup = self.digest("identifier", identifier)
         challenge_id = uuid4()
@@ -186,9 +189,12 @@ class IdentityService:
             provider = self.email if kind == "EMAIL" else self.sms
             provider.send(identifier, f"Kasoma {body.purpose} code: {code}. Expires in 10 minutes.")
         except Exception:
+            observe(observer, "EMAIL" if kind == "EMAIL" else "SMS", "FAILED")
             # No provider exception/body may reach logs or expose whether delivery succeeded.
             with self.transaction() as db:
                 db.execute(delete(Challenge).where(Challenge.id == challenge_id))
+        else:
+            observe(observer, "EMAIL" if kind == "EMAIL" else "SMS", "RETURNED")
         return OTPAccepted(challenge_id=challenge_id)
 
     def consume(

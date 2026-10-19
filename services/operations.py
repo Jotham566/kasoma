@@ -24,6 +24,7 @@ from services.operations_contracts import (
     OperationCounts,
     OperationsView,
     OperationThresholds,
+    OTPDispatch,
     RequestTiming,
 )
 from services.request_metrics_collector import metric_cache, metric_scope
@@ -45,6 +46,7 @@ def thresholds(identity: IdentityService) -> OperationThresholds:
         channel_dispatch_min_samples=settings.ops_channel_dispatch_min_samples,
         grading_age_seconds=settings.ops_grading_age_seconds,
         model_gateway_attempts=settings.ops_model_gateway_attempts_threshold,
+        otp_failures=settings.ops_otp_failures_threshold,
         export_failures=settings.ops_export_failure_threshold,
         export_age_seconds=settings.ops_export_age_seconds,
         retirement_stall_seconds=settings.export_retirement_interval_seconds * 2,
@@ -113,8 +115,21 @@ def evaluate(
     limits: OperationThresholds,
     request_metric: RequestTiming | None = None,
     model_metric: ModelUsage | None = None,
+    otp_metric: OTPDispatch | None = None,
 ) -> list[OperationAlert]:
     alerts: list[OperationAlert] = []
+    if (
+        otp_metric is not None
+        and otp_metric.email_failed + otp_metric.sms_failed >= limits.otp_failures
+    ):
+        alerts.append(
+            OperationAlert(
+                code="OTP_ADAPTER_FAILURES",
+                severity="WARNING",
+                observed=otp_metric.email_failed + otp_metric.sms_failed,
+                threshold=limits.otp_failures,
+            )
+        )
     if model_metric is not None and model_metric.observed_attempts >= limits.model_gateway_attempts:
         alerts.append(
             OperationAlert(
@@ -303,16 +318,20 @@ def snapshot(identity: IdentityService, *, worker_sample: bool = False) -> Opera
     limits = thresholds(identity)
     timing = request_timing(identity)
     usage = model_usage(identity)
+    otp = otp_dispatch(identity)
     view = OperationsView(
         generated_at=identity.clock(),
         health=health,
         worker=worker,
         counts=values,
         thresholds=limits,
-        alerts=evaluate(health, worker, values, limits, timing, usage),
+        alerts=evaluate(health, worker, values, limits, timing, usage, otp),
+        otp_dispatch=otp,
         model_usage=usage,
         request_timing=timing,
     )
+    if otp is not None:
+        view.unavailable_metrics = [m for m in view.unavailable_metrics if m != "OTP_DISPATCH"]
     if usage is not None:
         view.unavailable_metrics = [m for m in view.unavailable_metrics if m != "AI_USAGE"]
     if timing is not None:
@@ -358,6 +377,31 @@ def model_usage(identity: IdentityService) -> ModelUsage | None:
             reported_output_tokens=outgoing,
             total_input_tokens=incoming if unknown == 0 else None,
             total_output_tokens=outgoing if unknown == 0 else None,
+            interval_count=value.interval_count,
+            capped=value.capped,
+        )
+    except Exception:
+        return None
+
+
+def otp_dispatch(identity: IdentityService) -> OTPDispatch | None:
+    from services.otp_metric_store import OTPMetricStore
+
+    settings = identity.settings
+    if not settings.otp_observation_enabled or settings.app_env not in {"development", "test"}:
+        return None
+    try:
+        with metric_cache(settings) as cache:
+            value = OTPMetricStore(cache, metric_scope(settings, purpose="otp-metrics")).read()
+        if value is None:
+            return None
+        returned_email, failed_email, returned_sms, failed_sms = value.counts
+        return OTPDispatch(
+            observed_attempts=sum(value.counts),
+            email_returned=returned_email,
+            email_failed=failed_email,
+            sms_returned=returned_sms,
+            sms_failed=failed_sms,
             interval_count=value.interval_count,
             capped=value.capped,
         )

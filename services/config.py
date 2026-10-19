@@ -59,6 +59,8 @@ class Settings(BaseSettings):
     export_retirement_interval_seconds: int = Field(default=300, ge=60, le=3600)
     channel_receipt_holds_enabled: bool = False
     channel_preservation_enabled: bool = False
+    otp_observation_enabled: bool = False
+    ops_otp_failures_threshold: int = Field(default=1, ge=1, le=10000)
     model_observation_enabled: bool = False
     ops_model_gateway_attempts_threshold: int = Field(default=100, ge=1, le=10000)
     ops_grading_age_seconds: int = Field(default=60, ge=1, le=86400)

@@ -34,7 +34,10 @@ def bearer(request: Request) -> str:
 @router.post("/auth/otp/request", status_code=202, response_model=OTPAccepted)
 def request_otp(body: OTPRequest, request: Request) -> OTPAccepted:
     return service(request).request_otp(
-        body, request.client.host if request.client else "unknown", bearer(request)
+        body,
+        request.client.host if request.client else "unknown",
+        bearer(request),
+        observer=getattr(request.app.state, "otp_observer", None),
     )
 
 

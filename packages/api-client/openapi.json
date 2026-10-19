@@ -3611,6 +3611,80 @@
         "title": "OTPAccepted",
         "type": "object"
       },
+      "OTPDispatch": {
+        "additionalProperties": false,
+        "properties": {
+          "best_effort": {
+            "const": true,
+            "default": true,
+            "title": "Best Effort",
+            "type": "boolean"
+          },
+          "capped": {
+            "title": "Capped",
+            "type": "boolean"
+          },
+          "email_failed": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Email Failed",
+            "type": "integer"
+          },
+          "email_returned": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Email Returned",
+            "type": "integer"
+          },
+          "interval_count": {
+            "maximum": 256.0,
+            "minimum": 0.0,
+            "title": "Interval Count",
+            "type": "integer"
+          },
+          "measure": {
+            "const": "LOCAL_API_OTP_ADAPTER_ATTEMPTS",
+            "default": "LOCAL_API_OTP_ADAPTER_ATTEMPTS",
+            "title": "Measure",
+            "type": "string"
+          },
+          "observed_attempts": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Observed Attempts",
+            "type": "integer"
+          },
+          "retention_seconds": {
+            "const": 300,
+            "default": 300,
+            "title": "Retention Seconds",
+            "type": "integer"
+          },
+          "sms_failed": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Sms Failed",
+            "type": "integer"
+          },
+          "sms_returned": {
+            "maximum": 9007199254740991.0,
+            "minimum": 0.0,
+            "title": "Sms Returned",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "observed_attempts",
+          "email_returned",
+          "email_failed",
+          "sms_returned",
+          "sms_failed",
+          "interval_count",
+          "capped"
+        ],
+        "title": "OTPDispatch",
+        "type": "object"
+      },
       "OTPRequest": {
         "additionalProperties": false,
         "properties": {
@@ -3713,6 +3787,7 @@
               "CHANNEL_DISPATCH_SLOW",
               "GRADING_STALLED",
               "MODEL_GATEWAY_VOLUME",
+              "OTP_ADAPTER_FAILURES",
               "EXPORT_FAILED",
               "EXPORT_STALLED",
               "RETIREMENT_FAILED",
@@ -3891,6 +3966,13 @@
             "title": "Model Gateway Attempts",
             "type": "integer"
           },
+          "otp_failures": {
+            "default": 1,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Otp Failures",
+            "type": "integer"
+          },
           "request_min_samples": {
             "default": 20,
             "maximum": 10000.0,
@@ -3965,6 +4047,16 @@
               }
             ]
           },
+          "otp_dispatch": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OTPDispatch"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "request_timing": {
             "anyOf": [
               {
@@ -3988,6 +4080,7 @@
             "default": [
               "AI_USAGE",
               "MESSAGING_USAGE",
+              "OTP_DISPATCH",
               "GRADING_FAILURE_RATE",
               "REQUEST_LATENCY",
               "MASTERY_LAG",
@@ -3997,6 +4090,7 @@
               "enum": [
                 "AI_USAGE",
                 "MESSAGING_USAGE",
+                "OTP_DISPATCH",
                 "GRADING_FAILURE_RATE",
                 "REQUEST_LATENCY",
                 "MASTERY_LAG",

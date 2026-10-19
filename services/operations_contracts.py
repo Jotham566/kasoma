@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from services.health import Health
 from services.identity_contracts import Contract
@@ -47,6 +47,28 @@ class ModelUsage(Contract):
     retention_seconds: Literal[300] = 300
     measure: Literal["LOCAL_WORKER_GATEWAY_ATTEMPTS"] = "LOCAL_WORKER_GATEWAY_ATTEMPTS"
     best_effort: Literal[True] = True
+
+
+class OTPDispatch(Contract):
+    observed_attempts: int = Field(ge=0, le=2**53 - 1, strict=True)
+    email_returned: int = Field(ge=0, le=2**53 - 1, strict=True)
+    email_failed: int = Field(ge=0, le=2**53 - 1, strict=True)
+    sms_returned: int = Field(ge=0, le=2**53 - 1, strict=True)
+    sms_failed: int = Field(ge=0, le=2**53 - 1, strict=True)
+    interval_count: int = Field(ge=0, le=256, strict=True)
+    capped: bool
+    retention_seconds: Literal[300] = 300
+    measure: Literal["LOCAL_API_OTP_ADAPTER_ATTEMPTS"] = "LOCAL_API_OTP_ADAPTER_ATTEMPTS"
+    best_effort: Literal[True] = True
+
+    @model_validator(mode="after")
+    def coherent_counts(self) -> "OTPDispatch":
+        if (
+            self.observed_attempts
+            != self.email_returned + self.email_failed + self.sms_returned + self.sms_failed
+        ):
+            raise ValueError("INCOHERENT_OTP_COUNTS")
+        return self
 
 
 class ChannelCounts(Contract):
@@ -123,6 +145,7 @@ AlertCode = Literal[
     "CHANNEL_DISPATCH_SLOW",
     "GRADING_STALLED",
     "MODEL_GATEWAY_VOLUME",
+    "OTP_ADAPTER_FAILURES",
     "EXPORT_FAILED",
     "EXPORT_STALLED",
     "RETIREMENT_FAILED",
@@ -147,6 +170,7 @@ class OperationThresholds(Contract):
     channel_queue_age_seconds: int = Field(default=60, ge=1, le=86400)
     channel_dispatch_p95_ms: int = Field(default=1500, ge=1, le=60000)
     channel_dispatch_min_samples: int = Field(default=20, ge=1, le=1000)
+    otp_failures: int = Field(default=1, ge=1, le=10000)
     model_gateway_attempts: int = Field(default=100, ge=1, le=10000)
     grading_age_seconds: int = Field(default=60, ge=1, le=86400)
     export_failures: int = Field(default=1, ge=1, le=10000)
@@ -164,10 +188,12 @@ class OperationsView(Contract):
     alerts: list[OperationAlert]
     request_timing: RequestTiming | None = None
     model_usage: ModelUsage | None = None
+    otp_dispatch: OTPDispatch | None = None
     unavailable_metrics: list[
         Literal[
             "AI_USAGE",
             "MESSAGING_USAGE",
+            "OTP_DISPATCH",
             "GRADING_FAILURE_RATE",
             "REQUEST_LATENCY",
             "MASTERY_LAG",
@@ -176,6 +202,7 @@ class OperationsView(Contract):
     ] = [
         "AI_USAGE",
         "MESSAGING_USAGE",
+        "OTP_DISPATCH",
         "GRADING_FAILURE_RATE",
         "REQUEST_LATENCY",
         "MASTERY_LAG",

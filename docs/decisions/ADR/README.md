@@ -154,3 +154,7 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-062: Owned recent practice-day indicator](062-owned-practice-activity.md)
   records the approved roadmap's read-only consistency display, explicit Kampala
   calendar window and existing ownership/sealed-result rules; verification pending.
+
+- [ADR-063: Bounded local OTP adapter observations](063-local-otp-dispatch-observations.md)
+  records four payload-free, default-disabled API counters with finite local retention;
+  adapter returns are not delivery/billing evidence. Verification is pending.

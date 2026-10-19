@@ -46,6 +46,7 @@ return 1
 """
 
 READ = """
+if #KEYS == 4 and redis.call('EXISTS', KEYS[4]) == 1 then return {} end
 local now = redis.call('TIME')
 local ms = tonumber(now[1]) * 1000 + math.floor(tonumber(now[2]) / 1000)
 if redis.call('ZCARD', KEYS[1]) > 256 then return {} end
@@ -96,10 +97,13 @@ class RawIntervalBatch:
 
 
 class BoundedIntervalStore:
-    def __init__(self, cache: Redis, scope: str, *, kind: Literal["request", "model"]) -> None:
-        if re.fullmatch(r"[0-9a-f]{64}", scope) is None or kind not in {"request", "model"}:
+    def __init__(
+        self, cache: Redis, scope: str, *, kind: Literal["request", "model", "otp"]
+    ) -> None:
+        if re.fullmatch(r"[0-9a-f]{64}", scope) is None or kind not in {"request", "model", "otp"}:
             raise ValueError("INVALID_METRIC_SCOPE")
         self.cache = cache
+        self.kind = kind
         self.prefix = f"kasoma:ops:{kind}:" + scope + ":"
         self.registry = self.prefix + "intervals"
         self.capped = self.prefix + "capped"
@@ -147,7 +151,10 @@ class BoundedIntervalStore:
 
     def read_raw(self) -> RawIntervalBatch | None:
         try:
-            raw = self.cache.eval(READ, 3, self.registry, self.capped, self.fresh, self.data_prefix)
+            keys = [self.registry, self.capped, self.fresh]
+            if self.kind == "otp":
+                keys.append(self.prefix + "incomplete")
+            raw = self.cache.eval(READ, len(keys), *keys, self.data_prefix)
             if not isinstance(raw, list) or not 2 <= len(raw) <= MAX_INTERVALS + 2:
                 return None
             now_ns = int(raw[0]) * 1000

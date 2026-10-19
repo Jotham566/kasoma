@@ -2568,6 +2568,41 @@ export interface components {
              */
             message: string;
         };
+        /** OTPDispatch */
+        OTPDispatch: {
+            /**
+             * Best Effort
+             * @default true
+             * @constant
+             */
+            best_effort: true;
+            /** Capped */
+            capped: boolean;
+            /** Email Failed */
+            email_failed: number;
+            /** Email Returned */
+            email_returned: number;
+            /** Interval Count */
+            interval_count: number;
+            /**
+             * Measure
+             * @default LOCAL_API_OTP_ADAPTER_ATTEMPTS
+             * @constant
+             */
+            measure: "LOCAL_API_OTP_ADAPTER_ATTEMPTS";
+            /** Observed Attempts */
+            observed_attempts: number;
+            /**
+             * Retention Seconds
+             * @default 300
+             * @constant
+             */
+            retention_seconds: 300;
+            /** Sms Failed */
+            sms_failed: number;
+            /** Sms Returned */
+            sms_returned: number;
+        };
         /** OTPRequest */
         OTPRequest: {
             /**
@@ -2619,7 +2654,7 @@ export interface components {
              * Code
              * @enum {string}
              */
-            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "MODEL_GATEWAY_VOLUME" | "EXPORT_FAILED" | "EXPORT_STALLED" | "RETIREMENT_FAILED" | "RETIREMENT_STALLED";
+            code: "REQUEST_RESPONSE_START_SLOW" | "DATABASE_DOWN" | "REDIS_DOWN" | "WORKER_HEARTBEAT_MISSING" | "IMPORT_FAILED" | "IMPORT_STALLED" | "FLAG_BACKLOG" | "HIGH_PRIORITY_FLAGS" | "CHANNEL_INBOUND_FAILED" | "CHANNEL_OUTBOUND_FAILED" | "CHANNEL_STALLED" | "CHANNEL_DISPATCH_SLOW" | "GRADING_STALLED" | "MODEL_GATEWAY_VOLUME" | "OTP_ADAPTER_FAILURES" | "EXPORT_FAILED" | "EXPORT_STALLED" | "RETIREMENT_FAILED" | "RETIREMENT_STALLED";
             /** Observed */
             observed: number;
             /**
@@ -2690,6 +2725,11 @@ export interface components {
              */
             model_gateway_attempts: number;
             /**
+             * Otp Failures
+             * @default 1
+             */
+            otp_failures: number;
+            /**
              * Request Min Samples
              * @default 20
              */
@@ -2719,6 +2759,7 @@ export interface components {
             generated_at: string;
             health: components["schemas"]["Health"];
             model_usage?: components["schemas"]["ModelUsage"] | null;
+            otp_dispatch?: components["schemas"]["OTPDispatch"] | null;
             request_timing?: components["schemas"]["RequestTiming"] | null;
             /**
              * Schema Version
@@ -2732,13 +2773,14 @@ export interface components {
              * @default [
              *       "AI_USAGE",
              *       "MESSAGING_USAGE",
+             *       "OTP_DISPATCH",
              *       "GRADING_FAILURE_RATE",
              *       "REQUEST_LATENCY",
              *       "MASTERY_LAG",
              *       "WEBHOOK_FAILURES"
              *     ]
              */
-            unavailable_metrics: ("AI_USAGE" | "MESSAGING_USAGE" | "GRADING_FAILURE_RATE" | "REQUEST_LATENCY" | "MASTERY_LAG" | "WEBHOOK_FAILURES")[];
+            unavailable_metrics: ("AI_USAGE" | "MESSAGING_USAGE" | "OTP_DISPATCH" | "GRADING_FAILURE_RATE" | "REQUEST_LATENCY" | "MASTERY_LAG" | "WEBHOOK_FAILURES")[];
             /**
              * Worker
              * @enum {string}
