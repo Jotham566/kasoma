@@ -13,6 +13,21 @@ journeys pass, plus quality/contracts/build, security/images and service smoke.
 [Verification](E6_PRACTICE_ACTIVITY_VERIFICATION.md) tracks expanded/backend/browser/hosted acceptance;
 this is not a stored streak system, ADR-061 approval or real-data release.
 
+## Verified fresh revision response — no empty evidence reads
+
+NFR-PERF-001/002, FR-REV-001/002/005/006, FR-GRD-008, FR-WA-003, NFR-SEC-002
+and NFR-MNT-001: the shared start transaction uses its known empty evidence only for
+a newly inserted revision. Same-key retries, active resumes and reassessment views
+retain current DB reads and full grade/provenance. Three baseline query-budget failures
+and the passing answered-resume control become four focused passes with full committed
+serialization parity. Expanded 40 integration, 1,130 unit/contract, 35 tooling and nine
+three-engine browser cases pass, plus quality/contracts/build and source security.
+[Verification](E9_FRESH_SESSION_RESPONSE_VERIFICATION.md) records both passing native profiles (START p95 408.061/422.913ms),
+image/service checks and source-pinned aggregate reports. Complete hosted 39286019222 at 58d598e passes 1,130 unit/contract, 483 integration,
+35 tooling and 111 browser executions plus all focused/engineering gates. Recovery
+verifies 69 tables/686 rows in 477ms. Only documentation/aggregate closeout follows
+that verified runtime/test/Make tree. No claimed p95-variance fix or ADR-061 implementation.
+
 ## Proposed synthetic erasure decision — awaiting owner approval
 
 FR-ID-003/005/006, BR-010, FR-GRD-003/004/005, FR-WA-006, FR-OPS-003,
@@ -40,12 +55,12 @@ provenance and unbound OTP ownership gaps. No execution or permission changes.
 
 ## Verified bounded disposable load-role lifecycle — 19 October 2026
 
-[Complete hosted39267916272](https://github.com/Jotham566/kasoma/actions/runs/39267916272)
+[Complete hosted 39267916272](https://github.com/Jotham566/kasoma/actions/runs/39267916272)
 passes at `a23e9bc020014271e8e697bd2518beda9b3a3393`:1,130 unit/contract,
-479 integration,35 tooling and111 full browser executions, plus9 focused assessment,
+479 integration,35 tooling and 111 full browser executions, plus9 focused assessment,
 12 interception controls,3 staff UI and3 native WebKit controls. Setup/migration/seed,
 restricted logins, lint/types/contracts/build, recovery, dependency/source/image security
-and container smoke pass. Logical recovery verifies69 tables/686 rows in561ms, with
+and container smoke pass. Logical recovery verifies 69 tables/686 rows in561ms, with
 no cleanup failure and refused execution after stripped ownership. No object-storage
 recovery, production RPO/RTO or external release approval is inferred.
 
@@ -176,7 +191,7 @@ Its 25 focused cases, 1,112 unit/contract and 35 tooling cases, six focused thre
 browser journeys and 69-table/686-row logical recovery pass locally. The native spawn
 registration defect is fixed by a private AppLoader. Final full native verification
 passes 465 integration and 108 browser executions, plus image/security/service gates;
-source `94b40a6` fails hosted39243195783 in one Chromium `route.fetch` socket reset
+source `94b40a6` fails hosted 39243195783 in one Chromium `route.fetch` socket reset
 during interception; commit status is unknown. All hosted backend/role/recovery/UI/transport gates preceding
 that browser step pass. A bounded, guarded test-transport correction and exact
 committed-code/retry-key checks are in verification; no application policy changes

@@ -59,3 +59,24 @@ and explicit web/WhatsApp counts, alongside duplicate/date/DTO/sealed-result con
 Native app/branded-browser review was unavailable because the Mac was locked. Existing
 IAB/automated engines do not substitute for physical/branded browser acceptance. Keep
 all normal Docker services running. No real data, inference, Gemini or external delivery.
+
+## Verified performance baseline integrated
+
+Main83f30cc publishes complete hosted39286019222's verified performance source58d598e
+plus Markdown/aggregate closeout. Its merged branch is removed. That baseline is now
+merged into the activity candidate; overlapping documentation and Make targets retain
+both changes. The combined tree still requires its own targeted/load/hosted verification;
+the earlier performance CI does not accept this API/UI feature. ADR-061 stays unapproved.
+
+## Combined native checks before publication
+
+After integrating main 83f30cc, `make test-progress test-fresh-session-response` passes
+55 focused cases in 59.12s and 40 assessment integration cases in 158.43s. Seven channel
+cases occur in both targets; these are 95 executions, not 95 distinct integration tests.
+`make test-unit` passes 1,146 unit/contract and 35 tooling cases, with 484 integration
+cases deselected. Quality/types/contracts/build, security/source/images and eight-service
+container smoke pass. The combined progress journey passes Chromium 18.1s, Firefox 19.1s
+and WebKit 16.1s, including real graded activity, sealed diagnostic exclusion, legacy
+absence, offline retry, axe and narrow primary-action order. Native branded/physical
+review remains separate. Both source-pinned load profiles and the feature's own full
+hosted run are still required; no prior CI result substitutes for this combined tree.
