@@ -1,7 +1,7 @@
 # ADR-062: Owned recent practice-day indicator
 
 Date: 19 October 2026
-Status: Accepted within the user's approved MVP implementation discretion; verification pending
+Status: Accepted within the user's approved MVP implementation discretion; full hosted39299684285 passes at adf4328
 Requirements: FR-MST-004/005, FR-ID-003, FR-WA-003, NFR-SEC-002,
 NFR-ACC-001, NFR-LOC-001, NFR-MNT-001
 
@@ -77,3 +77,10 @@ Physical/branded-browser and production acceptance remain separate gates.
 
 Rollback removes/hides the additive projection/card while preserving all original
 evidence and API compatibility. No learner history or persistence is rewritten.
+
+## Engineering verification - 19 October
+
+Complete hosted39299684285 accepts the combined activity/recovery application and test
+source adf4328. [Verification](../../implementation/E6_PRACTICE_ACTIVITY_VERIFICATION.md)
+records exact counts, both source78 native load reports, retained earlier failures and
+remaining physical/academic/provider/release gates. No data policy or erasure approval.

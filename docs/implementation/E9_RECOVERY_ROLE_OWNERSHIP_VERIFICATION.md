@@ -1,7 +1,7 @@
-# Recovery owner-role cleanup correction - candidate
+# Recovery owner-role cleanup correction - bounded engineering verified
 
 Requirements: NFR-REL-002, NFR-SEC-002, NFR-MNT-001.
-Status: local focused, quality, unit/security and logical restore checks pass; full hosted acceptance pending.
+Status: bounded synthetic engineering accepted after full hosted39299684285 at adf4328.
 
 ## Defect and correction
 
@@ -106,3 +106,27 @@ on the combined source, including the long journey in 7.7/10.0/8.6s across the e
 This does not explain or repair the hosted timeout. No timeout/assertion/retry change
 is made, neither branch is promoted, and the new full run is required independently.
 See [the exact failure boundary](E6_PRACTICE_ACTIVITY_VERIFICATION.md).
+
+## Verified practice-day display and recovery ownership
+
+Complete hosted [39299684285](https://github.com/Jotham566/kasoma/actions/runs/39299684285) passes at exact combined
+source adf432879a8b55eeb1f9e8d59f5d6b053f76bf56: 1,154 unit/contract, 487 integration,
+35 tooling and 111 full browser executions, plus focused assessment/transport/staff/
+native WebKit controls and all setup/migration/seed/role/quality/contracts/build/
+security/image/service gates. Logical recovery verifies 69 tables/686 rows in 493ms,
+without cleanup failure; restored retirement execution remains denied.
+
+This accepts the bounded synthetic practice-day indicator (FR-MST-004/005 and roadmap
+3.5) and exact owned recovery-role correction (NFR-REL-002/SEC-002/MNT-001). Native
+load observations remain pinned to activity source78ca959; no adf4328 load remeasurement
+is invented. The earlier run39294126038 remains FAILED at an unexplained WebKit
+privacy timeout; current full passes do not establish its cause or a transport fix.
+Only Markdown closeout follows the verified application/test/Make tree. External
+academic/privacy/provider, full preservation/erasure, production recovery, physical/
+branded-device and pilot gates remain. No ADR-061 approval or OTP acceptance is inferred.
+
+Actual PostgreSQL role-collision/replacement cases run in the 487-case full integration
+suite. Both generated database cleanup and independently created/replaced role
+preservation remain enforced. No application permission, migration SQL, unrelated
+resource cleanup or account-erasure authority changes. The restore report explicitly
+keeps object_storage_recovery_verified=false and production_rpo_rto_verified=false.

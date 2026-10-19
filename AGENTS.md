@@ -267,6 +267,23 @@ OTP source ceee4012c7f74dcc0c387a45ab112ed35d657f1b is pushed on its own branch;
 complete hosted39304052749 is confirmed in progress. Parent adf4328 hosted39299684285
 is separately in the browser stage. Neither feature is accepted from another source;
 main remains e7a4fc0. Preserve both live heads; only Markdown OTP closeout follows ceee401.
+
+Complete hosted39299684285 is SUCCESS at exact combined source
+adf432879a8b55eeb1f9e8d59f5d6b053f76bf56:1,154 unit/contract,487 integration,35 tooling
+and111 full browser executions plus every focused/setup/migration/seed/role/quality/
+contract/build/security/image/service gate. Recovery verifies69 tables/686 rows in493ms,
+no cleanup failure and stripped retirement execution denied. Bounded practice-day and
+recovery-ownership engineering are accepted. Earlier39294126038 WebKit privacy timeout
+remains FAILED/unexplained; no fix or new adf load measurement is inferred. Only
+Markdown closeout follows the verified tree. Separate OTP sourceceee401 CI39304052749
+is live, not accepted by this run. Normal review Docker stays healthy on0042; local
+preview includes that separate OTP candidate with collection/retirement disabled.
+Publication through main87a93d7 is verified; merged practice/recovery branches are
+removed locally/remotely. The only remaining feature branch is OTP observations.
+Its local integration of main changes Markdown only relative to sourceceee401;
+keep that remote head unchanged while hosted39304052749 runs. Do not infer OTP
+acceptance from the parent result. Earlier pending-main notes retain their historic
+state; current main is87a93d7. No ADR-061 approval or production acceptance is inferred.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

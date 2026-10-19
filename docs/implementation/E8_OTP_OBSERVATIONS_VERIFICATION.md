@@ -143,3 +143,18 @@ in progress. Do not replace that remote head for Markdown closeout. Parent combi
 source adf4328 run39299684285 is separately in the browser stage; neither result is
 inferred from another source. Main remains e7a4fc0 and no merged-branch cleanup is
 yet authorized by ancestry. This following closeout is Markdown only.
+
+## Verified parent published; OTP head preserved
+
+Parent source adf4328 passes complete hosted39299684285: 1,154 unit/contract,487
+integration,35 tooling,111 full browser executions and all focused/engineering gates.
+Recovery verifies69 tables/686 rows in493ms with no cleanup failure. That accepted
+practice-day/recovery tree plus Markdown closeout is pushed to main87a93d7; its two
+merged branches are removed locally/remotely after ancestry and remote verification.
+The retained earlier WebKit timeout remains unexplained, without a claimed fix.
+
+Integrating main87 into this OTP branch changes Markdown only relative to published
+OTP source ceee401. Three informational conflicts retain both evidence histories.
+The OTP remote head remains ceee401 while its own hosted39304052749 runs; parent
+acceptance does not accept the OTP API/SDK/UI. Normal Docker remains healthy with
+collection/retirement disabled. No required release or ADR-061 gate changes.

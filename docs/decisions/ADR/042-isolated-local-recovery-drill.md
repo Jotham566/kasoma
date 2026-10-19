@@ -55,3 +55,9 @@ restored destination creates no role and confers no cleanup authority. No migrat
 SQL, application ACL, data policy or production entitlement changes. Complete hosted
 verification remains required; this clarifies enforcement of the original isolation
 decision rather than expanding its cleanup authorization.
+
+The ownership correction passes complete hosted39299684285 at adf4328: 1,154 unit/
+contract,487 integration,35 tooling and111 browser executions plus all engineering
+gates. Logical recovery verifies69 tables/686 rows in493ms, with no cleanup failure.
+Only Markdown closeout follows that verified tree. Production/object-storage recovery
+and account-erasure authority remain excluded.
