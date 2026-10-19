@@ -14,11 +14,15 @@ grading/mastery service with fake transport, signed durable intake and STOP barr
 
 ADMIN operations includes channel queue/status and fake-dispatch timing. Offline short-text
 candidate validation and budgeted dual-pass rehearsal are implemented; learner short-text scoring
-is disabled. An isolated synthetic logical restore and 60 Chromium/Firefox/WebKit journey
-executions pass; cold first-question transfer is below 250,000 bytes in those fixtures.
+is disabled. The latest verified source `6b06c53` passes 1,092 unit/contract,
+412 integration, 35 tooling and 108 Chromium/Firefox/WebKit journey executions,
+plus logical recovery, restricted-role, security/image and service checks. Cold
+first-question transfer is below 250,000 bytes in those fixtures. Both local
+objective load profiles pass, including numeric answers and 50 prior answers per
+active learner; this is fixed synthetic engineering evidence.
 
 These are engineering results, not academic or production acceptance. Erasure/anonymization,
-remaining holds/retention/large-history work, full short-text learner integration, load/latency,
+remaining holds/retention/large-history work, actual short-text scoring enablement, full deployed/provider load acceptance,
 academic benchmarks/content approval, privacy/provider decisions and pilot release gates remain.
 Use the [current sprint](docs/implementation/CURRENT_SPRINT.md),
 [requirements evidence](docs/implementation/REQUIREMENTS_TRACEABILITY.md) and
@@ -45,6 +49,10 @@ Mailpit: localhost:8025; MinIO console: localhost:9001.
 Run `make lint typecheck test openapi-check build`, then `make e2e-install` and
 `make e2e security containers recovery-drill`. Missing dependencies fail clearly. The runbook
 covers native Ollama, safe shutdown, migrations, CI and deferred evaluation gates.
+
+Optional local performance checks are `make test-load-profile`, `make load-objective`
+and `make load-history-mixed`. Run full profiles sequentially; each creates and removes
+only its own synthetic database. See the [scope and evidence](docs/implementation/E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
 
 ## Documentation
 

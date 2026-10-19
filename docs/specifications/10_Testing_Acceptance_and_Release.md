@@ -123,8 +123,8 @@ database/container resource measurements, a daily soak or production deployment 
 answers for each of 500 active learners, strong/weak/inconsistent/improving trajectories,
 and timed Mathematics choice/Physics numeric journeys. It retains the same load and
 latency gates and separately gates each response format. The final native profile and
-original-baseline recheck pass at `6b06c53`; full hosted regression/main promotion are
-pending. See [history/mixed verification](../implementation/E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
+original-baseline recheck pass at `6b06c53`; complete hosted regression 39217860618
+also passes. See [history/mixed verification](../implementation/E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
 Run profiles sequentially and await successful owned-database cleanup. Neither uses
 the running review database or external providers. These fixed recent histories do
 not replace older/decayed or diagnostic histories, provider failure, soak, shared

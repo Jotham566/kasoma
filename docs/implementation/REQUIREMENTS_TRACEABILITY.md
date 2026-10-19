@@ -23,7 +23,7 @@ and security pass. Full integration/hosted verification is pending.
 This supports resilience testing, not NFR-REL-001 availability or full provider-load
 acceptance. No runtime policy, architecture, real inference or enablement change.
 
-## Current independent load candidate
+## Current verified load increment
 
 NFR-PERF-001/002 / NFR-SCL-001 / FR-MST-004/005 / NFR-MNT-001:
 [history/mixed load evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) defines a
@@ -31,8 +31,10 @@ NFR-PERF-001/002 / NFR-SCL-001 / FR-MST-004/005 / NFR-MNT-001:
 submissions under unchanged operation/format latency gates. All 37 harness cases,
 1,092 unit/contract, lint/types/contracts and security pass. Initial history setup
 fails before timing with successful cleanup; the refresh correction passes at full
-size in the final-source native result recorded below. Hosted acceptance
-and main promotion remain pending.
+size in the final-source native result recorded below. Complete hosted
+[39217860618](https://github.com/Jotham566/kasoma/actions/runs/39217860618) passes at
+`6b06c53`: 1,092 unit/contract, 412 integration, 35 tooling, 108 browser executions
+and full UI/transport/role/recovery/security/image/service checks.
 No runtime, retention, provider or academic enablement changes.
 Final fixture generation guarantees both formats with 144 items per subject; the
 earlier 293-item candidate correctly fails for missing numeric delivery despite zero
@@ -41,8 +43,11 @@ requests, zero errors, 1,250 answers per format, 27,500 total grades and success
 cleanup. START p95 432.085 ms, numeric-answer p95 27.778 ms and progress p95 17.079 ms
 pass unchanged gates. This closes only this recent-history mixed objective profile;
 the sequential original-baseline recheck also passes 7,000 requests with zero errors,
-START p95 421.751 ms and successful cleanup. Hosted/main promotion, full performance
-and external release acceptance remain pending. Startup p99 remains a risk.
+START p95 421.751 ms and successful cleanup. Full performance and external release
+acceptance remain pending. Startup p99 remains a risk. Documentation/aggregate-report
+closeout preserves the exact verified code/test/Makefile/workflow tree.
+Publication through main `6ebdf71` is verified and the merged load branch is removed
+locally/remotely. Independent provider/UI candidate acceptance remains separate.
 The local runbook and testing specification document both optional isolated profiles
 and their unchanged thresholds; documenting the command grants no new acceptance.
 
@@ -57,7 +62,7 @@ approval is pending; no runtime, migration or application acceptance is supplied
 Existing retention/erasure gaps remain open. Main closeout `f1bd1ad` separately
 passes complete hosted [39189901813](https://github.com/Jotham566/kasoma/actions/runs/39189901813).
 
-## Current accepted checkpoint — 19 October 2026
+## Earlier accepted application checkpoint — 19 October 2026
 
 Application/test source `6d53541` passes complete hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895) and is pushed to main
 through Markdown-only merge `5de2ce5`; all merged implementation branches are removed
@@ -227,11 +232,11 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-OPS-002 | ADMIN snapshot/dashboard, bounded imports/flags/channel/exports and response-start histograms; grading queue and verified local model observations | [Operations evidence](E8_OPERATIONS_VERIFICATION.md); [grading candidate](E8_GRADING_OPERATIONS_VERIFICATION.md); threshold/recovery, authorization, safe logs and browser checks | Partial: existing local visibility merged; grading queue/lease/fallback and bounded local model observations merged; model spend, academic/technical error-rate distinctions, SMS/email/mastery/provider telemetry and production alerting remain pending |
 | FR-OPS-003 | Atomic content/role audit, database history guards | Direct SQL audit rewrite rejection, role-action records and content events | Partial: content/local roles and flag read/triage audit; bounded aggregate ADMIN audit activity verified at 5d95f9d; individual support access and retention processing remain gated |
 | FR-OPS-004 | Typed channel attempt/outbound limits and feature flag; configurable shared short-text per-job request/token/time ceiling with finite lease/hard task bounds | [E7 evidence](E7_LINKING_READINESS.md); [runtime-budget candidate](E4_RUNTIME_BUDGET_VERIFICATION.md); actual fake exhaustion and exact replay | Local channel controls merged; typed runtime budget passes local and complete hosted checks; actual provider usage/billing and production acceptance remain gated. No unspecified learner/day/fleet quota is invented |
-| NFR-PERF-001 | Isolated objective HTTP load runner; ADR-046 shared content locks and batched eligibility | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local baseline passes per-operation p95 (START 441 ms); hosted regression passes; representative deployment/history/provider acceptance pending |
-| NFR-PERF-002 | Objective answer response includes deterministic feedback; bounded channel wake-up | [Historical objective load evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md); [channel evidence](E7_CONVERSATION_VERIFICATION.md) | Historical isolated objective baseline: ANSWER p95 27.221 ms across 2,500 complete JSON responses. This is not a current-source/deployment rerun; representative histories, numeric/AI/provider and WhatsApp end-to-end acceptance remain pending |
+| NFR-PERF-001 | Isolated objective and mixed recent-history HTTP load; ADR-046 locks/batched eligibility | [Baseline evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md); [mixed history](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) | Native 6b06c53 profiles and complete hosted 39217860618 pass; mixed START p95 432.085 ms. Deployment, older/diagnostic histories and provider acceptance remain pending |
+| NFR-PERF-002 | Deterministic choice/numeric response feedback; bounded channel wake-up | [Current baseline/mixed evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md); [channel evidence](E7_CONVERSATION_VERIFICATION.md) | Native 6b06c53 mixed ANSWER p95 27.487 ms; numeric subset 27.778 ms, 1,250 samples per format. Full AI/provider/WhatsApp/deployment acceptance remains pending |
 | NFR-REL-001 | — | — | Not started |
 | NFR-REL-002 | Isolated synthetic logical recovery command (ADR-042) | 16 safety cases; [recovery evidence](E9_RECOVERY_VERIFICATION.md) | Synthetic logical recovery verified in CI 37223872075; production PITR/RPO/RTO pending |
-| NFR-SCL-001 | Synthetic 2,000-registration/500-active/50-concurrent objective load profile | [Load profile evidence](E9_OBJECTIVE_LOAD_VERIFICATION.md) | Local 7,000-request baseline passed with 500 sessions/2,500 grades and no errors; broader scale acceptance pending |
+| NFR-SCL-001 | Synthetic 2,000-registration/500-active/50-concurrent objective and mixed-history profiles | [Load evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) | Both native 6b06c53 7,000-request profiles pass; mixed final totals 27,500 grades/5,500 sessions, zero errors, successful cleanup. Complete hosted regression passes; daily soak/deployed/provider scale acceptance pending |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
 | NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
 | NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, assessment, diagnostic, progress/history and flag/triage axe/keyboard checks; remaining journey matrix pending |
