@@ -181,8 +181,19 @@ three staff UI and three native WebKit controls plus all engineering gates. Reco
 verifies 69 tables/686 rows in 465 ms. This supersedes the preceding pending operations
 acceptance only; earlier failures remain failures. Only Markdown closeout follows the
 verified application/test/Makefile/workflow tree `e33ec69`. Review Docker is healthy on
-0042 with retirement false. Next is the assessed disposable load-role lifecycle;
-require exact role absence before migration and never clean pre-existing resources.
+0042 with retirement false. Disposable load-role source `a23e9bc` passes complete hosted39267916272:1,130 unit/contract,
+479 integration,35 tooling and111 browser executions plus all focused/engineering gates.
+Recovery verifies69 tables/686 rows in561ms. Exclusive committed creation and exact OID
+checks protect concurrent creators/replacements;69 focused native cases pass. Only
+Markdown/aggregate JSON closeout follows that verified code/test/Make/workflow tree.
+Corrected native objective/history recheck pass, but the initial history START p95
+559.306ms miss remains failed; variability is unexplained. Main follow-up39264562568
+fails at the export journey's initial OTP POST socket reset; unchanged focused Firefox
+and the new full suite pass, without a claimed transport fix. Review retirement stays
+false; existing resources are never swept. Next prepare the exact account-erasure
+transform/preservation/recovery proposal from E8_ERASURE_TRANSFORM_READINESS.md;
+39 direct foreign keys across36 tables and19 hold kinds do not prove full clearance.
+No account-erasure authority or new anonymity policy is inferred.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

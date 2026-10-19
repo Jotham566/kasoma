@@ -1,0 +1,84 @@
+{
+  "active_learners": 500,
+  "all_http": {
+    "p50_ms": 12.304,
+    "p95_ms": 27.073,
+    "p99_ms": 306.221,
+    "samples": 7000
+  },
+  "answer_dispatch_lag": {
+    "p50_ms": 1.083,
+    "p95_ms": 1.179,
+    "p99_ms": 16.106,
+    "samples": 2500
+  },
+  "answer_formats": {
+    "SINGLE_CHOICE": {
+      "p50_ms": 18.996,
+      "p95_ms": 27.405,
+      "p99_ms": 125.906,
+      "samples": 2500
+    }
+  },
+  "attempts": 2500,
+  "cleanup_failed": false,
+  "completed_learners": 500,
+  "completed_sessions": 500,
+  "concurrency_limit": 50,
+  "cpu_seconds_client_and_api": 50.251,
+  "database_resources_measured": false,
+  "duration_seconds": 125.447,
+  "errors": 0,
+  "grades": 2500,
+  "history_attempts": 0,
+  "history_completed_sessions": 0,
+  "history_grades": 0,
+  "observed_answer_dispatch_per_second": 19.981,
+  "operations": {
+    "ANSWER": {
+      "p50_ms": 18.996,
+      "p95_ms": 27.405,
+      "p99_ms": 125.906,
+      "samples": 2500
+    },
+    "NEXT": {
+      "p50_ms": 10.571,
+      "p95_ms": 17.797,
+      "p99_ms": 326.435,
+      "samples": 2500
+    },
+    "PROFILE": {
+      "p50_ms": 4.095,
+      "p95_ms": 216.175,
+      "p99_ms": 232.28,
+      "samples": 500
+    },
+    "PROGRESS": {
+      "p50_ms": 8.997,
+      "p95_ms": 15.157,
+      "p99_ms": 28.218,
+      "samples": 500
+    },
+    "START": {
+      "p50_ms": 13.187,
+      "p95_ms": 428.912,
+      "p99_ms": 1134.858,
+      "samples": 500
+    },
+    "STATE": {
+      "p50_ms": 10.074,
+      "p95_ms": 15.241,
+      "p99_ms": 30.485,
+      "samples": 500
+    }
+  },
+  "peak_inflight_http": 50,
+  "peak_rss_bytes_client_api_and_fixture_setup": 143753216,
+  "production_acceptance": false,
+  "profile": "isolated-objective-http-v1",
+  "registered_learners": 2000,
+  "reviewed_synthetic_items": 288,
+  "source_commit": "a23e9bc020014271e8e697bd2518beda9b3a3393",
+  "status": "PASSED",
+  "target_answer_dispatch_per_second": 20
+}

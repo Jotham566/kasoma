@@ -1424,7 +1424,7 @@ question transfer budget. Failure-only diagnostics report capped endpoint-kind/s
 counts and scalar focus/visibility state, without request IDs, payloads or credentials.
 See [verification](../implementation/E3_REVIEW_ACTION_STABILITY_VERIFICATION.md).
 
-## Disposable load owner lifecycle candidate
+## Verified bounded disposable load owner lifecycle
 
 `make test-load-profile` runs deterministic contract checks without external calls.
 `make test-load-role-cleanup` adds actual local PostgreSQL migration/cleanup and
@@ -1436,4 +1436,4 @@ transaction and confirms its OID; cleanup requires that same identity. An absenc
 check alone grants no ownership. A pre-existing, replaced, unsafe/shared or dependent role
 is preserved and the run fails closed. Do not sweep existing orphan roles or use
 DROP OWNED, revoke dependencies, or clean developer/application resources.
-See [candidate evidence](../implementation/E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).
+See [bounded verification](../implementation/E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).

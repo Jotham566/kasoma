@@ -88,3 +88,15 @@ executions, focused controls and all engineering gates. Recovery verifies 69 tab
 and [stable actions](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md). This is bounded
 synthetic evidence, with review retirement false. Full preservation, erasure,
 object-storage/production recovery, academic/privacy/provider and pilot gates remain.
+
+## Disposable load lifecycle and retained failures — 19 October
+
+Complete hosted [39267916272](https://github.com/Jotham566/kasoma/actions/runs/39267916272)
+at a23e9bc passes1,130 unit/contract,479 integration,35 tooling,111 browser executions
+and all engineering gates. Recovery verifies69 tables/686 rows in561ms. This accepts
+the bounded disposable-role lifecycle only. Corrected native objective/history recheck
+pass, but the initial corrected history START p95 of559.306ms remains a failed run;
+variance is unresolved. Main follow-up39264562568 fails at initial OTP transport.
+Its cause is unconfirmed despite later focused/full passes. No threshold or release
+gate is waived. [Erasure readiness](E8_ERASURE_TRANSFORM_READINESS.md) records the
+next exact transform/preservation/recovery assessment and its required review.

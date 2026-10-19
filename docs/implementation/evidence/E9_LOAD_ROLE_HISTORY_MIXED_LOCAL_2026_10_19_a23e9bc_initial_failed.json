@@ -1,0 +1,90 @@
+{
+  "active_learners": 500,
+  "all_http": {
+    "p50_ms": 12.739,
+    "p95_ms": 27.478,
+    "p99_ms": 369.933,
+    "samples": 7000
+  },
+  "answer_dispatch_lag": {
+    "p50_ms": 1.077,
+    "p95_ms": 1.178,
+    "p99_ms": 20.733,
+    "samples": 2500
+  },
+  "answer_formats": {
+    "NUMERIC": {
+      "p50_ms": 19.51,
+      "p95_ms": 27.908,
+      "p99_ms": 160.29,
+      "samples": 1250
+    },
+    "SINGLE_CHOICE": {
+      "p50_ms": 19.526,
+      "p95_ms": 28.078,
+      "p99_ms": 204.402,
+      "samples": 1250
+    }
+  },
+  "attempts": 27500,
+  "cleanup_failed": false,
+  "completed_learners": 500,
+  "completed_sessions": 5500,
+  "concurrency_limit": 50,
+  "cpu_seconds_client_and_api": 51.881,
+  "database_resources_measured": false,
+  "duration_seconds": 125.342,
+  "errors": 0,
+  "grades": 27500,
+  "history_attempts": 25000,
+  "history_completed_sessions": 5000,
+  "history_grades": 25000,
+  "observed_answer_dispatch_per_second": 19.997,
+  "operations": {
+    "ANSWER": {
+      "p50_ms": 19.518,
+      "p95_ms": 28.007,
+      "p99_ms": 168.747,
+      "samples": 2500
+    },
+    "NEXT": {
+      "p50_ms": 10.661,
+      "p95_ms": 17.884,
+      "p99_ms": 359.565,
+      "samples": 2500
+    },
+    "PROFILE": {
+      "p50_ms": 4.307,
+      "p95_ms": 180.31,
+      "p99_ms": 204.164,
+      "samples": 500
+    },
+    "PROGRESS": {
+      "p50_ms": 12.182,
+      "p95_ms": 15.821,
+      "p99_ms": 18.401,
+      "samples": 500
+    },
+    "START": {
+      "p50_ms": 14.163,
+      "p95_ms": 559.306,
+      "p99_ms": 1210.911,
+      "samples": 500
+    },
+    "STATE": {
+      "p50_ms": 10.356,
+      "p95_ms": 14.515,
+      "p99_ms": 19.892,
+      "samples": 500
+    }
+  },
+  "peak_inflight_http": 50,
+  "peak_rss_bytes_client_api_and_fixture_setup": 136069120,
+  "production_acceptance": false,
+  "profile": "isolated-history-mixed-http-v1",
+  "registered_learners": 2000,
+  "reviewed_synthetic_items": 288,
+  "source_commit": "a23e9bc020014271e8e697bd2518beda9b3a3393",
+  "status": "FAILED",
+  "target_answer_dispatch_per_second": 20
+}

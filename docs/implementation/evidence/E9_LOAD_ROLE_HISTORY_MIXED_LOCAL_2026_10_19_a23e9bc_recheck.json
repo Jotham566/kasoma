@@ -1,0 +1,90 @@
+{
+  "active_learners": 500,
+  "all_http": {
+    "p50_ms": 12.857,
+    "p95_ms": 28.093,
+    "p99_ms": 319.217,
+    "samples": 7000
+  },
+  "answer_dispatch_lag": {
+    "p50_ms": 1.082,
+    "p95_ms": 1.196,
+    "p99_ms": 15.733,
+    "samples": 2500
+  },
+  "answer_formats": {
+    "NUMERIC": {
+      "p50_ms": 20.125,
+      "p95_ms": 28.435,
+      "p99_ms": 125.511,
+      "samples": 1250
+    },
+    "SINGLE_CHOICE": {
+      "p50_ms": 20.068,
+      "p95_ms": 29.064,
+      "p99_ms": 85.302,
+      "samples": 1250
+    }
+  },
+  "attempts": 27500,
+  "cleanup_failed": false,
+  "completed_learners": 500,
+  "completed_sessions": 5500,
+  "concurrency_limit": 50,
+  "cpu_seconds_client_and_api": 53.038,
+  "database_resources_measured": false,
+  "duration_seconds": 125.388,
+  "errors": 0,
+  "grades": 27500,
+  "history_attempts": 25000,
+  "history_completed_sessions": 5000,
+  "history_grades": 25000,
+  "observed_answer_dispatch_per_second": 19.991,
+  "operations": {
+    "ANSWER": {
+      "p50_ms": 20.106,
+      "p95_ms": 28.731,
+      "p99_ms": 97.099,
+      "samples": 2500
+    },
+    "NEXT": {
+      "p50_ms": 10.847,
+      "p95_ms": 17.181,
+      "p99_ms": 316.049,
+      "samples": 2500
+    },
+    "PROFILE": {
+      "p50_ms": 4.247,
+      "p95_ms": 191.351,
+      "p99_ms": 226.438,
+      "samples": 500
+    },
+    "PROGRESS": {
+      "p50_ms": 12.213,
+      "p95_ms": 17.897,
+      "p99_ms": 22.433,
+      "samples": 500
+    },
+    "START": {
+      "p50_ms": 14.157,
+      "p95_ms": 448.045,
+      "p99_ms": 1106.124,
+      "samples": 500
+    },
+    "STATE": {
+      "p50_ms": 10.179,
+      "p95_ms": 15.625,
+      "p99_ms": 23.742,
+      "samples": 500
+    }
+  },
+  "peak_inflight_http": 50,
+  "peak_rss_bytes_client_api_and_fixture_setup": 136052736,
+  "production_acceptance": false,
+  "profile": "isolated-history-mixed-http-v1",
+  "registered_learners": 2000,
+  "reviewed_synthetic_items": 288,
+  "source_commit": "a23e9bc020014271e8e697bd2518beda9b3a3393",
+  "status": "PASSED",
+  "target_answer_dispatch_per_second": 20
+}

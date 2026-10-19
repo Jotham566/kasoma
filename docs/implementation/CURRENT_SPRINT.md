@@ -1,4 +1,57 @@
-# Current sprint: verified bounded synthetic export retirement operations
+# Current sprint: verified disposable load-role lifecycle
+
+## Verified bounded disposable load-role lifecycle — 19 October 2026
+
+[Complete hosted39267916272](https://github.com/Jotham566/kasoma/actions/runs/39267916272)
+passes at `a23e9bc020014271e8e697bd2518beda9b3a3393`:1,130 unit/contract,
+479 integration,35 tooling and111 full browser executions, plus9 focused assessment,
+12 interception controls,3 staff UI and3 native WebKit controls. Setup/migration/seed,
+restricted logins, lint/types/contracts/build, recovery, dependency/source/image security
+and container smoke pass. Logical recovery verifies69 tables/686 rows in561ms, with
+no cleanup failure and refused execution after stripped ownership. No object-storage
+recovery, production RPO/RTO or external release approval is inferred.
+
+NFR-MNT-001/NFR-SEC-002: both load profiles now clean only a confirmed, exclusively
+created role with the same OID, safe attributes and no memberships, after successful
+owned database drop. A real two-connection red regression and replacement tests prove
+the stronger boundary. All69 focused native cases pass. No API/schema, grading,
+mastery, provider or architecture change; no existing orphan/debug/application resource
+cleanup. The normal Docker review stack stays healthy on0042 with retirement false.
+
+Corrected-source objective and unchanged history recheck pass at START p95
+428.912/448.045ms with zero errors and successful cleanup. The initial corrected
+history run fails at559.306ms and remains failed. Main follow-up39264562568 fails
+in initial OTP fixture transport; its exact cause remains unknown, although unchanged
+focused Firefox and the current full hosted suite pass. No variance or transport fix
+is claimed, no threshold is relaxed and no blanket retry is added. These risks remain
+MVP/release work. The following earlier notes retain their then-current status.
+Only documentation/aggregate evidence follows the exact verified source tree.
+
+## Diagnostic history recheck and main follow-up failure
+
+The unchanged a23e9bc history recheck passes at START p95 448.045ms with zero errors
+and successful cleanup. Its initial559.306ms miss remains failed; variability is
+unresolved. Separately, main follow-up39264562568 fails on the export gateway journey's
+initial OTP POST socket reset, before export creation; cause/commit state are unknown.
+Retain both results without blanket retry or broad acceptance. Current corrected-source
+CI remains in progress. [Evidence](E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).
+
+## Retained history-load latency failure
+
+NFR-PERF-001/002/NFR-SCL-001: corrected-sourcea23e9bc history load finishes all7,000
+requests without errors and cleans its resources, but fails START p95 at559.306ms
+against the unchanged500ms gate. Preserve that failed report. The application tree
+is unchanged; cause remains unconfirmed. An unchanged diagnostic recheck is running,
+with no performance acceptance inferred. [Evidence](E9_LOAD_ROLE_CLEANUP_VERIFICATION.md).
+
+## Next privacy boundary: account-erasure transform readiness
+
+FR-ID-006/BR-010/FR-OPS-003/NFR-SEC-002/NFR-MNT-001: the
+[readiness assessment](E8_ERASURE_TRANSFORM_READINESS.md) ties the current
+coded blockers, request/user states and19 hold kinds to the required exact source,
+transform, preservation and recovery proposal. It chooses no new policy or execution
+behavior and grants no erasure authority. Implementation follows current candidate
+publication and a concrete approved destructive-transform decision.
 
 ## Candidate correction: exclusive load-role ownership
 
