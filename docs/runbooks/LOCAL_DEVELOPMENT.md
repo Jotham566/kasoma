@@ -95,12 +95,24 @@ make e2e
 make test-web-mobile # focused 320-pixel synthetic touch journey; also included in e2e
 make test-load-profile # deterministic load-runner isolation/measurement checks
 make load-objective # optional full-size isolated synthetic HTTP load; creates/drops its own database
+make load-history-mixed # optional 50-prior-answer histories and choice/numeric HTTP load
 make security
 make containers
 make security-source
 make security-containers
 make container-smoke
 ```
+
+The optional load commands accept only the local development PostgreSQL profile on
+loopback port 55432. Each creates, migrates, seeds and removes its own randomly named
+synthetic database; neither targets the review database or accepts a supplied HTTP URL.
+Run them sequentially and await terminal cleanup. `load-history-mixed` prepares ten
+five-question sessions for each of 500 active learners before timing 50 concurrent
+choice/numeric journeys; preparation takes additional time. Both commands use fake
+providers and make no inference or external delivery calls. A passing result requires
+the unchanged latency/completion/format gates and successful cleanup. See
+[baseline evidence](../implementation/E9_OBJECTIVE_LOAD_VERIFICATION.md) and
+[history/mixed scope and evidence](../implementation/E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
 
 `make test` runs socket-blocked unit/contracts first, then PostgreSQL/Redis
 integration tests with only loopback sockets allowed. Missing services fail the

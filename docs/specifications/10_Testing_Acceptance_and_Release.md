@@ -119,6 +119,17 @@ rate and scoped resource use, and fails on errors or incomplete sessions. See th
 This finite baseline does not replace representative histories, numeric/provider-failure scenarios,
 database/container resource measurements, a daily soak or production deployment acceptance.
 
+`make load-history-mixed` adds a fixed synthetic recent-history profile: 50 prior
+answers for each of 500 active learners, strong/weak/inconsistent/improving trajectories,
+and timed Mathematics choice/Physics numeric journeys. It retains the same load and
+latency gates and separately gates each response format. The final native profile and
+original-baseline recheck pass at `6b06c53`; full hosted regression/main promotion are
+pending. See [history/mixed verification](../implementation/E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
+Run profiles sequentially and await successful owned-database cleanup. Neither uses
+the running review database or external providers. These fixed recent histories do
+not replace older/decayed or diagnostic histories, provider failure, soak, shared
+database resource measurements or production acceptance.
+
 ## 6. Test data
 
 - Use synthetic identities and original fixture questions.

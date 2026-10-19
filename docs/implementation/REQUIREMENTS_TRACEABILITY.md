@@ -20,6 +20,8 @@ pass unchanged gates. This closes only this recent-history mixed objective profi
 the sequential original-baseline recheck also passes 7,000 requests with zero errors,
 START p95 421.751 ms and successful cleanup. Hosted/main promotion, full performance
 and external release acceptance remain pending. Startup p99 remains a risk.
+The local runbook and testing specification document both optional isolated profiles
+and their unchanged thresholds; documenting the command grants no new acceptance.
 
 ## Proposed retention boundary — not implemented
 

@@ -19,6 +19,8 @@
   293-item candidate completes with zero HTTP errors and successful cleanup but
   correctly fails because all timed answers are choice; its failed report is retained
   separately from the passing final-source evidence.
+- Document the new command and sequential isolated execution in the local runbook
+  and testing specification; preserve all broader performance/release gates.
 
 ## Proposed — completed export accountability retirement
 
