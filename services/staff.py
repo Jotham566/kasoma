@@ -7,7 +7,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from services.domain.content import AuditLog
-from services.domain.identity import Identifier, UserRole
+from services.domain.identity import Identifier, User, UserRole
 from services.identity import IdentityError, IdentityService, normalize
 
 ROLES = {"CONTENT_AUTHOR", "ACADEMIC_REVIEWER", "ADMIN", "SUPPORT_READONLY"}
@@ -43,6 +43,9 @@ def provision(identity: IdentityService, email: str, role: str, revoke: bool = F
         if identifier is None:
             raise ValueError("Verify the synthetic identity first")
         identity.lock(db, str(identifier.user_id))
+        user = db.get(User, identifier.user_id, populate_existing=True)
+        if not revoke and (user is None or user.status != "ACTIVE"):
+            raise ValueError("Disabled identities cannot receive staff roles")
         existing = db.get(UserRole, (identifier.user_id, role))
         if revoke:
             db.execute(

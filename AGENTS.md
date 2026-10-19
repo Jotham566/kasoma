@@ -460,3 +460,31 @@ candidate after observing11.3GB of shared system catalogs. Only a new owned boun
 PostgreSQL service hosts the standard synthetic browser fixture; normal services and
 all existing schemas remain. Scope/cleanup/private-key tests and actual browser/hosted
 acceptance are pending. No prior HTTP500 or pointer failure is declared fixed.
+
+ADR-061 lifecycle work is isolated on codex/erasure-lifecycle. Closed plan/authorization/
+status types, a disabled private fake-only profile and a71-source/501-column0044 structural
+manifest pass97 focused and1374 unit/contract tests plus35 tooling, lint/types and
+security/source checks. Actual isolated catalog drift and disabled-role provisioning
+cases pass2/2. These are foundation checks only: no closure migration, provisioner, executor, routes or DELETE
+completion exists. Trigger/grant/payload/ownership validation,
+permanent closure and full first-slice/hosted acceptance remain pending. Keep review
+execution disabled; see docs/implementation/E8_ERASURE_LIFECYCLE_READINESS.md.
+
+
+ADR-061 prerequisite source1851740 passes complete hosted39328044945:1374 unit/contract,
+514 integration,35 tooling and117 browsers plus all engineering gates. Recovery71 tables/
+691 rows passes logical607ms and actual PG/MinIO one42,060-byte object193ms with empty
+cleanup and stripped retirement denied. Only closed contracts/private configuration,
+structural drift checks and disabled-role grant refusal are accepted; no closure or
+account-erasure execution/fulfillment exists. Only Markdown closeout follows this source.
+Combined integration and full approved lifecycle/preservation/removal acceptance remain.
+
+
+The combined codex/browser-isolation candidate now integrates independently hosted-
+verified configuration3e6175b and ADR-061 foundation1851740 (only Markdown follows),
+plus locally verified ADR-068 browser isolation and pinned-local Docker transport.
+All117 pre-integration browser executions pass with nine exact owned containers removed;
+the transport follow-up passes nine actual assessment executions with empty cleanup.
+The merge changes no application schema beyond0044. Combined-source backend/browser/
+recovery/security/image/service and complete hosted acceptance are still required.
+Main remains eb05457; review execution stays off and no account closure/removal exists.

@@ -1,5 +1,19 @@
 # Changelog
 
+## ADR-061 lifecycle contracts — first slice in progress
+
+FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002 and NFR-MNT-001: closed internal
+plan/authorization/status types reject expanded caller authority, unbounded plan TTLs,
+private source/cursor fields and contradictory closure/completion. The private fake-only
+profile defaults disabled. A frozen71-source/501-column manifest and read-only catalog
+fence detect structural drift without granting execution. Local staff provisioning now
+refuses grants/regrants on existing disabled identities while retaining audited revocation.
+Final97 focused,1374 unit/contract,35 tooling and two actual integration cases pass
+with quality/contracts/build/security/source checks. Full first-slice/hosted acceptance
+remains pending. No route, migration, executor, account closure or DELETE completion
+is enabled. Verification and the full first vertical slice remain in progress; see
+[readiness](docs/implementation/E8_ERASURE_LIFECYCLE_READINESS.md).
+
 ## ADR-061 bounded synthetic implementation approved
 
 The human owner explicitly approves the updated ADR-061, including0044 source coverage,
@@ -1497,3 +1511,21 @@ pins a Unix endpoint for the synthetic harness and restores process environment.
 resource controls and1328 unit/contract checks pass; actual final-source/native and
 combined hosted acceptance remain pending. Normal services/global Docker context stay
 unchanged.
+
+ADR-061 prerequisite source1851740 passes complete hosted39328044945:1374 unit/contract,
+514 integration,35 tooling and117 browsers plus all engineering gates. Recovery71 tables/
+691 rows passes logical607ms and actual PG/MinIO one42,060-byte object193ms with empty
+cleanup and stripped retirement denied. Only closed contracts/private configuration,
+structural drift checks and disabled-role grant refusal are accepted; no closure or
+account-erasure execution/fulfillment exists. Only Markdown closeout follows this source.
+Combined integration and full approved lifecycle/preservation/removal acceptance remain.
+
+
+The combined codex/browser-isolation candidate now integrates independently hosted-
+verified configuration3e6175b and ADR-061 foundation1851740 (only Markdown follows),
+plus locally verified ADR-068 browser isolation and pinned-local Docker transport.
+All117 pre-integration browser executions pass with nine exact owned containers removed;
+the transport follow-up passes nine actual assessment executions with empty cleanup.
+The merge changes no application schema beyond0044. Combined-source backend/browser/
+recovery/security/image/service and complete hosted acceptance are still required.
+Main remains eb05457; review execution stays off and no account closure/removal exists.
