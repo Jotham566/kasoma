@@ -263,6 +263,10 @@ known export loss from becoming a false zero after recovery; production/disabled
 readers never connect. Normal Docker stays healthy with collection/retirement false.
 See E8_OTP_OBSERVATIONS_VERIFICATION.md for retained schema, security
 and presentation-test failures/corrections. No ADR-061 approval is inferred.
+OTP source ceee4012c7f74dcc0c387a45ab112ed35d657f1b is pushed on its own branch;
+complete hosted39304052749 is confirmed in progress. Parent adf4328 hosted39299684285
+is separately in the browser stage. Neither feature is accepted from another source;
+main remains e7a4fc0. Preserve both live heads; only Markdown OTP closeout follows ceee401.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

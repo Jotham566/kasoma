@@ -133,3 +133,13 @@ Physical/branded-browser and actual delivery/billing gates remain separate. This
 increment is ready for its own exact-source full hosted run, not for main promotion
 or any production enablement. Parent source adf4328's live run cannot accept this
 new API/SDK/UI/test/Make tree. Only Markdown closeout should follow its published head.
+
+## Published verification candidate
+
+Exact runtime/API/UI/test/Make source ceee4012c7f74dcc0c387a45ab112ed35d657f1b is
+pushed on codex/otp-dispatch-observations. Its own complete hosted run is
+[39304052749](https://github.com/Jotham566/kasoma/actions/runs/39304052749), confirmed
+in progress. Do not replace that remote head for Markdown closeout. Parent combined
+source adf4328 run39299684285 is separately in the browser stage; neither result is
+inferred from another source. Main remains e7a4fc0 and no merged-branch cleanup is
+yet authorized by ancestry. This following closeout is Markdown only.

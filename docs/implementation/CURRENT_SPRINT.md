@@ -11,7 +11,8 @@ schema and offline presentation-harness failures are retained and corrected with
 relaxing gates. Final local quality/contracts/build, 1,171 unit/contract, 35 tooling,
 35 OTP/identity, 24 operations and 43 model cases, six browser executions and
 security/images/service smoke pass. Known export loss stays unavailable across empty
-recovery pulses through a finite marker. Own hosted acceptance remains pending.
+recovery pulses through a finite marker. Own source ceee401 is pushed for complete hosted 39304052749, now in progress;
+keep its remote head unchanged for Markdown closeout. Main remains e7a4fc0.
 [Exact scope and evidence](E8_OTP_OBSERVATIONS_VERIFICATION.md).
 
 ## Activity hosted timeout retained; combined verification active
