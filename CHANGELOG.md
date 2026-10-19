@@ -1,5 +1,14 @@
 # Changelog
 
+## Explicit private-profile parser dependency
+
+NFR-MNT-001: declare the already locked python-dotenv1.2.3 dependency directly for
+the ADR-061 private-profile parser. `make lock-python` resolves the existing lock
+offline; no package versions or artifacts change. `make setup` retains frozen
+installation. This grants no erasure activation or new data-processing authority.
+Combined-source verification remains pending.
+
+
 ## ADR-061 lifecycle contracts — first slice in progress
 
 FR-ID-006, BR-010, FR-OPS-003, NFR-SEC-002 and NFR-MNT-001: closed internal

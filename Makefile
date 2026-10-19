@@ -14,6 +14,9 @@ help:
 	@echo "Kasoma E0: setup services migrate seed dev test lint openapi e2e security build containers"
 setup:
 	$(PYTHON) scripts/setup.py
+.PHONY: lock-python
+lock-python:
+	$(CURDIR)/.local/tools/bin/uv lock --offline
 services:
 	docker compose up -d --wait postgres redis minio mailpit
 .PHONY: check-ci-profile

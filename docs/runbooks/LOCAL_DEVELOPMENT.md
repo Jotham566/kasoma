@@ -39,6 +39,9 @@ merely because the power failed.
 Prerequisites: Git, Make, Python 3.9+ for the setup launcher, npm and Corepack,
 Docker Desktop/Compose. `make setup` installs repository-local uv 0.12.18, Python
 3.12.14 and Node 24.21.0, then Corepack's pinned pnpm 10.30.2 and locked dependencies.
+For an intentional Python dependency declaration using already cached artifacts,
+`make lock-python` updates the lock offline; review its diff before `make setup`.
+It is not an upgrade or an alternative to frozen installation.
 Install Corepack 0.34.0 if it is missing. Initial downloads require internet;
 runtime/test execution uses local services and fakes. No cloud account is required.
 
