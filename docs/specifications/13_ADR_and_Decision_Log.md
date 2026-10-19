@@ -409,5 +409,7 @@ Implementation acceptance requires the decision’s migration, role and test gat
 
 ADR-060 preservation and SQL kernel sources `be2735e` and `e5d3d98` pass complete
 hosted39232307831/39234377840 respectively. The latter passes456 integration and108
-browser executions. Executor operations remain pending; review state stays false.
+browser executions. Executor operations now pass complete hosted39256037485 attempt2
+at `d8fc031`: 1,112 unit/contract, 465 integration, 35 tooling and 111 browser
+executions, focused controls and all engineering gates. Review state stays false.
 These are bounded synthetic engineering results, not real-data/erasure or release approval.

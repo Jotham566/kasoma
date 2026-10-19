@@ -1335,7 +1335,8 @@ fixtures and ownership damage; no review-stack purge or external provider runs.
 `make migrate` installs 0041 default-disabled; it creates only a minimal NOLOGIN owner,
 not a review-stack executor LOGIN. Keep export_retirement_state.enabled=false.
 The routine independently rejects the normal public review scope even if that state
-flag is altered. Runtime configuration/scheduling/health are a separate pending step.
+flag is altered. Runtime configuration/scheduling/health are separately verified in the operations
+evidence below; they remain default-disabled and isolated-synthetic only.
 
 Logical restore with --no-owner/--no-acl must leave execution refused until privileged
 ownership/ACL repair and a fresh explicit isolated opt-in. The recovery drill verifies
@@ -1398,7 +1399,7 @@ Both require the scheduler, database switch and isolated scope. The dashboard gr
 no enable/delete control. Durable minimized SQL audit remains transaction-atomic;
 aggregate cache/UI observations are not an acceptance or compliance record.
 
-See [candidate verification](../implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
+See [complete bounded verification](../implementation/E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
 for exact results and limitations. Production/privacy authority, full preservation,
 account erasure and finite disposal of other audit classes remain separate release gates.
 

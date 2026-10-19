@@ -174,6 +174,15 @@ updated image/source/service checks; Docker is healthy on0042 with retirement fa
 Hosted39255125288 starts no steps because GitHub reports failed account payments or
 insufficient spending capacity. Owner action is requested once; main remains `e9f688e`,
 the active branch is preserved and complete hosted acceptance remains pending; ADR-057 does not authorize account erasure.
+The owner-authorized public visibility change clears CI startup. Complete hosted
+39256037485 attempt2 at `d8fc031` now passes: 1,112 unit/contract, 465 integration,
+35 tooling, 111 browser executions, nine focused assessment, 12 transport controls,
+three staff UI and three native WebKit controls plus all engineering gates. Recovery
+verifies 69 tables/686 rows in 465 ms. This supersedes the preceding pending operations
+acceptance only; earlier failures remain failures. Only Markdown closeout follows the
+verified application/test/Makefile/workflow tree `e33ec69`. Review Docker is healthy on
+0042 with retirement false. Next is the assessed disposable load-role lifecycle;
+require exact role absence before migration and never clean pre-existing resources.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

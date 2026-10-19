@@ -1,5 +1,31 @@
 # Requirements Traceability
 
+## Complete hosted engineering verification — 19 October 2026
+
+[Run 39256037485, attempt 2](https://github.com/Jotham566/kasoma/actions/runs/39256037485/attempts/2)
+passes completely at `d8fc0310120fb0b6366f193fdb6aec5f4c799255`. Its application,
+tests, contracts, Makefile and workflow match `e33ec69`; later changes are Markdown only.
+Verified results: 1,112 unit/contract, 465 integration, 35 tooling and 111 full browser
+executions (99 ordinary plus 12 disabled fake short-text), nine focused assessment,
+12 interception controls, three staff UI and three native WebKit transport controls.
+Setup/migration/seed, actual restricted logins, lint/types/contracts/build,
+security/dependency/source/image checks and container smoke all pass. Logical recovery
+verifies 69 tables/686 rows in 465 ms, with no cleanup failure and denied execution
+after stripped ownership. Object-storage recovery and production RPO/RTO are not proved.
+
+This verifies ADR-060's bounded synthetic executor operations, the guarded test
+interception helper and stable feedback actions. It does not complete FR-ID-006/BR-010,
+full preservation, account erasure, real-data authority or the MVP release gates.
+The eight-service Docker review stack is healthy on 0042 with retirement false;
+normal learner short-text scoring remains disabled. No new architecture is adopted.
+The next assessed implementation is the bounded disposable load-role lifecycle.
+
+The owner explicitly authorized public repository visibility. GitHub confirms PUBLIC;
+current-source and all 125 locally available commit secret scans pass. Earlier billing
+refusals and browser failures remain historical failures. The following earlier stage
+notes preserve their then-current status; this complete run supersedes their pending
+engineering acceptance without retrospectively converting failures into passes.
+
 ## Current publication boundary
 
 Source `e33ec69` passes111 local browser executions, nine focused assessment cases,

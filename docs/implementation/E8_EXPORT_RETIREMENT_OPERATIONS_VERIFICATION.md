@@ -1,4 +1,30 @@
-# Synthetic export retirement operations — candidate
+# Synthetic export retirement operations — verified
+
+## Complete hosted engineering verification — 19 October 2026
+
+[Run 39256037485, attempt 2](https://github.com/Jotham566/kasoma/actions/runs/39256037485/attempts/2)
+passes completely at `d8fc0310120fb0b6366f193fdb6aec5f4c799255`. Its application,
+tests, contracts, Makefile and workflow match `e33ec69`; later changes are Markdown only.
+Verified results: 1,112 unit/contract, 465 integration, 35 tooling and 111 full browser
+executions (99 ordinary plus 12 disabled fake short-text), nine focused assessment,
+12 interception controls, three staff UI and three native WebKit transport controls.
+Setup/migration/seed, actual restricted logins, lint/types/contracts/build,
+security/dependency/source/image checks and container smoke all pass. Logical recovery
+verifies 69 tables/686 rows in 465 ms, with no cleanup failure and denied execution
+after stripped ownership. Object-storage recovery and production RPO/RTO are not proved.
+
+This verifies ADR-060's bounded synthetic executor operations, the guarded test
+interception helper and stable feedback actions. It does not complete FR-ID-006/BR-010,
+full preservation, account erasure, real-data authority or the MVP release gates.
+The eight-service Docker review stack is healthy on 0042 with retirement false;
+normal learner short-text scoring remains disabled. No new architecture is adopted.
+The next assessed implementation is the bounded disposable load-role lifecycle.
+
+The owner explicitly authorized public repository visibility. GitHub confirms PUBLIC;
+current-source and all 125 locally available commit secret scans pass. Earlier billing
+refusals and browser failures remain historical failures. The following earlier stage
+notes preserve their then-current status; this complete run supersedes their pending
+engineering acceptance without retrospectively converting failures into passes.
 
 Requirements: FR-ID-006, FR-OPS-002/003, BR-010, NFR-SEC-002, NFR-MNT-001;
 operator presentation also supports NFR-ACC-001.
@@ -6,7 +32,7 @@ operator presentation also supports NFR-ACC-001.
 This implements step 3 of approved [ADR-060](../decisions/ADR/060-completed-export-accountability-retirement-proposal.md).
 The [SQL kernel](E8_EXPORT_RETIREMENT_VERIFICATION.md) and
 [exact preservation foundation](E8_EXPORT_EVIDENCE_HOLDS_VERIFICATION.md) have
-separate complete hosted evidence. This candidate has not yet passed full acceptance.
+separate complete hosted evidence. The bounded candidate now passes the complete engineering checks above.
 The normal review stack remains disabled; no account erasure or real-data use is authorized.
 
 ## Implementation boundary

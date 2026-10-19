@@ -22,8 +22,12 @@ bounded tool-resource cleanup gap, not permission to purge application data or r
 
 1. Keep the current local-only validator, generated database naming, provider choices,
    HTTP profiles, latency thresholds and server-stop-before-drop rules unchanged.
-2. After successful drop of a database created by that invocation, derive only its
-   `owner_name(database, "public")`; use bounded catalog lookup rather than enumeration.
+2. Derive only `owner_name(database, "public")` for the invocation's generated
+   database. Before migrations, require that exact role to be absent using a bounded
+   catalog lookup. If it already exists, refuse migration and preserve the role;
+   creating a fresh database alone does not prove ownership of a pre-existing role.
+   After successful drop of the invocation-created database, inspect only that derived
+   role using a bounded lookup rather than enumeration.
 3. If absent, finish successfully. If present, require the expected non-login,
    non-elevated attributes and no memberships before attempting normal restrictive
    DROP ROLE. Do not alter attributes, revoke dependencies, use DROP OWNED or sweep
@@ -38,8 +42,9 @@ bounded tool-resource cleanup gap, not permission to purge application data or r
 ## Acceptance gates
 
 - Preserve existing negative tests with explicit absent-role mocks where needed.
-- Cover role absent/present, database-drop failure, unsafe/shared role refusal and
-  role-drop failure. Assert exact SQL targets/order and withheld diagnostic text.
+- Cover a pre-existing exact role (refuse before migration and preserve it),
+  role absent/created by migration, database-drop failure, unsafe/shared role refusal
+  and role-drop failure. Assert exact SQL targets/order and withheld diagnostic text.
 - Run an actual isolated fresh migration that creates the derived role, stop before
   learner fixture creation, and verify database/role cleanup. Use only an invocation's
   freshly created resources; no cleanup of existing orphan roles is authorized.
@@ -52,3 +57,12 @@ This follows the existing recovery lifecycle under
 and preserves [ADR-046](../decisions/ADR/046-shared-assessment-content-locks.md).
 No new architectural decision, performance acceptance, erasure or real-data authority
 is proposed. Further aged/diagnostic/provider/soak load profiles remain separate work.
+
+## Readiness refinement during hosted verification
+
+Inspection of `install_v1` confirms that migration 0041 can reuse an existing derived
+role when its attributes pass validation. The load invocation must therefore record
+absence before migration, rather than infer exclusive lifecycle ownership from its
+fresh database name. This adds an acceptance case within the existing bounded cleanup
+plan; it grants no authority over pre-existing roles. Implementation still follows
+current candidate promotion.

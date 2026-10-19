@@ -78,3 +78,13 @@ This supplies a fixed recent-history objective profile, not full older/diagnosti
 history, provider-failure, database resource, daily soak or production acceptance.
 Startup p99 remains close to/above one second. No external sign-off or ADR-060
 deletion authority is inferred; the release-gate table remains open.
+
+## Bounded export executor and stable actions — 19 October
+
+Complete hosted [39256037485 attempt2](https://github.com/Jotham566/kasoma/actions/runs/39256037485/attempts/2)
+passes at `d8fc031`: 1,112 unit/contract, 465 integration, 35 tooling and 111 browser
+executions, focused controls and all engineering gates. Recovery verifies 69 tables/
+686 rows in 465 ms. See [operations](E8_EXPORT_RETIREMENT_OPERATIONS_VERIFICATION.md)
+and [stable actions](E3_REVIEW_ACTION_STABILITY_VERIFICATION.md). This is bounded
+synthetic evidence, with review retirement false. Full preservation, erasure,
+object-storage/production recovery, academic/privacy/provider and pilot gates remain.
