@@ -1,7 +1,7 @@
 # ADR-057: Minimized channel preservation snapshots
 
 Date: 19 October 2026
-Status: Approved for bounded synthetic implementation; application acceptance pending
+Status: Approved bounded synthetic implementation; engineering verified at 0a8f674
 Owners: Product, privacy/safeguarding and technical owners; bounded user approval recorded below
 Requirements: FR-ID-006, FR-WA-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001
 
@@ -219,3 +219,12 @@ CHANNEL_PRESERVATION_ENABLED defaults false. Advertise new snapshot kinds only w
 creation is enabled; existing readers/release and body disposal remain available after
 disablement. Generated contracts, advisory inventory and operator controls ship with the
 candidate, but full SQL/race/role/recovery/browser/security acceptance is still required.
+
+## Complete bounded engineering verification
+
+The explicit human approval above remains limited to the specified synthetic scope.
+Source `0a8f674` passes complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273); all API/SQL, rollback/race, finite
+lifecycle, restricted-login, populated recovery, browser and security/service gates
+pass. This records implementation evidence, without extending source allowlists,
+real-data permission, full preservation coverage or erasure authority. See
+[verification](../../implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md).

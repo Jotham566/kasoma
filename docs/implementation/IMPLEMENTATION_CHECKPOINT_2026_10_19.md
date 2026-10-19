@@ -1,5 +1,10 @@
 # Implementation checkpoint after power recovery — 19 October 2026
 
+> Historical checkpoint before the later ADR-057 approval and implementation. Its
+> proposal-only wording below is historical; current bounded approval and verified
+> source `0a8f674` are recorded in [the current sprint](CURRENT_SPRINT.md) and
+> [capture evidence](E8_CHANNEL_PRESERVATION_VERIFICATION.md).
+
 This is an engineering checkpoint, not a completed MVP or production release.
 The [current sprint](CURRENT_SPRINT.md) and [traceability register](REQUIREMENTS_TRACEABILITY.md)
 remain the live status sources. All work uses synthetic fixtures and deterministic fake

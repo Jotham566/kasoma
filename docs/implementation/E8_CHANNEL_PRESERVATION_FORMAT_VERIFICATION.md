@@ -91,3 +91,10 @@ and full channel/hold/browser/security suites before claiming usable preservatio
 
 Full preservation coverage, accountability expiry, legal sufficiency of omitted raw
 material, destructive erasure authority and production release gates remain open.
+
+## Subsequent capture verification
+
+The original first-increment boundary above is historical. Bounded capture source
+`0a8f674` now passes complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273); its merged branch is removed. See
+[capture evidence](E8_CHANNEL_PRESERVATION_VERIFICATION.md) for SQL, finite lifecycle,
+API/UI and recovery acceptance. Full preservation and release gates remain open.

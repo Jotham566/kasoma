@@ -127,19 +127,18 @@ merged after hosted verification. The local grading queue snapshot and database-
 completion cap are merged after hosted verification. Configurable existing runtime
 budgets and bounded local model observations are merged after complete hosted
 verification. Exact terminal channel receipt holds are merged after complete hosted verification, with new
-creation default-disabled; live channel preservation remains unsupported. The four
+creation default-disabled; full channel preservation coverage remains incomplete. The four
 legacy hold DELETE clocks and bounded ADMIN audit activity are merged after complete
 hosted verification at 5d95f9d. Guarded disposable CI storage preparation is verified;
 it never authorizes developer SDK or application-volume cleanup.
-ADR-057 has explicit user approval for the bounded synthetic implementation only;
-its private evidence format is the first increment, with capture/lifecycle acceptance pending.
-Format source `25b44b1` passes complete hosted 39176205670. Real-time capture development
-exposes an existing conversation updated_at/exact 24-hour expiry clock mismatch; its
-advancing-clock correction and new browser coverage remain on the active capture branch.
-The bounded capture candidate adds 0038 and exact encrypted evidence/lifecycle/UI;
-local evidence and the corrected historical-schema fixture are tracked in
-`docs/implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md`. Complete hosted
-acceptance remains pending; capture creation remains false.
+ADR-057 has explicit user approval for bounded synthetic implementation only.
+Exact encrypted owned link/conversation-version capture, finite disposal, independent
+API/SQL guards and accessible controls are merged at `0a8f674` after complete hosted
+39183714273. Clean/additive 0038, actual restricted logins, populated logical recovery,
+1055 unit/contract, 412 integration and full browser/security/image/service checks pass.
+The advancing-clock conversation expiry correction is verified; creation stays false.
+Full raw/live-body coverage, erasure and accountability expiry remain pending.
+See `docs/implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md` for the exact boundary.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
 `docs/implementation/CURRENT_SPRINT.md` and maintain the evidence register at

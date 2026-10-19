@@ -51,7 +51,7 @@ do not replace production PITR/RPO/RTO, branded/mobile tests, academic approval 
 OPEN-QUESTION PRESERVATION-01 is resolved only for the bounded synthetic implementation
 of [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md): the human
 user explicitly approved its source identities, field allowlists and finite lifecycle.
-Raw messages, usable credentials and real-data processing remain excluded. The first
-increment provides the private format only; full capture/lifecycle/API/UI/recovery
-acceptance is pending. This decision cannot close all hold coverage or authorize erasure;
+Raw messages, usable credentials and real-data processing remain excluded. Source
+`0a8f674` passes complete hosted 39183714273 for bounded capture/lifecycle/API/UI/
+recovery and security/service engineering. Creation remains default-disabled. This decision cannot close all hold coverage or authorize erasure;
 destructive execution still needs the separate reviewed transform and approval.

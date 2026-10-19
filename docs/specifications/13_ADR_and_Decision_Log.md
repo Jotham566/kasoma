@@ -371,12 +371,12 @@ began earlier. Historical queries, source evidence and immutable guards remain u
 ## ADR-057: Minimized channel preservation snapshots
 
 **Status:** Explicit user approval for bounded synthetic implementation on 19 October;
-full application acceptance pending. See
+complete bounded engineering verification at `0a8f674`, hosted 39183714273. See
 [ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md).
 Bounded encrypted link/conversation-version evidence is independent of mutable
 operational state. Approval covers the specified source identities, allowed fields
-and finite lifecycle in synthetic development. The first private-format increment
-does not enable capture; real-data processing, raw-body preservation and erasure remain excluded.
+and finite lifecycle in synthetic development. The capture/lifecycle/API/UI increment is verified with creation default-disabled;
+real-data processing, raw-body preservation, full coverage and erasure remain excluded.
 
 ## ADR-058: Bounded ADMIN audit activity
 

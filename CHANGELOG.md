@@ -1,11 +1,13 @@
 # Changelog
 
-## In progress — bounded synthetic channel capture
+## Verified — bounded synthetic channel capture
 
-- Add candidate 0038 source/capture, finite disposal, generated contracts, advisory
+- Add additive 0038 source/capture, finite disposal, generated contracts, advisory
   inventory and operator controls under ADR-057. Expanded 34 focused integration (including
   both actual restricted logins), 105 contract/format and 108 browser executions pass;
-  expanded acceptance and full regression remain pending. Creation stays disabled.
+  complete hosted 39183714273 verifies source `0a8f674` with all 1,055 unit/contract,
+  412 integration, 35 tooling and full security/recovery/image/service gates. Source
+  is on main and its merged branch is removed. Creation stays disabled.
 - Reproduce and correct the existing advancing-clock conversation expiry mismatch
   using one timestamp per exact 24-hour pair; both regression cases and the real-time
   conversation/capture browser journey pass. No database invariant is relaxed.
@@ -26,7 +28,7 @@
   all 1,022 unit/contract, 378 integration and 35 tooling cases, full browser/security/
   recovery/image/service gates. This is format acceptance only; capture is separate.
 - Capture development exposes a real advancing-clock conversation expiry mismatch;
-  correction and its new real-time browser coverage remain on the capture branch.
+  the correction and new real-time coverage are now verified in `0a8f674`.
 
 ## Accepted engineering checkpoint — 19 October 2026
 

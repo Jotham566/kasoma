@@ -2,18 +2,16 @@
 
 ## Current accepted checkpoint — 19 October 2026
 
-Application source `25b44b1` passes complete
-[39176205670](https://github.com/Jotham566/kasoma/actions/runs/39176205670) and is on main; the closeout changes only
-documentation. ADR-056/058/059 are accepted for their bounded local/hosted engineering
-scope. Full 1,022 unit/contract, 378 integration, 35 tooling, 105 browser and
-UI/transport/security/recovery/image/service gates pass. This supersedes older
-candidate/pending engineering status below, without changing any production, academic,
-privacy, preservation/erasure or physical-device release gate. ADR-057 now has explicit
-bounded synthetic implementation approval; application acceptance remains pending.
-The private-format increment is verified; full capture/lifecycle acceptance remains
-separate. Subsequent real-time channel testing finds a conversation timestamp mismatch;
-its correction and new advancing-clock/browser coverage remain on the capture branch.
-[Checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
+Application source `0a8f674` passes complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273) and is pushed to main.
+The merged capture branch is removed locally/remotely. All 1,055 unit/contract,
+412 integration, 35 tooling, 108 browser and UI/transport/security/recovery/image/
+service gates pass. This supersedes older candidate engineering status below.
+ADR-057's bounded encrypted exact link/conversation snapshots are engineering-verified;
+real-data processing, full preservation, erasure and production release remain excluded.
+The advancing-clock conversation correction is verified. Progress/shared-selector
+follow-ups remain on active child branches with separate hosted acceptance pending.
+See [capture evidence](E8_CHANNEL_PRESERVATION_VERIFICATION.md) and the earlier
+[checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19.md).
 
 
 NFR-MNT-001 candidate: [ADR-059](../decisions/ADR/059-disposable-ci-runner-storage.md)
@@ -32,30 +30,18 @@ restricted login, recovery, security, rebuilt Docker and six browser/UI cases pa
 locally; complete hosted acceptance remains required. No application acceptance or full audit-coverage claim.
 
 FR-ID-006 / FR-WA-006 / FR-OPS-003 / BR-010 / NFR-SEC-002 / NFR-MNT-001:
-[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md)
-records exact source/version, field allowlists, atomic encrypted capture, independent
-authorization, finite expiry, export boundaries and tests before further mutable-channel
-preservation. Explicit user approval on 19 October permits the bounded synthetic
-implementation. The first private-format increment adds strict allowlists, UTC
-canonicalization, bounded independently derived authenticated encryption and 82
-socket-disabled format/binding/tampering tests; see
-[verification](E8_CHANNEL_PRESERVATION_FORMAT_VERIFICATION.md). Capture, SQL/lifecycle,
-access/API/UI and full application acceptance remain pending. No real-data/erasure authority.
-Format source `25b44b1` passes full local and complete hosted 39176205670. This closes
-only its format acceptance, not these full functional requirements.
-The additive 0038 capture candidate implements exact source versions, independent guards,
-atomic finite decisions/disposal and disabled operator controls; initial 27 integration cases, 105 contract/format cases and three browser engines pass.
-See [capture readiness](E8_CHANNEL_PRESERVATION_CAPTURE_READINESS.md). Broad and
-restricted-role/race/recovery/browser/security acceptance is still required; this does
-not close FR-ID-006/BR-010 or complete channel preservation coverage.
-Expanded local evidence covers 34 focused integration cases, both restricted logins,
-105 format/contracts, advancing-clock regressions and initial three-engine journeys.
-Logical restore verifies 68 tables/680 rows, bound ciphertext after source removal,
-finite disposal and sequence position; real PITR/RPO/RTO remains unverified. See
-[capture verification](E8_CHANNEL_PRESERVATION_VERIFICATION.md). Current full regression
-and hosted acceptance remain pending.
+[ADR-057](../decisions/ADR/057-minimized-channel-preservation-proposal.md) has explicit
+bounded synthetic approval. Source `0a8f674` passes complete hosted [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273):
+0038 exact source versions, bound encryption, independent current claim/ownership,
+atomic finite decisions and disposal, default-disabled API/UI, minimized export and
+advisory inventory. All 34 focused integration, 105 format/contracts, advancing-clock,
+actual restricted-role and full broader gates pass; 68-table/680-row logical restore
+verifies evidence after operational source removal and disposal/sequence guards.
+See [capture verification](E8_CHANNEL_PRESERVATION_VERIFICATION.md). The earlier
+private format source `25b44b1` passes 39176205670. This closes only the approved
+bounded engineering slice, not full FR-ID-006/BR-010 or legal preservation sufficiency.
 
-FR-WA-002 / FR-WA-006 / NFR-MNT-001 candidate: real-time conversation testing exposes
+FR-WA-002 / FR-WA-006 / NFR-MNT-001 verified at `0a8f674`: real-time conversation testing exposes
 two clock reads violating the exact 24-hour expiry constraint. Both new advancing-clock
 cases fail before the one-instant correction and pass afterward; the new real-time
 conversation/capture browser path passes in all three engines. No SQL constraint or
