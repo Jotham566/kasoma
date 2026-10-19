@@ -1603,3 +1603,8 @@ Do not enable account erasure or remove data in the Docker review database. Foll
 Local make staff-role rejects grants and regrants when the verified synthetic identity
 is DISABLED. Explicit revocation remains supported and audited; it never reactivates
 the identity. This guard does not implement permanent closure or account erasure.
+
+The standard browser matrix runs three fresh API shards per engine. Each gets its
+own generated database and production OTP peer budget; adding journeys must not
+be accommodated by raising the application rate limit or test deadline. Separate
+short-text and configuration profiles retain their existing commands.

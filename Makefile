@@ -242,17 +242,20 @@ e2e-list:
 	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --list
 	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --list
 e2e-chromium:
-	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=1/2
-	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=2/2
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=1/3
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=2/3
+	KASOMA_E2E_BROWSER=chromium $(PNPM) exec playwright test --shard=3/3
 .PHONY: e2e-chromium-full
 e2e-chromium-full:
 	KASOMA_E2E_CHROMIUM_CHANNEL=chromium $(MAKE) e2e-chromium
 e2e-firefox:
-	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=1/2
-	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=2/2
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=1/3
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=2/3
+	KASOMA_E2E_BROWSER=firefox $(PNPM) exec playwright test --shard=3/3
 e2e-webkit:
-	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=1/2
-	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=2/2
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=1/3
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=2/3
+	KASOMA_E2E_BROWSER=webkit $(PNPM) exec playwright test --shard=3/3
 
 .PHONY: test-runtime-role
 test-runtime-role:

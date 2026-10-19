@@ -302,3 +302,58 @@ The pinned-local-endpoint source passes all nine actual assessment executions ac
 Chromium/Firefox/WebKit (14.8s/16.9s/16.5s), with three returned creation IDs and three
 empty cleanup reports. The mocked content target's earlier3-case pass was only a UI
 control, not database acceptance. Full combined-source verification still follows.
+
+## Combined-source numeric pointer failure and viewport reproduction
+
+At2966bab the first three standard shards pass17 cases each, but Firefox shard2
+fails numeric.spec.ts:188 (16 pass): the worked solution is absent. The preserved
+synthetic trace contains no solution GET after the pointer action. The API has a
+fresh owned PostgreSQL service with empty cleanup; this failure cannot be explained
+solely by the shared catalog. No SQL failure is inferred from this pointer result.
+The later WebKit/short-text/configuration stages of that command did not execute.
+
+The trace's click input and after snapshots show viewport scroll changing from313
+to360.4333190917969 while delayed reviewed hints add an action below feedback. The
+previous delayed-hints test adds scrollY to the target coordinate and checks only
+document layout, so it excludes this movement. A new deterministic test holds the
+hint response, scrolls to the page bottom, places the pointer at the solution action,
+then releases the response and checks viewport stability before clicking that same
+point. Chromium fails before the correction with48 pixels of movement (three other
+assessment cases pass). This establishes a reproducible viewport interaction, without
+claiming every earlier numeric/transport failure has the same cause.
+
+A bounded CSS overflow-anchor:none on the practice page removes that page's scroll
+anchor candidates. It does not change routes, provider authority, scoring, request
+limits, retries or test deadlines. Cross-engine regression and complete combined
+source acceptance remain pending. The native Mac still reports locked; the existing
+in-app preview is readable and reports services ready, but supplies no branded,
+physical-device or screen-reader acceptance. All eight review services remain healthy.
+
+The first main-only overflow-anchor attempt fails the same48-pixel regression. A
+finite test probe confirms documentTop650.984375 remains unchanged while scrollY
+275 becomes323 and document height995 becomes1043, despite main's computed anchor
+being none. Opt-out must apply to the scrolling root. The revised root selector
+html:has(.practice-page) scopes the behavior to practice without a global JavaScript
+style mutation. Initial Chromium and Firefox four-case assessment profiles pass;
+WebKit and final narrow/full-source checks remain pending. Failed attempts above
+are retained and are not acceptance evidence.
+
+The final focused assessment matrix passes15 executions: five each in Chromium,
+Firefox and WebKit, including pointer stability at320 and1280 pixels. The original
+document-position regression, lost acknowledgement/resume and grading gates remain.
+Screenshots confirm readable narrow feedback/actions. Complete browser, backend,
+image/service/recovery and own exact-source hosted acceptance remain pending.
+
+The first final full-browser attempt fails Chromium shard2 at WhatsApp onboarding:
+OTP request returns202, verification returns400/OTP_INVALID and no profile appears
+(17 pass). This is an authentication rejection, not another proved pointer miss.
+The expanded36-test engine cohort now uses three fresh API shards to retain the
+unchanged20-per-peer OTP policy; no production rate or test deadline is increased.
+The removed fixture's exact suppression cause is unproven. A new complete matrix
+is required; focused15 passes do not accept this failed full run.
+
+The three-shard standard cohort passes108 executions (12 in each of nine fresh
+shards), with nine empty cleanup reports and independent exact-ID absence confirmed
+for all nine containers. The focused15 assessment cases also pass at320/1280 pixels.
+This supersedes the failed two-shard cohort for this local standard-browser matrix
+only; configuration/short-text/full hosted engineering acceptance remain separate.
