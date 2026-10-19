@@ -1,5 +1,15 @@
 # Changelog
 
+## In verification — stalled fake grading isolation
+
+- Add three FR-GRD-003/004/005 and FR-MST-001/004/005 regressions: 50 scheduled owned
+  web reads finish while a fake model call is held; timeout/failure/fallback then
+  produces exactly one neutral outcome with no grade/mastery/publication evidence.
+  Add `make test-provider-fault-isolation`. Corrected focused tests, 1,092 unit/contract,
+  35 tooling, lint/types/contracts and security pass. Full hosted regression is
+  pending. No runtime, architecture or learner
+  enablement changes; no full provider-load or availability acceptance claim.
+
 ## Native verified; hosted pending — synthetic history and numeric load
 
 - Extend the isolated objective harness for NFR-PERF-001/002/NFR-SCL-001 with

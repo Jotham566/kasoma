@@ -1,5 +1,16 @@
 # Requirements Traceability
 
+## Independent provider fault candidate
+
+FR-GRD-003/004/005 / FR-MST-001/004/005 / NFR-SEC-002 / NFR-MNT-001:
+[provider isolation evidence](E9_PROVIDER_FAULT_ISOLATION_VERIFICATION.md) covers
+50 scheduled owned reads before releasing one stalled fake model call, followed by
+single-dispatch neutral timeout/failure/fallback without grade/mastery evidence.
+All three corrected focused cases, 1,092 unit/contract, 35 tooling, lint/types/contracts
+and security pass. Full integration/hosted verification is pending.
+This supports resilience testing, not NFR-REL-001 availability or full provider-load
+acceptance. No runtime policy, architecture, real inference or enablement change.
+
 ## Current independent load candidate
 
 NFR-PERF-001/002 / NFR-SCL-001 / FR-MST-004/005 / NFR-MNT-001:

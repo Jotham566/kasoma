@@ -18,6 +18,13 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
 
 ## Requirements and implementation
 
+- FR-GRD-003/004/005, FR-MST-001/004/005, NFR-SEC-002 and NFR-MNT-001:
+  [fake provider isolation](E9_PROVIDER_FAULT_ISOLATION_VERIFICATION.md) adds three
+  bounded regressions for owned web reads during a stalled fake call and neutral
+  publication after timeout/failure/fallback. Corrected focused cases, 1,092 unit/contract,
+  35 tooling, lint/types/contracts and security pass. Full integration/hosted verification
+  remains pending. Normal learner scoring remains off.
+
 - NFR-PERF-001/002, NFR-SCL-001, FR-MST-004/005 and NFR-MNT-001: an independent
   synthetic history/mixed objective load profile is under verification while ADR-060
   awaits approval. It uses normal domain histories and real loopback HTTP without
