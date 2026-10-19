@@ -100,3 +100,11 @@ variance is unresolved. Main follow-up39264562568 fails at initial OTP transport
 Its cause is unconfirmed despite later focused/full passes. No threshold or release
 gate is waived. [Erasure readiness](E8_ERASURE_TRANSFORM_READINESS.md) records the
 next exact transform/preservation/recovery assessment and its required review.
+
+## Academic reference discovery — 19 October
+
+The [source review register](ACADEMIC_SOURCE_REVIEW_REGISTER.md) now identifies two
+official NCDC Lower Secondary PDFs with byte hashes, page counts and visually checked
+starting locators. This reduces source-discovery work only. Rights remain UNKNOWN_BLOCKED;
+applicable edition, exact mappings, reviewers, 250 approved items and expert benchmark
+truth remain unprovided. No academic, legal or release gate changes status.

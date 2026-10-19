@@ -1,5 +1,14 @@
 # Current sprint: verified disposable load-role lifecycle
 
+## Official academic source discovery — review pending
+
+FR-CNT-005, FR-DIAG-003 and NFR-MNT-001: the [source review register](ACADEMIC_SOURCE_REVIEW_REGISTER.md)
+records two official NCDC Lower Secondary PDF links, inspected byte hashes/page counts
+and visually verified Senior 4 starting locators. Both rights states stay UNKNOWN_BLOCKED;
+no source PDF/text/media is committed or imported. Academic currency, exact mappings,
+independent item review and expert benchmark evidence remain pending. This is
+documentation-only preparation, with no change to release gates or application acceptance.
+
 ## Verified fresh revision response — no empty evidence reads
 
 NFR-PERF-001/002, FR-REV-001/002/005/006, FR-GRD-008, FR-WA-003, NFR-SEC-002
