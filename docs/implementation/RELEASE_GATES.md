@@ -117,3 +117,32 @@ approved secondary-region requirement. It records material edition/default/regio
 constraints and the missing budget, regional transfer, compatibility and ownership
 inputs. This is research only: no provider selection, cloud operation, paid allocation,
 legal approval, retention exception or production recovery evidence is inferred.
+
+## Verified configuration, erasure prerequisites and browser foundation
+
+Complete hosted [39334774152](https://github.com/Jotham566/kasoma/actions/runs/39334774152)
+is SUCCESS at exact2966bab656cc6520c57264e45acce2366ca40786:1,425 unit/contract,
+514 integration (1022.25s),35 tooling and117 full browser executions, plus every
+required setup/migration/seed, focused, role, quality/contracts/build, security, image
+and service gate. Logical recovery verifies71 tables/691 rows in464ms; actual
+database/MinIO recovery verifies71/691/one42,084-byte ciphertext in189ms, stopped
+source services, fault/guard checks and empty cleanup. Production RPO/RTO is false.
+
+FR-OPS-002/003 and NFR-SEC-002/OBS-001/ACC-001/LOC-001/MNT-001: accept the bounded
+15-key warning configuration, immutable versions/audited retry and accessible editor.
+NFR-MNT-001/PERF-001/002/SEC-002/OBS-001: accept the owned browser fixture and bounded
+diagnostics. FR-ID-006/BR-010 receive strict internal contracts, private fake-only
+profile,71-source structural drift fence and disabled-role prerequisites only.
+No account closure, erasure, permanent SQL barrier or DELETE completion exists.
+
+The native full run remains FAILED:513 integration pass and one Alembic upgrade-head
+setup error for test_exact_history_hold_preserves_snapshot_without_freezing_new_transitions
+(2294.28s). Its captured diagnostic does not establish a cause. The unchanged serial
+make test-grading-work recheck passes26 cases in56.16s; no timeout, retry or assertion
+changes and no schema/role/cache cleanup. This does not turn the failed native run
+into a pass. All514 cases pass in the exact-source clean hosted run above.
+
+Only Markdown closeout follows this verified runtime/test/Make/workflow tree. The
+newer identity-coordination and practice-viewport candidates need their own complete
+verification. Normal Docker stays healthy on0044 with retirement/short-text disabled.
+Full privacy/erasure, academic, provider, physical/branded-device and pilot gates remain.

@@ -1,7 +1,7 @@
 # ADR-068: Fresh owned PostgreSQL services for synthetic browsers
 
 Date:20 October2026 (Africa/Kampala)
-Status: Accepted within delegated local engineering discretion; local browser/resource checks pass; full combined/hosted verification pending
+Status: Accepted within delegated engineering discretion; complete hosted39334774152 passes at2966bab; bounded foundation only
 Requirements: NFR-MNT-001, NFR-PERF-001/002, NFR-SEC-002 and NFR-OBS-001
 
 ## Evidence and decision

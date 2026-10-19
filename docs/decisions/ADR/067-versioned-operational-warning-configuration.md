@@ -1,7 +1,7 @@
 # ADR-067: Versioned operational warning configuration
 
 Date:19 October2026
-Status: Accepted within delegated MVP engineering discretion; implementation pending
+Status: Accepted within delegated engineering discretion; complete hosted39334774152 passes at2966bab; bounded foundation only
 Requirements: FR-OPS-002/003, NFR-SEC-002, NFR-OBS-001, NFR-ACC-001,
 NFR-LOC-001, NFR-MNT-001; API contract section9, bootstrap configuration section4.
 
