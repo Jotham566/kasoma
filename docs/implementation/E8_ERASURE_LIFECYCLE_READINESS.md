@@ -185,3 +185,27 @@ source scans. No closure migration, erasure provisioning, API/UI, executor or re
 exists. Full combined backend/browser/recovery/images/hosted acceptance still follows
 when the first complete lifecycle vertical slice is implemented. No MVP fulfillment or
 permanent closure is claimed from this prerequisite commit.
+
+
+Foundation source185174090d05c03127169df29271c03c85b3b2b3 is committed and pushed on
+codex/erasure-lifecycle for its own complete hosted verification39328044945, confirmed
+in progress. Its remote head stays unchanged while live. Main promotion and complete
+lifecycle acceptance remain pending; a green parent/configuration run cannot accept
+this separate prerequisite implementation.
+
+
+## Complete hosted prerequisite verification
+
+Hosted39328044945 is SUCCESS at exact185174090d05c03127169df29271c03c85b3b2b3:
+1374 unit/contract,514 integration (1274.14s),35 tooling and117 full browser executions
+plus all focused/setup/migration/seed/role/quality/contracts/build/security/images/service
+gates. Logical recovery verifies71 tables/691 rows in607ms. Actual PG/MinIO recovery
+verifies71/691/one42,060-byte encrypted object in193ms, with source services stopped,
+exact storage scope, missing/corrupt rejection, immutable guards, retirement execution
+denied and no cleanup failures. Production RPO/RTO remains unverified.
+
+This accepts the closed contract/private-profile/structural-fence/disabled-role prerequisite
+implementation only. It does not implement permanent account closure, routes, provisioning,
+erasure, richer preservation, finite retirement or DELETE completion. Only Markdown
+closeout follows the verified source; main integration still requires combined-source
+verification with the separate browser-isolation work. Normal review execution stays off.

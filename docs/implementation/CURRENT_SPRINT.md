@@ -604,3 +604,12 @@ Full preservation, erasure/anonymization and accountability processing remain in
 Academic inventory/rights/benchmark/calibration, privacy/safeguarding and provider/budget
 approvals, production recovery, physical/branded devices and pilot sign-offs remain
 [release gates](RELEASE_GATES.md). No approval or completion is inferred from tests.
+
+
+ADR-061 prerequisite source1851740 passes complete hosted39328044945:1374 unit/contract,
+514 integration,35 tooling and117 browsers plus all engineering gates. Recovery71 tables/
+691 rows passes logical607ms and actual PG/MinIO one42,060-byte object193ms with empty
+cleanup and stripped retirement denied. Only closed contracts/private configuration,
+structural drift checks and disabled-role grant refusal are accepted; no closure or
+account-erasure execution/fulfillment exists. Only Markdown closeout follows this source.
+Combined integration and full approved lifecycle/preservation/removal acceptance remain.

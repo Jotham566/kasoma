@@ -444,3 +444,12 @@ cases pass2/2. These are foundation checks only: no closure migration, provision
 completion exists. Trigger/grant/payload/ownership validation,
 permanent closure and full first-slice/hosted acceptance remain pending. Keep review
 execution disabled; see docs/implementation/E8_ERASURE_LIFECYCLE_READINESS.md.
+
+
+ADR-061 prerequisite source1851740 passes complete hosted39328044945:1374 unit/contract,
+514 integration,35 tooling and117 browsers plus all engineering gates. Recovery71 tables/
+691 rows passes logical607ms and actual PG/MinIO one42,060-byte object193ms with empty
+cleanup and stripped retirement denied. Only closed contracts/private configuration,
+structural drift checks and disabled-role grant refusal are accepted; no closure or
+account-erasure execution/fulfillment exists. Only Markdown closeout follows this source.
+Combined integration and full approved lifecycle/preservation/removal acceptance remain.
