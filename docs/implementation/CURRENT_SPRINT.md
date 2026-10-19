@@ -16,6 +16,10 @@ also pass, including 25,000 prior grades in the mixed case. Documentation/aggreg
 report closeout preserves that exact code/test/Makefile/workflow tree. The full MVP
 and real-data/release gates remain incomplete.
 
+The verified source and documentation are published to `main` through `6ebdf71`.
+Its merged load branch is removed locally and remotely. Later closeout edits remain
+documentation-only and preserve the exact code/test/Makefile/workflow source above.
+
 Independent candidates retain their own acceptance boundaries: provider-fault
 isolation source `8a938dd` is running hosted
 [39220793602](https://github.com/Jotham566/kasoma/actions/runs/39220793602); profile
@@ -37,7 +41,7 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
 ## Requirements and implementation
 
 - NFR-PERF-001/002, NFR-SCL-001, FR-MST-004/005 and NFR-MNT-001: an independent
-  synthetic history/mixed objective load profile is under verification while ADR-060
+  synthetic history/mixed objective load profile is verified independently while ADR-060
   awaits approval. It uses normal domain histories and real loopback HTTP without
   runtime changes. See [scope and evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
   Native profile and complete hosted engineering verification now pass.

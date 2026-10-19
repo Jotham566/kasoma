@@ -23,6 +23,8 @@ the sequential original-baseline recheck also passes 7,000 requests with zero er
 START p95 421.751 ms and successful cleanup. Full performance and external release
 acceptance remain pending. Startup p99 remains a risk. Documentation/aggregate-report
 closeout preserves the exact verified code/test/Makefile/workflow tree.
+Publication through main `6ebdf71` is verified and the merged load branch is removed
+locally/remotely. Independent provider/UI candidate acceptance remains separate.
 The local runbook and testing specification document both optional isolated profiles
 and their unchanged thresholds; documenting the command grants no new acceptance.
 

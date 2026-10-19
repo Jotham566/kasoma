@@ -23,6 +23,8 @@
   separately from the passing final-source evidence.
 - Document the new command and sequential isolated execution in the local runbook
   and testing specification; preserve all broader performance/release gates.
+- Publish through main `6ebdf71` and remove the merged load branch locally/remotely.
+  Independent provider-isolation and UI candidates await their own hosted results.
 
 ## Proposed — completed export accountability retirement
 

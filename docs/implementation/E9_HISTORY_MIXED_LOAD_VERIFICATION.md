@@ -145,6 +145,13 @@ Documentation closeout changes only Markdown and aggregate JSON reports after th
 verified source. Verify that code, tests, Makefile and workflows remain identical to
 `6b06c53` when publishing; preserve the passing and failed native reports separately.
 
+Publication is verified through main commit `6ebdf71`; the owned merged load branch
+is removed locally and remotely. The first normal local branch deletion refuses
+because its tracking branch still points at the earlier source. Verify ancestry in
+both local and remote main, remove only that stale local tracking association, then
+use normal deletion. No unmerged work is discarded. Provider-isolation and profile-UI
+candidates retain their own live CI and are not accepted by this load result.
+
 ## Files in this increment
 
 - `scripts/objective_load.py`, `tests/contract/test_objective_load.py`, `Makefile`.
