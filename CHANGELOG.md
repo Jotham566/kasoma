@@ -10,7 +10,7 @@
   pending. No runtime, architecture or learner
   enablement changes; no full provider-load or availability acceptance claim.
 
-## Native verified; hosted pending — synthetic history and numeric load
+## Verified engineering — synthetic history and numeric load
 
 - Extend the isolated objective harness for NFR-PERF-001/002/NFR-SCL-001 with
   50 prior answers per active learner, varied evidence trajectories, Mathematics/
@@ -20,8 +20,10 @@
   initial history setup fails safely and is corrected to normal refresh rotation.
   Final native full-size profile passes at `6b06c53`: 7,000 HTTP requests, zero errors,
   1,250 answers per format, 27,500 total grades and successful cleanup. START p95 is
-  432.085 ms, numeric-answer p95 27.778 ms and progress p95 17.079 ms. Hosted regression
-  and main promotion remain pending. The original-baseline recheck also passes:
+  432.085 ms, numeric-answer p95 27.778 ms and progress p95 17.079 ms. Complete hosted
+  39217860618 passes at that source: 1,092 unit/contract, 412 integration, 35 tooling,
+  108 browser executions and full role/recovery/security/image/service checks.
+  The original-baseline recheck also passes:
   7,000 requests, zero errors, START p95 421.751 ms and successful cleanup. Retain
   startup p99 above one second as a risk. No production or academic claim.
 - Make format coverage independent of random item UUID order: the final fixture
@@ -31,6 +33,8 @@
   separately from the passing final-source evidence.
 - Document the new command and sequential isolated execution in the local runbook
   and testing specification; preserve all broader performance/release gates.
+- Publish through main `6ebdf71` and remove the merged load branch locally/remotely.
+  Independent provider-isolation and UI candidates await their own hosted results.
 
 ## Proposed — completed export accountability retirement
 

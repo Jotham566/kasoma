@@ -1,4 +1,4 @@
-# Current sprint: verified bounded preservation, progress and shared controls
+# Current sprint: verified synthetic history and mixed objective load
 
 Updated 19 October 2026. This is not a completed MVP or production-release declaration.
 [Earlier sprint history](SPRINT_HISTORY_2026_10_18.md), the
@@ -6,10 +6,32 @@ Updated 19 October 2026. This is not a completed MVP or production-release decla
 [the current checkpoint/file inventory](IMPLEMENTATION_CHECKPOINT_2026_10_19_PRESERVATION.md)
 preserve the evidence and boundaries.
 
-## Verified source on main
+## Latest verified engineering source
+
+Load tooling/test source `6b06c53` passes complete hosted
+[39217860618](https://github.com/Jotham566/kasoma/actions/runs/39217860618): 1,092
+unit/contract, 412 integration, 35 tooling and 108 browser executions, plus UI/transport,
+restricted-role, recovery, security, image and service checks. Both native load profiles
+also pass, including 25,000 prior grades in the mixed case. Documentation/aggregate
+report closeout preserves that exact code/test/Makefile/workflow tree. The full MVP
+and real-data/release gates remain incomplete.
+
+The verified source and documentation are published to `main` through `6ebdf71`.
+Its merged load branch is removed locally and remotely. Later closeout edits remain
+documentation-only and preserve the exact code/test/Makefile/workflow source above.
+
+Independent candidates retain their own acceptance boundaries: provider-fault
+isolation source `8a938dd` is running hosted
+[39220793602](https://github.com/Jotham566/kasoma/actions/runs/39220793602); profile
+visibility source `44ae9ad` is running
+[39222489376](https://github.com/Jotham566/kasoma/actions/runs/39222489376). The latter
+passes nine local identity executions and is running in the healthy Docker web
+preview. Their full hosted results will be recorded separately from this load source.
+
+## Earlier verified application increments
 
 Application/test source `6d53541` passes complete hosted [39185423895](https://github.com/Jotham566/kasoma/actions/runs/39185423895) and is pushed to main
-through Markdown-only merge `5de2ce5`. This documentation closeout preserves that
+through Markdown-only merge `5de2ce5`. That earlier documentation closeout preserves that
 exact application/test/workflow tree. All three merged implementation branches are
 removed locally/remotely. Capture source `0a8f674` passes complete hosted
 [39183714273](https://github.com/Jotham566/kasoma/actions/runs/39183714273); progress
@@ -26,18 +48,18 @@ source `7148a1c` passes complete hosted [39184552472](https://github.com/Jotham5
   remains pending. Normal learner scoring remains off.
 
 - NFR-PERF-001/002, NFR-SCL-001, FR-MST-004/005 and NFR-MNT-001: an independent
-  synthetic history/mixed objective load profile is under verification while ADR-060
+  synthetic history/mixed objective load profile is verified independently while ADR-060
   awaits approval. It uses normal domain histories and real loopback HTTP without
   runtime changes. See [scope and evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md).
-  No load acceptance is claimed before the full-size command finishes.
+  Native profile and complete hosted engineering verification now pass.
   Final fixture coverage is deterministic by subject (144 choice/144 numeric);
   the earlier 293-item candidate correctly fails for missing numeric delivery despite
   zero HTTP errors and successful cleanup. Final source `6b06c53` passes the native
   profile: 7,000 HTTP requests, 1,250 timed answers per format, 27,500 total grades,
   zero errors and successful cleanup; START p95 432.085 ms, numeric answer 27.778 ms.
   The sequential original-baseline recheck also passes: 7,000 requests, zero errors,
-  START p95 421.751 ms and successful cleanup. Hosted regression and main promotion
-  remain pending; startup p99 and broader performance/release gaps remain.
+  START p95 421.751 ms and successful cleanup. Complete hosted 39217860618 passes
+  at that source; startup p99 and broader performance/release gaps remain.
   The local runbook and testing specification now describe the optional command,
   generated-database boundary and sequential execution.
 

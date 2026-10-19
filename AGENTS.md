@@ -141,12 +141,18 @@ Full raw/live-body coverage, erasure and accountability expiry remain pending.
 See `docs/implementation/E8_CHANNEL_PRESERVATION_VERIFICATION.md` for the exact boundary.
 Request-local progress replay reuse under unchanged ADR-024 is merged after complete
 hosted 39184552472 at `7148a1c`; shared native select touch targets are merged after
-complete hosted 39185423895 at `6d53541`. Latest application/test source `6d53541`
-passes 1074 unit/contract, 412 integration, 35 tooling and 108 browser executions,
-plus recovery, actual restricted logins, security/images and service smoke.
-Only documentation changes follow that source; all merged implementation branches
-are removed. Docker remains healthy on 0038 and host-native Ollama connectivity is
-restored without inference. Completed-export evidence retirement needs a separately
+complete hosted 39185423895 at `6d53541`. Load tooling/test source `6b06c53` passes
+complete hosted 39217860618: 1092 unit/contract, 412 integration, 35 tooling and 108
+browser executions, plus recovery, actual restricted logins, security/images and
+service smoke. Both native objective profiles pass, including 25,000 prior grades
+and timed choice/numeric feedback; full provider/deployment/soak acceptance remains.
+Only Markdown/aggregate JSON closeout follows that verified code/test/Makefile tree.
+Publication through main `6ebdf71` is verified and its merged load branch is removed.
+Separately, provider-isolation tests at `8a938dd` and profile UI correction at
+`44ae9ad` await their own hosted acceptance. The latter passes nine local identity
+journeys and is running in the healthy Docker web preview; no acceptance is inferred
+for those branches from the load CI. Docker remains healthy on 0038 and host-native
+Ollama connectivity is restored without inference. Completed-export evidence retirement needs a separately
 reviewed guard/retention design; ADR-057 does not authorize account erasure.
 Genuine academic/report/safety/provider authority,
 complete preservation coverage and production release approval remain pending. See
