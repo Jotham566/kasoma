@@ -122,3 +122,15 @@ The source still requires sequential original/recent profile rechecks and its ow
 hosted regression. b5557a3's completed hosted39308594889 is separate acceptance for the
 metric-loss fix, not acceptance of this newer runner. Object recovery remains live at
 29f1ddc in39311093503. No main promotion of temporal tooling is inferred yet.
+
+## Verified metric parent integration
+
+Complete hosted39308594889 succeeds at b5557a3:1,180 unit/contract,502 integration,
+35 tooling,114 full browser executions and all focused/engineering gates. Main
+3cde8c23c9b43bcaa39e3bbe4821beaad2760623 is pushed and remote SHA/ancestry verified;
+the owned merged metric-loss branch is removed locally/remotely. Integrating main
+into this temporal candidate changes Markdown only relative to3b57714. Four
+informational conflicts preserve both current acceptance and candidate histories.
+The measured runtime remains unchanged; original/recent rechecks will use this tree.
+Object source29f1ddc's own hosted39311093503 remains live and cannot accept this
+newer load tooling. No academic/privacy/provider/erasure or production gate changes.

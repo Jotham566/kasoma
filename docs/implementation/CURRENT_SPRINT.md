@@ -6,10 +6,11 @@ NFR-PERF-001/002,SCL-001 and FR-DIAG/MST: ADR-066 adds a fixed temporal fixture
 profile without changing application/engine behavior or thresholds. Independent
 historical clocks and normal OTP build completed diagnostics and old/recent evidence;
 current credentials are issued only after preparation. Local quality/contracts/build,1,253 unit/contract,35 tooling,69 focused controls
-and203 typed source files pass; dependency/source security checks pass. Full-size
-native profile is live; native and own complete hosted gates remain pending. No measured performance is claimed yet.
+and203 typed source files pass; dependency/source security checks pass. The first
+full-size temporal measurement passes; original/recent rechecks and own hosted
+verification remain pending.
 [Verification](E9_TEMPORAL_HISTORY_LOAD_VERIFICATION.md). First native profile PASSES:35000 grades,
-7000 HTTP/zero errors,START p95410.622ms,cleanup false. Original/recent rechecks
+7000 HTTP/zero errors,START p95410.622ms,cleanup_failed=false. Original/recent rechecks
 and own hosted verification remain; no production acceptance.
 
 
@@ -25,8 +26,23 @@ contracts/security and real restore pass. Own full hosted verification remains p
 [Verification](E9_OBJECT_RECOVERY_VERIFICATION.md). Source29f1ddc is pushed for own
 full hosted39311093503, confirmed live; keep its remote head unchanged.
 
+## Verified known-export-loss metric windows
 
-## Known request/model metric loss - candidate
+Complete hosted [39308594889](https://github.com/Jotham566/kasoma/actions/runs/39308594889)
+succeeds at exact source b5557a373f42bf24241f7034d4068b0d1a86da3f:1,180 unit/contract,
+502 integration,35 tooling and114 full browser executions, plus focused and all
+setup/migration/role/quality/contracts/build/security/image/service gates. Logical
+recovery verifies69 tables/686 rows in425ms with cleanup empty and retirement denied.
+
+This accepts ADR-064's finite namespace loss guard under FR-OPS-002 and NFR-OBS-001/
+SEC-002/MNT-001. Known export loss cannot recover as measured zero; stored payloads,
+scopes and expiry stay unchanged. All server readers must honor the marker; no mixed-
+version or production rollout/completeness/billing claim. Only Markdown follows the
+verified source. Object-recovery/temporal-load candidates need their own acceptance.
+[Verification](E8_METRIC_LOSS_VERIFICATION.md).
+
+
+## Historical metric-loss candidate notes (superseded by verified result above)
 
 FR-OPS-002, NFR-OBS-001/SEC-002/MNT-001: two actual SDK/Redis regressions reproduce
 fresh zero after a lost nonempty export. ADR-064 extends the existing finite

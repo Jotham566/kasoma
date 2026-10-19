@@ -370,3 +370,16 @@ controls,203 typed files and quality/contracts/build/security. Native temporal
 measurement remains live; no performance acceptance. Learner-level ADMIN mastery
 replay cannot be inferred from aggregate audit access: explicit support permission/
 audit is required by API section9 and remains unresolved.
+
+ADR-064 known metric-loss windows pass complete hosted39308594889 at b5557a3:
+1,180 unit/contract,502 integration,35 tooling,114 full browser executions plus
+all focused/engineering gates. Logical69-table/686-row restore425ms cleans without
+failure and retirement stays denied. Only Markdown follows that verified tree;
+object-recovery and temporal-load candidates need separate own acceptance.
+
+Current verification snapshot: main3cde8c2 contains fully verified ADR-064 and
+its merged branch is removed after remote/ancestry proof. ADR-066 first temporal
+native profile passes35000 grades/7000 HTTP/zero errors,START p95410.622ms and
+cleanup_failed=false; original/recent profile rechecks and own full hosted remain.
+ADR-065 source29f1ddc stays unchanged for live39311093503. The load candidate
+integrates main through Markdown only; do not infer full MVP/release acceptance.

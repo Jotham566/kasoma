@@ -1,7 +1,7 @@
 # ADR-064: Known metric export loss remains unavailable
 
 Date: 19 October 2026
-Status: Accepted within delegated MVP engineering discretion; verification pending
+Status: Accepted within delegated MVP engineering discretion; complete hosted39308594889 verified
 Requirements: FR-OPS-002, NFR-OBS-001, NFR-SEC-002, NFR-MNT-001
 
 ## Context and decision
@@ -46,3 +46,8 @@ model and OTP codec/store/lifecycle/ADMIN tests, quality/security/container and 
 gates. No timeout, assertion or provider/grading quota is relaxed. Rollback must keep affected projections unavailable while markers remain live; do not
 reintroduce an older reader that ignores known loss. Disable affected observation
 projections and let transient metadata expire. No history is changed.
+
+Complete hosted39308594889 at b5557a3 passes1,180 unit/contract,502 integration,
+35 tooling and114 full browser executions plus all engineering gates. Logical
+restore69 tables/686 rows425ms cleans successfully. Only Markdown follows; all
+production/mixed-reader, ledger, provider/privacy and erasure gates remain separate.
