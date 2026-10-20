@@ -1453,3 +1453,33 @@ therefore retain failed hosted evidence; none is promoted or rerun as a substitu
 for the corrected source's own complete39378996412 verification. The controlled
 two-architecture reproduction/correction is local proof of the serialization defect,
 not a claimed successful hosted result for any old head.
+
+
+## Complete hosted portable-catalog/credential verification
+
+Complete own hosted39378996412 is SUCCESS at exact
+9fece6ad03662eb6ba7f1a9b6f0d79037b364c0b:1,502 unit/contract,642 integration,
+35 tooling and123 full browser executions, plus every required setup/migration/seed,
+independent fresh catalog, focused transport/assessment/staff, actual restricted-login,
+quality/contracts/build/security/image/service gate. The conditional registry login
+alone is legitimately skipped when optional credentials are absent; no engineering
+stage is skipped. Logical recovery verifies74 tables/692 rows in633ms; stopped-source
+PostgreSQL/MinIO verifies74/692/one42,084-byte ciphertext in381ms with integrity/fault/
+immutable/dormant checks and empty cleanup. Production RPO/RTO and erasure checkpoint
+recovery remain false. No new learner-load or physical/branded acceptance is inferred.
+
+This accepts corrected unsigned raw Datum serialization, pre-install32+9 catalog
+verification/private v5 provenance, retained-closed LOGIN guards and the actor/bound-
+recipient LINK/GUARDIAN dispatch/cleanup guards at this combined source. Earlier
+catalog854afaa/39371164944, LOGIN4e5b2ab/39373055520 and linked2c37d4d/39375073567
+remain FAILED at their own exact heads; no failure is relabeled or rerun to hide it.
+The current native two-architecture reproduction supplies the correction's separate
+mechanism evidence. Only Markdown follows the verified runtime/test/Make/workflow
+source on the prepared publication branch. Parent main37be6e3 follow-up39374776606
+is separately SUCCESS and remote/main ancestry is checked before publication.
+
+Consumer1597a68/39380895685 and principal4bf5a77/39383925992 remain separate live
+candidates; neither is accepted by this run. No actual closure, new preservation,
+retention, erasure, normal short-text or retirement activation occurs. Full installed
+catalog/payload/ownership/hold/export clearance, permanent barriers, bounded durable
+removal/checkpoint recovery and external release gates remain required.

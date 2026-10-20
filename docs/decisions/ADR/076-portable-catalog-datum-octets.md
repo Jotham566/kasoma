@@ -1,7 +1,7 @@
 # ADR-076: Portable raw catalog Datum octets
 
 Date: 20 October 2026 (Africa/Kampala)
-Status: Accepted technical correction under approved ADR-061/073; verification pending
+Status: Accepted technical implementation under approved ADR-061; combined source9fece6a passes complete hosted39378996412
 Requirements: FR-ID-006, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Evidence and decision
@@ -58,3 +58,7 @@ This corrects a reproducible representation defect, not erasure clearance. Full
 installed SQL/ACL/payload/preservation/export guards, credential-consumer completion,
 durable erasure/checkpoint recovery and external release gates remain. Activation
 stays false; no normal review, real data or production permission is inferred.
+
+Complete engineering acceptance is at combined source9fece6a in hosted39378996412.
+Earlier failed source runs remain failed; this does not enable erasure or grant
+production, privacy/academic/provider or physical/branded release acceptance.

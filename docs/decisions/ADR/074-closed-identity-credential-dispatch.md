@@ -1,7 +1,7 @@
 # ADR-074: Closed-identity credential intake and dispatch
 
 Date: 20 October 2026 (Africa/Kampala)
-Status: Accepted technical implementation under approved ADR-061; verification pending
+Status: Accepted technical implementation under approved ADR-061; combined source9fece6a passes complete hosted39378996412
 Requirements: FR-ID-001/002/005/006, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Decision
@@ -53,3 +53,7 @@ active reuse protection, changed-binding refusal, actual idle gate/exclusive con
 late closure refusal, failed dispatch cleanup, observation accuracy and exact cleanup.
 Full installed SQL/source/payload/preservation/export/checkpoint enforcement remains
 mandatory before the real closure/removal lane can be accepted.
+
+Complete engineering acceptance is at combined source9fece6a in hosted39378996412.
+Earlier failed source runs remain failed; this does not enable erasure or grant
+production, privacy/academic/provider or physical/branded release acceptance.

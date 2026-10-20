@@ -21,6 +21,16 @@ pass with quality/security gates; complete own hosted acceptance pending. Two lo
 long-lived identity TRUNCATE timeouts remain failed and unexplained.
 No schema, retention, closure execution or review activation change.
 
+
+## Verified portable catalog and credential/dispatch guards
+
+Exact9fece6a passes complete hosted39378996412:1,502 unit/contract,642 integration,
+35 tooling and123 browser executions plus all engineering gates. Accept ADR-073/074/
+075/076 at this combined source; retain all three older failed heads as failures.
+Recoveries verify74/692 logically and with stopped-source database/MinIO, one42,084B
+ciphertext, immutable/fault checks and empty cleanup. No erasure, retirement or normal
+short-text activation. Separate consumer/principal candidates need their own acceptance.
+
 ## Dormant lifecycle0045 — isolated verification candidate
 
 FR-ID-006/BR-010/FR-OPS-003 and NFR-SEC-002/MNT-001: additive0045 registers the

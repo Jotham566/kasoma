@@ -1,7 +1,7 @@
 # ADR-075: Actor and bound-recipient credential dispatch gates
 
 Date: 20 October 2026 (Africa/Kampala)
-Status: Accepted technical implementation under approved ADR-061; verification pending
+Status: Accepted technical implementation under approved ADR-061; combined source9fece6a passes complete hosted39378996412
 Requirements: FR-ID-001/002/003/005/006, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Decision
@@ -49,3 +49,7 @@ recipients, actual two-subject idle gates, partial-acquisition cleanup, duplicat
 subjects, one-connection operation, changed binding, closed/consumed failure cleanup,
 unchanged LOGIN/model/consent paths and exact owned cleanup. Full source/payload/SQL
 guards, exact preservation, bounded removal and quarantined recovery remain required.
+
+Complete engineering acceptance is at combined source9fece6a in hosted39378996412.
+Earlier failed source runs remain failed; this does not enable erasure or grant
+production, privacy/academic/provider or physical/branded release acceptance.

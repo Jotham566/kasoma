@@ -1,7 +1,7 @@
 # ADR-073: Frozen pre-install source catalog
 
 Date:20 October2026 (Africa/Kampala)
-Status: Accepted technical implementation under approved ADR-061; verification pending
+Status: Accepted technical implementation under approved ADR-061; combined source9fece6a passes complete hosted39378996412
 Requirements: FR-ID-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Decision
@@ -73,3 +73,7 @@ bounds before their full deparsers run. PostgreSQL16's get_const_expr calls a ty
 output function; see the primary [PostgreSQL deparser source](https://github.com/postgres/postgres/blob/REL_16_STABLE/src/backend/utils/adt/ruleutils.c).
 Reject changed raw trees or code/type interfaces before invoking those routines. This
 supports the guard ordering, not a claim that a catalog hash secures a hostile engine.
+
+Complete engineering acceptance is at combined source9fece6a in hosted39378996412.
+Earlier failed source runs remain failed; this does not enable erasure or grant
+production, privacy/academic/provider or physical/branded release acceptance.

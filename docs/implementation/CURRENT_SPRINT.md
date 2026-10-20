@@ -2017,3 +2017,53 @@ reproduced versioned expectations, including complete live-body comparisons rath
 than normalizing live code. The principal fence alone cannot clear altered code,
 constraints/policies, unrelated-role grants or source payload/hold/export graphs.
 Those checks precede durable atomic authorization/closure and checkpoint recovery.
+
+
+## Complete hosted portable-catalog/credential verification
+
+Complete own hosted39378996412 is SUCCESS at exact
+9fece6ad03662eb6ba7f1a9b6f0d79037b364c0b:1,502 unit/contract,642 integration,
+35 tooling and123 full browser executions, plus every required setup/migration/seed,
+independent fresh catalog, focused transport/assessment/staff, actual restricted-login,
+quality/contracts/build/security/image/service gate. The conditional registry login
+alone is legitimately skipped when optional credentials are absent; no engineering
+stage is skipped. Logical recovery verifies74 tables/692 rows in633ms; stopped-source
+PostgreSQL/MinIO verifies74/692/one42,084-byte ciphertext in381ms with integrity/fault/
+immutable/dormant checks and empty cleanup. Production RPO/RTO and erasure checkpoint
+recovery remain false. No new learner-load or physical/branded acceptance is inferred.
+
+This accepts corrected unsigned raw Datum serialization, pre-install32+9 catalog
+verification/private v5 provenance, retained-closed LOGIN guards and the actor/bound-
+recipient LINK/GUARDIAN dispatch/cleanup guards at this combined source. Earlier
+catalog854afaa/39371164944, LOGIN4e5b2ab/39373055520 and linked2c37d4d/39375073567
+remain FAILED at their own exact heads; no failure is relabeled or rerun to hide it.
+The current native two-architecture reproduction supplies the correction's separate
+mechanism evidence. Only Markdown follows the verified runtime/test/Make/workflow
+source on the prepared publication branch. Parent main37be6e3 follow-up39374776606
+is separately SUCCESS and remote/main ancestry is checked before publication.
+
+Consumer1597a68/39380895685 and principal4bf5a77/39383925992 remain separate live
+candidates; neither is accepted by this run. No actual closure, new preservation,
+retention, erasure, normal short-text or retirement activation occurs. Full installed
+catalog/payload/ownership/hold/export clearance, permanent barriers, bounded durable
+removal/checkpoint recovery and external release gates remain required.
+
+
+Prepared publication also passes native make containers migrate container-smoke
+security-containers on the verified runtime tree: worker/private-object export,
+request/model telemetry and service smoke pass; image scans pass. All eight review
+services are healthy on0045. Only Markdown closeout differs from exact9fece6a;
+no extra application/test/Make/workflow change is accepted by this publication.
+Main publishes this verified source; its new follow-up run requires separate status.
+Consumer1597a68 and principal4bf5a77 remain unmerged until their own acceptance.
+
+
+Verified source9fece6a is published through main825d57e491a4e1f41931cd833d64457a509da504.
+Its main follow-up39387033557 is confirmed in progress; do not cancel or infer its
+completion. Four catalog/LOGIN/linked/portable branches are proven fully merged and
+removed locally/remotely after terminal own-run checks, exact SHA/ancestry proof,
+atomic lease-protected deletion and independent remote-absence verification. All
+unmerged consumer/principal/installed-catalog work is preserved. Root Docker remains
+8/8healthy on0045 with execution disabled. This local integration changes Markdown
+only relative to the frozen v6 application/test/Make tree4bf5a77; preserve its remote
+head for own39383925992. Consumer1597a68/39380895685 remains separately live.
