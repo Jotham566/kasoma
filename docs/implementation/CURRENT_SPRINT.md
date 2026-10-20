@@ -1396,3 +1396,20 @@ review remains dormant and healthy on0045. Full catalog/ACL/payload/hold/export 
 exact richer preservation, permanent SQL write barriers, atomic authorization/closure,
 durable bounded removal/verification/retirement and quarantined erasure recovery remain
 required. No case completion or full MVP acceptance is inferred from these prerequisites.
+
+
+Private gate candidate81f1d843e6e7d3fdbfd342f0626a883981bf9aef is pushed for complete
+hosted39365821234. Preserve that remote head. Native exact-container cleanup evidence
+comes from assertions inside each fresh scope/source context after its cleanup, using
+independent Docker inventory. Successful pytest captures those container logs: the
+separate quiet-log scan found no IDs and provides no additional cleanup evidence.
+The21-case strengthened gate run and11-case bootstrap run pass; local browsers remain
+in progress. Full573 hosted integration/image/service acceptance is pending.
+
+Main600db71 follow-up39364455335 remains live. Prepared accepted-bootstrapf9cd1fb is
+only Markdown beyond hosted-verified3f865e4 and has passing native image/migration/
+service/security checks; keep main fixed while its run is live. Staff41c6eaa passes
+final29/19/16/6 local owned cohorts and123 local browsers, with four wrapper-source
+and twelve browser source IDs independently confirmed absent; its hosted39365013049
+and planf645a54 hosted39364234883 stay separate. All eight normal review services are
+healthy on0045. No erasure/retirement/normal short-text activation or case completion.
