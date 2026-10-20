@@ -1024,3 +1024,18 @@ suite and image/service acceptance cannot be inferred from focused/native checks
 No erasure executor/authorization, closed identity or completed DELETE exists. Next is
 the independently provisioned SQL capability and atomic reviewed plan/authorization/
 closure with durable continuation, complete preservation and later bounded removal.
+
+## Frozen ADR-070 candidate and parent correction
+
+Runtime/test/Make/workflow source94feeab6e946c2905202da19a0a85952f5b26036 is frozen
+for full hosted [39352281782](https://github.com/Jotham566/kasoma/actions/runs/39352281782),
+confirmed in progress. It merges parentb4b20f1 with the identical regression fix;
+the merge changes Markdown only relative to verified application/test sourcec2880bc.
+Final quality/unit/controller/owned checks pass:1,471 unit/contract,110 resource controls,
+29 identity/lifecycle/preview and19 model cases. Full531 integration and exact-source
+hosted image/service acceptance remain unproved until that run completes. Retain the
+remote head; only Markdown closeout follows it. Parentb4b20f1 hosted39350745638 is
+separate and in progress; main stays72c9c17 with its successful39345752803 follow-up.
+All local commands have terminated; thirty recorded source containers are independently
+absent. Normal Docker is kept running on0044 with erasure/retirement/short-text disabled.
+No closure/erasure/DELETE completion or production/academic/device acceptance is inferred.
