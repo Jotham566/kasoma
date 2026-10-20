@@ -807,3 +807,11 @@ This prepared merge preserves both Markdown evidence histories; executable/test/
 workflow files equal hosted-verified3f865e4. Main600db71 and its follow-up39364455335
 remain live and fixed. Do not advance main, remove the unmerged bootstrap branch, or
 infer acceptance for newer work until the main follow-up is terminal successful.
+
+
+Native prepared-bootstrap publication checks pass: `make containers migrate
+container-smoke security-containers`. All eight normal review services are healthy
+on0045; the ordinary source remains ineligible/dormant with no erasure provisioning.
+Main600db71 follow-up39364455335 is still live; preserve main. New plan/staff/private
+gate work has separate frozen candidates and cannot inherit this bootstrap acceptance.
+The prepared merge remains only Markdown beyond complete hosted-verified3f865e4.
