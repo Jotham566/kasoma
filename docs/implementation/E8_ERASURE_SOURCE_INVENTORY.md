@@ -1155,3 +1155,23 @@ clearance or release acceptance is inferred from this inventory.
 
 No new role, executor/login membership, plaintext body, source-ID ledger or payload
 reading endpoint is added. Source shape is a drift fence, not constraint/ACL/hold proof.
+
+
+## ADR-071 private disabled capability installation inventory
+
+The ordinary0045 public baseline stays74 tables/545 columns. The explicit fresh-source
+installer adds one capability-specific private table with16 columns, making75/561
+across application and installed control namespaces. No normal migration/startup creates
+that namespace. This is K/shared control metadata, not a learner/source-reference map.
+An executor must validate the additional namespace/functions/ACLs and pgcrypto bindings
+independently; the ordinary public shape check alone cannot authorize closure.
+
+The private control primary key is singleton. Exact columns are singleton integer;
+database_oid, namespace_oid, cap_namespace_oid, crypto_namespace_oid, crypto_hmac_oid,
+owner_oid, authorizer_oid, executor_oid (oid); source_nonce and installation_nonce (uuid);
+version (text); fingerprint_key (bytea,32 bytes); creation_enabled and execution_enabled
+(boolean, false); installed_at (timestamptz, actual database clock). All are non-null.
+The key is private cryptographic material, never an API/status/log/export field. Public
+and both login roles have no control-table rights. Installed function/role identity and
+all activation controls remain separate gates; no borrower may treat these totals as
+preservation, ownership, erasure or production clearance.

@@ -1668,3 +1668,20 @@ requires review. The33 approved action rules validate exact actor/target/case-ki
 bindings and reject invalid clocks, without returning audit bodies, IDs or deadlines.
 Composite retry keys and opaque hashes are not audit-target ownership. These checks
 do not establish preservation, lawful-root expiry, SQL capability or erasure clearance.
+
+
+### Fresh erasure SQL bootstrap checks
+
+Run `make test-erasure-fresh-scope` from the standard local fake-provider profile.
+It creates its own bounded owned sources and checks pre-migration proof, migrations,
+actual restricted logins and the disabled ADR-071 installation. It never adopts the
+normal review database, an existing schema/role or a caller-supplied URL. It uses the
+same memory/tmpfs/process caps and exact owned cleanup. The optional factory attestation
+is erasure-purpose only; ordinary browser/identity fixture behavior stays unchanged.
+
+This is not an erasure command. The private installer is privileged test/bootstrap
+tooling, never imported by API/ordinary worker startup. Normal `make migrate` does not
+install it. Creation/execution stay false; the logins have only disabled readiness,
+no source/control reads or owner membership. Authorization/closure and the full approved
+preservation/removal/retirement/recovery workflow remain implementation work. Never
+point a destructive rehearsal at the normal review profile or infer release clearance.

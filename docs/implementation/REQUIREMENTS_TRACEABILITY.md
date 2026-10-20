@@ -2307,3 +2307,81 @@ with ancestry proof. Main follow-up39355923737 is confirmed live; do not move ma
 that run needs its fixed head. Coordination94feeab hosted39352281782 is still separate
 and live. Normal review has eight healthy services on0045, scope/creation/executionfalse,
 no erasure owner/executor and zero closed identities. No data/cache/volume sweep.
+
+
+## ADR-061 SQL capability work — fresh-source bootstrap in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: begin the independently
+restricted SQL capability slice with an exclusively created source proof, issued before
+migrations. Bind exact owned container/label/loopback port and database/schema OIDs,
+fake-only profile and process-local issuance/lifetime. Reject configuration-only,
+reconstructed, retargeted, expired or already-populated source issuance. Standard test
+resource caps and exact cleanup remain; neither normal review data nor existing roles/
+schemas/volumes are adopted or removed. Preserve standard browser/test fixture behavior.
+
+The new prescribed make test-erasure-fresh-scope target always creates its own bounded
+source; never point it at an existing schema. This implementation is in progress,
+not an issued plan, SQL owner/executor, activation, closure, removal or completed first
+slice. Continue through independent SQL authority, server plan/authorization, permanent
+closure and durable continuation with all source/preservation/export guards. No new
+privacy/retention policy or architecture decision is inferred from this bootstrap proof.
+
+
+## ADR-071 disabled SQL installation — implementation in progress
+
+Record the technical bootstrap decision in ADR-071 under approved ADR-061. An explicit
+forward installer only accepts the live registered source proof, rejects existing roles/
+crypto/control namespaces and unknown source namespaces, and creates separate NOLOGIN
+owner/authorizer/maintenance principals without memberships or elevated flags. It adds
+one private16-column shared control table (K), purpose-specific HMAC key and qualified
+pgcrypto1.3 namespace; these are additional capability inventory, never learner-owned
+rows or a substitute for full source/guard/ACL validation. Normal migrations/startup
+never read this installer. Normal review remains dormant and untouched.
+
+A narrowly bound forward state guard records source/role OIDs and nonce only in this
+owned source. Creation/execution CHECKs remain false, plans/jobs remain unwritable and
+closed_at remains forbidden. The only login entrypoint is minimized disabled readiness;
+private initialization/scope functions and source/control tables are not granted to
+those logins. PostgreSQL-side fixed error handlers protect dynamic-login failures and
+rejected private-key row validation from uncaught secret-bearing SQL details. No audit
+suppression, trigger-disable flag, arbitrary SQL/cutoff or general DELETE grant exists.
+
+Initial actual-login/source checks pass7 cases after format fixes. Add later-failure
+rollback and PostgreSQL log-boundary proof, standard HMAC comparison, unknown-namespace
+and broader regression checks before acceptance. The SQL authorization/closure slice
+is still incomplete: no server plan, authorization, permanent closure, restartable job,
+full preservation/removal/retirement or completed DELETE exists. Keep this branch in
+progress until those requirements are implemented and independently verified.
+
+
+## ADR-071 bootstrap local checkpoint
+
+Final local format/lint/types (222 sources),1,487 unit/contract,110 resource controls,
+11 fresh-scope/SQL cases, OpenAPI/build and dependency/source/secret security pass.
+Actual logins prove only minimized disabled readiness, no source/control reads or
+protected writes, no owner role assumption, private function denial and temporary
+search-path shadowing resistance. Owner LOGIN drift and crypto-namespace rename make
+readiness fail. Replays, pre-existing role adoption and unknown namespaces fail.
+The complete installed inventory is75 tables/561 columns; ordinary public remains74/545.
+
+A late invalid-key initialization rolls back roles, extension/namespaces and source
+handoff. The corrected log probe captures both Docker streams, observes the fixed
+server error and finds neither the rejected key marker (text/hex) nor either generated
+login credential. The earlier stdout-only probe was insufficient evidence; the first
+corrected fixture failed because its credential callback was not wired. Earlier format,
+duplicate-basename and invalid-settings fixture failures stay recorded. No scanner
+exception is added; the privileged modules are explicitly included in make security.
+
+All123 browser executions pass after the shared factory extension (108 standard,
+12 short-text,three configuration), with12 recorded browser source containers
+independently absent and empty cleanup. Each native fresh-source/capability context
+also independently checks exact container absence. The legacy short-text runner keeps
+its existing schema scope. No existing schema/role, SDK/cache, volume or image cleanup.
+Main review remains eight healthy services on0045 with erasure/retirement disabled.
+
+This is disabled bootstrap engineering evidence, not completed FR-ID-006 or first-slice
+acceptance. Full source/private-catalog/ACL integrity, payload and exact-hold checks,
+server plan/authorization/closure, durable continuation, preservation/removal/retirement
+and erasure recovery remain required. No ordinary authorizer source CRUD is granted yet.
+No plan/job is created, closed_at is unchanged and no DELETE request is completed.
+Full exact-source hosted acceptance remains pending; do not infer it from parent runs.

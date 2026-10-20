@@ -184,3 +184,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-069: Owned synthetic identity verification source](069-owned-erasure-identity-verification.md)
 
 - [ADR-070: SQL-visible account processing coordination](070-sql-visible-account-processing-gate.md)
+
+- [ADR-071: Isolated erasure SQL capability bootstrap](071-isolated-erasure-capability-bootstrap.md)

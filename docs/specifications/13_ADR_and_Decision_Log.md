@@ -502,3 +502,13 @@ Status: Accepted within delegated engineering discretion; verification pending.
 account HMAC locks and add shared SQL-visible coordination with a narrow idle-session
 model-dispatch gate. This amends ADR-050's blanket inference-lock rule without keeping
 row locks/transactions across inference or adding provider/erasure authority.
+
+
+## ADR-071: Isolated erasure SQL capability bootstrap
+
+[Record](../decisions/ADR/071-isolated-erasure-capability-bootstrap.md): technical
+implementation under approved ADR-061. Use registered pre-migration fresh-source proof,
+exclusive NOLOGIN/authorizer/maintenance roles and a private versioned SQL control/crypto
+namespace. Normal migrations/startup cannot install it; creation/execution remain false.
+No new privacy, retention, cloud/provider or real-data permission. Verification and the
+complete SQL authorization/closure/preservation/removal workflow remain in progress.
