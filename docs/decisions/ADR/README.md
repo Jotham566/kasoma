@@ -192,3 +192,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-073: Frozen pre-install source catalog](073-frozen-preinstall-source-catalog.md)
 
 - [ADR-074: Closed-identity credential dispatch](074-closed-identity-credential-dispatch.md)
+
+- [ADR-075: Linked credential dispatch gates](075-linked-credential-dispatch-gates.md)

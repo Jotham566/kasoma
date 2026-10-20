@@ -1754,3 +1754,9 @@ The future-state fixture is not an account-closure command or executor acceptanc
 Known retained closed LOGIN identifiers keep generic responses without issuing codes;
 pre-barrier unbound history is neither swept nor attributed by hash. There is no
 normal-stack activation or new environment key.
+
+
+make test-erasure-linked-dispatch verifies ADR-075's bounded one/two-subject gate
+protocol and owned fake-only LINK/GUARDIAN races. It cannot target normal review.
+Exact pending cleanup respects closure/consumption and keeps original clocks. This
+is not a closure/erasure command or proof of SQL executor acceptance. No new env key.

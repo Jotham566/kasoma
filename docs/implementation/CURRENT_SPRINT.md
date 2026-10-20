@@ -1721,3 +1721,36 @@ next credential slice, before full installed SQL/ACL/payload/preservation/export
 clearance and real atomic closure, bounded removal and checkpoint recovery. No
 account-erasure, physical-device or external academic/privacy/provider/release
 acceptance is inferred.
+
+
+## ADR-075 LINK/GUARDIAN dispatch — implementation candidate
+
+FR-ID-001/002/003/005/006, BR-010 and NFR-SEC-002/MNT-001: extend the credential
+barrier to current actor and bound recipient. Coordinate the recipient before rate/
+identifier work with a shared gate, without acquiring a second account HMAC lock.
+One owned connection holds at most two sorted/deduplicated session-shared gates; a
+fresh short transaction rechecks recent actor authentication and exact binding before
+send. Commit before provider I/O. Partial/uncertain acquisition or release invalidates
+the connection, preserving the existing model gateway port and one-connection behavior.
+
+Only the invocation's exact pending new challenge can be cleaned up under its expected
+actor binding. Actor closure leaves the original source/clock for the restricted
+lifecycle/expiry; consumed evidence is never discarded. No hash sweep or ownership/
+retention permission is inferred. The unchanged-parent regression gives eight failures/
+11 passes; the first correction passes19 and the expanded matrix passes40 plus18
+existing credential cases. Recency and both binding-change stages, broader engineering/
+browser and own complete hosted acceptance remain in verification. No account closure,
+DELETE completion, normal review activation or external release clearance is enabled.
+Parent 4e5b2ab/39373055520, catalog854afaa/39371164944 and main0053a7b/39371028143
+remain separate live sources; preserve their remote heads.
+
+
+ADR-075 final local gates pass: 44 linked-dispatch controls (17 contract/27 native),
+18 existing credential cases, 29 identity/lifecycle, 19 model, 16 source, six staff,
+one OTP API case, 1,501 unit/contract, 35 tooling and 123 browsers, plus lint/types
+(228 Python sources), contracts/build and dependency/source security. Twelve exact
+browser and12 captured native IDs are independently absent; final native contexts
+also assert their own exact cleanup. Initial eight failures remain retained. See
+E8_LINKED_DISPATCH_VERIFICATION.md. Own complete hosted/image/service/recovery
+acceptance remains pending; guardian consumption, staff revocation and full erasure
+SQL/preservation/checkpoint controls remain required before any activation.

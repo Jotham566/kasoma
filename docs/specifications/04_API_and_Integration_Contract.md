@@ -997,3 +997,11 @@ dispatch coordinates/rechecks against closure. Changed lookup ownership requires
 fresh issuance, with no caller-selected owner or lock. Closed refresh and existing
 LOGIN verification fail before family/challenge mutation. This is a consumer guard,
 not an account-closure or DELETE-completion endpoint. All execution remains disabled.
+
+
+ADR-075 extends generic OTP acceptance/suppression to a retained closed bound
+LINK/GUARDIAN recipient. Dispatch rechecks the current recent authenticated actor
+and original recipient binding while protecting both subjects; no actor/recipient
+UUID, lock or SQL selector is accepted from the client. Exact failure cleanup leaves
+closed-actor source and consumed evidence intact. Response DTOs and rate limits stay
+unchanged. Full erasure and DELETE fulfillment remain disabled/unimplemented.

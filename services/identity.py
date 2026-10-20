@@ -14,7 +14,7 @@ from cryptography.fernet import Fernet
 from sqlalchemy import Connection, Engine, delete, func, select, text, update
 from sqlalchemy.orm import Session
 
-from services.account_processing import coordinate, dispatch_connection
+from services.account_processing import coordinate, dispatch_connections
 from services.config import Settings
 from services.domain.curriculum import Level, Subject
 from services.domain.identity import (
@@ -158,13 +158,16 @@ class IdentityService:
         challenge_id = uuid4()
         with self.transaction() as db:
             owner = None
-            login_owner = None
             if body.purpose != "LOGIN":
                 owner = self.authenticate(db, token, recent=True).user_id
-            else:
-                login_owner = self.login_binding(db, kind, lookup)
-                if login_owner is not None:
-                    self.lock_user(db, login_owner)
+            recipient_owner = self.identifier_binding(db, kind, lookup)
+            if recipient_owner is not None:
+                if body.purpose == "LOGIN":
+                    self.lock_user(db, recipient_owner)
+                elif recipient_owner != owner:
+                    # Shared recipient coordination only: no opposing account
+                    # HMAC/row-lock order across actor and recipient identities.
+                    coordinate(db, recipient_owner)
             now = self.clock()
             permitted = [
                 self.rate(db, "peer:" + peer, 20, 3600),
@@ -174,9 +177,7 @@ class IdentityService:
             ]
             if not all(permitted):
                 return OTPAccepted(challenge_id=challenge_id)
-            if body.purpose == "LOGIN" and not self.login_binding_open(
-                db, kind, lookup, login_owner
-            ):
+            if not self.otp_binding_open(db, kind, lookup, recipient_owner):
                 return OTPAccepted(challenge_id=challenge_id)
             if body.purpose == "GUARDIAN" and db.scalar(
                 select(Identifier.id).where(
@@ -199,25 +200,31 @@ class IdentityService:
                     expires_at=now + timedelta(minutes=10),
                 )
             )
-        if not self.deliver_otp(body, kind, identifier, lookup, login_owner, code, observer):
-            # Only this invocation's exact newly created challenge, never a hash sweep.
-            with self.transaction() as db:
-                db.execute(delete(Challenge).where(Challenge.id == challenge_id))
+        if not self.deliver_otp(
+            body,
+            kind,
+            identifier,
+            lookup,
+            recipient_owner,
+            code,
+            observer,
+            actor=owner,
+            token=token,
+        ):
+            self.discard_new_challenge(challenge_id, owner)
         return OTPAccepted(challenge_id=challenge_id)
 
-    def login_binding(self, db: Session, kind: str, lookup: str) -> UUID | None:
+    def identifier_binding(self, db: Session, kind: str, lookup: str) -> UUID | None:
         return db.scalar(
             select(Identifier.user_id).where(
                 Identifier.type == kind, Identifier.lookup_hash == lookup
             )
         )
 
-    def login_binding_open(
-        self, db: Session, kind: str, lookup: str, expected: UUID | None
-    ) -> bool:
-        # Caller already took the expected account lock before this identifier lock.
+    def otp_binding_open(self, db: Session, kind: str, lookup: str, expected: UUID | None) -> bool:
+        # Caller coordinated the actor/expected recipient before this identifier lock.
         self.lock(db, lookup)
-        if self.login_binding(db, kind, lookup) != expected:
+        if self.identifier_binding(db, kind, lookup) != expected:
             return False
         if expected is None:
             return True
@@ -233,20 +240,26 @@ class IdentityService:
         kind: str,
         identifier: str,
         lookup: str,
-        login_owner: UUID | None,
+        recipient_owner: UUID | None,
         code: str,
         observer: OTPObserver | None,
+        *,
+        actor: UUID | None = None,
+        token: str | None = None,
     ) -> bool:
         # No account/identifier row, HMAC lock or transaction spans provider.send.
-        gate = dispatch_connection(self.engine, login_owner) if login_owner else nullcontext()
+        subjects = tuple(subject for subject in (actor, recipient_owner) if subject is not None)
+        gate = dispatch_connections(self.engine, subjects) if subjects else nullcontext()
         try:
             with gate as connection:
-                if body.purpose == "LOGIN":
-                    with self.transaction(connection) as db:
-                        if login_owner is not None:
-                            self.lock_user(db, login_owner)
-                        if not self.login_binding_open(db, kind, lookup, login_owner):
+                with self.transaction(connection) as db:
+                    if body.purpose != "LOGIN":
+                        if self.authenticate(db, token, recent=True).user_id != actor:
                             return False
+                    elif recipient_owner is not None:
+                        self.lock_user(db, recipient_owner)
+                    if not self.otp_binding_open(db, kind, lookup, recipient_owner):
+                        return False
                 try:
                     provider = self.email if kind == "EMAIL" else self.sms
                     provider.send(
@@ -260,6 +273,22 @@ class IdentityService:
         except Exception:
             # Gate/database failure is not a provider outcome; never echo diagnostics.
             return False
+
+    def discard_new_challenge(self, challenge_id: UUID, owner: UUID | None) -> None:
+        """Only a pending exact row created by this invocation; never a hash sweep."""
+        with self.transaction() as db:
+            if owner is not None:
+                self.lock_user(db, owner)
+                user = db.get(User, owner, populate_existing=True)
+                if user is None or (user.status != "ACTIVE" and user.closed_at is not None):
+                    return
+            db.execute(
+                delete(Challenge).where(
+                    Challenge.id == challenge_id,
+                    Challenge.user_id == owner,
+                    Challenge.consumed_at.is_(None),
+                )
+            )
 
     def consume(
         self, db: Session, body: OTPVerify, purposes: set[str], owner: UUID | None

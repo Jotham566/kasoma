@@ -539,3 +539,12 @@ LOGIN bindings before rate/identifier work, reject closed credential mutations a
 hold only an idle shared subject gate through bound OTP dispatch. Keep generic responses,
 actual provider-only observations, exact newly created challenge cleanup and unchanged
 active reuse protection. No closure, hash-based attribution or execution authority.
+
+
+## ADR-075: Linked credential dispatch gates
+
+[Record](../decisions/ADR/075-linked-credential-dispatch-gates.md): protect authenticated
+actor and known recipient with at most two shared subject gates on one owned connection.
+Recheck current recent authority and exact binding before LINK/GUARDIAN dispatch, without
+opposing account HMAC locks. Exact pending cleanup respects committed closure and consumed
+evidence. No new data attribution, retention, erasure activation or public DTO.

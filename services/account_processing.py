@@ -42,15 +42,30 @@ def dispatch_gate(engine: Engine, subject: UUID) -> Iterator[None]:
 
 @contextmanager
 def dispatch_connection(engine: Engine, subject: UUID) -> Iterator[Connection]:
-    """One owned idle connection; no transaction, row or HMAC lock spans inference.
+    """Single-subject compatibility port for the existing model/LOGIN callers."""
+    with dispatch_connections(engine, (subject,)) as connection:
+        yield connection
+
+
+@contextmanager
+def dispatch_connections(engine: Engine, subjects: tuple[UUID, ...]) -> Iterator[Connection]:
+    """At most two subject gates on one owned connection, idle during dispatch.
 
     Invalidate on an uncertain acquisition/release: pool rollback does not release
     session advisory locks. This function never reads or grants subject authority.
     """
+    if (
+        type(subjects) is not tuple
+        or not 1 <= len(subjects) <= 2
+        or any(type(subject) is not UUID for subject in subjects)
+    ):
+        raise ProcessingGateUnavailable()
+    ordered = sorted(set(subjects), key=lambda subject: subject.int)
     with engine.connect() as connection:
         try:
-            if connection.scalar(_SHARED_SESSION, {"subject": subject}) is not True:
-                raise ProcessingGateUnavailable()
+            for subject in ordered:
+                if connection.scalar(_SHARED_SESSION, {"subject": subject}) is not True:
+                    raise ProcessingGateUnavailable()
             connection.commit()
         except BaseException:
             connection.invalidate()
@@ -63,8 +78,9 @@ def dispatch_connection(engine: Engine, subject: UUID) -> Iterator[Connection]:
             try:
                 if connection.in_transaction():
                     connection.rollback()
-                if connection.scalar(_RELEASE_SESSION, {"subject": subject}) is not True:
-                    raise ProcessingGateUnavailable()
+                for subject in reversed(ordered):
+                    if connection.scalar(_RELEASE_SESSION, {"subject": subject}) is not True:
+                        raise ProcessingGateUnavailable()
                 connection.commit()
             except BaseException:
                 connection.invalidate()
