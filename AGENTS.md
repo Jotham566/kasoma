@@ -579,3 +579,9 @@ failed; no unsupported root-cause claim. Main64e1f72 follow-up39339512181 also p
 Only Markdown closeout follows this verified runtime/test/Make/workflow tree.
 No permanent SQL closure, erasure executor or DELETE completion is accepted; those
 remain the next bounded ADR-061 slice. Normal review activation stays disabled.
+
+Parent0045 hosted39346406621 atcb0cd22 is FAILED:1,445 unit/contract and521 integration
+pass; the sole failure is the0042 configuration upgrade's whole-user JSON comparison
+not expecting closed_at:null. The correction must require exactly that addition while
+preserving all old fields/rows. It remains unaccepted pending focused and full hosted
+verification; do not enable closure or erasure. Main72c9c17 follow-up39345752803 is SUCCESS.

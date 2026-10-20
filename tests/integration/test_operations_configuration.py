@@ -62,12 +62,18 @@ def test_configuration_additive_upgrade_preserves_existing_staff_and_content(con
     )
     with service.engine.connect() as connection:
         for table, rows in before.items():
-            assert (
-                list(
-                    connection.scalars(text(f"SELECT to_jsonb(t)::text FROM {table} t ORDER BY 1"))
+            actual = [
+                json.loads(row)
+                for row in connection.scalars(
+                    text(f"SELECT to_jsonb(t)::text FROM {table} t ORDER BY 1")
                 )
-                == rows
-            )
+            ]
+            expected = [json.loads(row) for row in rows]
+            if table == "users":
+                assert all("closed_at" not in row for row in expected)
+                # 0045 adds only a nullable clock; every prior field/row must survive.
+                expected = [row | {"closed_at": None} for row in expected]
+            assert actual == expected
     view = get(client, actors)
     assert view["revision"] == 0
     assert patch(client, actors, view).status_code == 200
