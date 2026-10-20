@@ -2247,3 +2247,45 @@ independently in progress; neither is accepted from these local reader checks.
 Main remains72c9c17 with a healthy eight-service review preview on0044. Next is the
 independently owned SQL capability and complete server plan/authorization/closure;
 full payload/hold/export-drain checks must precede any actual closure or removal.
+
+
+## ADR-061 exact audit-source gate — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: the native unknown-action
+regression fails before the change (one failure/nine passes): another actor's audit
+against an owned case is absent from the action-filtered fingerprint. Expand the private
+audit scope through frozen typed source UUID identities, including explicit0039 receipt
+identity, without matching composite retry keys or opaque hashes. Unknown actions must
+change the source version and fail the separate exact classification gate.
+
+Implement the33 explicitly approved ADR-061 action rules and0043/0044 addendum, with
+exact owner/staff actor and case/hold/flag/grading-review target bindings and current
+EXPORT/DELETE case-kind constraints. Unknown/missing/ambiguous associations or malformed
+clocks fail closed; learner original reports remain distinct from independent triage.
+No prefix classification, fabricated deadline, SQL role, route, erasure authority or
+new retention/architecture decision is introduced. Root/deadline, source/payload integrity,
+holds and independent SQL authorization still require their own complete checks.
+Initial type errors are corrected; final local and own full hosted verification remain
+pending. Preserve all frozen live verification heads and normal review disablement.
+
+
+## Exact audit gate local verification
+
+Final format/lint/types and1,483 unit/contract pass; three isolated cohorts pass29
+identity/lifecycle/preview,19 fake dispatch and16 source checks (six contract/ten native).
+Unknown audits against both an owned case and an owned attempt enter the fingerprint
+and require review. No composite retry key is used as a target identity. Original
+learner flags followed by independent triage classify correctly. Wrong targets, wrong
+EXPORT/DELETE kind, missing actors, subject staff reads and future clocks fail closed.
+All nine recorded sources, including the failed before-regression run, are independently
+absent with empty cleanup. OpenAPI/build and dependency/source/secret security pass;
+initial type failures remain failed. No new scanner exception or architecture change.
+
+Parentb4b20f1 complete hosted39350745638 is SUCCESS for dormant0045 only (1,445 unit,
+522 integration,123 browser executions and all mandatory gates). Coordination94feeab
+and read-only predecessor752cda1 still require their own outcomes. Even a green
+predecessor run cannot accept this audit correction; promote the combined reader/audit
+source only after its own full hosted acceptance. No source classifier establishes
+payload, exact-hold, deadline, SQL-scope or closure/removal clearance. The next complete
+ADR-061 slice remains independently restricted SQL plan/authorization/closure, not a
+count-only or empty-account erasure substitute. Keep normal review execution disabled.

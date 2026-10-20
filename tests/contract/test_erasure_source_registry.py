@@ -32,3 +32,12 @@ def test_schema_is_quoted_and_values_are_bound_without_returning_bodies_or_keys(
     assert "SELECT x.*" not in query
     with pytest.raises(TypeError):
         PREDICATES["users"] = "true"
+
+
+def test_audit_scope_has_no_action_filter_or_composite_retry_key_lookup():
+    scope = PREDICATES["audit_log"]
+    assert scope is not None
+    assert "x.action" not in scope
+    assert 'y."key"' not in scope
+    assert 'FROM __S__."data_request_receipts" y' in scope
+    assert 'SELECT y."id"' in scope

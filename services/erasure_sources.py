@@ -47,7 +47,7 @@ _AUDIT_REVIEW = (
 # No fallback by naming convention. K/shared opaque T entries own no learner rows.
 # Lifecycle rows participate as case evidence; callers must explicitly account for
 # their own writes when later turning this reference reader into an issued plan.
-PREDICATES = MappingProxyType(
+_BASE_PREDICATES = MappingProxyType(
     {
         "account_erasure_state": None,
         "account_erasure_plans": f"x.request_id IN ({_REQUEST})",
@@ -59,19 +59,7 @@ PREDICATES = MappingProxyType(
         "assessment_receipts": "x.learner_id=:subject",
         "assessment_sessions": "x.learner_id=:subject",
         "attempts": "x.learner_id=:subject",
-        "audit_log": (
-            "x.actor_id=:subject OR x.target_id=:subject OR "
-            f"(x.action IN ('data_request.created','data_request.review_started',"
-            "'data_export.queued','data_export.completed','data_request.deletion_previewed',"
-            "'data_export.retrieved','legal_hold.queue_read','legal_hold.source_checked',"
-            f"'legal_hold.export_sources_read') AND x.target_id IN ({_REQUEST})) OR "
-            "(x.action IN ('legal_hold.created','legal_hold.released') "
-            f"AND x.target_id IN ({_HOLD})) OR "
-            f"(x.action IN ('content.flag.created','content.flag.updated','content.flag.read') "
-            f"AND x.target_id IN ({_FLAG})) OR "
-            f"(x.action IN ('grading_review.completed','grading_review.read',"
-            f"'grading_review.receipt_read') AND x.target_id IN ({_AUDIT_REVIEW}))"
-        ),
+        "audit_log": None,  # Filled from the closed source graph below.
         "auth_sessions": "x.user_id=:subject",
         "channel_links": "x.user_id=:subject",
         "channel_mutation_receipts": "x.actor_id=:subject",
@@ -137,6 +125,36 @@ PREDICATES = MappingProxyType(
         "users": "x.id=:subject",
     }
 )
+
+
+def _audit_predicate() -> str:
+    # UUID source identities come from the frozen typed PK manifest, never from a
+    # column-name heuristic. Composite retry keys are deliberately not target IDs.
+    targets = []
+    for name, definition in BASELINE.items():
+        predicate = _BASE_PREDICATES[name]
+        if predicate is None or name == "audit_log":
+            continue
+        keys = definition.primary_key
+        if name == "data_request_receipts":
+            keys = ("id",)  # Explicit0039 public evidence identity, not actor/key.
+        if len(keys) != 1:
+            continue
+        column = next(c for c in definition.columns if c.name == keys[0])
+        if column.type_name != "uuid":
+            continue
+        targets.append(
+            sql.SQL("SELECT y.{} FROM __S__.{} y WHERE {}").format(
+                sql.Identifier(column.name),
+                sql.Identifier(name),
+                sql.SQL(predicate.replace("x.", "y.")),
+            )
+        )
+    joined = sql.SQL(" UNION ALL ").join(targets).as_string()
+    return "x.actor_id=:subject OR x.target_id=:subject OR x.target_id IN (" + joined + ")"
+
+
+PREDICATES = MappingProxyType(dict(_BASE_PREDICATES) | {"audit_log": _audit_predicate()})
 
 
 def assert_registry() -> None:

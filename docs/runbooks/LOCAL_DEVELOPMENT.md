@@ -1660,3 +1660,11 @@ which runs it as a third fixed fresh-source cohort after identity and model disp
 Memory/tmpfs/deadline caps stay unchanged. It never issues a plan, grants clearance,
 provisions a role, modifies original guards or executes erasure. The private corruption
 mirror belongs solely to the disposable test invocation and is never a serving source.
+
+
+The owned source cohort also checks the ADR-061 exact audit classification gate.
+An unknown action against a typed owned source remains in the source fingerprint and
+requires review. The33 approved action rules validate exact actor/target/case-kind
+bindings and reject invalid clocks, without returning audit bodies, IDs or deadlines.
+Composite retry keys and opaque hashes are not audit-target ownership. These checks
+do not establish preservation, lawful-root expiry, SQL capability or erasure clearance.

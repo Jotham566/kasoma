@@ -9,6 +9,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from services.domain.identity import IdentityEvent
+from services.erasure_audit_policy import AuditClassificationUncertain, validate_audit_sources
 from services.erasure_manifest import BASELINE
 from services.erasure_sources import OwnershipConflict, fingerprint, validate_relations
 from services.identity_contracts import OTPRequest, OTPVerify
@@ -161,6 +162,12 @@ def test_own_report_and_independent_triage_are_not_subject_staff_provenance(asse
     flag_id = UUID(response.json()["id"])
     with snapshot(service) as db:
         reported = fingerprint(db, subject, KEY)
+        assert (
+            validate_audit_sources(db, subject, db.scalar(text("SELECT current_schema()")))[
+                "MATERIAL_CLOSURE"
+            ]
+            == 1
+        )
         assert reported.semantic_clearance is False
         assert reported.counts["content_flags"] == reported.counts["content_flag_history"] == 1
         assert reported.counts["content_flag_receipts"] == 1
@@ -176,3 +183,114 @@ def test_own_report_and_independent_triage_are_not_subject_staff_provenance(asse
         assert reviewed.counts["content_flag_receipts"] == 2
         assert reviewed.version != reported.version
         assert reviewed.semantic_clearance is False
+        classified = validate_audit_sources(db, subject, db.scalar(text("SELECT current_schema()")))
+        assert classified["MATERIAL_CLOSURE"] == 2
+        assert classified["SECURITY"] == 1
+    # Unknown actions on another owned source must not hide merely because current
+    # audit vocabulary normally targets cases/flags/reviews rather than attempts.
+    from services.domain.content import AuditLog
+
+    reviewer = service.me(actors["reviewer"]["Authorization"].removeprefix("Bearer ")).id
+    with Session(service.engine) as db, db.begin():
+        db.add(
+            AuditLog(
+                id=uuid4(),
+                actor_id=reviewer,
+                target_id=UUID(grade["attempt_id"]),
+                action="future.attempt.audit",
+                reason="Synthetic unknown audit target",
+                request_id=uuid4(),
+                before_hash=None,
+                after_hash=None,
+                created_at=service.clock(),
+            )
+        )
+    with snapshot(service) as db:
+        changed = fingerprint(db, subject, KEY)
+        assert changed.counts["audit_log"] == reviewed.counts["audit_log"] + 1
+        assert changed.version != reviewed.version
+        with pytest.raises(AuditClassificationUncertain):
+            validate_audit_sources(db, subject, db.scalar(text("SELECT current_schema()")))
+
+
+def test_unknown_action_on_owned_case_is_included_in_source_version(identity):
+    from services.domain.content import AuditLog
+    from tests.integration.test_data_requests import create
+    from tests.integration.test_identity import login
+
+    service, client, *_ = identity
+    headers, _ = login(client, "unknown-audit-owner@example.invalid")
+    subject = service.me(headers["Authorization"].removeprefix("Bearer ")).id
+    request = create(client, headers, "DELETE")
+    assert request.status_code == 201, request.text
+    other = register(service, "unknown-audit-other@example.invalid")
+    with snapshot(service) as db:
+        before = fingerprint(db, subject, KEY)
+        assert (
+            validate_audit_sources(db, subject, db.scalar(text("SELECT current_schema()")))[
+                "MATERIAL_CASE"
+            ]
+            == 1
+        )
+    with Session(service.engine) as db, db.begin():
+        db.add(
+            AuditLog(
+                id=uuid4(),
+                actor_id=other,
+                target_id=UUID(request.json()["id"]),
+                action="future.unclassified.action",
+                reason="Synthetic unknown classification",
+                request_id=uuid4(),
+                before_hash=None,
+                after_hash=None,
+                created_at=service.clock(),
+            )
+        )
+    with snapshot(service) as db:
+        after = fingerprint(db, subject, KEY)
+        assert after.counts["audit_log"] == before.counts["audit_log"] + 1
+        assert after.version != before.version
+        with pytest.raises(AuditClassificationUncertain):
+            validate_audit_sources(db, subject, db.scalar(text("SELECT current_schema()")))
+
+
+@pytest.mark.parametrize(
+    "bad", ["wrong_kind", "wrong_target", "missing_actor", "staff_actor", "future_clock"]
+)
+def test_known_audit_actions_require_exact_target_actor_and_clock(identity, bad):
+    from datetime import timedelta
+
+    from services.domain.content import AuditLog
+    from tests.integration.test_data_requests import create
+    from tests.integration.test_identity import login
+
+    service, client, *_ = identity
+    headers, _ = login(client, "audit-binding-owner@example.invalid")
+    subject = service.me(headers["Authorization"].removeprefix("Bearer ")).id
+    request = create(client, headers, "DELETE")
+    assert request.status_code == 201, request.text
+    action = "data_export.completed" if bad == "wrong_kind" else "data_request.created"
+    if bad == "staff_actor":
+        action = "data_request.queue_read"
+    with Session(service.engine) as db, db.begin():
+        db.add(
+            AuditLog(
+                id=uuid4(),
+                actor_id=None if bad == "missing_actor" else subject,
+                target_id=subject
+                if bad in {"wrong_target", "staff_actor"}
+                else UUID(request.json()["id"]),
+                action=action,
+                reason="Synthetic audit binding input",
+                request_id=uuid4(),
+                before_hash=None,
+                after_hash=None,
+                created_at=service.clock() + timedelta(days=3650)
+                if bad == "future_clock"
+                else service.clock(),
+            )
+        )
+    with snapshot(service) as db:
+        error = OwnershipConflict if bad == "staff_actor" else AuditClassificationUncertain
+        with pytest.raises(error):
+            validate_audit_sources(db, subject, db.scalar(text("SELECT current_schema()")))
