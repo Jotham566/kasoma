@@ -1,6 +1,9 @@
 # Changelog
 
-## Installed private principal fence — ADR-078 candidate
+Verified ADR-077/078 sources1597a68/4bf5a77 pass complete own39380895685/39383925992.
+Publication preserves their exact runtime tree; see the current sprint for evidence.
+
+## Installed private principal fence — ADR-078 verified
 
 FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: fresh private v6
 installation checks a closed principal/grant recipe through SQL scope identity.
@@ -11,7 +14,7 @@ eight regressions and healthy handoff corrections are retained. Final21 principa
 11 bootstrap,24 plan,1,502 unit/contract and123 browser executions pass with quality/
 security gates; complete own hosted acceptance remains pending.
 
-## Closed guardian/role consumers — local candidate
+## Closed guardian/role consumers — ADR-077 verified
 
 FR-ID-003/005/006 and BR-010: coordinate and recheck known guardian recipients
 before new consent-code consumption; preserve replay/withdrawal. Refuse closed

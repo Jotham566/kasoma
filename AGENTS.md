@@ -874,3 +874,14 @@ services are healthy on0045. Only Markdown closeout differs from exact9fece6a;
 no extra application/test/Make/workflow change is accepted by this publication.
 Main publishes this verified source; its new follow-up run requires separate status.
 Consumer1597a68 and principal4bf5a77 remain unmerged until their own acceptance.
+
+
+Complete main825d57e follow-up39387033557 passes1,502 unit/contract,642 integration,
+35 tooling,123 browsers and all required gates. Independent ADR-077 consumer1597a68
+complete39380895685 and ADR-078 principal4bf5a77 complete39383925992 also pass.
+The latter covers676 integration and123 browsers plus all gates; logical74/692
+restore614ms and actual stopped-source PG/MinIO74/692/one42,060-byte ciphertext331ms,
+fault/immutable/dormant guards/cleanup[], productionfalse. Promotion through732ed6a
+has only Markdown differences from accepted4bf5a77 runtime/test/Make/typing.
+Separate af02686 preparation CI39393189109 stays live, not accepted here. V7 work
+is separate; no actual closure, removal or erasure checkpoint is enabled.

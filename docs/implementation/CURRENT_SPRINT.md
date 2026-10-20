@@ -2067,3 +2067,39 @@ unmerged consumer/principal/installed-catalog work is preserved. Root Docker rem
 8/8healthy on0045 with execution disabled. This local integration changes Markdown
 only relative to the frozen v6 application/test/Make tree4bf5a77; preserve its remote
 head for own39383925992. Consumer1597a68/39380895685 remains separately live.
+
+
+## Consent consumers and principal-fence publication
+
+Main825d57e follow-up [39387033557](https://github.com/Jotham566/kasoma/actions/runs/39387033557)
+is SUCCESS:1,502 unit/contract,642 integration,35 tooling,123 full browser executions
+and every required engineering gate. Logical74/692 recovery588ms; actual stopped-source
+PG/MinIO74/692/one42,084-byte ciphertext316ms, fault/guards/cleanup[], productionfalse.
+The earlier portal/catalog acceptance remains confined to its own source.
+
+Separately, consent consumer1597a68192e9351f0bfbb14fcb44566536e3c851 passes complete
+own [39380895685](https://github.com/Jotham566/kasoma/actions/runs/39380895685):1,502
+unit/contract,654 integration,35 tooling,123 browsers and all required gates. Logical
+74/692 recovery569ms; stopped-source object recovery one42,084-byte ciphertext317ms.
+Principal fence4bf5a77347af725cdb05853392f73e14c6e68fef passes complete own
+[39383925992](https://github.com/Jotham566/kasoma/actions/runs/39383925992):1,502
+unit/contract,676 integration,35 tooling,123 browsers and all required gates. Logical
+74/692 recovery614ms; stopped-source one42,060-byte ciphertext331ms. Both verify
+fault/immutable/dormant guards and empty cleanup. Production RPO/RTO remainsfalse;
+this is not account-erasure checkpoint recovery. Only optional registry auth skips.
+
+Promotion through732ed6a integrates main825d57e with only Markdown differences from
+accepted runtime/test/Make/typing source4bf5a77. Earlier failures remain failed.
+V6 principal separation and closed guardian/role consumers are accepted engineering;
+no v7 catalog/preparation acceptance, actual closure/removal, full MVP or release
+approval is inferred. The separate af02686 preparation source runs its own39393189109
+and remains outside this publication. Normal review stays on0045 with erasure false.
+
+
+Publication checks pass: make lint openapi-check build containers migrate
+container-smoke security-containers security-source. Docker remains8/8healthy on0045;
+normal state eligibility/creation/execution arefalse and closed-user count iszero.
+No private capability installer, erasure action, cloud/model evaluation or cleanup
+runs against normal review. Only Markdown closeout follows the exact4bf5a77 tree.
+Merged branches will be deleted only after remote main SHA/ancestry and terminal own
+hosted proofs; the pending preparation branch is retained unchanged.
