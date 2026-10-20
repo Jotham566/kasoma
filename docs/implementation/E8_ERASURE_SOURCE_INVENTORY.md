@@ -1188,3 +1188,9 @@ source seal normalizes only its current plan version field, retaining all other 
 New exact erasure_plan_read and erasure_plan_expiry_batch audits use the approved access/
 system security class. Full private/public catalog/ACL integrity and actual execution
 remain separate required gates; these counts are not erasure clearance.
+
+
+The staged private v3 plan gate changes no public table/column or private control shape:
+public0045 remains74/545; fresh installed scope remains75/561. It changes only the
+trusted fresh private function recipe/readiness contract; existing installations are
+not upgraded or reused. Full source/hold/payload/ACL clearance remains pending.

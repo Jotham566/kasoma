@@ -23,6 +23,9 @@ from services.erasure_sources import PREDICATES
 SQL_SOURCE = Path(__file__).parents[1] / "apps/api/migrations/sql/erasure_capability_v1.sql"
 
 
+SQL_PLAN_SOURCE = SQL_SOURCE.parent / "erasure_plans_v3.sql"
+
+
 InstallPhase = Literal["SOURCE", "ROLES", "LOGINS", "CRYPTO", "DEFINITION", "CONTROL", "HANDOFF"]
 
 
@@ -206,7 +209,7 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
                 raise CapabilityInstallUnavailable()
             db.execute(text(ddl))
             db.execute(text(compile_plan_helpers(namespace, crypto)))
-            ddl = (SQL_SOURCE.parent / "erasure_plans_v2.sql").read_text()
+            ddl = SQL_PLAN_SOURCE.read_text()
             for marker, value in replacements.items():
                 ddl = ddl.replace(marker, value)
             if "__" in ddl:

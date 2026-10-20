@@ -6,7 +6,7 @@ from uuid import uuid4
 
 import pytest
 from psycopg import sql
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 
@@ -118,6 +118,7 @@ def issue(proof, capability, engine, session, case, *, nonce=None):
                     "Erasure plan snapshot required",
                     "Erasure authority unavailable",
                     "Erasure case unavailable",
+                    "Erasure source busy",
                     "Erasure source unavailable",
                 }
                 primary = getattr(getattr(error.orig, "diag", None), "message_primary", None)
@@ -443,3 +444,141 @@ def test_source_catalog_drift_cannot_issue_a_plan():
         assert rejected.value.orig.sqlstate == "42501"
         with proof_engine(proof) as db:
             assert db.scalar(text("SELECT count(*) FROM public.account_erasure_plans")) == 0
+
+
+def test_private_plan_gate_agrees_with_public_subject_and_precedes_case_row_locks():
+    from services.domain.data_requests import DataRequest
+    from tests.integration.test_account_processing import EXCLUSIVE
+
+    with planned_source() as (proof, capability, identity, authorizer, executor):
+        learner, admin, case = reviewed_case(identity)
+        with proof_engine(proof) as fence, fence.begin():
+            assert fence.scalar(EXCLUSIVE, {"subject": learner[2]}) is True
+            # The private call must reach the busy gate before trying this locked row.
+            # Reversed ordering fails with a lock timeout, not the fixed busy denial.
+            fence.execute(select(DataRequest.id).where(DataRequest.id == case).with_for_update())
+            with pytest.raises(DBAPIError, match="Erasure source busy"):
+                issue(proof, capability, authorizer, admin[1], case)
+            # A failed busy call must write no plan/audit.
+            with Session(identity.engine) as db, db.begin():
+                assert db.scalar(text("SELECT count(*) FROM account_erasure_plans")) == 0
+                assert (
+                    db.scalar(
+                        text(
+                            "SELECT count(*) FROM audit_log "
+                            "WHERE action='data_request.erasure_plan_read'"
+                        )
+                    )
+                    == 0
+                )
+        with authorizer.connect().execution_options(isolation_level="REPEATABLE READ") as db:
+            with db.begin():
+                db.execute(text("SET LOCAL statement_timeout='5000ms'"))
+                assert call_private_plan(db, proof, capability, admin[1], case).request_id == case
+                with proof_engine(proof) as observer:
+                    assert observer.scalar(EXCLUSIVE, {"subject": learner[2]}) is False
+                    assert observer.scalar(EXCLUSIVE, {"subject": uuid4()}) is True
+        with proof_engine(proof) as observer:
+            assert observer.scalar(EXCLUSIVE, {"subject": learner[2]}) is True
+
+
+def call_private_plan(db, proof, capability, session, case):
+    with proof_engine(proof) as binding:
+        nonce = binding.scalar(text("SELECT scope_nonce FROM account_erasure_state"))
+    return ErasurePlan.model_validate(
+        db.scalar(
+            text(
+                sql.SQL(
+                    "SELECT {}.issue_plan(:session,:case,CAST(:database AS oid),"
+                    "CAST(:namespace AS oid),:nonce,:correlation)"
+                )
+                .format(sql.Identifier(capability.namespace))
+                .as_string()
+            ),
+            {
+                "session": session,
+                "case": case,
+                "database": proof.database_oid,
+                "namespace": proof.namespace_oid,
+                "nonce": nonce,
+                "correlation": uuid4(),
+            },
+        )
+    )
+
+
+def test_private_plan_rejects_subject_row_changed_after_snapshot_before_gate():
+    from tests.integration.test_account_processing import EXCLUSIVE
+
+    with planned_source() as (proof, capability, identity, authorizer, executor):
+        learner, admin, case = reviewed_case(identity)
+        with pytest.raises(DBAPIError) as failed:
+            with authorizer.connect().execution_options(isolation_level="REPEATABLE READ") as db:
+                with db.begin():
+                    db.execute(text("SET LOCAL statement_timeout='5000ms'"))
+                    # Establish the same snapshot used by the private scope/auth checks.
+                    db.scalar(
+                        text(
+                            sql.SQL("SELECT {}.readiness()")
+                            .format(sql.Identifier(capability.namespace))
+                            .as_string()
+                        )
+                    )
+                    with proof_engine(proof) as fence, fence.begin():
+                        assert fence.scalar(EXCLUSIVE, {"subject": learner[2]}) is True
+                        # Ordinary disablement represents a changed subject row; closed_at
+                        # remains dormant and no erasure authority is manufactured here.
+                        fence.execute(
+                            text("UPDATE users SET status='DISABLED' WHERE id=:subject"),
+                            {"subject": learner[2]},
+                        )
+                    call_private_plan(db, proof, capability, admin[1], case)
+        assert failed.value.orig.sqlstate == "40001"
+        with proof_engine(proof) as db:
+            assert db.scalar(text("SELECT count(*) FROM account_erasure_plans")) == 0
+            assert (
+                db.scalar(
+                    text(
+                        "SELECT count(*) FROM audit_log "
+                        "WHERE action='data_request.erasure_plan_read'"
+                    )
+                )
+                == 0
+            )
+        # A fresh snapshot remains able to exercise this disabled learner's privacy case.
+        assert issue(proof, capability, authorizer, admin[1], case).request_id == case
+
+
+def test_http_refuses_legacy_private_recipe_before_plan_writes(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from apps.api.main import create_app
+    from scripts import erasure_capability
+    from services import erasure_plans
+    from services.erasure_config import ErasureSettings
+
+    # Rehearse the actual historical v2 recipe in a fresh disposable source only.
+    with monkeypatch.context() as legacy:
+        legacy.setattr(erasure_capability, "CAPABILITY_VERSION", "isolated-erasure-capability-v2")
+        legacy.setattr(
+            erasure_capability,
+            "SQL_PLAN_SOURCE",
+            erasure_capability.SQL_SOURCE.parent / "erasure_plans_v2.sql",
+        )
+        with planned_source() as (proof, capability, identity, authorizer, executor):
+            _, admin, case = reviewed_case(identity)
+            config = ErasureSettings(
+                enabled=True,
+                database_url=capability.executor_url,
+                authorizer_database_url=capability.authorizer_url,
+                capability_namespace=capability.namespace,
+            )
+            legacy.setattr(erasure_plans, "load_erasure", lambda: config)
+            with TestClient(create_app(proof.settings, identity)) as client:
+                response = client.get(
+                    f"/api/v1/admin/data-requests/{case}/erasure-plan",
+                    headers={"Authorization": "Bearer " + admin[0]},
+                )
+                assert response.status_code == 503
+            with proof_engine(proof) as db:
+                assert db.scalar(text("SELECT count(*) FROM account_erasure_plans")) == 0

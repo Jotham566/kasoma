@@ -9,6 +9,7 @@ from sqlalchemy import text
 from services.database import engine_for
 from services.domain.data_requests import DataRequest, DataRequestReview
 from services.domain.identity import UserRole
+from services.erasure_capability_contract import CAPABILITY_VERSION
 from services.erasure_config import load_erasure
 from services.erasure_contracts import ErasurePlan
 from services.identity import IdentityError, IdentityService
@@ -82,6 +83,15 @@ def plan(identity: IdentityService, token: str, target: UUID, correlation: UUID)
         with engine.connect().execution_options(isolation_level="REPEATABLE READ") as db:
             with db.begin():
                 db.execute(text("SET LOCAL statement_timeout='5000ms'"))
+                readiness = sql.SQL("SELECT {}.readiness()").format(
+                    sql.Identifier(cfg.capability_namespace)
+                )
+                if db.scalar(text(readiness.as_string())) != {
+                    "version": CAPABILITY_VERSION,
+                    "creation_enabled": False,
+                    "execution_enabled": False,
+                }:
+                    raise IdentityError("ERASURE_UNAVAILABLE", 503)
                 statement = sql.SQL(
                     "SELECT {}.issue_plan(:session,:case,CAST(:database AS oid),"
                     "CAST(:namespace AS oid),:nonce,:correlation)"
@@ -100,7 +110,7 @@ def plan(identity: IdentityService, token: str, target: UUID, correlation: UUID)
                     )
                 )
                 if result.request_id != target or result.authorization_available:
-                    # This staged v2 implementation cannot assert completed clearance.
+                    # This staged v3 implementation cannot assert completed clearance.
                     raise IdentityError("ERASURE_UNAVAILABLE", 503)
                 return result
     except IdentityError:

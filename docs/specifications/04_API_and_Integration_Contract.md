@@ -976,3 +976,10 @@ candidates and removing at most100 expired plan rows per transaction. It uses ac
 database time, accepts no cutoff/ID list and writes count-only security audit. Finite
 plan expiry does not complete a request, move a case deadline or remove learning data.
 Generated OpenAPI and TypeScript contracts include this GET and its closed response.
+
+
+The staged erasure-plan private transport additionally requires exact v3 readiness.
+Legacy private v1/v2 recipes return the same fixed503 unavailable boundary before plan
+writes. SQL derives the learner from the case, tries the installed-namespace shared
+processing gate before case locks and rejects a stale subject-row snapshot. Busy/stale
+calls cannot publish a plan/read audit. No authorization or erasure POST is enabled.

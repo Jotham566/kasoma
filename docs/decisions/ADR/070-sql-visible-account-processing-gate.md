@@ -114,3 +114,23 @@ Test actual PostgreSQL wait state under an exclusive subject gate and independen
 acquire the same case/flag row NOWAIT while the staff operation waits. Verify completion
 after release, unrelated subject independence, unchanged audit/retry authorization and
 normal flag/hold/channel regression. No custom sleep or trigger bypass establishes proof.
+
+
+## Private plan gate amendment —20 October2026
+
+The private SQL plan issuer also participates in the subject gate. After current
+private principal/source/ADMIN checks, read the immutable case subject, try the shared
+transaction gate using the independently verified installed public namespace OID,
+then lock/recheck case, review and subject user rows. Never derive the key from the
+private principal's pg_catalog search path or accept a subject/key parameter. Busy
+returns a fixed denial before any plan/audit insert; no queued private call keeps case
+locks ahead of closure. The shared gate remains held until the issuing transaction ends.
+
+Under REPEATABLE READ, acquiring a gate alone cannot refresh a snapshot established
+before concurrent closure. Lock the subject user row as well as the case/review; a row
+changed since that snapshot causes a safe serialization conflict before plan writes.
+This supplements the existing closed_at check and avoids issuing from an older identity
+version after an exclusive processing transaction commits. No new closure authority is
+introduced. Fresh capability v3 records the amended recipe; do not adopt or upgrade an
+existing v1/v2 installation. Public0045 and the v2 fingerprint algorithm remain unchanged.
+Verify actual private/public-key agreement, zero writes when busy, held-case contention before the call, unrelated subject independence and stale-snapshot refusal.

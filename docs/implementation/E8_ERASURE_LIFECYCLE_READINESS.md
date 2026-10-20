@@ -898,3 +898,43 @@ The exact disabled-bootstrap source passes hosted39359471826; its prepared main 
 7c621de is Markdown only beyond3f865e4 and waits for live main39364455335. New plan
 candidatef645a54 hosted39364234883 remains separate. Full approved ADR-061 erasure and
 external acceptance gates remain unfinished; this is prerequisite work only.
+
+
+## Private plan processing coordination — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: extend the fresh isolated
+recipe to private capability v3 under the ADR-070/072 amendments. After principal,
+source and current ADMIN authority checks, derive the subject from its immutable case,
+try its shared transaction gate using the pinned public namespace OID, then lock/recheck
+case/review/subject. Busy calls must write no plan or audit. The subject row lock must
+reject a REPEATABLE READ snapshot predating a committed subject change. The API verifies
+exact private readiness version before issuing; an older credential/namespace is not
+silently adopted. The v2 fingerprint algorithm/public0045 remain unchanged. Normal
+review remains dormant; there is still no authorization/job/closure/removal/completion.
+
+The added busy regression fails before correction (one failure/18 passes) with exact
+owned cleanup. Verification of the new v3 recipe and stale-snapshot regression is pending.
+Staff41c6eaa's unchanged runtime passes final29/19/16/6 owned checks and all123 local
+browsers; its separate hosted39365013049 remains live. Preserve all live remote heads.
+
+
+## Private v3 plan gate — local verification candidate
+
+`make format lint test-erasure-plans test-erasure-fresh-scope test-unit openapi-check
+build security security-source` passes:21 plan/compiler/API cases,11 fresh-source/SQL
+checks and1,490 unit/contract tests. Strengthened contention rerun passes all21 cases:
+an independently held case row cannot delay the fixed busy-gate denial; successful
+plans hold the correct public-subject gate until commit, unrelated subjects proceed,
+and a changed subject row after snapshot raises40001 before any plan/read audit.
+The API refuses an actual fresh historical v2 recipe without creating a plan. All
+recorded owned native source containers from both runs are independently absent.
+
+The initial added busy regression stays failed (one failure/18 passes before repair).
+An initial formatting-only run also failed two long test SQL literals; split literals
+and final format/lint/types pass. No broader scanner exclusion was introduced.
+Full local browser regression is running; full573 integration and exact-source hosted/
+image/service acceptance remain pending. Keep existing remote candidates fixed. Normal
+review remains dormant and healthy on0045. Full catalog/ACL/payload/hold/export clearance,
+exact richer preservation, permanent SQL write barriers, atomic authorization/closure,
+durable bounded removal/verification/retirement and quarantined erasure recovery remain
+required. No case completion or full MVP acceptance is inferred from these prerequisites.

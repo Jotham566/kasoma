@@ -1716,3 +1716,9 @@ Staff preservation/flag source coordination follows the ADR-070 staff addendum.
 Run `make test-erasure-identity-isolated` for the owned-source lock-order regressions;
 normal review remains dormant. Shared coordination does not enable account erasure or
 replace independent SQL/preservation/retention clearance.
+
+
+The fresh private plan recipe is v3: its source gate uses the installed public namespace,
+not the authorizer's pg_catalog search path. `make test-erasure-plans` checks busy/stale
+transactions. Existing v1/v2 namespaces are not adopted; mismatched readiness fails closed.
+This does not activate erasure or change ordinary0045 migrations/review.
