@@ -661,3 +661,23 @@ plan/authorization/closure with durable continuation remain next, not optional w
 Main2f3031b follow-up39355923737 remains live, and prepared coordinatione37cd55 is only
 Markdown beyond full hosted-verified94feeab. Do not move active remote heads. All eight
 normal review services are healthy on0045; retirement/erasure/short-text remain disabled.
+
+
+## Main coordination publication after parent follow-up
+
+Parent main2f3031b follow-up39355923737 is terminal SUCCESS. Accepted coordination
+94feeab/e37cd55 is now published through main40aa7d2dd4283012faa4f638e5dffacb56d8b8dd,
+with native image rebuild/migration/service smoke and HIGH/CRITICAL image checks passing.
+The merged local/remote coordination branch is removed after ancestry proof. All eight
+normal review services are healthy on0045, with false eligibility/creation/execution,
+no erasure principals and zero closed identities. Main follow-up39359937884 is confirmed
+live; preserve that head. This supersedes the preceding live2f3031b status only.
+
+Disabled-bootstrap3f865e4 hosted39359471826 stays live at its frozen remote head, with
+only Markdown following locally. Combined audit4db1cec hosted39355841664 remains separate
+and live. Neither parent acceptance proves new bootstrap/audit acceptance. The next work
+is the complete reviewed server plan and atomic authorization/closure with durable job
+continuation, full current authority, source/hold/payload/export checks and SQL enforcement.
+No empty-account/count-only substitute or manual mark-complete is permitted. Ordinary
+SQL-login possession alone must not impersonate a recently authenticated ADMIN caller;
+record any new internal command-authentication mechanism as a technical ADR before use.

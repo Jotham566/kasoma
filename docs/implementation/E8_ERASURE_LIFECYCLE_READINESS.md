@@ -772,3 +772,23 @@ and integrates accepted main2f3031b. Main follow-up39355923737 remains separatel
 do not move its head. Source ownership752cda1 and combined audit4db1cec have their own
 live runs; they cannot accept this bootstrap source. Full SQL server plan/authorization,
 permanent closure, durable continuation and complete ADR-061 fulfillment remain work.
+
+
+## Main coordination publication after parent follow-up
+
+Parent main2f3031b follow-up39355923737 is terminal SUCCESS. Accepted coordination
+94feeab/e37cd55 is now published through main40aa7d2dd4283012faa4f638e5dffacb56d8b8dd,
+with native image rebuild/migration/service smoke and HIGH/CRITICAL image checks passing.
+The merged local/remote coordination branch is removed after ancestry proof. All eight
+normal review services are healthy on0045, with false eligibility/creation/execution,
+no erasure principals and zero closed identities. Main follow-up39359937884 is confirmed
+live; preserve that head. This supersedes the preceding live2f3031b status only.
+
+Disabled-bootstrap3f865e4 hosted39359471826 stays live at its frozen remote head, with
+only Markdown following locally. Combined audit4db1cec hosted39355841664 remains separate
+and live. Neither parent acceptance proves new bootstrap/audit acceptance. The next work
+is the complete reviewed server plan and atomic authorization/closure with durable job
+continuation, full current authority, source/hold/payload/export checks and SQL enforcement.
+No empty-account/count-only substitute or manual mark-complete is permitted. Ordinary
+SQL-login possession alone must not impersonate a recently authenticated ADMIN caller;
+record any new internal command-authentication mechanism as a technical ADR before use.
