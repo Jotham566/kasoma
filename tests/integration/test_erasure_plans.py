@@ -549,7 +549,7 @@ def test_private_plan_rejects_subject_row_changed_after_snapshot_before_gate():
         assert issue(proof, capability, authorizer, admin[1], case).request_id == case
 
 
-@pytest.mark.parametrize("version", [2, 3])
+@pytest.mark.parametrize("version", [2, 3, 4])
 def test_http_refuses_legacy_private_recipe_before_plan_writes(monkeypatch, version):
     from fastapi.testclient import TestClient
 
@@ -558,7 +558,7 @@ def test_http_refuses_legacy_private_recipe_before_plan_writes(monkeypatch, vers
     from services import erasure_plans
     from services.erasure_config import ErasureSettings
 
-    # Rehearse the actual historical v2/v3 recipes in a fresh disposable source only.
+    # Rehearse the actual historical v2/v3/v4 recipes in a fresh disposable source only.
     with monkeypatch.context() as legacy:
         legacy.setattr(
             erasure_capability, "CAPABILITY_VERSION", f"isolated-erasure-capability-v{version}"
@@ -566,7 +566,7 @@ def test_http_refuses_legacy_private_recipe_before_plan_writes(monkeypatch, vers
         legacy.setattr(
             erasure_capability,
             "SQL_PLAN_SOURCE",
-            erasure_capability.SQL_SOURCE.parent / f"erasure_plans_v{version}.sql",
+            erasure_capability.SQL_SOURCE.parent / f"erasure_plans_v{min(version, 3)}.sql",
         )
         with planned_source() as (proof, capability, identity, authorizer, executor):
             _, admin, case = reviewed_case(identity)

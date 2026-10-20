@@ -6,12 +6,14 @@ from pydantic import ValidationError
 from services.erasure_catalog import (
     CATEGORIES,
     RAW_CATEGORIES,
+    ROOT,
     CatalogBaseline,
     CatalogUnavailable,
     load_baseline,
     migration_digest,
     retirement_owner,
 )
+from services.erasure_datum import DATUM_CODEC
 from services.export_retirement_install import owner_name
 
 
@@ -19,9 +21,12 @@ def test_versioned_baseline_is_closed_and_bound_to_approved_migrations():
     baseline = load_baseline()
     assert len(CATEGORIES) == 32 and len(RAW_CATEGORIES) == 9
     assert baseline.migration_sources_sha256 == migration_digest()
+    assert baseline.datum_codec == DATUM_CODEC
     assert baseline.categories["triggers"].count > 500
     assert baseline.categories["functions"].count > 100
     for mutation in (
+        {"profile": "public-preinstall-catalog-v1"},
+        {"datum_codec": "unknown"},
         {"revision": "0044"},
         {"postgres_major": 17},
         {"categories": {}},
@@ -38,6 +43,15 @@ def test_versioned_baseline_is_closed_and_bound_to_approved_migrations():
     changed["categories"]["roles"]["count"] = True
     with pytest.raises(ValidationError):
         CatalogBaseline.model_validate(changed)
+
+
+def test_portability_correction_preserves_all_frozen_metadata_and_approved_bodies():
+    import json
+
+    original = json.loads((ROOT / "services/erasure_catalog_v1.json").read_text())
+    current = json.loads((ROOT / "services/erasure_catalog_v2.json").read_text())
+    for field in ("categories", "raw_categories", "body_templates", "migration_sources_sha256"):
+        assert current[field] == original[field]
 
 
 @pytest.mark.parametrize("database", ["kasoma", "kasoma_erasure_test_" + "1" * 32, "other"])

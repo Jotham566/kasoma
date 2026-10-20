@@ -1,0 +1,68 @@
+# Portable catalog Datum verification
+
+Requirements: FR-ID-006, BR-010, NFR-SEC-002, NFR-MNT-001.
+Decision: [ADR-076](../decisions/ADR/076-portable-catalog-datum-octets.md).
+Status: local engineering verified; complete own hosted acceptance pending.
+
+## Reproduction and correction
+
+Catalog source854afaa hosted39371164944 fails42 integration cases/552 pass;
+LOGIN source4e5b2ab hosted39373055520 separately fails42/570. Both pass their
+1,495 unit/contract and35 tooling checks; neither completes the remaining hosted
+gates. Keep these failures and their original heads rather than rerunning them as
+an explanation or inferring acceptance from local tests.
+
+Two controlled fresh PostgreSQL160014 sources from the same approved immutable
+image index reproduce v1 acceptance on ARM64 and rejection on AMD64. Only raw
+constraints differ; all32 full metadata categories match. A known1000 literal
+emits232 versus-24 for the same eight-bit value. This agrees with PostgreSQL's
+[Datum serializer](https://github.com/postgres/postgres/blob/REL_16_STABLE/src/backend/nodes/outfuncs.c),
+which prints C char values as integers. Normalized octets now match on both variants.
+All existing full/native raw fingerprints, four approved code templates and ordinary
+migration hashes remain identical to the historical v1 artifact.
+
+The v2 artifact/private v5 recipe canonicalizes only constvalue octets in twelve
+closed raw-tree fields, within PostgreSQL. Bits/order/declared length and surrounding
+tree fields remain. Function bodies and all other metadata stay strict. Invalid
+octets cannot compare equal to approved data. No live trees or source rows leave
+the verifier, and no deparser runs until all nine raw categories match. The32 full
+categories remain required. Historical v1 artifacts/SQL remain; no old installation
+is adopted. This is a pre-install guard, not installed SQL/ACL/erasure clearance.
+
+## Local gates and limitations
+
+make update-erasure-catalog-baseline explicitly generates the artifact only from
+standard migrations in a fresh owned fake-only source. Independent reproduction and
+the actual guard pass. make erasure-catalog-portability checks both fixed immutable
+ARM64/AMD64 manifests on the supported M4, including changed-constant refusal before
+full deparsers, restored source, false activation, zero learners/jobs and exact cleanup.
+It accepts no caller image/URL/scope and does not install erasure authority. CI now
+runs native fresh reproduction/guard checks before its broader integration stage.
+
+An EXPLAIN/ANALYZE microcheck finds1,359.25 ms with JIT versus20.14 ms without, at
+the same estimated cost1,276,734.46. JIT is disabled locally for catalog inspection,
+then its prior setting is restored on success or savepoint rollback. The5-second
+statement and100-ms lock budgets are unchanged. Success/failure restoration tests
+pass. These measurements do not prove learner/provider/production performance.
+
+Local commands pass: make format/lint, erasure-catalog-baseline,
+erasure-catalog-portability, test-erasure-catalog (28), test-erasure-plans (23),
+test-erasure-fresh-scope (11), test-unit (1,502 unit/contract and35 tooling),
+openapi-check, build, security and security-source. Strict typing covers230 Python
+sources. The initial security scan flags five script assertions; explicit fixed-error
+checks replace them, with no scanner suppression. Paired/script/security rechecks pass.
+Generated contracts match; there is no public migration/dependency change. Standard
+clean migrations run in every new source; additive regression remains required in CI.
+
+make e2e passes123 executions:108 standard,12 short-text and three configuration.
+Twelve browser IDs and18 captured native/probe IDs are independently absent; normal
+native contexts also assert their exact cleanup. No older resources are swept.
+[Aggregate evidence](evidence/catalog-datum-controlled-evidence.json) records only
+technical counts/digests/variant identity and the controlled probe, never learner data.
+
+Own complete hosted642-integration/role/recovery/image/service verification remains
+pending. Normal review stays on0045, eight services healthy and erasure/retirement/
+ordinary short-text activation disabled. Guardian consumption, closed staff revocation,
+full installed-catalog/SQL/payload/preservation/export enforcement, durable removal
+and external-checkpoint quarantine recovery remain. Academic/privacy/provider/device
+and production release acceptance is not inferred from this correction.

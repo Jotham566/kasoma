@@ -1843,3 +1843,43 @@ run39373055520 and this linked-dispatch run stay live and unchanged; acceptance
 remains pending and neither may be promoted from local checks alone. Current main
 and healthy review preview contain only the separately accepted v3 plan source,
 not the failed catalog candidate. Activation stays false.
+
+
+## ADR-076 portable catalog octets — correction candidate
+
+FR-ID-006/BR-010 and NFR-SEC-002/MNT-001: controlled fresh ARM64/AMD64 instances from
+the same approved immutable PostgreSQL16.14/pgvector0.8.2 index reproduce v1 guard
+acceptance/refusal, with identical32 full categories and only raw constraints different.
+The same1000 literal serializes a byte as232 versus-24. Normalize only signed/unsigned
+constvalue octet notation inside the twelve closed pg_node_tree fields, entirely in
+SQL. Preserve every bit, its order, declared length and surrounding tree; leave live
+function bodies and all other metadata strict. Malformed/out-of-range bytes cannot
+match an approved baseline. Raw nine-stage refusal still precedes all full deparsers.
+
+The explicit new v2 artifact/private v5 recipe keeps historical v1 data/SQL and refuses
+old private versions without adoption. Reproduction preserves all frozen full/native
+raw fingerprints, code templates and ordinary migration hashes. Both controlled image
+variants now pass, including changed-constant refusal before full deparse and exact
+cleanup. The new prescribed M4-only make erasure-catalog-portability command uses
+only the two fixed approved immutable variants; CI adds native fresh baseline/guard
+preflight before broader tests. No existing image is retagged or resource adopted.
+
+Initial28 catalog,23 plan and11 bootstrap cases and paired portability pass. A measured
+catalog JIT overhead correction remains in final recheck:1359.25 versus20.14 ms in a
+fresh native microcheck, with existing budgets and success/failure restoration retained.
+No learner-load/production acceptance follows. Full own combined hosted, image/service/
+recovery and browser acceptance remain pending; old42-failure CI stays failed. No new
+public migration, erasure permission/activation, real data or full rights fulfillment.
+
+
+ADR-076 final local verification passes:28 catalog,23 plan and11 bootstrap cases,
+1,502 unit/contract,35 tooling and123 browsers, plus lint/types(230 sources),
+contracts/build and dependency/source security. Five new-script assertion findings
+are corrected with explicit fixed-error checks, without scanner suppression. Both
+approved immutable image variants pass metadata and pre-deparser changed-constant
+checks; historical fingerprints/code templates remain unchanged. Twelve browser and
+18 captured native/probe IDs are independently absent. See E8_CATALOG_DATUM_VERIFICATION.md
+and its aggregate evidence. Original catalog39371164944(42 failed/552 pass) and
+LOGIN39373055520(42 failed/570 pass) remain failed; linked39375073567 is separate.
+Only own full combined hosted verification can accept the correction. No erasure
+activation, full SQL/rights fulfillment or external release acceptance is inferred.

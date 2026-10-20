@@ -758,7 +758,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests; [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending; ADR-075 dispatch guards pending own hosted acceptance |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance |
-| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance |
+| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -807,12 +807,12 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-REL-002 | Isolated synthetic logical recovery with exclusive source-role/OID cleanup (ADR-042) | [Recovery evidence](E9_RECOVERY_VERIFICATION.md); [ownership correction](E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md) | Full hosted39299684285 at adf4328 verifies69 tables/686 rows in493ms and preserves unowned/replaced roles; object-storage and production PITR/RPO/RTO remain pending |
 | NFR-SCL-001 | Synthetic 2,000-registration/500-active/50-concurrent objective and mixed-history profiles | [Load evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) | Both native 6b06c53 7,000-request profiles pass; mixed final totals 27,500 grades/5,500 sessions, zero errors, successful cleanup. Complete hosted regression passes; daily soak/deployed/provider scale acceptance pending |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
-| NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
+| NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests; [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
 | NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, assessment, diagnostic, progress/history and flag/triage axe/keyboard checks; remaining journey matrix pending |
 | NFR-BW-001 | Cold-context first-question encoded transfer check, including headers/prefetch and no media exclusions for the synthetic fixture | Existing assessment E2E journey; [browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md) | Synthetic cold transfer verified across three engines: 191389–194127 bytes; media/mobile/latency release checks remain |
 | NFR-COMP-001 | Full journey harness for isolated Chromium/Firefox/WebKit runs | [Browser matrix evidence](E9_BROWSER_COVERAGE_VERIFICATION.md), [narrow viewport regression](E9_MOBILE_REFLOW_VERIFICATION.md) | 66 browser executions, including 320-pixel touch journey, verified in CI 37925290651; branded/current-previous/physical mobile acceptance pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs; API response-start and synthetic model-call timing | Unit redaction and real worker propagation tests; [model telemetry evidence](E8_MODEL_TELEMETRY_VERIFICATION.md) | Minimized timing verified through hosted CI 37914864557; durable aggregation/domain tracing remains partial |
-| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | Full hosted synthetic regression evidence recorded per slice; release acceptance remains separately gated |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E; [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) | Full hosted synthetic regression evidence recorded per slice; release acceptance remains separately gated |
 | NFR-LOC-001 | English shell; UTC storage/wire; progress/history dates in Africa/Kampala | Configuration and browser history checks | Progress/history presentation implemented; wider localization review pending |
 
 FR-GRD-003/004/005 / FR-MST-001 / FR-ID-006: the 10 October
@@ -2994,3 +2994,43 @@ run39373055520 and this linked-dispatch run stay live and unchanged; acceptance
 remains pending and neither may be promoted from local checks alone. Current main
 and healthy review preview contain only the separately accepted v3 plan source,
 not the failed catalog candidate. Activation stays false.
+
+
+## ADR-076 portable catalog octets — correction candidate
+
+FR-ID-006/BR-010 and NFR-SEC-002/MNT-001: controlled fresh ARM64/AMD64 instances from
+the same approved immutable PostgreSQL16.14/pgvector0.8.2 index reproduce v1 guard
+acceptance/refusal, with identical32 full categories and only raw constraints different.
+The same1000 literal serializes a byte as232 versus-24. Normalize only signed/unsigned
+constvalue octet notation inside the twelve closed pg_node_tree fields, entirely in
+SQL. Preserve every bit, its order, declared length and surrounding tree; leave live
+function bodies and all other metadata strict. Malformed/out-of-range bytes cannot
+match an approved baseline. Raw nine-stage refusal still precedes all full deparsers.
+
+The explicit new v2 artifact/private v5 recipe keeps historical v1 data/SQL and refuses
+old private versions without adoption. Reproduction preserves all frozen full/native
+raw fingerprints, code templates and ordinary migration hashes. Both controlled image
+variants now pass, including changed-constant refusal before full deparse and exact
+cleanup. The new prescribed M4-only make erasure-catalog-portability command uses
+only the two fixed approved immutable variants; CI adds native fresh baseline/guard
+preflight before broader tests. No existing image is retagged or resource adopted.
+
+Initial28 catalog,23 plan and11 bootstrap cases and paired portability pass. A measured
+catalog JIT overhead correction remains in final recheck:1359.25 versus20.14 ms in a
+fresh native microcheck, with existing budgets and success/failure restoration retained.
+No learner-load/production acceptance follows. Full own combined hosted, image/service/
+recovery and browser acceptance remain pending; old42-failure CI stays failed. No new
+public migration, erasure permission/activation, real data or full rights fulfillment.
+
+
+ADR-076 final local verification passes:28 catalog,23 plan and11 bootstrap cases,
+1,502 unit/contract,35 tooling and123 browsers, plus lint/types(230 sources),
+contracts/build and dependency/source security. Five new-script assertion findings
+are corrected with explicit fixed-error checks, without scanner suppression. Both
+approved immutable image variants pass metadata and pre-deparser changed-constant
+checks; historical fingerprints/code templates remain unchanged. Twelve browser and
+18 captured native/probe IDs are independently absent. See E8_CATALOG_DATUM_VERIFICATION.md
+and its aggregate evidence. Original catalog39371164944(42 failed/552 pass) and
+LOGIN39373055520(42 failed/570 pass) remain failed; linked39375073567 is separate.
+Only own full combined hosted verification can accept the correction. No erasure
+activation, full SQL/rights fulfillment or external release acceptance is inferred.

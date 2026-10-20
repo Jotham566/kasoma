@@ -1760,3 +1760,16 @@ make test-erasure-linked-dispatch verifies ADR-075's bounded one/two-subject gat
 protocol and owned fake-only LINK/GUARDIAN races. It cannot target normal review.
 Exact pending cleanup respects closure/consumption and keeps original clocks. This
 is not a closure/erasure command or proof of SQL executor acceptance. No new env key.
+
+
+ADR-076: make erasure-catalog-baseline reproduces the v2 artifact in a fresh fake-only
+source and checks the actual pre-install guard. CI runs it early. The explicit update
+command writes only from a newly migrated source; startup never learns a baseline.
+On the supported M4 Mac, make erasure-catalog-portability checks fixed ARM64/AMD64
+manifest variants of the approved image index, fetching immutable variants only when
+missing. It uses owned temporary databases, checks changed-constant refusal before
+deparsers and independently confirms exact cleanup. It accepts no URL/image/scope
+selector and never installs erasure authority. Existing services/images/volumes stay.
+Linux CI proves its native variant separately; the paired command refuses unsupported
+hosts instead of declaring an unexecuted matrix successful. Private v5 replaces no
+existing installation. Full installed SQL/ACL and erasure gates remain.

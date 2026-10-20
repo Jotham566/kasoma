@@ -1201,3 +1201,10 @@ ADR-073's staged pre-install fence changes no public/private data schema:0045 re
 engineering metadata, not an owned preservation table or full erasure clearance.
 The current fresh capability identity becomes v4; v3 gate SQL/HMAC-v2/public0045 identities
 remain separately versioned. Existing namespaces/roles are never adopted.
+
+
+ADR-076 changes pre-install representation provenance only: public0045 remains74
+tables/545 columns and installed private scope remains75/561. The v2 catalog artifact
+records unsigned-octet raw-tree serialization; private v5 keeps v3 plan SQL. No public
+source, disposition, ownership, payload/hold permission or retention clock changes.
+The historical v1 artifact remains recorded; no existing source is adopted.

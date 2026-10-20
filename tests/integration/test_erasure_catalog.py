@@ -24,6 +24,7 @@ def test_body_only_drift_must_be_refused_before_private_bootstrap():
         engine = engine_for(proof.settings)
         try:
             with engine.begin() as db:
+                db.execute(text("SET LOCAL jit=on"))
                 check_preinstall_catalog(db)
                 db.execute(
                     text("""
@@ -51,6 +52,7 @@ def test_body_only_drift_must_be_refused_before_private_bootstrap():
                     assert str(denied.value) == "ERASURE_CATALOG_UNAVAILABLE"
                     assert stages == ["RAW"]
                     assert db.scalar(text("SELECT current_schema()")) == "public"
+                    assert db.scalar(text("SHOW jit")) == "on"
                 finally:
                     event.remove(engine, "before_cursor_execute", observed)
             with pytest.raises(CapabilityInstallUnavailable) as failure:
@@ -90,6 +92,7 @@ def test_fresh_metadata_matches_after_row_writes_and_restores_connection_setting
                     db.execute(text("SET LOCAL timezone='Pacific/Auckland'"))
                     db.execute(text("SET LOCAL statement_timeout='7000ms'"))
                     db.execute(text("SET LOCAL lock_timeout='900ms'"))
+                    db.execute(text("SET LOCAL jit=on"))
                     before = tuple(
                         db.scalar(text("SHOW " + setting))
                         for setting in (
@@ -97,6 +100,7 @@ def test_fresh_metadata_matches_after_row_writes_and_restores_connection_setting
                             "timezone",
                             "statement_timeout",
                             "lock_timeout",
+                            "jit",
                         )
                     )
                     assert observe_catalog(db) == expected
@@ -115,6 +119,7 @@ def test_fresh_metadata_matches_after_row_writes_and_restores_connection_setting
                             "timezone",
                             "statement_timeout",
                             "lock_timeout",
+                            "jit",
                         )
                     )
                     assert before == after

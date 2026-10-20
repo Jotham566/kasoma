@@ -11,9 +11,11 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import Connection, text
 from sqlalchemy.exc import DBAPIError
 
+from services.erasure_datum import DATUM_PATTERN, datum_sql
+
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_SQL = ROOT / "services/erasure_catalog.sql"
-RAW_SQL = ROOT / "services/erasure_catalog_raw.sql"
+RAW_SQL = ROOT / "services/erasure_catalog_raw_v2.sql"
 RAW_CATEGORIES = frozenset(
     {
         "functions",
@@ -27,7 +29,23 @@ RAW_CATEGORIES = frozenset(
         "relations",
     }
 )
-BASELINE_PATH = ROOT / "services/erasure_catalog_v1.json"
+BASELINE_PATH = ROOT / "services/erasure_catalog_v2.json"
+NODE_FIELDS = MappingProxyType(
+    {
+        "ARG_DEFAULTS": ("p", "proargdefaults"),
+        "TYPE_DEFAULT": ("t", "typdefaultbin"),
+        "COLUMN_DEFAULT": ("d", "adbin"),
+        "CONSTRAINT": ("c", "conbin"),
+        "INDEX_EXPRESSION": ("i", "indexprs"),
+        "INDEX_PREDICATE": ("i", "indpred"),
+        "TRIGGER": ("t", "tgqual"),
+        "POLICY_QUAL": ("p", "polqual"),
+        "POLICY_CHECK": ("p", "polwithcheck"),
+        "RULE_QUAL": ("w", "ev_qual"),
+        "RULE_ACTION": ("w", "ev_action"),
+        "PARTITION": ("c", "relpartbound"),
+    }
+)
 DYNAMIC_BODIES = MappingProxyType(
     {
         "export_retirement_owner_safe": "body_owner",
@@ -65,7 +83,8 @@ class CatalogDigest(BaseModel):
 
 class CatalogBaseline(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
-    profile: Literal["public-preinstall-catalog-v1"] = "public-preinstall-catalog-v1"
+    profile: Literal["public-preinstall-catalog-v2"] = "public-preinstall-catalog-v2"
+    datum_codec: Literal["unsigned-octets-v1"] = "unsigned-octets-v1"
     revision: Literal["0045"] = "0045"
     postgres_major: Literal[16] = 16
     migration_sources_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
@@ -120,6 +139,13 @@ def catalog_queries() -> tuple[str, str]:
     ).as_string()
     full = CATALOG_SQL.read_text()
     raw = RAW_SQL.read_text()
+    for name, field in NODE_FIELDS.items():
+        marker = "__NODE_" + name + "__"
+        if raw.count(marker) != 1:
+            raise CatalogUnavailable()
+        raw = raw.replace(marker, datum_sql(sql.Identifier(*field)))
+    if "__NODE_" in raw:
+        raise CatalogUnavailable()
     if full.count("__DYNAMIC_BODY__") != 1 or raw.count("__DYNAMIC_BODY__") != 1:
         raise CatalogUnavailable()
     prefix = full.split(", acl_objects AS (", 1)
@@ -173,17 +199,20 @@ def _snapshot(
     previous_zone = db.scalar(text("SHOW timezone"))
     previous_statement = db.scalar(text("SHOW statement_timeout"))
     previous_lock = db.scalar(text("SHOW lock_timeout"))
+    previous_jit = db.scalar(text("SHOW jit"))
     db.execute(text("SET LOCAL statement_timeout='5000ms'"))
     db.execute(text("SET LOCAL lock_timeout='100ms'"))
     db.execute(text("SET LOCAL search_path=pg_catalog"))
     db.execute(text("SET LOCAL timezone='UTC'"))
+    # Small catalog rows do not justify JIT compilation of the scalar codec plans.
+    db.execute(text("SET LOCAL jit=off"))
     if templates.keys() != DYNAMIC_BODIES.keys():
         raise CatalogUnavailable()
     database = db.scalar(text("SELECT current_database()"))
     if not isinstance(database, str):
         raise CatalogUnavailable()
     owner = retirement_owner(database)
-    parameters = {"retirement_owner": owner} | {
+    parameters = {"retirement_owner": owner, "datum_pattern": DATUM_PATTERN} | {
         parameter: templates[name].replace(OWNER_PLACEHOLDER, owner)
         for name, parameter in DYNAMIC_BODIES.items()
     }
@@ -210,6 +239,7 @@ def _snapshot(
         {"timeout": previous_statement},
     )
     db.execute(text("SELECT set_config('lock_timeout',:timeout,true)"), {"timeout": previous_lock})
+    db.execute(text("SELECT set_config('jit',:jit,true)"), {"jit": previous_jit})
     return result
 
 

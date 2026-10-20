@@ -1005,3 +1005,9 @@ and original recipient binding while protecting both subjects; no actor/recipien
 UUID, lock or SQL selector is accepted from the client. Exact failure cleanup leaves
 closed-actor source and consumed evidence intact. Response DTOs and rate limits stay
 unchanged. Full erasure and DELETE fulfillment remain disabled/unimplemented.
+
+
+ADR-076 fresh private capability v5 records the portable raw-octet pre-install fence.
+The current private readiness contract refuses older v2/v3/v4 identities before plan
+writes; it does not adopt or upgrade them. Public DTOs,0045 structure and disabled
+execution behavior remain. Catalog portability is not full SQL/erasure clearance.

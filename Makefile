@@ -50,7 +50,7 @@ test-erasure-dispatch:
 	$(UV) pytest tests/integration/test_short_text_processing.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: test-erasure-catalog
 test-erasure-catalog:
-	$(UV) pytest tests/contract/test_erasure_catalog_contract.py tests/integration/test_erasure_catalog.py --allow-hosts=localhost,127.0.0.1,::1
+	$(UV) pytest tests/contract/test_erasure_catalog_contract.py tests/integration/test_erasure_catalog.py tests/integration/test_erasure_datum.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: test-erasure-credentials
 test-erasure-credentials:
 	$(UV) pytest tests/integration/test_closed_credentials.py --allow-hosts=localhost,127.0.0.1,::1
@@ -60,6 +60,9 @@ test-erasure-linked-dispatch:
 .PHONY: erasure-catalog-baseline update-erasure-catalog-baseline
 erasure-catalog-baseline:
 	$(UV) python -m scripts.erasure_catalog_baseline
+.PHONY: erasure-catalog-portability
+erasure-catalog-portability:
+	$(UV) python -m scripts.erasure_catalog_portability
 update-erasure-catalog-baseline:
 	$(UV) python -m scripts.erasure_catalog_baseline --write
 .PHONY: test-erasure-staff-processing
@@ -126,7 +129,7 @@ build:
 containers:
 	docker compose --profile application build
 security:
-	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py scripts/e2e_failures.py scripts/browser_database.py scripts/erasure_identity_check.py scripts/erasure_scope.py scripts/erasure_capability.py scripts/erasure_plan_sql.py scripts/erasure_catalog_baseline.py -q
+	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py scripts/e2e_failures.py scripts/browser_database.py scripts/erasure_identity_check.py scripts/erasure_scope.py scripts/erasure_capability.py scripts/erasure_plan_sql.py scripts/erasure_catalog_baseline.py scripts/erasure_catalog_portability.py -q
 	$(UV) python scripts/check_secrets.py
 	$(UV) pip-audit --local
 	$(PNPM) audit --audit-level=high

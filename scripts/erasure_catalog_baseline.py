@@ -18,6 +18,7 @@ from services.erasure_catalog import (
     CatalogUnavailable,
     _observe_catalog,
     baseline_text,
+    check_preinstall_catalog,
     load_baseline,
     retirement_owner,
 )
@@ -67,6 +68,9 @@ def reproduce(*, write: bool = False) -> None:
                 BASELINE_PATH.write_text(baseline_text(baseline))
             elif baseline != load_baseline():
                 raise CatalogUnavailable()
+            else:
+                with engine.begin() as db:
+                    check_preinstall_catalog(db)
             print(
                 f"Fresh catalog reproduced:{len(CATEGORIES)} metadata/"
                 f"{len(RAW_CATEGORIES)} raw safety categories; "

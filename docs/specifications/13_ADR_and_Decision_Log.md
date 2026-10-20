@@ -548,3 +548,13 @@ actor and known recipient with at most two shared subject gates on one owned con
 Recheck current recent authority and exact binding before LINK/GUARDIAN dispatch, without
 opposing account HMAC locks. Exact pending cleanup respects committed closure and consumed
 evidence. No new data attribution, retention, erasure activation or public DTO.
+
+
+## ADR-076: Portable raw catalog Datum octets
+
+[Record](../decisions/ADR/076-portable-catalog-datum-octets.md): preserve the exact
+eight-bit values of signed/unsigned raw Datum serialization on the approved ARM64/
+AMD64 image variants. Keep all surrounding trees, live code bodies and32 full
+metadata categories strict. Versioned v2 artifact/private v5 provenance, independent
+fresh reproduction and raw-before-deparser denials remain required. No erasure
+activation, live-source baseline learning or new data permission.

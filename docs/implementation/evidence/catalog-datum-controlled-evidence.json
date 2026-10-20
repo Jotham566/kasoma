@@ -1,0 +1,85 @@
+{
+  "profile": "catalog-datum-controlled-evidence-v1",
+  "postgres_version_num": 160014,
+  "image_index": "sha256:00ba258a66dac104fd5171074a0084462a64a1369d8513f3d0a634e2f24d15bc",
+  "before": [
+    {
+      "guard_passed": true,
+      "arch": "arm64",
+      "raw_differences": [],
+      "full_differences": [],
+      "probe_octets": [
+        [
+          232,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "exact_container_absent": true
+    },
+    {
+      "guard_passed": false,
+      "arch": "amd64",
+      "raw_differences": [
+        "constraints"
+      ],
+      "full_differences": [],
+      "probe_octets": [
+        [
+          -24,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "exact_container_absent": true
+    }
+  ],
+  "after": [
+    {
+      "architecture": "arm64",
+      "catalog_match": true,
+      "changed_constant_refused_before_deparse": true,
+      "exact_container_absent": true,
+      "full_categories": 32,
+      "image": "sha256:b759abdeb144e561a4dbfe9863b5ac58cdd3fb6350cee7e68035baffdbca9693",
+      "raw_categories": 9,
+      "server_version_num": 160014
+    },
+    {
+      "architecture": "amd64",
+      "catalog_match": true,
+      "changed_constant_refused_before_deparse": true,
+      "exact_container_absent": true,
+      "full_categories": 32,
+      "image": "sha256:6d5c7b5aa3eb2098a2365f6d8cff723fded9e0e680757908b0b144b47f9c069c",
+      "raw_categories": 9,
+      "server_version_num": 160014
+    }
+  ],
+  "local_checks": {
+    "unit_contract": 1502,
+    "tooling": 35,
+    "catalog": 28,
+    "plans": 23,
+    "bootstrap": 11,
+    "browser": 123,
+    "browser_exact_ids_absent": 12,
+    "captured_native_exact_ids_absent": 18
+  },
+  "catalog_jit_microcheck_ms": {
+    "on": 1359.25,
+    "off": 20.14
+  },
+  "activation_enabled": false,
+  "complete_hosted_acceptance": false
+}
