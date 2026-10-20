@@ -1702,3 +1702,22 @@ nine captured native IDs are independently absent; final native contexts also as
 exact cleanup. See E8_CLOSED_CREDENTIAL_VERIFICATION.md for retained failures, fixture
 limits and the pending LINK/GUARDIAN dispatch race. Full own hosted/image/service/
 recovery acceptance remains pending; no erasure or DELETE completion is enabled.
+
+
+## Frozen closed LOGIN candidate
+
+Exact source 4e5b2abc0b11551acd5cab6a163e17ec2edc39fc is pushed on
+codex/erasure-credential-guards for its own live full hosted 39373055520. Keep that
+remote head fixed; only Markdown closeout follows its runtime/test/Make/workflow tree.
+All local engineering and 123 browser checks pass as recorded above; full hosted
+612-integration/image/service/recovery acceptance remains pending. Parent catalog
+854afaa/39371164944 and main 0053a7b/39371028143 are separately live, not accepted
+by this push. The prepared verified v3 publication remains at 7c729f2.
+
+Normal Docker remains eight healthy services on0045 with false activation, no
+erasure principals and zero closed identities. Host-native Ollama connectivity
+passes without inference. LINK/GUARDIAN post-authentication dispatch races are the
+next credential slice, before full installed SQL/ACL/payload/preservation/export
+clearance and real atomic closure, bounded removal and checkpoint recovery. No
+account-erasure, physical-device or external academic/privacy/provider/release
+acceptance is inferred.
