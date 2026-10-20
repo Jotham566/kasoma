@@ -1981,3 +1981,146 @@ execution. Full reviewed plan/authorization/closure, preservation/removal/retire
 closed-account support and genuine release gates remain. Source audit4db1cec and disabled
 bootstrap3f865e4 are separate pending candidates with fixed live remote heads. Remove
 only the merged coordination branch after successful main publication and ancestry proof.
+
+
+## ADR-061 source ownership reader — local verification
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: add a closed74-source
+relational selection registry and bidirectional ownership-edge checks for the future
+versioned plan. K/shared opaque T sources have no account predicate; owned ephemeral
+plans remain case-scoped. Unbound OTPs are never attributed by lookup hash. Return
+only counts and a keyed streaming fingerprint, with PostgreSQL row digests, ordered
+primary keys and xmin versions under a read-only repeatable-read snapshot. Bind the
+fold to subject/database/schema; never transfer source bodies, credentials or key lists.
+No LIMIT truncates the reader; test above10,000 owned events.
+
+This reference is explicitly NOT semantic clearance or an issued plan. Payload/version
+validation, staff/audit classification, exact holds, lifecycle self-write reconciliation,
+independent SQL privileges/scope and server authorization/closure remain required.
+No route, executor, role, deletion, identity closure or completion is added. A malicious
+relation is tested only in a separately created disposable mirror; original guards
+and rows are never disabled or rewritten.
+
+Preserve frozen parentb4b20f1 hosted39350745638 and coordination94feeab hosted39352281782
+while this separate branch develops. Add a third closed fresh-source cohort for the
+reader/corruption cases, keeping existing resource/supervision caps and no caller target.
+Initial format failures and a registry check incorrectly treating every T disposition
+as shared are corrected; owned temporary plans are explicit. The first mirror fixture
+failed its existing revision-session topic constraint; correct the fixture, preserving
+all original guards. Earlier failed runs remain failed.
+
+Final local quality/contracts/build,1,476 unit/contract,110 resource controls and all
+three owned cohorts pass:29 identity/lifecycle/preview,19 fake dispatch and nine reader
+checks (five contract/four native). Tests include10,001 owned events without truncation,
+unrelated learner stability, changed private key, immutable counts, cross-owner inputs,
+revoked staff roles and original learner reporting after independent staff triage.
+The reader always returns semantic_clearance=false. It has no serving consumer.
+
+The first security run reports five B608 findings in SQL templates interpolating only
+fixed registry constants. Review UUID parameter binding and psycopg identifier quoting;
+add five line-specific B608 exceptions, not a global exclusion. Executable AST equality
+is checked before/after annotations. Final format/lint/types/contracts/build and security/
+source/dependency checks pass. All nine recorded owned source containers are independently
+absent; cleanup reports are empty. The initial independent absence probe falsely rejects
+Docker's lowercase no-such-object message; the corrected case-insensitive probe verifies
+all nine without removing anything. Full exact-source hosted acceptance remains pending.
+No migration, route, dependency, provider, retention or new architectural decision is
+introduced. Normal review stays disabled on0044, with eight healthy services.
+
+
+## Frozen source ownership candidate
+
+Read-only implementation/test/Make source752cda1469f4d824182c00f65afae1367b4bc273
+is pushed for complete hosted [39354774163](https://github.com/Jotham566/kasoma/actions/runs/39354774163),
+confirmed in progress. Preserve that remote head. Only Markdown closeout follows it.
+This adds no semantic clearance, issued plan, SQL capability or account closure.
+Parentb4b20f1 hosted39350745638 and coordination94feeab hosted39352281782 remain
+independently in progress; neither is accepted from these local reader checks.
+Main remains72c9c17 with a healthy eight-service review preview on0044. Next is the
+independently owned SQL capability and complete server plan/authorization/closure;
+full payload/hold/export-drain checks must precede any actual closure or removal.
+
+
+## ADR-061 exact audit-source gate — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: the native unknown-action
+regression fails before the change (one failure/nine passes): another actor's audit
+against an owned case is absent from the action-filtered fingerprint. Expand the private
+audit scope through frozen typed source UUID identities, including explicit0039 receipt
+identity, without matching composite retry keys or opaque hashes. Unknown actions must
+change the source version and fail the separate exact classification gate.
+
+Implement the33 explicitly approved ADR-061 action rules and0043/0044 addendum, with
+exact owner/staff actor and case/hold/flag/grading-review target bindings and current
+EXPORT/DELETE case-kind constraints. Unknown/missing/ambiguous associations or malformed
+clocks fail closed; learner original reports remain distinct from independent triage.
+No prefix classification, fabricated deadline, SQL role, route, erasure authority or
+new retention/architecture decision is introduced. Root/deadline, source/payload integrity,
+holds and independent SQL authorization still require their own complete checks.
+Initial type errors are corrected; final local and own full hosted verification remain
+pending. Preserve all frozen live verification heads and normal review disablement.
+
+
+## Exact audit gate local verification
+
+Final format/lint/types and1,483 unit/contract pass; three isolated cohorts pass29
+identity/lifecycle/preview,19 fake dispatch and16 source checks (six contract/ten native).
+Unknown audits against both an owned case and an owned attempt enter the fingerprint
+and require review. No composite retry key is used as a target identity. Original
+learner flags followed by independent triage classify correctly. Wrong targets, wrong
+EXPORT/DELETE kind, missing actors, subject staff reads and future clocks fail closed.
+All nine recorded sources, including the failed before-regression run, are independently
+absent with empty cleanup. OpenAPI/build and dependency/source/secret security pass;
+initial type failures remain failed. No new scanner exception or architecture change.
+
+Parentb4b20f1 complete hosted39350745638 is SUCCESS for dormant0045 only (1,445 unit,
+522 integration,123 browser executions and all mandatory gates). Coordination94feeab
+and read-only predecessor752cda1 still require their own outcomes. Even a green
+predecessor run cannot accept this audit correction; promote the combined reader/audit
+source only after its own full hosted acceptance. No source classifier establishes
+payload, exact-hold, deadline, SQL-scope or closure/removal clearance. The next complete
+ADR-061 slice remains independently restricted SQL plan/authorization/closure, not a
+count-only or empty-account erasure substitute. Keep normal review execution disabled.
+
+
+## Frozen combined audit candidate and accepted parent publication
+
+Runtime/test/Make/workflow source4db1cec65674419bab9a81eeaf4e5da0262f927c is frozen
+for complete hosted [39355841664](https://github.com/Jotham566/kasoma/actions/runs/39355841664),
+confirmed in progress. Preserve its remote head; only Markdown closeout follows it.
+Predecessor752cda1 hosted39354774163 is separate, and cannot accept the correction for
+unknown audits demonstrated by the failing before-regression. Source/hold/payload/SQL
+capability and account closure/removal/DELETE completion remain unaccepted.
+
+Dormant0045 parentb4b20f1 is accepted by complete hosted39350745638 and published
+through main2f3031b4100cbaa3856a1561260d62e9451166a2 after native images/migration/
+service smoke and HIGH/CRITICAL scans pass. Its merged local/remote branch is removed
+with ancestry proof. Main follow-up39355923737 is confirmed live; do not move main while
+that run needs its fixed head. Coordination94feeab hosted39352281782 is still separate
+and live. Normal review has eight healthy services on0045, scope/creation/executionfalse,
+no erasure owner/executor and zero closed identities. No data/cache/volume sweep.
+
+
+## Accepted read-only source and audit policy — hosted39355841664
+
+Complete hosted [39355841664](https://github.com/Jotham566/kasoma/actions/runs/39355841664)
+is SUCCESS at4db1cec65674419bab9a81eeaf4e5da0262f927c:1,483 unit/contract,
+541 integration,35 tooling,29 identity/lifecycle,19 fake dispatch,16 owned-source
+checks and123 full browser executions. All setup/migration/seed, focused/restricted
+login, quality/contracts/build, dependency/source/image security and service smoke gates
+pass. Logical recovery verifies74 tables/692 rows in613ms. Actual stopped-source PG/
+MinIO recovery verifies74/692/one42,084-byte ciphertext in325ms, with fault/immutable/
+dormant checks and empty cleanup; productionRPO/RTO remains false.
+
+Accept the closed ownership reader and exact33-action audit classifier together, including
+rejection of unknown other-actor audit on an owned case/attempt. Predecessor752cda1's
+success does not cure its known audit omission; this combined corrected source does.
+Source hashes/counts remain read-only with semantic_clearance=false. They are not full
+payload/retention/hold/private-catalog clearance, authorization, closure or fulfillment.
+The initial unknown-audit regression remains a recorded failure before correction.
+
+Main40aa7d2 follow-up39359937884 is terminal SUCCESS. This merge preserves both
+Markdown evidence histories; its executable/test/Make/workflow tree is identical to
+hosted-verified4db1cec. New bootstrap3f865e4 and planf645a54 have separate frozen live
+heads39359471826/39364234883; do not move or infer acceptance for them. Normal review
+remains dormant; remove only ancestry-proven merged source/audit branches after publication.

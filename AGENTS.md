@@ -669,3 +669,65 @@ execution. Full reviewed plan/authorization/closure, preservation/removal/retire
 closed-account support and genuine release gates remain. Source audit4db1cec and disabled
 bootstrap3f865e4 are separate pending candidates with fixed live remote heads. Remove
 only the merged coordination branch after successful main publication and ancestry proof.
+
+
+ADR-061 read-only source ownership candidate752cda1 is separately pushed for full
+hosted39354774163. Local1,476 unit/contract,110 resource controls,29 identity/lifecycle,
+19 fake dispatch and nine ownership checks pass, plus quality/contracts/build and
+security/source/dependencies. Nine recorded owned source containers are independently
+absent. The74-source registry streams keyed row fingerprints without bodies/credentials,
+rejects bidirectional ownership conflicts and former staff provenance, and preserves
+learner-report classification after independent triage. semantic_clearance is always
+false; no issued plan, SQL capability, closure or erasure exists. Five fixed-template
+B608 exceptions are line-specific and reviewed; no scanner-wide exception. Initial
+registry/fixture/security/probe failures remain failures. Parentb4b20f1 and coordination
+94feeab hosted runs remain separate and live; do not move their remote heads or promote
+unverified source. Main72c9c17 and normal healthy review0044 remain disabled for erasure.
+
+
+The combined read-only audit correction4db1cec is separately pushed for complete
+hosted39355841664; preserve that live head. Local1,483 unit/contract and29/19/16 owned
+identity/dispatch/source cohorts pass, plus format/lint/types/contracts/build/security.
+The unknown other-actor audit on an owned case fails before correction (one failure/
+nine passes); unknown owned-attempt coverage, exact33 approved action/actor/target/
+case-kind rules, original learner flags after independent triage and invalid-clock/
+missing-actor/staff-actor denials pass. No composite retry-key ownership is inferred.
+Nine owned sources are independently absent. No deadline, route, role, closure or
+execution authority is introduced. The separate classifier returns counts only and
+is not full preservation/retention/source/SQL clearance. Full engineering acceptance
+still requires its own hosted run, not752cda1's predecessor CI.
+Dormant0045 parentb4b20f1 passes complete hosted39350745638:1,445 unit,522 integration,
+35 tooling,22 owned checks and123 full browsers plus all mandatory gates. Recovery74/
+692 passes559ms logical/316ms actual PG+MinIO one42,084-byte object; productionRPO/RTO
+false. Published main2f3031b includes only Markdown closeout beyond that verified tree;
+its follow-up39355923737 is live. Merged erasure-barrier local/remote branch is removed.
+All eight review services are healthy on0045 with false scope/creation/execution, no
+owner/executor and zero closed identities after rebuild/migration/smoke/image scans.
+Keep main and other active remote heads fixed; next complete ADR-061 work is the
+independently restricted SQL capability, server plan/authorization/closure and durable
+continuation with all preservation/export-drain/payload gates, not partial fulfillment.
+
+
+## Accepted read-only source and audit policy — hosted39355841664
+
+Complete hosted [39355841664](https://github.com/Jotham566/kasoma/actions/runs/39355841664)
+is SUCCESS at4db1cec65674419bab9a81eeaf4e5da0262f927c:1,483 unit/contract,
+541 integration,35 tooling,29 identity/lifecycle,19 fake dispatch,16 owned-source
+checks and123 full browser executions. All setup/migration/seed, focused/restricted
+login, quality/contracts/build, dependency/source/image security and service smoke gates
+pass. Logical recovery verifies74 tables/692 rows in613ms. Actual stopped-source PG/
+MinIO recovery verifies74/692/one42,084-byte ciphertext in325ms, with fault/immutable/
+dormant checks and empty cleanup; productionRPO/RTO remains false.
+
+Accept the closed ownership reader and exact33-action audit classifier together, including
+rejection of unknown other-actor audit on an owned case/attempt. Predecessor752cda1's
+success does not cure its known audit omission; this combined corrected source does.
+Source hashes/counts remain read-only with semantic_clearance=false. They are not full
+payload/retention/hold/private-catalog clearance, authorization, closure or fulfillment.
+The initial unknown-audit regression remains a recorded failure before correction.
+
+Main40aa7d2 follow-up39359937884 is terminal SUCCESS. This merge preserves both
+Markdown evidence histories; its executable/test/Make/workflow tree is identical to
+hosted-verified4db1cec. New bootstrap3f865e4 and planf645a54 have separate frozen live
+heads39359471826/39364234883; do not move or infer acceptance for them. Normal review
+remains dormant; remove only ancestry-proven merged source/audit branches after publication.
