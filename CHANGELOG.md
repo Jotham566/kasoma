@@ -1,5 +1,26 @@
 # Changelog
 
+## Verified identity coordination and practice viewport
+
+Complete hosted [39337786063](https://github.com/Jotham566/kasoma/actions/runs/39337786063)
+is SUCCESS at exact12c6b60d3a76a82c5e10ee15fc51122f4a130fcb:1,444 unit/contract,
+517 integration (1600.91s),35 tooling,11 owned identity cases and123 full browser
+executions. All required setup/migration/seed, focused, restricted-role, quality,
+contracts/build, security, image and service gates pass. Logical recovery verifies
+71 tables/691 rows in530ms; actual PostgreSQL/MinIO recovery verifies71/691/one
+42,084-byte ciphertext in311ms, stopped source services, fault/immutable guards,
+denied stripped retirement and empty cleanup. Production RPO/RTO remains false.
+
+FR-ID-003/005/006 and NFR-SEC-002/MNT-001: accept existing-user LOGIN coordination
+and ADR-069's exclusively owned fake identity verification source. NFR-ACC-001/
+COMP-001 and FR-REV-005: accept the viewport correction and delayed-hints pointer
+regressions. Local source12c also passes123 browser executions with12 independently
+absent owned containers. Earlier native integration/cache/attachment failures remain
+failed; no unsupported root-cause claim. Main64e1f72 follow-up39339512181 also passes.
+Only Markdown closeout follows this verified runtime/test/Make/workflow tree.
+No permanent SQL closure, erasure executor or DELETE completion is accepted; those
+remain the next bounded ADR-061 slice. Normal review activation stays disabled.
+
 ## OTP verification and the user barrier — unverified candidate
 
 FR-ID-003/005/006 and NFR-SEC-002: an existing LOGIN now selects its user lock before

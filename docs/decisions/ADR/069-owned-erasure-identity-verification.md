@@ -1,7 +1,7 @@
 # ADR-069: Owned synthetic identity verification source
 
 Date:20 October2026 (Africa/Kampala)
-Status: Accepted within delegated engineering discretion;105 local controls and11 native identity cases pass; complete hosted acceptance pending
+Status: Accepted within delegated engineering discretion;105 local controls and11 native identity cases pass; complete hosted39337786063 accepted at12c6b60
 Requirements: FR-ID-003/005/006, NFR-SEC-002, NFR-MNT-001
 
 ## Context and decision
