@@ -1,7 +1,7 @@
 # ADR-070: SQL-visible account processing coordination
 
 Date:20 October2026 (Africa/Kampala)
-Status: Accepted within delegated engineering discretion under approved ADR-061; verification pending
+Status: Accepted within delegated engineering discretion under approved ADR-061; complete local/hosted engineering verification, closure and production gates remain pending
 Requirements: FR-ID-003/005/006, FR-GRD-003/004, FR-WA-006, FR-OPS-003,
 BR-010, NFR-SEC-002, NFR-MNT-001
 

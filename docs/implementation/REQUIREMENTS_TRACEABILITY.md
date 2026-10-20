@@ -2190,3 +2190,54 @@ separate and in progress; main stays72c9c17 with its successful39345752803 follo
 All local commands have terminated; thirty recorded source containers are independently
 absent. Normal Docker is kept running on0044 with erasure/retirement/short-text disabled.
 No closure/erasure/DELETE completion or production/academic/device acceptance is inferred.
+
+
+
+## Accepted dormant lifecycle source — hosted39350745638
+
+Complete hosted [39350745638](https://github.com/Jotham566/kasoma/actions/runs/39350745638)
+is SUCCESS atb4b20f1b0e44d1ae08ae58091f35bb9c060e957f:1,445 unit/contract,
+522 integration,35 tooling,22 owned identity/lifecycle checks and123 full browser
+executions. All required setup, clean/additive migrations, seed, focused/restricted
+login, quality/contracts/build, recovery, dependency/source/image security and service
+smoke gates pass. Logical recovery verifies74 tables/692 rows in559ms. Actual stopped-
+source PostgreSQL/MinIO restore verifies74/692/one42,084-byte ciphertext in316ms,
+with fault/immutable/dormant guards, stripped retirement denied and empty cleanup.
+Production RPO/RTO remains false. Prior39346406621 stays failed; this source corrects
+only the additive-upgrade test's expected closed_at:null, preserving all old fields.
+
+Accept0045 dormant lifecycle persistence, the structural manifest and denial tests.
+No plan/job creation, SQL erasure owner/executor, authorization, permanent closure,
+removal or DELETE completion is accepted. Normal review activation stays false.
+Coordination94feeab and source ownership752cda1 need their own complete hosted runs;
+this acceptance covers neither. Only Markdown closeout follows the verified runtime/
+test/Make/workflow tree. Native review images rebuild successfully; make migrate and
+container-smoke pass with all eight services healthy on0045. Direct count-only inspection
+confirms scope/creation/execution=false, owner/executor absent and zero closed users.
+Existing review data/volumes remain; no account-erasure operation is performed.
+
+Native rebuilt API/web image HIGH/CRITICAL scanning also passes before publication.
+
+
+## Accepted account-processing coordination source — hosted39352281782
+
+Complete hosted [39352281782](https://github.com/Jotham566/kasoma/actions/runs/39352281782)
+is SUCCESS at94feeab6e946c2905202da19a0a85952f5b26036:1,471 unit/contract,
+531 integration,35 tooling,29 owned identity/lifecycle and19 owned fake-dispatch
+checks, plus123 full browsers and every mandatory engineering gate. Logical recovery
+verifies74 tables/692 rows in438ms; actual stopped-source PostgreSQL/MinIO restore
+verifies74/692/one42,060-byte ciphertext in217ms, with fault/immutable/dormant guards,
+stripped retirement denied and empty cleanup. Production RPO/RTO remains false.
+
+Accept ADR-070's compatible SQL-visible shared gate, fresh authority reads and bounded
+idle-connection fake-dispatch coordination, alongside the unchanged original HMAC locks.
+No permanent closure, erasure authorization/executor or completed DELETE exists. The
+future exclusive closure must use nonblocking transaction acquisition and all independent
+case/source/hold/export/SQL guards. Provider cancellation after process loss remains
+unproved outside the fake lane. Normal review execution stays disabled.
+
+Integrate accepted main2f3031b's Markdown closeout only. Resolve five competing appended
+verification sections by preserving both histories; there is no application/test/Make/
+workflow change relative to hosted94feeab. Main follow-up39355923737 remains live and
+unchanged. Promotion to main and corresponding review rebuild wait for that fixed-head
+run; do not cancel it. Source ownership/audit752cda1/4db1cec remain separate candidates.
