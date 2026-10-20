@@ -1,7 +1,7 @@
 # ADR-077: Closed guardian-consent and local role consumers
 
 Date: 20 October 2026 (Africa/Kampala)
-Status: Accepted technical extension under approved ADR-061/070/075; local engineering verified; complete own hosted acceptance pending
+Status: Accepted technical extension under approved ADR-061/070/075; complete own hosted39380895685 verified at source1597a68; main publication pending
 Requirements: FR-ID-003/005/006, BR-010, NFR-SEC-002, NFR-MNT-001
 
 For a new guardian grant, pre-read only the exact actor-owned GUARDIAN challenge's

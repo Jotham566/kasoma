@@ -109,3 +109,21 @@ permanent SQL guards, preservation, export drain, erasure or checkpoint recovery
 Both long-lived local identity failures stay failed; fresh-owned70, consumer12 and
 all123 browsers plus engineering checks pass as recorded above. No MVP/release or
 physical/branded acceptance is inferred.
+
+
+## Complete own consumer verification at1597a68
+
+Hosted39380895685 is SUCCESS at exact1597a68192e9351f0bfbb14fcb44566536e3c851:
+1,502 unit/contract,654 integration,35 tooling,123 full browser executions and all
+required setup/migration/seed, focused, restricted-login, quality/contracts/build/
+security/image/service gates. Logical recovery74 tables/692 rows569ms; stopped-source
+PostgreSQL/MinIO74/692/one42,084-byte ciphertext317ms with integrity/fault/immutable/
+dormant checks and empty cleanup. Production RPO/RTO and erasure recovery remain false.
+Optional registry authentication alone is legitimately skipped when credentials are
+absent. This accepts ADR-077's guardian consumption and closed local-role guard only
+at that combined source. Two prior local long-lived TRUNCATE57014 failures remain
+failed/unexplained; clean hosted acceptance does not turn them into passes.
+
+The candidate is not yet published to main. Main825d57e follow-up39387033557 remains
+live and unchanged; the principal4bf5a77/39383925992 result is independently pending.
+No v6/v7, actual erasure or production acceptance is inferred from this consumer run.

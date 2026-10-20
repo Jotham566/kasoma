@@ -1,5 +1,14 @@
 # Changelog
 
+## Installed catalog expectation groundwork — in progress
+
+ADR-079/FR-ID-006/BR-010: strict expected-tree bindings cover ten private/public
+variable expressions while preserving all other bytes and parser locations. Eleven
+contract cases and one independent two-source native case pass, with new OIDs/nonces.
+This is groundwork: the v7 SQL checker, immutable technical expectation field and
+full installed artifact remain unimplemented. Runtime stays v6; no API, schema,
+permission, activation or model-provider change.
+
 ## Installed private principal fence — ADR-078 candidate
 
 FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: fresh private v6

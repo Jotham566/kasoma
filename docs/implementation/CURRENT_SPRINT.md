@@ -2067,3 +2067,36 @@ unmerged consumer/principal/installed-catalog work is preserved. Root Docker rem
 8/8healthy on0045 with execution disabled. This local integration changes Markdown
 only relative to the frozen v6 application/test/Make tree4bf5a77; preserve its remote
 head for own39383925992. Consumer1597a68/39380895685 remains separately live.
+
+
+## ADR-079 typed expectation groundwork — full fence remains pending
+
+FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: ten fixed raw expression fields
+and eleven typed slots reproduce a separately created source with varied OIDs/nonces.
+No live-source runtime learning or body/location normalization. make test-erasure-catalog-bindings
+passes12;1,513 unit/contract,35 tooling,232-file typing, quality/contracts/build/security
+pass.677 integration is collection only. No v7 checker, artifact, new private column,
+SQL interlock, API/permission or activation is implemented yet. See
+[installed catalog work](E8_INSTALLED_CATALOG_VERIFICATION.md). Continue with the full
+rolled-back generation and immutable expected-data/checker pipeline, then all source/
+preservation/export/barrier/recovery gates. Root main825d57e is published/healthy;
+its separate39387033557 follow-up remains live and unchanged. Four merged branches
+are removed after exact proof. No unmerged work is discarded or accepted by parent CI.
+
+
+## Complete own consumer verification at1597a68
+
+Hosted39380895685 is SUCCESS at exact1597a68192e9351f0bfbb14fcb44566536e3c851:
+1,502 unit/contract,654 integration,35 tooling,123 full browser executions and all
+required setup/migration/seed, focused, restricted-login, quality/contracts/build/
+security/image/service gates. Logical recovery74 tables/692 rows569ms; stopped-source
+PostgreSQL/MinIO74/692/one42,084-byte ciphertext317ms with integrity/fault/immutable/
+dormant checks and empty cleanup. Production RPO/RTO and erasure recovery remain false.
+Optional registry authentication alone is legitimately skipped when credentials are
+absent. This accepts ADR-077's guardian consumption and closed local-role guard only
+at that combined source. Two prior local long-lived TRUNCATE57014 failures remain
+failed/unexplained; clean hosted acceptance does not turn them into passes.
+
+The candidate is not yet published to main. Main825d57e follow-up39387033557 remains
+live and unchanged; the principal4bf5a77/39383925992 result is independently pending.
+No v6/v7, actual erasure or production acceptance is inferred from this consumer run.

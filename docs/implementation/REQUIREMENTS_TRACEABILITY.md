@@ -758,7 +758,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests; [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 pending own hosted acceptance |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 pending own hosted acceptance |
-| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) ; [installed principal candidate](E8_ERASURE_PRINCIPALS_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 pending own hosted acceptance ; ADR-078 pending own hosted acceptance |
+| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) ; [installed principal candidate](E8_ERASURE_PRINCIPALS_VERIFICATION.md) ; [installed catalog groundwork](E8_INSTALLED_CATALOG_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 pending own hosted acceptance ; ADR-078 pending own hosted acceptance ; ADR-079 full fence pending |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -3218,3 +3218,36 @@ unmerged consumer/principal/installed-catalog work is preserved. Root Docker rem
 8/8healthy on0045 with execution disabled. This local integration changes Markdown
 only relative to the frozen v6 application/test/Make tree4bf5a77; preserve its remote
 head for own39383925992. Consumer1597a68/39380895685 remains separately live.
+
+
+## ADR-079 typed expectation groundwork — full fence remains pending
+
+FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: ten fixed raw expression fields
+and eleven typed slots reproduce a separately created source with varied OIDs/nonces.
+No live-source runtime learning or body/location normalization. make test-erasure-catalog-bindings
+passes12;1,513 unit/contract,35 tooling,232-file typing, quality/contracts/build/security
+pass.677 integration is collection only. No v7 checker, artifact, new private column,
+SQL interlock, API/permission or activation is implemented yet. See
+[installed catalog work](E8_INSTALLED_CATALOG_VERIFICATION.md). Continue with the full
+rolled-back generation and immutable expected-data/checker pipeline, then all source/
+preservation/export/barrier/recovery gates. Root main825d57e is published/healthy;
+its separate39387033557 follow-up remains live and unchanged. Four merged branches
+are removed after exact proof. No unmerged work is discarded or accepted by parent CI.
+
+
+## Complete own consumer verification at1597a68
+
+Hosted39380895685 is SUCCESS at exact1597a68192e9351f0bfbb14fcb44566536e3c851:
+1,502 unit/contract,654 integration,35 tooling,123 full browser executions and all
+required setup/migration/seed, focused, restricted-login, quality/contracts/build/
+security/image/service gates. Logical recovery74 tables/692 rows569ms; stopped-source
+PostgreSQL/MinIO74/692/one42,084-byte ciphertext317ms with integrity/fault/immutable/
+dormant checks and empty cleanup. Production RPO/RTO and erasure recovery remain false.
+Optional registry authentication alone is legitimately skipped when credentials are
+absent. This accepts ADR-077's guardian consumption and closed local-role guard only
+at that combined source. Two prior local long-lived TRUNCATE57014 failures remain
+failed/unexplained; clean hosted acceptance does not turn them into passes.
+
+The candidate is not yet published to main. Main825d57e follow-up39387033557 remains
+live and unchanged; the principal4bf5a77/39383925992 result is independently pending.
+No v6/v7, actual erasure or production acceptance is inferred from this consumer run.

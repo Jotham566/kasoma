@@ -63,6 +63,9 @@ test-erasure-consent-consumers:
 .PHONY: test-erasure-principals
 test-erasure-principals:
 	$(UV) pytest tests/integration/test_erasure_principal_fence.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-erasure-catalog-bindings
+test-erasure-catalog-bindings:
+	$(UV) pytest tests/contract/test_erasure_catalog_binding_contract.py tests/integration/test_erasure_catalog_bindings.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: erasure-catalog-baseline update-erasure-catalog-baseline
 erasure-catalog-baseline:
 	$(UV) python -m scripts.erasure_catalog_baseline
