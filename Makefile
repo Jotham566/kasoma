@@ -44,7 +44,10 @@ test-erasure-identity-isolated:
 	$(UV) python -m scripts.erasure_identity_check
 .PHONY: test-erasure-identity
 test-erasure-identity:
-	$(UV) pytest tests/integration/test_identity.py tests/integration/test_erasure_staff_barrier.py tests/integration/test_erasure_lifecycle.py tests/integration/test_erasure_source_shape.py tests/integration/test_deletion_preview.py --allow-hosts=localhost,127.0.0.1,::1
+	$(UV) pytest tests/integration/test_account_processing.py tests/integration/test_identity.py tests/integration/test_erasure_staff_barrier.py tests/integration/test_erasure_lifecycle.py tests/integration/test_erasure_source_shape.py tests/integration/test_deletion_preview.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-erasure-dispatch
+test-erasure-dispatch:
+	$(UV) pytest tests/integration/test_short_text_processing.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: test-erasure-source
 test-erasure-source:
 	$(UV) pytest tests/integration/test_erasure_source_shape.py tests/integration/test_erasure_staff_barrier.py --allow-hosts=localhost,127.0.0.1,::1

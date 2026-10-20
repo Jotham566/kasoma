@@ -42,3 +42,13 @@ private fake environment. Run actual existing identity/LINK/single-use checks an
 new user-barrier/binding races against a fresh owned source. Record before/after
 results and exact cleanup; require broad quality/security and exact-source hosted
 acceptance. Remove only the test target/entrypoint to roll back; no data migration.
+
+## Fixed-cohort extension under ADR-070 — verification pending
+
+The processing-gate tests add two closed cohorts: test-erasure-identity and
+test-erasure-dispatch. Each receives its own fresh owned source, destroyed before
+starting the next; the resource caps and600s per-child supervision remain unchanged.
+Only this exact target allowlist is callable, with no shell or environment selector.
+Original test results remain historical; the expanded combined failure and fresh-source
+verification are recorded in the current erasure readiness evidence. This adds no
+executor, account processing permission, cleanup scope or erasure activation.

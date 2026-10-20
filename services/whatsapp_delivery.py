@@ -49,7 +49,7 @@ def deliver_one(identity: IdentityService, provider: Delivery) -> bool:
         if row is None:
             return False
         if row.actor_id:
-            identity.lock(db, str(row.actor_id))
+            identity.lock_user(db, row.actor_id)
         channel_lock(identity, db)
         db.refresh(row)
         if row.status != "PENDING" or row.available_at > identity.clock():

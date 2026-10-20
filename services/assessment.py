@@ -73,7 +73,7 @@ class AssessmentService:
 
     def authorize_actor(self, db: Session, actor: UUID, subject: UUID | None = None) -> UUID:
         """Internal trusted-actor entry only; every call rechecks current authorization."""
-        self.identity.lock(db, str(actor))
+        self.identity.lock_user(db, actor)
         user = db.get(User, actor, populate_existing=True)
         if user is None or user.status != "ACTIVE":
             raise IdentityError("AUTH_REQUIRED", 401)

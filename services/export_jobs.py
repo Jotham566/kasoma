@@ -109,7 +109,7 @@ def status(identity: IdentityService, token: str, target: UUID) -> ExportJobView
 def locked_job(
     identity: IdentityService, db: Session, actor: UUID, target: UUID
 ) -> tuple[DataRequest, ExportJob] | None:
-    identity.lock(db, str(actor))
+    identity.lock_user(db, actor)
     request = db.scalar(
         select(DataRequest)
         .where(DataRequest.id == target, DataRequest.user_id == actor)

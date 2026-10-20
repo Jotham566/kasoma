@@ -1640,3 +1640,13 @@ flags, a structural check or a green test as execution authority. A future forwa
 capability migration and exact isolated provisioning must precede any closure. There
 is no erasure enable/provision/process command in this version. The normal review
 stack stays on its accepted main migration until full candidate acceptance.
+
+### SQL account-processing verification — ADR-070 candidate
+
+`make test-erasure-identity-isolated` now runs two fixed sequential cohorts, each in a
+new owned PostgreSQL source: identity/lifecycle/preview, then fake grading dispatch.
+`make test-erasure-dispatch` is the prescribed direct dispatch target; prefer the
+owned orchestrator. Source caps and deadlines stay unchanged. The controller rejects
+unknown targets and never reuses a preceding source. Keep the remote0045 verification
+head frozen while developing this separate candidate. Neither advisory locks nor their
+non-secret keys authorize account closure or bypass any case/preservation/SQL guard.

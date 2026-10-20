@@ -9,6 +9,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import make_url
 
 from apps.api.main import create_app
+from scripts.migration_diagnostics import classify
 from services.config import Settings
 from services.database import engine_for
 from services.identity import IdentityService
@@ -33,12 +34,27 @@ def identity(request):
     # Exercise actual foundation -> identity migration, preserving the seeded catalog.
     migration_target = getattr(request, "param", "head")
     for target in ["0001", migration_target, migration_target]:
-        subprocess.run(
-            ["uv", "run", "--frozen", "alembic", "-c", "apps/api/alembic.ini", "upgrade", target],
-            check=True,
-            env=env,
-            capture_output=True,
-        )
+        try:
+            subprocess.run(
+                [
+                    "uv",
+                    "run",
+                    "--frozen",
+                    "alembic",
+                    "-c",
+                    "apps/api/alembic.ini",
+                    "upgrade",
+                    target,
+                ],
+                check=True,
+                env=env,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError as failure:
+            # Keep failures failed without rendering environment, SQL or credentials.
+            raise RuntimeError(
+                f"Synthetic migration failed ({classify(failure.stderr)}); diagnostics withheld"
+            ) from None
         if target == "0001":
             seed(config, foundation_only=True)
     local = engine_for(config)

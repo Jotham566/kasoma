@@ -2,7 +2,7 @@
 
 import signal
 import subprocess
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from unittest.mock import Mock
 
 import pytest
@@ -78,6 +78,8 @@ def test_child_environment_is_fake_and_uses_only_new_private_database(
     verify = Mock()
     monkeypatch.setattr(check, "verify", verify)
     check.run()
+    assert factory.call_count == verify.call_count == 2
+    assert [call.args[1] for call in verify.call_args_list] == list(check.COHORTS)
     environment = verify.call_args.args[0]
     assert environment["DATABASE_URL"] == isolated.database_url.get_secret_value()
     assert (
@@ -108,3 +110,44 @@ def test_termination_is_never_reported_as_a_pass(monkeypatch):
     with pytest.raises(SystemExit) as stopped:
         check.main()
     assert stopped.value.code == 143
+
+
+@pytest.mark.parametrize("target", ["test", "", "test-erasure-identity; false"])
+def test_unknown_target_is_rejected_before_start(monkeypatch, target):
+    _, spawn, _ = process(monkeypatch, [0])
+    with pytest.raises(ValueError, match="Unsupported closed"):
+        check.verify({}, target)
+    spawn.assert_not_called()
+
+
+def test_fixed_dispatch_target_has_same_supervision(monkeypatch):
+    child, spawn, _ = process(monkeypatch, [0])
+    check.verify({}, "test-erasure-dispatch")
+    assert spawn.call_args.args == (["/usr/bin/make", "test-erasure-dispatch"],)
+    child.wait.assert_called_once_with(timeout=600)
+
+
+def test_each_cohort_finishes_cleanup_before_next_source(settings, monkeypatch):
+    observed = []
+
+    @contextmanager
+    def source(config):
+        observed.append("enter")
+        try:
+            yield settings
+        finally:
+            observed.append("exit")
+
+    monkeypatch.setattr(check, "Settings", lambda **kwargs: settings)
+    monkeypatch.setattr(check, "cleanup_on_termination", nullcontext)
+    monkeypatch.setattr(check, "erasure_test_database", source)
+    monkeypatch.setattr(check, "verify", lambda environment, target: observed.append(target))
+    check.run()
+    assert observed == [
+        "enter",
+        "test-erasure-identity",
+        "exit",
+        "enter",
+        "test-erasure-dispatch",
+        "exit",
+    ]

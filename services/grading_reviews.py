@@ -118,7 +118,7 @@ class GradingReviewService:
         # Stable account order precedes the band. Role revocation uses the same
         # reviewer account lock, avoiding extra write privileges on the role table.
         for account in sorted({actor, attempt.learner_id}, key=str):
-            self.identity.lock(db, str(account))
+            self.identity.lock_user(db, account)
         if self.actor(db, token) != actor:
             raise IdentityError("AUTH_REQUIRED", 401)
         AssessmentService(self.identity).authorize_actor(db, attempt.learner_id, session.subject_id)

@@ -44,7 +44,7 @@ select = ["E", "F", "I", "UP", "B"]
 plugins = ["pydantic.mypy"]
 python_version = "3.12"
 strict = true
-files = ["apps", "services", "scripts/recovery_drill.py", "scripts/recovery_containers.py", "scripts/object_recovery_drill.py", "scripts/disposable_owner.py", "scripts/recovery_fixture.py", "scripts/objective_load.py", "scripts/temporal_history.py", "scripts/ci_runner_storage.py", "scripts/e2e_failures.py", "scripts/browser_database.py", "scripts/erasure_identity_check.py"]
+files = ["apps", "services", "scripts/recovery_drill.py", "scripts/recovery_containers.py", "scripts/object_recovery_drill.py", "scripts/disposable_owner.py", "scripts/recovery_fixture.py", "scripts/objective_load.py", "scripts/temporal_history.py", "scripts/ci_runner_storage.py", "scripts/e2e_failures.py", "scripts/browser_database.py", "scripts/erasure_identity_check.py", "scripts/migration_diagnostics.py"]
 
 [[tool.mypy.overrides]]
 module = ["celery", "celery.*"]

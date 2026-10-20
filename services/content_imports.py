@@ -132,8 +132,8 @@ def process_one(identity: IdentityService) -> bool:
         )
         if row is None:
             return False
-        identity.lock(db, str(row.actor_id))
-        user = db.get(User, row.actor_id)
+        identity.lock_user(db, row.actor_id)
+        user = db.get(User, row.actor_id, populate_existing=True)
         active_author = (
             user is not None
             and user.status == "ACTIVE"

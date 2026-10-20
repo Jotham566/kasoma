@@ -494,3 +494,11 @@ Status: Accepted within delegated engineering discretion; verification pending.
 [Record](../decisions/ADR/069-owned-erasure-identity-verification.md): reuse the exact-ID,
 distinct-label local fixture for the closed ADR-061 identity test target. Fresh fake
 source only; no review data, executor, erasure or application policy change.
+
+## ADR-070: SQL-visible account processing coordination
+
+Status: Accepted within delegated engineering discretion; verification pending.
+[Record](../decisions/ADR/070-sql-visible-account-processing-gate.md): preserve existing
+account HMAC locks and add shared SQL-visible coordination with a narrow idle-session
+model-dispatch gate. This amends ADR-050's blanket inference-lock rule without keeping
+row locks/transactions across inference or adding provider/erasure authority.

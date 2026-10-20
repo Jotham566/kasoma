@@ -280,3 +280,14 @@ approval or grading correctness. Failures to record/export never change grading 
 The development-only probe uses a fixed FakeModelProvider fallback with explicit one
 input/output token; it cannot perform inference or access learner/corpus records.
 Normal learner short-text delivery remains disabled and all authority gates remain.
+
+## SQL-visible dispatch boundary — ADR-070 candidate
+
+[ADR-070](../decisions/ADR/070-sql-visible-account-processing-gate.md) narrowly amends
+ADR-050's blanket inference-lock rule: an idle session holds one shared account privacy
+advisory gate through each authorized fake provider call. All ordinary row, HMAC,
+content/band locks and authorization transactions end before inference. Fresh authority,
+existing global request/token/time limits and final publication checks remain mandatory.
+A busy gate prevents dispatch; uncertain cleanup discards the connection. This does not
+enable normal scoring, external adapters, real learner data or account erasure, nor
+prove remote cancellation after worker loss. Full ADR-061 barriers remain required.

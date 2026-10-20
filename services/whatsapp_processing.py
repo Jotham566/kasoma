@@ -45,7 +45,7 @@ def resolve_actor(db: Session, row: InboundMessage) -> UUID | None:
 
 
 def allowed(identity: IdentityService, db: Session, actor: UUID | None) -> bool:
-    user = db.get(User, actor) if actor else None
+    user = db.get(User, actor, populate_existing=True) if actor else None
     return bool(user and user.status == "ACTIVE" and identity.profile(db, user.id).learning_allowed)
 
 
@@ -170,7 +170,7 @@ def process_one(identity: IdentityService) -> bool:
             return False
         actor = resolve_actor(db, row)
         if actor:
-            identity.lock(db, str(actor))
+            identity.lock_user(db, actor)
         channel_lock(identity, db)
         db.refresh(row)
         if (

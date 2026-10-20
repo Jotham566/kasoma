@@ -1,6 +1,7 @@
-"""One leased job: no model work under locks; atomic authorized score or neutral outcome."""
+"""One leased job: idle privacy gate during dispatch, atomic authorized publication."""
 
 from collections.abc import Callable
+from contextlib import AbstractContextManager
 from dataclasses import dataclass, field
 from time import monotonic
 from uuid import UUID
@@ -8,6 +9,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from services.account_processing import dispatch_gate
 from services.assessment import AssessmentService
 from services.assessment_outcomes import response_projection, result_binding
 from services.domain.assessment import AssessmentSession, Attempt, Grade, SessionItem
@@ -35,6 +37,7 @@ SafetyAuthority = Callable[[SyntheticRubricContext, str], bool]
 @dataclass(frozen=True)
 class Material:
     attempt_id: UUID
+    actor_id: UUID
     band_id: UUID
     context: SyntheticRubricContext = field(repr=False)
     response: str = field(repr=False)
@@ -47,20 +50,23 @@ class VersionedGateway:
         model_version: str,
         authorize: Callable[[], None],
         deadline: float,
+        dispatch: Callable[[], AbstractContextManager[None]],
     ):
         self.gateway, self.model_version = gateway, model_version
         self.authorize, self.deadline = authorize, deadline
+        self.dispatch = dispatch
 
     def execute(self, task: ModelTask) -> ModelResult:
-        self.authorize()
-        remaining = int((self.deadline - monotonic()) * 1000)
-        if remaining <= 0:
-            raise ValueError("Model budget expired before dispatch")
-        task = task.model_copy(update={"timeout_ms": min(task.timeout_ms, remaining)})
-        result = self.gateway.execute(task)
-        if result.provider != "fake" or result.model != self.model_version:
-            raise ValueError("Model provenance unavailable")
-        return result
+        with self.dispatch():
+            self.authorize()
+            remaining = int((self.deadline - monotonic()) * 1000)
+            if remaining <= 0:
+                raise ValueError("Model budget expired before dispatch")
+            task = task.model_copy(update={"timeout_ms": min(task.timeout_ms, remaining)})
+            result = self.gateway.execute(task)
+            if result.provider != "fake" or result.model != self.model_version:
+                raise ValueError("Model provenance unavailable")
+            return result
 
 
 class ShortTextProcessor:
@@ -123,7 +129,13 @@ class ShortTextProcessor:
             or settings.short_text_configuration_version != "short-text-runtime-v1"
         ):
             return None
-        return Material(attempt.id, band.id, self.service.short_text.context(version), response)
+        return Material(
+            attempt.id,
+            attempt.learner_id,
+            band.id,
+            self.service.short_text.context(version),
+            response,
+        )
 
     def process_one(self) -> bool:
         with Session(self.identity.engine) as db, db.begin():
@@ -152,18 +164,20 @@ class ShortTextProcessor:
             )
             with Session(self.identity.engine) as db, db.begin():
                 material = self.material(db, work.attempt_id, work.claim_id)
-            # Immutable input has been captured; all DB locks are released before inference.
+            # Immutable input is captured; row/HMAC locks and transactions end before inference.
             if (
                 material is not None
                 and self.safety is not None
                 and (self.safety(material.context, material.response) is True)
             ):
+                dispatch_actor = material.actor_id
 
                 def authorize_dispatch() -> None:
                     with Session(self.identity.engine) as dispatch_db, dispatch_db.begin():
                         current = self.material(dispatch_db, attempt_id, claim_id)
                         if (
                             current is None
+                            or current.actor_id != dispatch_actor
                             or self.safety is None
                             or (self.safety(current.context, current.response) is not True)
                         ):
@@ -175,6 +189,7 @@ class ShortTextProcessor:
                         self.identity.settings.short_text_model_version,
                         authorize_dispatch,
                         monotonic() + budget.timeout_ms / 1000,
+                        lambda: dispatch_gate(self.identity.engine, dispatch_actor),
                     ),
                     context=material.context,
                     response=material.response,
@@ -206,7 +221,7 @@ class ShortTextProcessor:
             attempt = db.get(Attempt, attempt_id)
             if attempt is None:
                 return
-            self.identity.lock(db, str(attempt.learner_id))
+            self.identity.lock_user(db, attempt.learner_id)
             row = db.scalar(
                 select(GradingWorkRow)
                 .where(GradingWorkRow.attempt_id == attempt_id)

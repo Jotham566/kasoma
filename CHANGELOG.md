@@ -1791,3 +1791,85 @@ in progress. Only Markdown closeout follows that runtime/test/Make/workflow tree
 full522 integration and hosted image/service acceptance remain pending. Do not promote
 this candidate from local/browser checks alone. No account closure, erasure, completed
 DELETE, production recovery, normal short-text activation or full MVP acceptance.
+
+## SQL-visible account processing gate — ADR-070 candidate
+
+FR-ID-003/005/006, FR-GRD-003/004, FR-WA-006, FR-OPS-003, BR-010 and
+NFR-SEC-002/MNT-001: preserve existing HMAC serialization and add explicit lock_user
+shared SQL coordination at account entrypoints. Refresh cached authority after the
+gate. Each fake grading dispatch uses an owned idle session's shared gate through
+the provider call, without an open transaction, row, band or HMAC lock across inference.
+Uncertain acquisition/release invalidates the connection; no gate grants authority.
+ADR-070 records the narrow technical amendment to ADR-050, without changing privacy,
+retention, provider/academic enablement or erasure permissions. No executor is installed.
+
+Before implementation, three actual access/refresh/LOGIN cases fail and22 controls
+pass. An expanded44-case combined fixture gives five expected gate failures,24 passes
+and15 Alembic setup errors; no captured diagnostic establishes the setup cause. Its
+owned source cleans up. Split identity and model cohorts into two fixed Make targets,
+each in a fresh source under the same512m/256m tmpfs bounds and600s child supervision;
+never accept an arbitrary caller target. The identity/lifecycle cohort now passes25
+cases. Model/pool cleanup tests and complete local/hosted verification remain pending.
+Initial B008 fixture-clock lint is corrected by capturing the synthetic instant before
+the callback. No account closure, erasure or completed DELETE is accepted. The frozen
+0045 sourcecb0cd22 remains separately in hosted39346406621, with its head unchanged.
+
+## ADR-070 scope and failure corrections — candidate
+
+Bind the processing gate to database/schema/subject with negative keys separate from
+HMAC serialization. Native29 identity and19 model cases pass, plus1,471 unit/contract
+and110 controller controls. An actual unlock failure releases the physical session;
+cached principals refresh. The same-UUID cross-schema regression fails before the fix.
+Sanitized migration categories identify STORAGE_EXHAUSTED in the failed combined
+fixture; two fixed fresh cohorts pass under unchanged caps. Correct a duplicate test
+basename; no cache cleanup. Objective load passes7,000 requests/zero errors with
+START p95 468.534ms. Mixed-history and final broad/hosted verification remain pending.
+
+## Parent0045 verification failure and correction
+
+Hosted39346406621 atcb0cd22 is FAILED:1,445 unit/contract,521 integration pass; the
+0042 configuration-upgrade fixture does not expect the newly added closed_at:null.
+No later browser/image/service acceptance is inferred. Correct the test to require
+exactly that addition and preserve every old field/row/table; no migration/clock or
+application behavior changes. Parent correction is separately verified/published;
+this ADR-070 branch includes the same regression fix and still needs its own full CI.
+Main72c9c17's follow-up39345752803 succeeds, without accepting either candidate.
+
+## ADR-070 complete local regression checkpoint
+
+Both sequential native load profiles pass7,000 requests with zero errors and exact
+owned cleanup. Objective START/ANSWER p95 are468.534/25.784ms. Mixed history includes
+25,000 prior grades; START/ANSWER p95 are431.664/26.499ms, with choice/numeric feedback.
+No production acceptance or explanation of earlier variance is inferred.
+
+All123 browser executions pass (108 standard,12 short-text,three configuration).
+The twelve browser source containers and all30 recorded test-source IDs from this
+iteration are independently absent; cleanup reports are empty. The separate short-text
+runner keeps its existing schema scope. No older schema, role, volume, SDK or cache
+cleanup is performed. Channel/ingress34, channel assessment7, conversation11, export
+worker15, export lifecycle42 and configuration34 checks pass (some contracts overlap).
+Actual restricted login passes. Final scoped recovery verifies74 tables/692 rows371ms
+logically and74/692/one42,084-byte ciphertext194ms with MinIO/source stopped, faults,
+immutable/dormant guards, denied stripped retirement and empty cleanup. Production
+RPO/RTO remains false.
+
+Dependency/source/secret security passes. Bandit initially flags the fixed transaction
+SQL template as B608. Its only interpolated fragment is the module constant; subject
+is a UUID bind and the schema OID comes from PostgreSQL. Record a single-line reviewed
+B608 exception, without a scanner-wide exclusion; executable AST equality is verified
+before/after the annotation. This is not an application SQL correction. Existing two
+subprocess exceptions are narrowed to their closed target validation. A bounded probe
+of33 local logs finds zero known-secret matches, long connection-password candidates
+or bearer candidates; it is not proof about unknown secrets or every artifact.
+
+The parent regression correction passes34 operations cases and1,445 unit/contract
+locally and is frozen atb4b20f1 for full hosted39350745638. Previous39346406621 remains
+failed (one null-column expectation failure/521 integration passes). Main72c9c17's
+separate follow-up succeeds. The same exact null-column expectation fix is included
+here; no migration, API, closure clock or retention behavior changes for that fix.
+
+This candidate still needs its own complete hosted acceptance. The full531 integration
+suite and image/service acceptance cannot be inferred from focused/native checks.
+No erasure executor/authorization, closed identity or completed DELETE exists. Next is
+the independently provisioned SQL capability and atomic reviewed plan/authorization/
+closure with durable continuation, complete preservation and later bounded removal.

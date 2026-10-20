@@ -14,6 +14,7 @@ from cryptography.fernet import Fernet
 from sqlalchemy import Engine, delete, func, select, text, update
 from sqlalchemy.orm import Session
 
+from services.account_processing import coordinate
 from services.config import Settings
 from services.domain.curriculum import Level, Subject
 from services.domain.identity import (
@@ -96,6 +97,10 @@ class IdentityService:
         number = int(self.digest("lock", key)[:15], 16)
         db.execute(text("SELECT pg_advisory_xact_lock(:key)"), {"key": number})
 
+    def lock_user(self, db: Session, user: UUID) -> None:
+        self.lock(db, str(user))
+        coordinate(db, user)
+
     def event(self, db: Session, user: UUID, action: str, request_id: str) -> None:
         db.add(
             IdentityEvent(
@@ -130,9 +135,9 @@ class IdentityService:
         )
         if session is None:
             raise IdentityError("AUTH_REQUIRED", 401)
-        self.lock(db, str(session.user_id))
+        self.lock_user(db, session.user_id)
         db.refresh(session)
-        user = db.get(User, session.user_id)
+        user = db.get(User, session.user_id, populate_existing=True)
         if (
             session.revoked_at
             or session.rotated_at
@@ -265,7 +270,7 @@ class IdentityService:
                     )
                 )
                 if bound is not None:
-                    self.lock(db, str(bound))
+                    self.lock_user(db, bound)
                     locked_user = bound
             challenge = self.consume(db, body, {"LINK"} if owner else {"LOGIN"}, owner)
             self.lock(db, challenge.lookup_hash)
@@ -314,7 +319,7 @@ class IdentityService:
             )
             if old is None:
                 raise IdentityError("AUTH_REQUIRED", 401)
-            self.lock(db, str(old.user_id))
+            self.lock_user(db, old.user_id)
             db.refresh(old)
             if old.rotated_at:
                 db.execute(
@@ -323,7 +328,7 @@ class IdentityService:
                     .values(revoked_at=self.clock())
                 )
                 raise IdentityError("AUTH_REQUIRED", 401)
-            user = db.get(User, old.user_id)
+            user = db.get(User, old.user_id, populate_existing=True)
             if (
                 old.revoked_at
                 or old.expires_at <= self.clock()

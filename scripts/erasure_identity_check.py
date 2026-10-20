@@ -2,15 +2,22 @@
 
 import os
 import signal
-import subprocess  # nosec B404 -- fixed absolute Make target; no shell or user-selected command.
+
+# Fixed executable and closed cohort allowlist; no shell or caller-selected command.
+import subprocess  # nosec B404
 
 from scripts.browser_database import cleanup_on_termination, erasure_test_database
 from services.config import Settings
 
+COHORTS = ("test-erasure-identity", "test-erasure-dispatch")
 
-def verify(environment: dict[str, str]) -> None:
-    process = subprocess.Popen(  # nosec B603 -- constant argv; credentials only in private env.
-        ["/usr/bin/make", "test-erasure-identity"], env=environment, start_new_session=True
+
+def verify(environment: dict[str, str], target: str = "test-erasure-identity") -> None:
+    if target not in COHORTS:
+        raise ValueError("Unsupported closed erasure verification cohort")
+    # Executable and validated cohort are fixed; private credentials stay in the environment.
+    process = subprocess.Popen(  # nosec B603
+        ["/usr/bin/make", target], env=environment, start_new_session=True
     )
     try:
         if process.wait(timeout=600) != 0:
@@ -33,21 +40,22 @@ def verify(environment: dict[str, str]) -> None:
 
 def run() -> None:
     settings = Settings(model_provider="fake", email_provider="fake")
-    with cleanup_on_termination(), erasure_test_database(settings) as config:
-        environment = os.environ | {
-            "APP_ENV": "development",
-            "DATABASE_URL": config.database_url.get_secret_value(),
-            "IDENTITY_ENCRYPTION_KEY": config.identity_encryption_key.get_secret_value(),
-            "IDENTITY_LOOKUP_KEY": config.identity_lookup_key.get_secret_value(),
-            "JWT_SIGNING_KEY": config.jwt_signing_key.get_secret_value(),
-            "MODEL_PROVIDER": "fake",
-            "EMAIL_PROVIDER": "fake",
-            "SMS_PROVIDER": "fake",
-            "WHATSAPP_PROVIDER": "fake",
-            "ALLOW_EXTERNAL_API_CALLS": "false",
-        }
-        # No caller-controlled selector, shell, URL, SQL, role or cleanup target.
-        verify(environment)
+    for target in COHORTS:
+        with cleanup_on_termination(), erasure_test_database(settings) as config:
+            environment = os.environ | {
+                "APP_ENV": "development",
+                "DATABASE_URL": config.database_url.get_secret_value(),
+                "IDENTITY_ENCRYPTION_KEY": config.identity_encryption_key.get_secret_value(),
+                "IDENTITY_LOOKUP_KEY": config.identity_lookup_key.get_secret_value(),
+                "JWT_SIGNING_KEY": config.jwt_signing_key.get_secret_value(),
+                "MODEL_PROVIDER": "fake",
+                "EMAIL_PROVIDER": "fake",
+                "SMS_PROVIDER": "fake",
+                "WHATSAPP_PROVIDER": "fake",
+                "ALLOW_EXTERNAL_API_CALLS": "false",
+            }
+            # No caller-controlled selector, shell, URL, SQL, role or cleanup target.
+            verify(environment, target)
 
 
 def main() -> None:

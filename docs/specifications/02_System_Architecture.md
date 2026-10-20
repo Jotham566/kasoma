@@ -197,3 +197,16 @@ Required dashboards:
 ## 12. Deployment gate
 
 Production deploy requires passing migrations, unit/integration/contract tests, security scan, OpenAPI compatibility check, smoke test and a rollback plan. Direct manual production code changes are prohibited.
+
+## Account processing coordination — ADR-070
+
+[ADR-070](../decisions/ADR/070-sql-visible-account-processing-gate.md) preserves
+existing account HMAC locks and adds a shared PostgreSQL gate bound to database,
+schema OID and subject UUID, using the negative bigint key range. A future restricted
+closure function must independently validate its installed scope and use nonblocking
+exclusive acquisition before case/source mutations; the gate itself grants no rights.
+Each fake short-text dispatch retains one idle connection's session shared gate after
+short authorization transactions end. No row, content/band or HMAC locks and no open
+transaction span inference. Release before returning the connection; uncertain
+acquisition/release invalidates it. Normal short-text and erasure stay disabled;
+this coordination candidate requires its own engineering verification.

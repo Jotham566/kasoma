@@ -517,3 +517,53 @@ def test_worker_observation_counts_actual_authorized_dispatches_only(short_text,
     finally:
         activate(None)
         metrics.shutdown()
+
+
+@pytest.mark.parametrize("failure", [False, True])
+def test_model_dispatch_keeps_sql_gate_without_open_transaction(short_text, failure):
+    from sqlalchemy import text
+
+    from tests.integration.test_account_processing import EXCLUSIVE, active_gate_count
+
+    identity, client, actors, _, policy, _ = short_text
+    session, item = start_short(short_text)
+    pending = save_short(short_text, session, item).json()
+    subject = identity.me(actors["learner"]["Authorization"].removeprefix("Bearer ")).id
+    observations = []
+
+    class InspectingProvider(FakeModelProvider):
+        def execute(self, task):
+            with identity.engine.connect() as db:
+                exclusive = db.scalar(EXCLUSIVE, {"subject": subject})
+                idle_gate = db.scalar(
+                    text("""
+                  WITH key AS (SELECT hashtextextended(
+                    'kasoma.account-processing.v1:' ||
+    pg_catalog.to_regnamespace(current_schema())::oid::text || ':' || CAST(:subject AS text),0)
+                    | (-9223372036854775808)::bigint AS value)
+                  SELECT EXISTS(SELECT 1 FROM pg_catalog.pg_locks l
+                    JOIN pg_catalog.pg_stat_activity a ON a.pid=l.pid CROSS JOIN key
+                    WHERE l.locktype='advisory' AND l.granted AND l.mode='ShareLock'
+                      AND l.classid=((key.value>>32)&4294967295)::oid
+                      AND l.objid=(key.value&4294967295)::oid AND l.objsubid=1
+                      AND a.datname=current_database() AND a.state='idle'
+                      AND a.xact_start IS NULL)
+                """),
+                    {"subject": subject},
+                )
+                observations.append((exclusive, idle_gate))
+            if failure:
+                raise RuntimeError("Synthetic provider failure")
+            return super().execute(task)
+
+    gateway = InspectingProvider(candidate_results(short_text, item))
+    assert ShortTextProcessor(
+        AssessmentService(identity, policy), gateway, safety=lambda context, response: True
+    ).process_one()
+    # Assert outside the callback: processor fallback must not hide a broken guard.
+    assert observations == ([(False, True)] if failure else [(False, True), (False, True)])
+    assert active_gate_count(identity.engine, subject) == 0
+    with identity.engine.connect() as db:
+        assert db.scalar(EXCLUSIVE, {"subject": subject}) is True
+    with Session(identity.engine) as db:
+        assert (db.get(Grade, UUID(pending["attempt_id"])) is None) == failure
