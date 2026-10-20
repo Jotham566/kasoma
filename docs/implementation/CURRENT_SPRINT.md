@@ -1612,3 +1612,12 @@ finish successfully before main advances or these unmerged source branches are r
 The separate v4 catalog source 854afaa has its own live hosted 39371164944 and cannot
 inherit this acceptance. Normal review stays on 0045 with all erasure/retirement/ordinary
 short-text activation disabled. Full ADR-061 fulfillment and external release gates remain.
+
+
+Native prepared-plan publication checks pass: make containers migrate container-smoke
+security-containers. All eight normal services are healthy on 0045 and the Docker preview
+now runs the hosted-verified v3 source. Direct read-only SQL confirms eligibility, creation
+and execution false, zero closed identities and zero erasure principals in normal review.
+No review data is erased or new private capability installed. Main 0053a7b follow-up
+39371028143 remains live; the prepared branch stays separate and source heads are kept.
+Only Markdown follows verified 81f1d84.
