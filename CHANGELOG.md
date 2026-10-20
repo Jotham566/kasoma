@@ -2519,3 +2519,13 @@ exact orphan removal is independently confirmed; all eight review services are h
 and host-native Ollama connectivity passes without inference. See the
 [catalog verification record](docs/implementation/E8_ERASURE_CATALOG_VERIFICATION.md) for exact evidence
 and remaining installed-catalog/SQL/hold/payload/closure/removal/recovery gaps.
+
+
+Final ADR-073 local browser evidence: make e2e passes 123 executions (108 standard,
+12 short-text and three configuration). Twelve exact recorded owned source containers
+have empty cleanup reports and independent full-ID absence. Full hosted 39371164944
+is live at frozen 854afaa; only Markdown follows. Main 0053a7b now publishes the
+verified disabled bootstrap, whose merged branches are removed. V3 plan/staff source
+81f1d84 independently passes complete hosted 39365821234 and has a prepared publication;
+main follow-up 39371028143 remains live. None of these accepts catalog hosted results,
+erasure execution, physical devices or full release. See the catalog verification record.
