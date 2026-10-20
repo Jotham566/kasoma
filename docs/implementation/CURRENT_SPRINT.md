@@ -1090,3 +1090,21 @@ verification sections by preserving both histories; there is no application/test
 workflow change relative to hosted94feeab. Main follow-up39355923737 remains live and
 unchanged. Promotion to main and corresponding review rebuild wait for that fixed-head
 run; do not cancel it. Source ownership/audit752cda1/4db1cec remain separate candidates.
+
+
+## Publication of accepted ADR-070 coordination
+
+Main parent2f3031b follow-up [39355923737](https://github.com/Jotham566/kasoma/actions/runs/39355923737)
+is terminal SUCCESS. Promote the separately complete hosted39352281782 coordination
+source94feeab through prepared Markdown mergee37cd55. Runtime/test/Make/workflow content
+remains exactly that verified source; publication closeout adds Markdown only.
+Native make containers migrate container-smoke security-containers all pass. All eight
+review services are healthy on0045; direct aggregate inspection confirms false scope/
+creation/execution, absent erasure owner/executor and zero closed users. No normal review
+erasure, retirement, short-text enablement, data/cache/volume cleanup or real inference.
+
+This accepts compatible account processing/fake-dispatch coordination, not SQL erasure
+execution. Full reviewed plan/authorization/closure, preservation/removal/retirement,
+closed-account support and genuine release gates remain. Source audit4db1cec and disabled
+bootstrap3f865e4 are separate pending candidates with fixed live remote heads. Remove
+only the merged coordination branch after successful main publication and ancestry proof.
