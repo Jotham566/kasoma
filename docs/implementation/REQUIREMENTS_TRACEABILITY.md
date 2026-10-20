@@ -2536,3 +2536,21 @@ on0045; the ordinary source remains ineligible/dormant with no erasure provision
 Main600db71 follow-up39364455335 is still live; preserve main. New plan/staff/private
 gate work has separate frozen candidates and cannot inherit this bootstrap acceptance.
 The prepared merge remains only Markdown beyond complete hosted-verified3f865e4.
+
+
+## Disabled bootstrap publication after parent acceptance
+
+Main 600db71 follow-up 39364455335 is terminal SUCCESS. Disabled bootstrap
+3f865e4 passes complete own hosted 39359471826: 1,487 unit/contract, 548 integration,
+35 tooling and 123 full browser executions, plus every focused/setup/migration/seed/
+restricted-role/quality/contracts/build/security/image/service gate. Recovery verifies
+74 tables/692 rows logically in 571 ms and one 42,084-byte private ciphertext with
+stopped source PostgreSQL/MinIO in 330 ms; fault/immutable/dormant guards and empty
+cleanup pass. Production RPO/RTO remains false.
+
+Only Markdown differs from that verified runtime/test/Make/workflow tree. Native
+image rebuild/migration/service smoke and image security pass for the prepared
+publication. All eight normal review services remain healthy on 0045; no private
+erasure capability is installed there, no identity closed and no DELETE completed.
+Later plan, staff, private-gate and catalog candidates retain separate exact-source
+acceptance; bootstrap acceptance does not clear them or full ADR-061 execution.
