@@ -600,3 +600,17 @@ separate and in progress; main stays72c9c17 with its successful39345752803 follo
 All local commands have terminated; thirty recorded source containers are independently
 absent. Normal Docker is kept running on0044 with erasure/retirement/short-text disabled.
 No closure/erasure/DELETE completion or production/academic/device acceptance is inferred.
+
+
+ADR-061 read-only source ownership candidate752cda1 is separately pushed for full
+hosted39354774163. Local1,476 unit/contract,110 resource controls,29 identity/lifecycle,
+19 fake dispatch and nine ownership checks pass, plus quality/contracts/build and
+security/source/dependencies. Nine recorded owned source containers are independently
+absent. The74-source registry streams keyed row fingerprints without bodies/credentials,
+rejects bidirectional ownership conflicts and former staff provenance, and preserves
+learner-report classification after independent triage. semantic_clearance is always
+false; no issued plan, SQL capability, closure or erasure exists. Five fixed-template
+B608 exceptions are line-specific and reviewed; no scanner-wide exception. Initial
+registry/fixture/security/probe failures remain failures. Parentb4b20f1 and coordination
+94feeab hosted runs remain separate and live; do not move their remote heads or promote
+unverified source. Main72c9c17 and normal healthy review0044 remain disabled for erasure.
