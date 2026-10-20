@@ -1625,3 +1625,18 @@ A managed checkout must run `make e2e-install` before the full browser matrix. T
 native Firefox attachment verifier resolves its repository-local pinned cache; a
 Playwright cache-variable override alone does not cover that verifier. Preserve other
 checkouts' browser/SDK caches; do not remove or replace them to resolve missing binaries.
+
+### Dormant account-erasure schema0045
+
+`make test-erasure-identity-isolated` now covers identity, direct SQL lifecycle guards,
+clean/additive migrations, structural drift and the existing advisory deletion preview
+in one exclusively owned fake source. It does not authorize a DELETE or provision an
+executor. `make recovery-drill recovery-objects` additionally verifies dormant state
+and rejection of activation/closure after restore. Preserve all existing review data.
+
+Migration0045 installs false-only capability state, empty guarded plans/jobs and null
+closure metadata. Do not treat schema presence, an isolated-looking name, configuration
+flags, a structural check or a green test as execution authority. A future forward
+capability migration and exact isolated provisioning must precede any closure. There
+is no erasure enable/provision/process command in this version. The normal review
+stack stays on its accepted main migration until full candidate acceptance.

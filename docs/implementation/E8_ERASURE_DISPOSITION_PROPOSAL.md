@@ -274,3 +274,21 @@ addendum, is recorded20 October2026 in ADR-061. The historical wording above des
 the choices submitted for that review; it grants no real-data or normal-review-database
 execution. Exact classification, preservation, removal and finite retirement still require
 implementation and passing engineering tests before any case completion.
+
+## ADR-061 lifecycle implementation0045 — dormant persistence
+
+These lifecycle sources implement the already-approved persistence/disposal categories.
+They do not add a retention permission or enable the automatic lane. The schema guard
+is dormant: no plan/job creation or account closure is accepted until a forward
+capability migration and independent isolated provisioning pass their own tests.
+
+| Table | Primary key | Action | Boundary |
+| --- | --- | --- | --- |
+| `account_erasure_state` | `singleton` | K | Shared private capability identity; false flags and null owner/executor, never learner-owned |
+| `account_erasure_plans` | `id` | T | At most ten-minute server plan, finite cleanup; no payload or credential copies |
+| `account_erasure_jobs` | `request_id` | R | Minimized parent DELETE accountability; parent completion deadline and exact dependencies, no new clock or tombstones |
+
+The added nullable users.closed_at is server-owned closure metadata under U. This
+migration leaves every existing user null, including DISABLED users. Direct DML cannot
+set it; no historical closure is inferred. The eventual independently guarded closure
+capability must use database time and retain the original clock permanently.

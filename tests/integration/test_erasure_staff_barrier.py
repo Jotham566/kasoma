@@ -118,3 +118,27 @@ def test_concurrently_bound_login_requires_fresh_verification(identity, monkeypa
         assert db.scalar(select(func.count()).select_from(User)) == 1
         assert db.scalar(select(func.count()).select_from(AuthSession)) == 0
         assert db.get(User, bound_user).status == "ACTIVE"
+
+
+def test_learner_profile_cannot_set_server_closure_controls(identity):
+    service, client, _, _ = identity
+    challenge = service.request_otp(
+        OTPRequest(identifier="closure-input@example.invalid", device_id=uuid4()), "test", None
+    )
+    credentials = service.verify(
+        OTPVerify(challenge_id=challenge.challenge_id, code="246810"), None, str(uuid4())
+    )
+    headers = {"Authorization": "Bearer " + credentials.access_token}
+    body = {
+        "display_name": "Synthetic control test",
+        "birth_date": "2000-01-01",
+        "subject_ids": [str(service.subjects()[0].id)],
+    }
+    for control in [{"closed_at": "2026-10-20T00:00:00Z"}, {"status": "DISABLED"}]:
+        response = client.patch("/api/v1/me", headers=headers, json=body | control)
+        assert response.status_code == 422
+    assert client.get("/api/v1/me", headers=headers).status_code == 200
+    with Session(service.engine) as db:
+        user = db.get(User, service.me(credentials.access_token).id)
+        assert user.status == "ACTIVE"
+        assert user.display_name is None and user.birth_date is None

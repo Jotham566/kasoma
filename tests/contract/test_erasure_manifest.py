@@ -1,4 +1,4 @@
-"""Approved71-source baseline and structural drift denials; never deletion clearance."""
+"""Approved74-source baseline and structural drift denials; never deletion clearance."""
 
 import re
 from dataclasses import FrozenInstanceError, replace
@@ -30,7 +30,7 @@ def test_frozen_baseline_agrees_with_approved_disposition_and_factual_source_doc
         "operations_configuration_versions": (("id",), "K"),
         "operations_configuration_state": (("id",), "K"),
     }
-    assert len(entries) == len(BASELINE) == 71
+    assert len(entries) == len(BASELINE) == 74
     assert {
         name: (value.primary_key, value.disposition) for name, value in BASELINE.items()
     } == entries
@@ -43,12 +43,14 @@ def test_frozen_baseline_agrees_with_approved_disposition_and_factual_source_doc
             SourceColumn(field, kind, nullable == "?")
             for field, nullable, kind in re.findall(r"`([a-z_0-9]+)(\?)?: ([^`]+)`", columns)
         )
+        if name == "users":
+            expected += (SourceColumn("closed_at", "timestamptz", True),)
         assert BASELINE[name].columns == expected
-    assert sum(len(value.columns) for value in BASELINE.values()) == 501
+    assert sum(len(value.columns) for value in BASELINE.values()) == 545
     assert_baseline(BASELINE_REVISION, observed())
 
 
-@pytest.mark.parametrize("revision", ["0042", "0043", "0045", "head", ""])
+@pytest.mark.parametrize("revision", ["0042", "0043", "0044", "0046", "head", ""])
 def test_migration_drift_refuses_same_table_shape(revision):
     with pytest.raises(SourceManifestChanged, match="^SOURCE_MANIFEST_CHANGED$"):
         assert_baseline(revision, observed())

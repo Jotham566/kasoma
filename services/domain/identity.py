@@ -3,7 +3,7 @@
 from datetime import date, datetime
 from uuid import UUID
 
-from sqlalchemy import JSON, DateTime, ForeignKey, String, UniqueConstraint
+from sqlalchemy import JSON, DateTime, ForeignKey, String, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from services.database import Base
@@ -11,6 +11,13 @@ from services.database import Base
 
 class User(Base):
     __tablename__ = "users"
+    # Historical upgrade fixtures may still seed pre-closure schemas. Ordinary
+    # identity reads use ACTIVE plus SQL's closed=>DISABLED invariant; private
+    # closure code explicitly selects this deferred column only on its current schema.
+    __mapper_args__ = {"eager_defaults": False}
+    closed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), server_default=text("NULL"), deferred=True
+    )
     id: Mapped[UUID] = mapped_column(primary_key=True)
     status: Mapped[str] = mapped_column(String(20), default="ACTIVE")
     display_name: Mapped[str | None]

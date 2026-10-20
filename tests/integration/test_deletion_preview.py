@@ -88,6 +88,9 @@ def test_preview_without_decryption_is_count_only_audited_and_non_destructive(
     view = result.json()
     assert view["execution_enabled"] is False
     assert source(view, "user_identifiers")["count"] == 1
+    assert source(view, "account_erasure_jobs", "SIX_YEARS_AFTER_COMPLETION")["count"] == 0
+    assert source(view, "account_erasure_jobs", "STAFF_PROVENANCE_REVIEW")["count"] == 0
+    assert source(view, "account_erasure_plans")["retention"] == "TRANSIENT_EXPIRY"
     assert source(view, "attempts")["count"] == 1
     assert source(view, "grades")["count"] == 1
     assert source(view, "session_items")["count"] == 5

@@ -1,5 +1,29 @@
 # Changelog
 
+## Dormant lifecycle0045 — isolated verification candidate
+
+FR-ID-006/BR-010/FR-OPS-003 and NFR-SEC-002/MNT-001: additive0045 registers the
+private control/plan/job schema and nullable server-owned closure metadata. Flags
+are constrained false, owner/executor null and all lifecycle DML/truncation denied.
+Direct closure is denied, including migration-role DML; no privileged role, executor,
+API, job creation, closure, removal or DELETE completion exists. A forward capability
+migration and independent isolated provisioning remain required. Existing DISABLED
+identities receive no invented closure date. Plans have bounded clocks; durable jobs
+cannot complete, remove rows or carry cursors in this dormant version.
+
+The strict manifest advances to74 tables/545 columns/0045 and erasure-0045-v1, with
+explicit lifecycle dispositions. Advisory preview includes case plans/jobs and claimant
+staff provenance without changing its non-execution contract. Recovery additionally
+checks dormancy and rejects forged activation/closure. No new architectural decision
+or retention permission: this stages the already-approved ADR-061 persistence only.
+
+Initial formatting exposed two overlong manifest strings, corrected before checks.
+Local98 contracts and17 isolated SQL/identity cases pass, including additive populated
+0044 upgrade, repeat upgrade, default state and drift/forgery denials. Broader preview,
+recovery, full regression and hosted acceptance remain pending. Earlier mapping-only
+notes are historical; these mappings are now registered in the candidate migration.
+Normal review Docker remains on verified0044; do not migrate it from this worktree.
+
 ## OTP verification and the user barrier — unverified candidate
 
 FR-ID-003/005/006 and NFR-SEC-002: an existing LOGIN now selects its user lock before
@@ -1700,3 +1724,32 @@ only Markdown follows it and incorporates main64e1f72's accepted2966bab foundati
 closeout. The complete local123-browser/identity/recovery checks do not constitute
 hosted acceptance or account erasure. Next implement ADR-061's permanent SQL barrier
 and resumable job in a new branch; keep both live remote CI heads unchanged.
+
+## SQL lifecycle work in progress on codex/erasure-barrier
+
+FR-ID-003/005/006, BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: begin the private
+control/plan/job mappings and a nullable deferred User.closed_at mapping. Deferred
+server-default loading preserves pre-closure migration fixtures without inventing
+closure dates. Add an HTTP regression refusing client-supplied closed_at/status while
+leaving access and profile unchanged. The lifecycle SQL migration, permanent clock/
+role/ownership guards, independent provisioning, atomic closure and resumable worker,
+contracts/API/UI and full first-slice verification remain to be implemented. These
+mappings are not yet migrated/registered and grant no activation or erasure authority.
+
+## Lifecycle0045 local engineering checkpoint
+
+The candidate passes quality/format/types (217 Python sources),1,445 unit/contract,
+35 tooling,98 focused contracts and22 owned actual PostgreSQL identity/lifecycle/
+preview cases. Populated0044-to0045 and repeated upgrade pass; the deferred mapping
+also preserves historical identity fixtures. OpenAPI consistency/build and dependency,
+source, secret and Bandit security checks pass. The initial two E501 strings were
+fixed; Bandit's existing narrow-annotation parser warnings are not failures.
+
+Logical recovery verifies74 tables/692 rows in333ms; PostgreSQL/MinIO verifies
+74/692/one42,084-byte ciphertext in173ms with source stopped, immutable/dormant guards,
+missing/corrupt rejection, stripped-retirement denial and no cleanup failure. These
+are synthetic recovery checks, not production RPO/RTO or erasure/checkpoint acceptance.
+Full local browsers and exact-source hosted/full integration acceptance remain pending.
+No account is closed or erased, and no request is completed. The next implementation
+is the independent isolated capability plus atomic authorization/closure and durable
+worker continuation under the approved ADR-061 locks and preservation barriers.

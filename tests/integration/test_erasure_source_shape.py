@@ -8,7 +8,7 @@ from services.erasure_inventory import SourceManifestChanged, check_source_shape
 pytestmark = pytest.mark.integration
 
 
-def test_actual0044_catalog_and_unknown_source_or_column_refusal(identity):
+def test_actual0045_catalog_and_unknown_source_or_column_refusal(identity):
     service, *_ = identity
     with service.engine.connect() as db:
         check_source_shape(db)

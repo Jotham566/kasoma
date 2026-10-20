@@ -1,6 +1,6 @@
 """Approved ADR-061 structural baseline; dispositions are not executable SQL authority.
 
-Frozen from the assessed0044 inventory. Runtime code never parses documentation.
+Frozen from the assessed0045 dormant lifecycle inventory. Runtime code never parses documentation.
 Ownership, payload versions, holds, privileges and barriers require separate validation.
 """
 
@@ -34,9 +34,33 @@ def _source(action: Disposition, key: tuple[str, ...], shape: str) -> SourceDefi
     return SourceDefinition(action, key, tuple(columns))
 
 
-BASELINE_REVISION = "0044"
+BASELINE_REVISION = "0045"
 BASELINE: Mapping[str, SourceDefinition] = MappingProxyType(
     {
+        "account_erasure_state": _source(
+            "K",
+            ("singleton",),
+            "singleton:int4 original_scope_eligible:bool database_oid:int8 namespace_oid:int8 "
+            "owner_oid?:int8 executor_oid?:int8 scope_nonce:uuid creation_enabled:bool "
+            "execution_enabled:bool policy:varchar manifest:varchar installed_at:timestamptz",
+        ),
+        "account_erasure_plans": _source(
+            "T",
+            ("id",),
+            "id:uuid request_id:uuid scope_nonce:uuid policy:varchar manifest:varchar "
+            "inventory_hash:varchar version?:varchar observed_at:timestamptz "
+            "expires_at:timestamptz",
+        ),
+        "account_erasure_jobs": _source(
+            "R",
+            ("request_id",),
+            "request_id:uuid subject_id:uuid authorized_by:uuid decision_reference:uuid "
+            "authorized_at:timestamptz authenticated_at:timestamptz "
+            "policy:varchar manifest:varchar "
+            "plan_id:uuid plan_version:varchar command_key:uuid command_hash:varchar phase:varchar "
+            "blocker?:varchar failure?:varchar closed_at?:timestamptz completed_at?:timestamptz "
+            "examined:int8 removed:int8 batches:int8 private_cursor?:json correlation_id:uuid",
+        ),
         "alembic_version": _source("K", ("version_num",), "version_num:varchar"),
         "assessment_grading_history": _source(
             "L", ("id",), "id:uuid attempt_id:uuid revision:int4 snapshot:jsonb"
@@ -398,7 +422,8 @@ BASELINE: Mapping[str, SourceDefinition] = MappingProxyType(
         "users": _source(
             "U",
             ("id",),
-            "id:uuid status:varchar display_name?:text birth_date?:date created_at:timestamptz",
+            "id:uuid status:varchar display_name?:text birth_date?:date created_at:timestamptz "
+            "closed_at?:timestamptz",
         ),
     }
 )

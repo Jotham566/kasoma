@@ -4,6 +4,7 @@ from sqlalchemy import text
 from services.config import Settings
 from services.database import Base, engine_for
 from services.domain import (  # noqa: F401
+    account_erasure,
     assessment,
     channel_preservation,
     content,

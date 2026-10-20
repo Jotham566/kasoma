@@ -85,7 +85,23 @@ def check_guards(engine: Engine) -> None:
         view = recorded(db, pointer, pointer.current_id)
         if view.revision != 1 or view.values.failed_imports != 2:
             raise RuntimeError("Restored warning configuration mismatch")
+    with engine.connect() as db:
+        state = db.execute(
+            text("""
+          SELECT original_scope_eligible,creation_enabled,execution_enabled,owner_oid,executor_oid
+          FROM account_erasure_state WHERE singleton=1
+        """)
+        ).one()
+        if tuple(state) != (False, False, False, None, None):
+            raise RuntimeError("Restored erasure lifecycle must remain dormant")
+        if db.scalar(text("SELECT count(*) FROM account_erasure_jobs")) != 0:
+            raise RuntimeError("Dormant recovery must not contain erasure execution")
     for statement in (
+        "UPDATE account_erasure_state SET creation_enabled=true,execution_enabled=true",
+        "DELETE FROM account_erasure_state",
+        "TRUNCATE account_erasure_plans",
+        "INSERT INTO account_erasure_jobs DEFAULT VALUES",
+        "UPDATE users SET status='DISABLED',closed_at=clock_timestamp()",
         "UPDATE operations_configuration_versions SET reason='REDUCE_NOISE'",
         "DELETE FROM operations_configuration_versions",
         "DELETE FROM operations_configuration_state",

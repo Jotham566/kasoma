@@ -48,7 +48,7 @@ def check_source_shape(db: Connection) -> None:
           WITH scoped AS MATERIALIZED (
             SELECT c.oid,c.relname,c.relkind FROM pg_catalog.pg_class c
             WHERE c.relnamespace=pg_catalog.to_regnamespace(:schema)
-              AND c.relkind IN ('r','p','f','m','v') ORDER BY c.relname LIMIT 72
+              AND c.relkind IN ('r','p','f','m','v') ORDER BY c.relname LIMIT 75
           )
           SELECT s.relname,s.relkind,
             (SELECT array_agg(a.attname::text ORDER BY k.ordinality)
@@ -63,7 +63,7 @@ def check_source_shape(db: Connection) -> None:
                              ORDER BY a.attnum)
              FROM (SELECT * FROM pg_catalog.pg_attribute
                    WHERE attrelid=s.oid AND attnum>0 AND NOT attisdropped
-                   ORDER BY attnum LIMIT 502) a
+                   ORDER BY attnum LIMIT 546) a
              JOIN pg_catalog.pg_type t ON t.oid=a.atttypid) AS columns
           FROM scoped s ORDER BY s.relname
         """),

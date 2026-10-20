@@ -1129,3 +1129,29 @@ Neither row grants subject ownership or deletion of administrative audit evidenc
 0044 forward repair changes only operations_configuration_version_guard, not these
 71-table/501-column/121-FK/102-trigger catalog counts. The normal synthetic preview is
 subsequently migrated through0044; no erasure or retention authority follows.
+
+## Dormant lifecycle0045 implementation inventory
+
+The structural manifest advances to0045:74 tables and545 columns. Existing69 historical
+sections and the0043/0044 addendum remain factual prior-source evidence. New fields in
+physical SQL order are listed below. No privileged execution, ownership/preservation
+clearance or release acceptance is inferred from this inventory.
+
+- users appends `closed_at?: timestamptz`; all pre-existing values remain null.
+- account_erasure_state: `singleton: int4`, `original_scope_eligible: bool`,
+  `database_oid: int8`, `namespace_oid: int8`, `owner_oid?: int8`, `executor_oid?: int8`,
+  `scope_nonce: uuid`, `creation_enabled: bool`, `execution_enabled: bool`,
+  `policy: varchar`, `manifest: varchar`, `installed_at: timestamptz`.
+- account_erasure_plans: `id: uuid`, `request_id: uuid`, `scope_nonce: uuid`,
+  `policy: varchar`, `manifest: varchar`, `inventory_hash: varchar`, `version?: varchar`,
+  `observed_at: timestamptz`, `expires_at: timestamptz`.
+- account_erasure_jobs: `request_id: uuid`, `subject_id: uuid`, `authorized_by: uuid`,
+  `decision_reference: uuid`, `authorized_at: timestamptz`, `authenticated_at: timestamptz`,
+  `policy: varchar`, `manifest: varchar`, `plan_id: uuid`, `plan_version: varchar`,
+  `command_key: uuid`, `command_hash: varchar`, `phase: varchar`, `blocker?: varchar`,
+  `failure?: varchar`, `closed_at?: timestamptz`, `completed_at?: timestamptz`,
+  `examined: int8`, `removed: int8`, `batches: int8`, `private_cursor?: json`,
+  `correlation_id: uuid`.
+
+No new role, executor/login membership, plaintext body, source-ID ledger or payload
+reading endpoint is added. Source shape is a drift fence, not constraint/ACL/hold proof.

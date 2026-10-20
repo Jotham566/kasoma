@@ -9,7 +9,7 @@ from pydantic import AwareDatetime, Field, StrictBool, field_validator, model_va
 from services.identity_contracts import Contract
 
 Policy = Literal["synthetic-account-erasure-v1"]
-Manifest = Literal["erasure-0044-v1"]
+Manifest = Literal["erasure-0045-v1"]
 Version = Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
 DurablePhase = Literal[
     "AUTHORIZED", "BARRIER_APPLIED", "PRESERVING", "REMOVING", "VERIFYING", "COMPLETED"
@@ -51,7 +51,7 @@ class ErasurePlan(Contract):
     plan_id: UUID
     version: Version
     policy: Policy = "synthetic-account-erasure-v1"
-    manifest: Manifest = "erasure-0044-v1"
+    manifest: Manifest = "erasure-0045-v1"
     observed_at: AwareDatetime
     expires_at: AwareDatetime
     authorization_available: StrictBool
@@ -74,7 +74,7 @@ class ErasureStatus(Contract):
 
     request_id: UUID
     policy: Policy = "synthetic-account-erasure-v1"
-    manifest: Manifest = "erasure-0044-v1"
+    manifest: Manifest = "erasure-0045-v1"
     phase: DurablePhase
     blocker: Blocker | None = None
     failure: Failure | None = None

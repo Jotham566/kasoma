@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from services.data_request_contracts import DeletionPreview, DeletionSource, RetentionCategory
 from services.data_requests import DataRequestService
+from services.domain.account_erasure import ErasureJob, ErasurePlanRow
 from services.domain.assessment import (
     AssessmentEvent,
     AssessmentReceipt,
@@ -202,6 +203,8 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     )
     add(DataExport, DataExport.request_id.in_(requests), "EXPIRES_AFTER_24_HOURS")
     add(ExportJob, ExportJob.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
+    add(ErasureJob, ErasureJob.request_id.in_(requests), "SIX_YEARS_AFTER_COMPLETION")
+    add(ErasurePlanRow, ErasurePlanRow.request_id.in_(requests), "TRANSIENT_EXPIRY")
     # Includes unclaimed/failed leases as well as published 24-hour copies.
     add(ExportGeneration, ExportGeneration.request_id.in_(requests), "TRANSIENT_EXPIRY")
     add(ContentFlag, ContentFlag.reporter_id == user, "TWENTY_FOUR_MONTHS_AFTER_RESOLUTION")
@@ -213,6 +216,7 @@ def inventory(db: Session, user: UUID) -> list[DeletionSource]:
     )
     # Staff provenance is deliberately separate from owned learning records.
     for model, condition in [
+        (ErasureJob, ErasureJob.authorized_by == user),
         (UserRole, UserRole.user_id == user),
         (ContentImport, ContentImport.actor_id == user),
         (GradingAuditReview, GradingAuditReview.reviewer_id == user),
