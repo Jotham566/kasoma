@@ -1901,3 +1901,13 @@ short-text disabled. Host-native Ollama connectivity passes without inference.
 Next complete guardian-consumption/closed staff-revocation guards and the full
 installed SQL/payload/preservation/export/erasure/checkpoint lifecycle. External
 academic/privacy/provider/device/production acceptance remains genuine required work.
+
+
+Linked parent39375073567 is now terminal FAILED at exact2c37d4d:1,501
+unit/contract and35 tooling pass;42 integration fail/597 pass. Its catalog/
+bootstrap/plan failures remain failures and later full-browser/security/image/
+service acceptance is unexecuted. All three older catalog-dependent candidates
+therefore retain failed hosted evidence; none is promoted or rerun as a substitute
+for the corrected source's own complete39378996412 verification. The controlled
+two-architecture reproduction/correction is local proof of the serialization defect,
+not a claimed successful hosted result for any old head.
