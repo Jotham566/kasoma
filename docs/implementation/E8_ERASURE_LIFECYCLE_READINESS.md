@@ -421,6 +421,30 @@ full522 integration and hosted image/service acceptance remain pending. Do not p
 this candidate from local/browser checks alone. No account closure, erasure, completed
 DELETE, production recovery, normal short-text activation or full MVP acceptance.
 
+## 0045 hosted additive-upgrade correction — verification pending
+
+Complete hosted39346406621 atcb0cd22 is FAILED:1,445 unit/contract and521 integration
+pass, but the0042 configuration-upgrade fixture compares whole physical user JSON
+before/after head. Its only reported difference is the added closed_at:null field.
+Later browser/security/image/service stages are unexecuted, not accepted. The source
+has no new closure/erasure authority and is not promoted. Main72c9c17's separate
+follow-up39345752803 is SUCCESS; it cannot accept0045.
+
+Update that regression to compare all existing row values and require the exact
+new closed_at:null addition for users. Every other field/table remains an exact
+comparison; do not omit columns, invent a clock, alter the migration or waive checks.
+Focused operations/quality verification and a new exact-source full hosted run remain
+required. Prior native/browser results remain scoped to their original commands.
+
+## Corrected0045 additive regression — local check
+
+The exact nullable-column expectation correction passes all34 operations configuration
+cases, including the populated0042-to-head upgrade. Quality/format/types pass. Every
+existing user value and other table row remains an exact parsed-JSON comparison; the
+new clock is required null. No application/migration/API behavior or architecture changes.
+Own full hosted verification remains required before promotion. The earlier failed
+39346406621 remains FAILED, with later stages unexecuted. Review stays on0044/main72c9c17.
+
 ## SQL-visible account processing gate — ADR-070 candidate
 
 FR-ID-003/005/006, FR-GRD-003/004, FR-WA-006, FR-OPS-003, BR-010 and
