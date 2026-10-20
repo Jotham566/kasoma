@@ -6,7 +6,11 @@ from uuid import UUID
 
 import pytest
 
-from services.account_processing import ProcessingGateUnavailable, dispatch_gate
+from services.account_processing import (
+    ProcessingGateUnavailable,
+    dispatch_connections,
+    dispatch_gate,
+)
 
 
 def connection(results):
@@ -29,6 +33,17 @@ def test_acquisition_transaction_ends_before_body_and_release_precedes_return():
     for call in owned.scalar.call_args_list:
         assert call.args[1] == {"subject": UUID(int=1)}
         assert "kasoma.account-processing.v1:" in str(call.args[0])
+
+
+@pytest.mark.parametrize(
+    "subjects",
+    [(), (UUID(int=1), UUID(int=2), UUID(int=3)), [UUID(int=1)], ("untrusted",), (None,), (1,)],
+)
+def test_dispatch_subject_set_is_closed_before_connection_checkout(subjects):
+    engine = Mock()
+    with pytest.raises(ProcessingGateUnavailable), dispatch_connections(engine, subjects):
+        raise AssertionError("Invalid or unbounded subject set must not dispatch")
+    engine.connect.assert_not_called()
 
 
 @pytest.mark.parametrize("failure", [RuntimeError("synthetic"), KeyboardInterrupt()])

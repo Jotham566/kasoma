@@ -110,7 +110,7 @@ def plan(identity: IdentityService, token: str, target: UUID, correlation: UUID)
                     )
                 )
                 if result.request_id != target or result.authorization_available:
-                    # This staged v3 implementation cannot assert completed clearance.
+                    # This staged v5 implementation cannot assert completed clearance.
                     raise IdentityError("ERASURE_UNAVAILABLE", 503)
                 return result
     except IdentityError:

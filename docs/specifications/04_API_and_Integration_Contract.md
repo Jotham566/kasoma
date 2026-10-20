@@ -983,3 +983,31 @@ Legacy private v1/v2 recipes return the same fixed503 unavailable boundary befor
 writes. SQL derives the learner from the case, tries the installed-namespace shared
 processing gate before case locks and rejects a stale subject-row snapshot. Busy/stale
 calls cannot publish a plan/read audit. No authorization or erasure POST is enabled.
+
+
+The staged private plan transport now requires exact v4 readiness, identifying the
+ADR-073 pre-install catalog fence. Existing v2/v3 installations fail the same fixed503
+before plan writes; no new public request/response field or erasure POST is introduced.
+Normal review remains excluded and creation/execution remain false.
+
+
+ADR-074 credential barrier: the existing LOGIN acceptance schema/status stays generic
+for a retained closed identifier; no code or provider dispatch is issued. Known-user
+dispatch coordinates/rechecks against closure. Changed lookup ownership requires
+fresh issuance, with no caller-selected owner or lock. Closed refresh and existing
+LOGIN verification fail before family/challenge mutation. This is a consumer guard,
+not an account-closure or DELETE-completion endpoint. All execution remains disabled.
+
+
+ADR-075 extends generic OTP acceptance/suppression to a retained closed bound
+LINK/GUARDIAN recipient. Dispatch rechecks the current recent authenticated actor
+and original recipient binding while protecting both subjects; no actor/recipient
+UUID, lock or SQL selector is accepted from the client. Exact failure cleanup leaves
+closed-actor source and consumed evidence intact. Response DTOs and rate limits stay
+unchanged. Full erasure and DELETE fulfillment remain disabled/unimplemented.
+
+
+ADR-076 fresh private capability v5 records the portable raw-octet pre-install fence.
+The current private readiness contract refuses older v2/v3/v4 identities before plan
+writes; it does not adopt or upgrade them. Public DTOs,0045 structure and disabled
+execution behavior remain. Catalog portability is not full SQL/erasure clearance.

@@ -522,3 +522,39 @@ Recheck current authenticated ADMIN case ownership in SQL, issue database-clock 
 plans, and ultimately commit authorization plus permanent closure atomically. No
 identity signing/lookup key sharing, client actor/subject/clock input or new privacy
 permission. Implementation and complete first-slice verification remain in progress.
+
+## ADR-073: Frozen pre-install source catalog
+
+[Record](../decisions/ADR/073-frozen-preinstall-source-catalog.md): compare a new source's
+behavior/privilege catalog against metadata reproduced only from approved migrations in
+an independently owned fake-only source. Never approve the live source as its own baseline.
+No source rows, credentials, erasure activation or new preservation/retention authority.
+Installed-catalog/SQL/payload/hold clearance and full execution remain required work.
+
+
+## ADR-074: Closed-identity credential dispatch
+
+[Record](../decisions/ADR/074-closed-identity-credential-dispatch.md): coordinate retained
+LOGIN bindings before rate/identifier work, reject closed credential mutations and
+hold only an idle shared subject gate through bound OTP dispatch. Keep generic responses,
+actual provider-only observations, exact newly created challenge cleanup and unchanged
+active reuse protection. No closure, hash-based attribution or execution authority.
+
+
+## ADR-075: Linked credential dispatch gates
+
+[Record](../decisions/ADR/075-linked-credential-dispatch-gates.md): protect authenticated
+actor and known recipient with at most two shared subject gates on one owned connection.
+Recheck current recent authority and exact binding before LINK/GUARDIAN dispatch, without
+opposing account HMAC locks. Exact pending cleanup respects committed closure and consumed
+evidence. No new data attribution, retention, erasure activation or public DTO.
+
+
+## ADR-076: Portable raw catalog Datum octets
+
+[Record](../decisions/ADR/076-portable-catalog-datum-octets.md): preserve the exact
+eight-bit values of signed/unsigned raw Datum serialization on the approved ARM64/
+AMD64 image variants. Keep all surrounding trees, live code bodies and32 full
+metadata categories strict. Versioned v2 artifact/private v5 provenance, independent
+fresh reproduction and raw-before-deparser denials remain required. No erasure
+activation, live-source baseline learning or new data permission.

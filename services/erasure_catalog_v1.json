@@ -1,0 +1,180 @@
+{
+  "body_templates": {
+    "data_request_completion_guard": "\n    BEGIN\n      IF TG_OP='DELETE' THEN\n        IF current_user='@EXPORT_RETIREMENT_OWNER@' AND\n          public.export_retirement_allowed('DATA_REQUEST',OLD.id)\n        THEN RETURN OLD; END IF;\n        RAISE EXCEPTION 'Request evidence is retained';\n      END IF;\n      IF TG_OP='INSERT' THEN\n        IF NEW.completed_at IS NOT NULL OR NEW.retention_due_at IS NOT NULL\n          OR NEW.export_digest IS NOT NULL\n        THEN RAISE EXCEPTION 'New request must be pending'; END IF;\n        RETURN NEW;\n      END IF;\n      IF (to_jsonb(NEW)-ARRAY['completed_at','retention_due_at','export_digest']) IS DISTINCT FROM\n         (to_jsonb(OLD)-ARRAY['completed_at','retention_due_at','export_digest'])\n        OR OLD.completed_at IS NOT NULL OR NEW.kind<>'EXPORT'\n        OR NEW.completed_at IS NULL OR NEW.completed_at<NEW.created_at\n        OR NEW.retention_due_at IS NULL OR NEW.retention_due_at<>NEW.completed_at+interval '6 years'\n        OR NEW.export_digest IS NULL OR NOT (\n          EXISTS(SELECT 1 FROM data_exports e WHERE e.request_id=NEW.id\n            AND e.created_at=NEW.completed_at AND e.digest=NEW.export_digest) OR\n          EXISTS(SELECT 1 FROM personal_export_generations g WHERE g.request_id=NEW.id\n            AND g.published_at=NEW.completed_at AND g.digest=NEW.export_digest))\n      THEN RAISE EXCEPTION 'Invalid export completion'; END IF;\n      RETURN NEW;\n    END ",
+    "export_retirement_leaf_guard": "\nDECLARE target uuid;\nBEGIN\n  IF TG_OP='DELETE' AND current_user='@EXPORT_RETIREMENT_OWNER@' THEN\n    IF TG_TABLE_NAME='data_request_receipts' THEN target := OLD.id;\n    ELSE target := OLD.request_id; END IF;\n    IF public.export_retirement_allowed(TG_ARGV[0],target) THEN RETURN OLD; END IF;\n  END IF;\n  RAISE EXCEPTION 'Assessment evidence is append-only';\nEND ",
+    "export_retirement_owner_safe": "\n  SELECT EXISTS(SELECT 1 FROM pg_roles WHERE rolname=current_user AND rolname='@EXPORT_RETIREMENT_OWNER@'\n    AND NOT rolcanlogin AND NOT rolsuper AND NOT rolcreatedb AND NOT rolcreaterole\n    AND NOT rolinherit AND NOT rolreplication AND NOT rolbypassrls)\n",
+    "personal_export_job_guard": "\n    BEGIN\n      IF TG_OP='DELETE' THEN\n        IF current_user='@EXPORT_RETIREMENT_OWNER@' AND\n          public.export_retirement_allowed('EXPORT_JOB_RECEIPT',OLD.request_id)\n        THEN RETURN OLD; END IF;\n        RAISE EXCEPTION 'Export job accountability is retained';\n      END IF;\n      IF TG_OP='INSERT' THEN\n        IF NEW.status<>'QUEUED' OR NEW.attempts<>0 OR NEW.failure IS NOT NULL\n          OR NEW.created_at<>NEW.queued_at OR NEW.updated_at<>NEW.queued_at\n        THEN RAISE EXCEPTION 'New export job must be queued'; END IF;\n      ELSE\n        IF NEW.request_id<>OLD.request_id OR NEW.created_at<>OLD.created_at\n          OR NEW.updated_at<OLD.updated_at\n        THEN RAISE EXCEPTION 'Immutable job ownership/time'; END IF;\n        IF NOT (\n          (OLD.status='QUEUED' AND NEW.status IN ('RUNNING','FAILED')) OR\n          (OLD.status='RUNNING' AND NEW.status IN ('QUEUED','FAILED','READY')) OR\n          (OLD.status='FAILED' AND NEW.status='QUEUED') OR\n          (OLD.status='READY' AND NEW.status='EXPIRED'))\n        THEN RAISE EXCEPTION 'Invalid export job transition'; END IF;\n        IF NEW.status='RUNNING' AND NEW.attempts<>OLD.attempts+1\n          OR NEW.status='QUEUED' AND OLD.status='FAILED' AND NEW.attempts<>0\n          OR NEW.status NOT IN ('RUNNING','QUEUED') AND NEW.attempts<>OLD.attempts\n          OR NEW.status='QUEUED' AND OLD.status='RUNNING' AND NEW.attempts<>OLD.attempts\n        THEN RAISE EXCEPTION 'Invalid export attempt accounting'; END IF;\n        IF NOT(OLD.status='FAILED' AND NEW.status='QUEUED') AND NEW.queued_at<>OLD.queued_at\n        THEN RAISE EXCEPTION 'Explicit retry required to renew queue time'; END IF;\n        IF NOT(OLD.status='FAILED' AND NEW.status='QUEUED')\n          AND NEW.correlation_id<>OLD.correlation_id\n        THEN RAISE EXCEPTION 'Automatic work retains command correlation'; END IF;\n        IF OLD.status IN ('QUEUED','RUNNING') AND NEW.status IN ('QUEUED','RUNNING')\n          AND (NEW.grant_family IS DISTINCT FROM OLD.grant_family OR\n            NEW.grant_authenticated_at IS DISTINCT FROM OLD.grant_authenticated_at)\n        THEN RAISE EXCEPTION 'Automatic work cannot renew authorization'; END IF;\n        IF NEW.status='READY' AND NOT export_grant_valid(NEW.request_id,OLD.grant_family,\n          OLD.grant_authenticated_at,NEW.updated_at)\n        THEN RAISE EXCEPTION 'Publication authorization expired'; END IF;\n        IF NEW.status='EXPIRED' AND (NEW.finished_at<>OLD.finished_at OR NOT EXISTS(\n          SELECT 1 FROM personal_export_generations g WHERE g.id=OLD.generation_id\n            AND g.expires_at<=NEW.updated_at))\n        THEN RAISE EXCEPTION 'Live export cannot expire early'; END IF;\n      END IF;\n      IF NEW.status IN ('QUEUED','RUNNING') AND (NOT export_grant_valid(NEW.request_id,\n          NEW.grant_family,NEW.grant_authenticated_at,NEW.updated_at) OR NOT EXISTS(\n          SELECT 1 FROM data_subject_requests WHERE id=NEW.request_id AND completed_at IS NULL))\n      THEN RAISE EXCEPTION 'Pending owned request and current grant required'; END IF;\n      IF NEW.status='RUNNING' AND NOT EXISTS(SELECT 1 FROM personal_export_generations g\n        WHERE g.id=NEW.generation_id AND g.request_id=NEW.request_id\n          AND g.created_at=NEW.updated_at AND g.published_at IS NULL)\n      THEN RAISE EXCEPTION 'Fresh owned generation required'; END IF;\n      RETURN NEW;\n    END "
+  },
+  "categories": {
+    "acl": {
+      "count": 1250,
+      "digest": "27c86acd29d7a5f692b6f7d3f2da5173018628d251588e72889a6b7ea25fbe8d"
+    },
+    "aggregates": {
+      "count": 4,
+      "digest": "5a0c2505f79cfaf5a42f782b3f818e9ed634e96083c308c3f11a27fded0f33ad"
+    },
+    "amop": {
+      "count": 36,
+      "digest": "81e3fe8d9c897736eed1862e431b7853000bd9e02833338f8c7e98e1556f014d"
+    },
+    "amproc": {
+      "count": 54,
+      "digest": "cd17aab8bca8161aa0764a4fa214fa68d30864ee05646b62a868505987f9ebbf"
+    },
+    "attribute_acl": {
+      "count": 4,
+      "digest": "179dd5f7072a3231eb8615edb8b98c6dee26a3ffca8017ac6e6cf2b1237ebce3"
+    },
+    "attributes": {
+      "count": 778,
+      "digest": "698950277face0d5e5e8a0b738eccc2b7b8fae38d831d78e0cbba916d84ff463"
+    },
+    "casts": {
+      "count": 23,
+      "digest": "67d495a9d269ec8c49117a9cc222640aec16d92c6ea01a88ce7eb8c6bde6a91c"
+    },
+    "collations": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "constraints": {
+      "count": 475,
+      "digest": "1afba24578d9e42785ec5dec6af6eb67b0f2caa5d036b33f6b0f7b5fd11b338a"
+    },
+    "conversions": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "database": {
+      "count": 1,
+      "digest": "1e31baddc110cae98f3b1a973763b88d64e8fcb146e2f3a272122df3cd80cc3d"
+    },
+    "database_settings": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "default_acl": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "enums": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "event_triggers": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "extensions": {
+      "count": 2,
+      "digest": "7bdc704d95abfc2348c13a498149b10bdfc7e419be7f5ab09e2016d74beeb5c5"
+    },
+    "foreign_controls": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "functions": {
+      "count": 202,
+      "digest": "45b190ba3a444a8cc5a573fc6a41ba5f5348076beeccc4ada19feb62ed77883b"
+    },
+    "indexes": {
+      "count": 168,
+      "digest": "577f507fc47c4911099580a7d1c40f0e4e3d5766d283de079c3183a14a4b0f54"
+    },
+    "inheritance": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "memberships": {
+      "count": 3,
+      "digest": "0a09f8e4bc52cfcff187e46267f76666ec143f8c3d4162b27aea4dcb73d8ae37"
+    },
+    "namespace": {
+      "count": 1,
+      "digest": "4060544b28473e65cd443526ec6b8791034a1eca0ba6207a8d0fea3d4d1877f8"
+    },
+    "opclasses": {
+      "count": 24,
+      "digest": "24e6d7c2a81cfb67b8f777213fbde3caf3570785b3d7a85bd682ef26dc163bbd"
+    },
+    "operators": {
+      "count": 40,
+      "digest": "cf0d78733406c8e6f267dbdb1bf81b886d2cb20031933b6eedfaafae07285a65"
+    },
+    "opfamilies": {
+      "count": 24,
+      "digest": "6d26c51cd48e68b273e5c411d53372ed5905da98af7b05816af42a61c450cbdb"
+    },
+    "policies": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "relations": {
+      "count": 243,
+      "digest": "64897c5fafad732da476a3586121f0e115a699b505a7b276cdd1bcccfb3eb079"
+    },
+    "roles": {
+      "count": 16,
+      "digest": "4c1c0ef3ea13bc933cdd8e3913fcc29e3b78b57bbbb223afab26004194f6cba7"
+    },
+    "rules": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "text_search": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "triggers": {
+      "count": 609,
+      "digest": "3ec718f783c47b18e730fe67b00fa68cea1d94f86add00abd4cccdec564b78f0"
+    },
+    "types": {
+      "count": 154,
+      "digest": "6d4db03245870d8942c3a1ea6eb478b069a0c822998579bc6dd794eb765bca0f"
+    }
+  },
+  "migration_sources_sha256": "3aa994bc411328a6205c35521e01a2ad8babecd70eac2671e7a765097d959e96",
+  "postgres_major": 16,
+  "profile": "public-preinstall-catalog-v1",
+  "raw_categories": {
+    "constraints": {
+      "count": 475,
+      "digest": "a5252512a96105ce67453d3701ac64568de3aa70b7660d0cc22053da2ec18ce1"
+    },
+    "defaults": {
+      "count": 34,
+      "digest": "a55ed55b387a9d94e026492f8cce031c4fb8d983b74f6b3adea678cefad50b72"
+    },
+    "functions": {
+      "count": 202,
+      "digest": "add90ca8159327223e5a51b9f6a3cbed932d2a56c523bc1a1d898139a043221c"
+    },
+    "indexes": {
+      "count": 168,
+      "digest": "ec81b6fe89bd1c7feca543ac7936913fc3a63df512f2a936b1106ae1e3c7aa63"
+    },
+    "policies": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "relations": {
+      "count": 243,
+      "digest": "c59c9a915aa3df4a376952e11bfb62b5603c5179d21045d83f5b3e04db690eba"
+    },
+    "rules": {
+      "count": 0,
+      "digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "triggers": {
+      "count": 609,
+      "digest": "3ec718f783c47b18e730fe67b00fa68cea1d94f86add00abd4cccdec564b78f0"
+    },
+    "types": {
+      "count": 154,
+      "digest": "65ae264d1e01988277dc4fcba3eecd72b5bad7978650519606b95c726077a4bf"
+    }
+  },
+  "revision": "0045"
+}

@@ -6,15 +6,15 @@ import json
 import re
 import secrets
 from collections.abc import Callable, Iterator
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
 from cryptography.fernet import Fernet
-from sqlalchemy import Engine, delete, func, select, text, update
+from sqlalchemy import Connection, Engine, delete, func, select, text, update
 from sqlalchemy.orm import Session
 
-from services.account_processing import coordinate
+from services.account_processing import coordinate, dispatch_connections
 from services.config import Settings
 from services.domain.curriculum import Level, Subject
 from services.domain.identity import (
@@ -82,8 +82,8 @@ class IdentityService:
         return self.cipher.decrypt(value.encode()).decode()
 
     @contextmanager
-    def transaction(self) -> Iterator[Session]:
-        with Session(self.engine) as db:
+    def transaction(self, connection: Connection | None = None) -> Iterator[Session]:
+        with Session(connection if connection is not None else self.engine) as db:
             try:
                 yield db
             except IdentityError:
@@ -160,6 +160,14 @@ class IdentityService:
             owner = None
             if body.purpose != "LOGIN":
                 owner = self.authenticate(db, token, recent=True).user_id
+            recipient_owner = self.identifier_binding(db, kind, lookup)
+            if recipient_owner is not None:
+                if body.purpose == "LOGIN":
+                    self.lock_user(db, recipient_owner)
+                elif recipient_owner != owner:
+                    # Shared recipient coordination only: no opposing account
+                    # HMAC/row-lock order across actor and recipient identities.
+                    coordinate(db, recipient_owner)
             now = self.clock()
             permitted = [
                 self.rate(db, "peer:" + peer, 20, 3600),
@@ -168,6 +176,8 @@ class IdentityService:
                 self.rate(db, "cooldown:" + lookup, 1, 60),
             ]
             if not all(permitted):
+                return OTPAccepted(challenge_id=challenge_id)
+            if not self.otp_binding_open(db, kind, lookup, recipient_owner):
                 return OTPAccepted(challenge_id=challenge_id)
             if body.purpose == "GUARDIAN" and db.scalar(
                 select(Identifier.id).where(
@@ -190,17 +200,95 @@ class IdentityService:
                     expires_at=now + timedelta(minutes=10),
                 )
             )
-        try:
-            provider = self.email if kind == "EMAIL" else self.sms
-            provider.send(identifier, f"Kasoma {body.purpose} code: {code}. Expires in 10 minutes.")
-        except Exception:
-            observe(observer, "EMAIL" if kind == "EMAIL" else "SMS", "FAILED")
-            # No provider exception/body may reach logs or expose whether delivery succeeded.
-            with self.transaction() as db:
-                db.execute(delete(Challenge).where(Challenge.id == challenge_id))
-        else:
-            observe(observer, "EMAIL" if kind == "EMAIL" else "SMS", "RETURNED")
+        if not self.deliver_otp(
+            body,
+            kind,
+            identifier,
+            lookup,
+            recipient_owner,
+            code,
+            observer,
+            actor=owner,
+            token=token,
+        ):
+            self.discard_new_challenge(challenge_id, owner)
         return OTPAccepted(challenge_id=challenge_id)
+
+    def identifier_binding(self, db: Session, kind: str, lookup: str) -> UUID | None:
+        return db.scalar(
+            select(Identifier.user_id).where(
+                Identifier.type == kind, Identifier.lookup_hash == lookup
+            )
+        )
+
+    def otp_binding_open(self, db: Session, kind: str, lookup: str, expected: UUID | None) -> bool:
+        # Caller coordinated the actor/expected recipient before this identifier lock.
+        self.lock(db, lookup)
+        if self.identifier_binding(db, kind, lookup) != expected:
+            return False
+        if expected is None:
+            return True
+        user = db.get(User, expected, populate_existing=True)
+        # SQL's immutable closed=>DISABLED invariant makes ACTIVE sufficient. Do
+        # not lazy-load a new column while historical ACTIVE migration fixtures
+        # are still on their old schema; there is no missing-column fallback.
+        return user is not None and (user.status == "ACTIVE" or user.closed_at is None)
+
+    def deliver_otp(
+        self,
+        body: OTPRequest,
+        kind: str,
+        identifier: str,
+        lookup: str,
+        recipient_owner: UUID | None,
+        code: str,
+        observer: OTPObserver | None,
+        *,
+        actor: UUID | None = None,
+        token: str | None = None,
+    ) -> bool:
+        # No account/identifier row, HMAC lock or transaction spans provider.send.
+        subjects = tuple(subject for subject in (actor, recipient_owner) if subject is not None)
+        gate = dispatch_connections(self.engine, subjects) if subjects else nullcontext()
+        try:
+            with gate as connection:
+                with self.transaction(connection) as db:
+                    if body.purpose != "LOGIN":
+                        if self.authenticate(db, token, recent=True).user_id != actor:
+                            return False
+                    elif recipient_owner is not None:
+                        self.lock_user(db, recipient_owner)
+                    if not self.otp_binding_open(db, kind, lookup, recipient_owner):
+                        return False
+                try:
+                    provider = self.email if kind == "EMAIL" else self.sms
+                    provider.send(
+                        identifier, f"Kasoma {body.purpose} code: {code}. Expires in 10 minutes."
+                    )
+                except Exception:
+                    observe(observer, "EMAIL" if kind == "EMAIL" else "SMS", "FAILED")
+                    return False
+                observe(observer, "EMAIL" if kind == "EMAIL" else "SMS", "RETURNED")
+                return True
+        except Exception:
+            # Gate/database failure is not a provider outcome; never echo diagnostics.
+            return False
+
+    def discard_new_challenge(self, challenge_id: UUID, owner: UUID | None) -> None:
+        """Only a pending exact row created by this invocation; never a hash sweep."""
+        with self.transaction() as db:
+            if owner is not None:
+                self.lock_user(db, owner)
+                user = db.get(User, owner, populate_existing=True)
+                if user is None or (user.status != "ACTIVE" and user.closed_at is not None):
+                    return
+            db.execute(
+                delete(Challenge).where(
+                    Challenge.id == challenge_id,
+                    Challenge.user_id == owner,
+                    Challenge.consumed_at.is_(None),
+                )
+            )
 
     def consume(
         self, db: Session, body: OTPVerify, purposes: set[str], owner: UUID | None
@@ -271,6 +359,11 @@ class IdentityService:
                 )
                 if bound is not None:
                     self.lock_user(db, bound)
+                    current = db.get(User, bound, populate_existing=True)
+                    if current is None or (
+                        current.status != "ACTIVE" and current.closed_at is not None
+                    ):
+                        raise IdentityError("AUTH_REQUIRED", 401)
                     locked_user = bound
             challenge = self.consume(db, body, {"LINK"} if owner else {"LOGIN"}, owner)
             self.lock(db, challenge.lookup_hash)
@@ -321,6 +414,9 @@ class IdentityService:
                 raise IdentityError("AUTH_REQUIRED", 401)
             self.lock_user(db, old.user_id)
             db.refresh(old)
+            user = db.get(User, old.user_id, populate_existing=True)
+            if user is not None and user.status != "ACTIVE" and user.closed_at is not None:
+                raise IdentityError("AUTH_REQUIRED", 401)
             if old.rotated_at:
                 db.execute(
                     update(AuthSession)
@@ -328,7 +424,6 @@ class IdentityService:
                     .values(revoked_at=self.clock())
                 )
                 raise IdentityError("AUTH_REQUIRED", 401)
-            user = db.get(User, old.user_id, populate_existing=True)
             if (
                 old.revoked_at
                 or old.expires_at <= self.clock()

@@ -753,12 +753,12 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 
 | Requirement | Implementation | Tests / evidence | Status |
 | --- | --- | --- | --- |
-| FR-ID-001 | Email/phone OTP, purpose binding, five-attempt/ten-minute limits, per-contact/peer/device sends; initial UI check serializes sign-in actions | `tests/integration/test_identity.py`, `tests/e2e/identity.spec.ts` | Local implemented; SES/SMS production gates pending |
-| FR-ID-002 | Verified identifier linking with uniqueness, encryption and keyed lookup; existing identities never auto-merge | API linking, collision and one-identity tests | Local implemented |
-| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending |
+| FR-ID-001 | Email/phone OTP, purpose binding, five-attempt/ten-minute limits, per-contact/peer/device sends; initial UI check serializes sign-in actions | `tests/integration/test_identity.py`, `tests/e2e/identity.spec.ts`; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented; SES/SMS production gates pending; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 |
+| FR-ID-002 | Verified identifier linking with uniqueness, encryption and keyed lookup; existing identities never auto-merge | API linking, collision and one-identity tests; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 |
+| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests; [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending; ADR-075 dispatch guards pass combined hosted39378996412 |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
-| FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout | Local implemented |
-| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending |
+| FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 |
+| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -807,12 +807,12 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | NFR-REL-002 | Isolated synthetic logical recovery with exclusive source-role/OID cleanup (ADR-042) | [Recovery evidence](E9_RECOVERY_VERIFICATION.md); [ownership correction](E9_RECOVERY_ROLE_OWNERSHIP_VERIFICATION.md) | Full hosted39299684285 at adf4328 verifies69 tables/686 rows in493ms and preserves unowned/replaced roles; object-storage and production PITR/RPO/RTO remain pending |
 | NFR-SCL-001 | Synthetic 2,000-registration/500-active/50-concurrent objective and mixed-history profiles | [Load evidence](E9_HISTORY_MIXED_LOAD_VERIFICATION.md) | Both native 6b06c53 7,000-request profiles pass; mixed final totals 27,500 grades/5,500 sessions, zero errors, successful cleanup. Complete hosted regression passes; daily soak/deployed/provider scale acceptance pending |
 | NFR-SEC-001 | `services/config.py`, loopback Compose, generated ignored secrets | Fail-closed/redaction tests; source/dependency scans | Partial; production TLS/encryption pending |
-| NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
+| NFR-SEC-002 | Identity ownership, recent-auth/consent controls and staff content-role enforcement | Identity integration and cross-origin browser tests; [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) | Partial; content RBAC implemented; assessment consent/ownership guards verified; production MFA/role governance and future route integration pending |
 | NFR-ACC-001 | `apps/web/app`, `packages/ui` | Playwright keyboard retry and axe scan | Shell, onboarding, staff review, assessment, diagnostic, progress/history and flag/triage axe/keyboard checks; remaining journey matrix pending |
 | NFR-BW-001 | Cold-context first-question encoded transfer check, including headers/prefetch and no media exclusions for the synthetic fixture | Existing assessment E2E journey; [browser evidence](E9_BROWSER_COVERAGE_VERIFICATION.md) | Synthetic cold transfer verified across three engines: 191389–194127 bytes; media/mobile/latency release checks remain |
 | NFR-COMP-001 | Full journey harness for isolated Chromium/Firefox/WebKit runs | [Browser matrix evidence](E9_BROWSER_COVERAGE_VERIFICATION.md), [narrow viewport regression](E9_MOBILE_REFLOW_VERIFICATION.md) | 66 browser executions, including 320-pixel touch journey, verified in CI 37925290651; branded/current-previous/physical mobile acceptance pending |
 | NFR-OBS-001 | UUID web/API/worker correlation; console OTel; safe JSON logs; API response-start and synthetic model-call timing | Unit redaction and real worker propagation tests; [model telemetry evidence](E8_MODEL_TELEMETRY_VERIFICATION.md) | Minimized timing verified through hosted CI 37914864557; durable aggregation/domain tracing remains partial |
-| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E | Full hosted synthetic regression evidence recorded per slice; release acceptance remains separately gated |
+| NFR-MNT-001 | pnpm/Turbo + uv locks; Alembic; generated client; Make/CI | Setup, lint/types, migration tests, OpenAPI diff, web build/E2E; [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) | Full hosted synthetic regression evidence recorded per slice; release acceptance remains separately gated |
 | NFR-LOC-001 | English shell; UTC storage/wire; progress/history dates in Africa/Kampala | Configuration and browser history checks | Progress/history presentation implemented; wider localization review pending |
 
 FR-GRD-003/004/005 / FR-MST-001 / FR-ID-006: the 10 October
@@ -2792,3 +2792,312 @@ completes. Catalog854afaa/39371164944 and LOGIN4e5b2ab/39373055520 remain separa
 candidates; newer linked/guardian dispatch is also not accepted by these results.
 All eight review services remain healthy on0045. Full SQL/payload/preservation/export
 clearance, durable removal, checkpoint recovery and external release gates remain.
+
+
+## ADR-073 frozen pre-install catalog — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: pin32 technical catalog categories
+from independently created fake-only sources migrated to0045. Compare behavior/privilege
+metadata before creating any erasure principal; the existing shape check cannot detect
+body-only trigger/function drift. The new regression demonstrates old bootstrap accepting
+a changed closure guard (one failed/six passed). The read-only verifier already rejects
+that drift; connect it to privileged installation before any role/schema/key mutation.
+
+Counts/SHA256 are computed within PG, without learner-row reads or live body transfer.
+The four approved ADR-060 owner-dependent code templates are generated only from fresh
+migrations. Render their checked expected code with the exact database/public owner;
+never normalize live body literals or approve arbitrary role prefixes. The artifact also
+binds the ordinary migration helper/source files. Separate fresh resources reproduce
+identical metadata despite different database names; transient connection search path,
+timezone and timeout settings are restored. Query budgets are5s/100ms; no LIMIT truncates
+the catalog reader. Physical statistics/storage IDs and passwords are excluded.
+
+Fresh private capability v4 records the stricter installation provenance, reusing the v3
+SQL plan gate. The API refuses legacy v2/v3 readiness; no old source is adopted. Public
+0045 stays74 tables/545 columns; installed private scope stays75/561. No erasure execution
+or new preservation/retention permission. Complete installed-catalog/ACL, SQL ownership/
+payload/hold/export validation, exact richer preservation, permanent closed-write gates,
+atomic authorization/closure and bounded durable fulfillment remain mandatory.
+
+Broader strict type checking finds three existing trusted-script errors: psycopg SQL
+composition inference and an untyped role-OID map. Explicit composable/map types preserve
+behavior. Initial formatting failures are recorded; native drift/role/API/bootstrap,
+full unit/browser/security and own hosted verification remain pending. Keep main600db71
+and all live earlier candidate heads fixed. Normal Docker review remains healthy/dormant.
+
+
+ADR-073 raw safety stage: compare nine raw code/type and stored-expression
+metadata categories before any PostgreSQL expression/definition deparser. This rejects
+changed type I/O routines and unknown raw expressions before they could be invoked by
+constant formatting. Render only the checked expected four dynamic code templates;
+never normalize live code. Both stages return only counts/digests. Savepoint rollback
+restores local settings on mismatch/query failure; success restores them explicitly.
+The explicit fresh-migration generator can create the initial raw expectation, while
+the runtime verifier must load it from the versioned artifact. The32 full metadata
+categories are supplemented by these nine safety categories, not silently redefined.
+Pinned PostgreSQL/vector core and the privileged creator/host remain trusted; this does
+not claim protection from a hostile administrator controlling the engine or artifact.
+
+
+## ADR-073 final native catalog boundary
+
+The final nine-raw/32-full-category candidate passes25 catalog,22 plan and11
+fresh-scope/bootstrap cases,1,495 unit/contract and35 tooling checks, lint/type checks
+(228 Python sources), baseline reproduction, generated contracts, build and dependency/
+source security. The initial subprocess scan failure is corrected using the existing
+bounded command helper without scanner suppression. Full browser/own hosted acceptance
+remains pending. The interrupted earlier run remains unaccepted. The owner-authorized
+exact orphan removal is independently confirmed; all eight review services are healthy
+and host-native Ollama connectivity passes without inference. See the
+[catalog verification record](E8_ERASURE_CATALOG_VERIFICATION.md) for exact evidence
+and remaining installed-catalog/SQL/hold/payload/closure/removal/recovery gaps.
+
+
+Final ADR-073 local browser evidence: make e2e passes 123 executions (108 standard,
+12 short-text and three configuration). Twelve exact recorded owned source containers
+have empty cleanup reports and independent full-ID absence. Full hosted 39371164944
+is live at frozen 854afaa; only Markdown follows. Main 0053a7b now publishes the
+verified disabled bootstrap, whose merged branches are removed. V3 plan/staff source
+81f1d84 independently passes complete hosted 39365821234 and has a prepared publication;
+main follow-up 39371028143 remains live. None of these accepts catalog hosted results,
+erasure execution, physical devices or full release. See the catalog verification record.
+
+
+## ADR-074 closed credential intake/dispatch — implementation candidate
+
+FR-ID-001/002/005/006, BR-010, NFR-SEC-002/MNT-001: coordinate current retained LOGIN binding
+before rates/identifier serialization, recheck that exact binding and closure, and
+return generic acceptance without a code/provider call for a closed identity. A
+changed binding requires fresh issuance instead of a late account-lock inversion.
+Bound dispatch holds only the existing idle session-shared subject gate and rechecks
+before the provider, with no row/HMAC/open transaction across send. Suppression and
+gate failure do not masquerade as provider failures; cleanup targets only this
+invocation's exact newly created challenge. Closed LOGIN rejects before challenge
+consumption; closed refresh rejects before unbounded family mutation. Ordinary
+nonclosed reuse protection remains. See ADR-074 for protocol and fixture limitations.
+
+The first four native cases produce three failures/one pass on the unchanged parent:
+closed email/phone still dispatch and closed rotated refresh rewrites its family.
+After the change those four pass. The expanded matrix, full local/own hosted checks
+remain pending. Synthetic future-state fixtures restore the exact closure trigger
+before consumer checks; they do not prove a closure executor or authorization. No
+erasure is activated, no DELETE completed, no real data or normal review changed.
+Full installed catalog/SQL/payload/hold/export validation, unbound ten-minute drain,
+permanent write guards, durable fulfillment and checkpoint recovery remain required.
+Catalog remote 854afaa stays fixed for live 39371164944; main 0053a7b follow-up
+39371028143 remains live. V3 plan publication is prepared separately.
+
+
+ADR-074 correction evidence: the one-connection case fails before gate-connection reuse
+(17 pass/one failure). A separate broad identity run fails the unchanged pre0045
+fixture on deferred closed_at access (28 pass/one failure). ACTIVE consumers now use
+the existing immutable closed-implies-DISABLED SQL invariant; non-ACTIVE closure
+checks do not gain a missing-column fallback. The existing None-valued model gate
+port is preserved while OTP rechecks reuse the same owned connection. All18 native
+credential cases now pass; full broader/browser/own hosted gates remain pending.
+See the closed credential verification record for failure history and fixture limits.
+
+
+ADR-074 final local gates pass: 18 closed-consumer/dispatch cases, 29 identity/lifecycle,
+19 model dispatch, 16 source ownership and six staff cases, one OTP observation API
+case, 1,495 unit/contract, 35 tooling and 123 browser executions, plus lint/types
+(228 Python sources), unchanged generated contracts, build and dependency/source
+security. The unchanged populated0044 upgrade passes. Twelve exact browser IDs and
+nine captured native IDs are independently absent; final native contexts also assert
+exact cleanup. See E8_CLOSED_CREDENTIAL_VERIFICATION.md for retained failures, fixture
+limits and the pending LINK/GUARDIAN dispatch race. Full own hosted/image/service/
+recovery acceptance remains pending; no erasure or DELETE completion is enabled.
+
+
+## Frozen closed LOGIN candidate
+
+Exact source 4e5b2abc0b11551acd5cab6a163e17ec2edc39fc is pushed on
+codex/erasure-credential-guards for its own live full hosted 39373055520. Keep that
+remote head fixed; only Markdown closeout follows its runtime/test/Make/workflow tree.
+All local engineering and 123 browser checks pass as recorded above; full hosted
+612-integration/image/service/recovery acceptance remains pending. Parent catalog
+854afaa/39371164944 and main 0053a7b/39371028143 are separately live, not accepted
+by this push. The prepared verified v3 publication remains at 7c729f2.
+
+Normal Docker remains eight healthy services on0045 with false activation, no
+erasure principals and zero closed identities. Host-native Ollama connectivity
+passes without inference. LINK/GUARDIAN post-authentication dispatch races are the
+next credential slice, before full installed SQL/ACL/payload/preservation/export
+clearance and real atomic closure, bounded removal and checkpoint recovery. No
+account-erasure, physical-device or external academic/privacy/provider/release
+acceptance is inferred.
+
+
+## ADR-075 LINK/GUARDIAN dispatch — implementation candidate
+
+FR-ID-001/002/003/005/006, BR-010 and NFR-SEC-002/MNT-001: extend the credential
+barrier to current actor and bound recipient. Coordinate the recipient before rate/
+identifier work with a shared gate, without acquiring a second account HMAC lock.
+One owned connection holds at most two sorted/deduplicated session-shared gates; a
+fresh short transaction rechecks recent actor authentication and exact binding before
+send. Commit before provider I/O. Partial/uncertain acquisition or release invalidates
+the connection, preserving the existing model gateway port and one-connection behavior.
+
+Only the invocation's exact pending new challenge can be cleaned up under its expected
+actor binding. Actor closure leaves the original source/clock for the restricted
+lifecycle/expiry; consumed evidence is never discarded. No hash sweep or ownership/
+retention permission is inferred. The unchanged-parent regression gives eight failures/
+11 passes; the first correction passes19 and the expanded matrix passes40 plus18
+existing credential cases. Recency and both binding-change stages, broader engineering/
+browser and own complete hosted acceptance remain in verification. No account closure,
+DELETE completion, normal review activation or external release clearance is enabled.
+Parent 4e5b2ab/39373055520, catalog854afaa/39371164944 and main0053a7b/39371028143
+remain separate live sources; preserve their remote heads.
+
+
+ADR-075 final local gates pass: 44 linked-dispatch controls (17 contract/27 native),
+18 existing credential cases, 29 identity/lifecycle, 19 model, 16 source, six staff,
+one OTP API case, 1,501 unit/contract, 35 tooling and 123 browsers, plus lint/types
+(228 Python sources), contracts/build and dependency/source security. Twelve exact
+browser and12 captured native IDs are independently absent; final native contexts
+also assert their own exact cleanup. Initial eight failures remain retained. See
+E8_LINKED_DISPATCH_VERIFICATION.md. Own complete hosted/image/service/recovery
+acceptance remains pending; guardian consumption, staff revocation and full erasure
+SQL/preservation/checkpoint controls remain required before any activation.
+
+
+Verified private-plan/staff source is published through main37be6e3 after parent
+main0053a7b follow-up39371028143 succeeds. Its three exact verified remote source
+branches and local publication/source branches are removed after SHA/ancestry and
+terminal-success checks with lease-protected deletion; independent remote inventory
+confirms absence. Main follow-up39374776606 is live; preserve that head. This merge
+adds only Markdown to linked-dispatch source d7a9a12; its local engineering/browser
+results remain source-specific, with own complete hosted acceptance still required.
+Catalog854afaa and LOGIN4e5b2ab remain frozen for their separate live pipelines.
+
+
+## Frozen linked-dispatch source and failed parent catalog gate
+
+Linked-dispatch source d7a9a12 is integrated with published main through Markdown
+only at 2c37d4da9eaae44e98420b69927eaaa45bb8709e. Its own full hosted
+39375073567 is confirmed live; keep that remote head fixed. No parent result
+accepts it. Main37be6e3 follow-up39374776606 is separately live.
+
+Parent catalog hosted39371164944 is terminal FAILED at exact854afaa:1,495
+unit/contract and35 tooling pass, but integration has42 failures/552 passes.
+Failures are the catalog/private-bootstrap/plan cohorts; the shared fresh-source
+wrapper withholds their underlying diagnostics, so the exact cause is not established.
+Later contracts/build/full-browser/security/image/service stages are unexecuted.
+Earlier setup, focused and recovery stages do not make this a complete pass.
+Its 74-table/692-row baseline recovery is not erasure checkpoint recovery.
+
+The M4/CI platform difference and raw catalog representation are investigation
+hypotheses, not a proved diagnosis or permission to weaken the fence/regenerate a
+baseline from a live source. The next priority is a controlled fresh-source catalog
+diagnosis/correction and complete own combined verification. Parent LOGIN4e5b2ab
+run39373055520 and this linked-dispatch run stay live and unchanged; acceptance
+remains pending and neither may be promoted from local checks alone. Current main
+and healthy review preview contain only the separately accepted v3 plan source,
+not the failed catalog candidate. Activation stays false.
+
+
+## ADR-076 portable catalog octets — correction candidate
+
+FR-ID-006/BR-010 and NFR-SEC-002/MNT-001: controlled fresh ARM64/AMD64 instances from
+the same approved immutable PostgreSQL16.14/pgvector0.8.2 index reproduce v1 guard
+acceptance/refusal, with identical32 full categories and only raw constraints different.
+The same1000 literal serializes a byte as232 versus-24. Normalize only signed/unsigned
+constvalue octet notation inside the twelve closed pg_node_tree fields, entirely in
+SQL. Preserve every bit, its order, declared length and surrounding tree; leave live
+function bodies and all other metadata strict. Malformed/out-of-range bytes cannot
+match an approved baseline. Raw nine-stage refusal still precedes all full deparsers.
+
+The explicit new v2 artifact/private v5 recipe keeps historical v1 data/SQL and refuses
+old private versions without adoption. Reproduction preserves all frozen full/native
+raw fingerprints, code templates and ordinary migration hashes. Both controlled image
+variants now pass, including changed-constant refusal before full deparse and exact
+cleanup. The new prescribed M4-only make erasure-catalog-portability command uses
+only the two fixed approved immutable variants; CI adds native fresh baseline/guard
+preflight before broader tests. No existing image is retagged or resource adopted.
+
+Initial28 catalog,23 plan and11 bootstrap cases and paired portability pass. A measured
+catalog JIT overhead correction remains in final recheck:1359.25 versus20.14 ms in a
+fresh native microcheck, with existing budgets and success/failure restoration retained.
+No learner-load/production acceptance follows. Full own combined hosted, image/service/
+recovery and browser acceptance remain pending; old42-failure CI stays failed. No new
+public migration, erasure permission/activation, real data or full rights fulfillment.
+
+
+ADR-076 final local verification passes:28 catalog,23 plan and11 bootstrap cases,
+1,502 unit/contract,35 tooling and123 browsers, plus lint/types(230 sources),
+contracts/build and dependency/source security. Five new-script assertion findings
+are corrected with explicit fixed-error checks, without scanner suppression. Both
+approved immutable image variants pass metadata and pre-deparser changed-constant
+checks; historical fingerprints/code templates remain unchanged. Twelve browser and
+18 captured native/probe IDs are independently absent. See E8_CATALOG_DATUM_VERIFICATION.md
+and its aggregate evidence. Original catalog39371164944(42 failed/552 pass) and
+LOGIN39373055520(42 failed/570 pass) remain failed; linked39375073567 is separate.
+Only own full combined hosted verification can accept the correction. No erasure
+activation, full SQL/rights fulfillment or external release acceptance is inferred.
+
+
+## Frozen portable-catalog combined source
+
+Exact9fece6ad03662eb6ba7f1a9b6f0d79037b364c0b is pushed on
+codex/catalog-datum-portability for complete own hosted39378996412, confirmed live.
+Preserve that remote head; only Markdown/aggregate evidence closeout follows its
+runtime/test/Make/workflow tree. Local engineering and123 browser executions pass;
+full native Linux642 integration, restricted-role, recovery, image/service and all
+remaining hosted gates are still required. Main remains37be6e3 and its separate
+follow-up39374776606 is not acceptance of this v5 correction. Catalog854afaa and
+LOGIN4e5b2ab remain failed at their exact recorded runs; linked2c37d4d has its own
+separate run39375073567. No failure is silently superseded by local or parent checks.
+Normal review stays eight healthy services on0045, with erasure/retirement/normal
+short-text disabled. Host-native Ollama connectivity passes without inference.
+Next complete guardian-consumption/closed staff-revocation guards and the full
+installed SQL/payload/preservation/export/erasure/checkpoint lifecycle. External
+academic/privacy/provider/device/production acceptance remains genuine required work.
+
+
+Linked parent39375073567 is now terminal FAILED at exact2c37d4d:1,501
+unit/contract and35 tooling pass;42 integration fail/597 pass. Its catalog/
+bootstrap/plan failures remain failures and later full-browser/security/image/
+service acceptance is unexecuted. All three older catalog-dependent candidates
+therefore retain failed hosted evidence; none is promoted or rerun as a substitute
+for the corrected source's own complete39378996412 verification. The controlled
+two-architecture reproduction/correction is local proof of the serialization defect,
+not a claimed successful hosted result for any old head.
+
+
+## Complete hosted portable-catalog/credential verification
+
+Complete own hosted39378996412 is SUCCESS at exact
+9fece6ad03662eb6ba7f1a9b6f0d79037b364c0b:1,502 unit/contract,642 integration,
+35 tooling and123 full browser executions, plus every required setup/migration/seed,
+independent fresh catalog, focused transport/assessment/staff, actual restricted-login,
+quality/contracts/build/security/image/service gate. The conditional registry login
+alone is legitimately skipped when optional credentials are absent; no engineering
+stage is skipped. Logical recovery verifies74 tables/692 rows in633ms; stopped-source
+PostgreSQL/MinIO verifies74/692/one42,084-byte ciphertext in381ms with integrity/fault/
+immutable/dormant checks and empty cleanup. Production RPO/RTO and erasure checkpoint
+recovery remain false. No new learner-load or physical/branded acceptance is inferred.
+
+This accepts corrected unsigned raw Datum serialization, pre-install32+9 catalog
+verification/private v5 provenance, retained-closed LOGIN guards and the actor/bound-
+recipient LINK/GUARDIAN dispatch/cleanup guards at this combined source. Earlier
+catalog854afaa/39371164944, LOGIN4e5b2ab/39373055520 and linked2c37d4d/39375073567
+remain FAILED at their own exact heads; no failure is relabeled or rerun to hide it.
+The current native two-architecture reproduction supplies the correction's separate
+mechanism evidence. Only Markdown follows the verified runtime/test/Make/workflow
+source on the prepared publication branch. Parent main37be6e3 follow-up39374776606
+is separately SUCCESS and remote/main ancestry is checked before publication.
+
+Consumer1597a68/39380895685 and principal4bf5a77/39383925992 remain separate live
+candidates; neither is accepted by this run. No actual closure, new preservation,
+retention, erasure, normal short-text or retirement activation occurs. Full installed
+catalog/payload/ownership/hold/export clearance, permanent barriers, bounded durable
+removal/checkpoint recovery and external release gates remain required.
+
+
+Prepared publication also passes native make containers migrate container-smoke
+security-containers on the verified runtime tree: worker/private-object export,
+request/model telemetry and service smoke pass; image scans pass. All eight review
+services are healthy on0045. Only Markdown closeout differs from exact9fece6a;
+no extra application/test/Make/workflow change is accepted by this publication.
+Main publishes this verified source; its new follow-up run requires separate status.
+Consumer1597a68 and principal4bf5a77 remain unmerged until their own acceptance.

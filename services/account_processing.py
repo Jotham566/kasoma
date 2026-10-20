@@ -4,7 +4,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from uuid import UUID
 
-from sqlalchemy import Engine, text
+from sqlalchemy import Connection, Engine, text
 from sqlalchemy.orm import Session
 
 # A non-secret coordination namespace, computed by PostgreSQL on both sides.
@@ -35,27 +35,52 @@ def coordinate(db: Session, subject: UUID) -> None:
 
 @contextmanager
 def dispatch_gate(engine: Engine, subject: UUID) -> Iterator[None]:
-    """One owned idle connection; no transaction, row or HMAC lock spans inference.
+    """Preserve the side-effect-only guard port used by the model gateway."""
+    with dispatch_connection(engine, subject):
+        yield
+
+
+@contextmanager
+def dispatch_connection(engine: Engine, subject: UUID) -> Iterator[Connection]:
+    """Single-subject compatibility port for the existing model/LOGIN callers."""
+    with dispatch_connections(engine, (subject,)) as connection:
+        yield connection
+
+
+@contextmanager
+def dispatch_connections(engine: Engine, subjects: tuple[UUID, ...]) -> Iterator[Connection]:
+    """At most two subject gates on one owned connection, idle during dispatch.
 
     Invalidate on an uncertain acquisition/release: pool rollback does not release
     session advisory locks. This function never reads or grants subject authority.
     """
+    if (
+        type(subjects) is not tuple
+        or not 1 <= len(subjects) <= 2
+        or any(type(subject) is not UUID for subject in subjects)
+    ):
+        raise ProcessingGateUnavailable()
+    ordered = sorted(set(subjects), key=lambda subject: subject.int)
     with engine.connect() as connection:
         try:
-            if connection.scalar(_SHARED_SESSION, {"subject": subject}) is not True:
-                raise ProcessingGateUnavailable()
+            for subject in ordered:
+                if connection.scalar(_SHARED_SESSION, {"subject": subject}) is not True:
+                    raise ProcessingGateUnavailable()
             connection.commit()
         except BaseException:
             connection.invalidate()
             raise
         try:
-            yield
+            # A caller may reuse this same connection for its short recheck, then
+            # commit before dispatch. No spare pool checkout is required.
+            yield connection
         finally:
             try:
                 if connection.in_transaction():
                     connection.rollback()
-                if connection.scalar(_RELEASE_SESSION, {"subject": subject}) is not True:
-                    raise ProcessingGateUnavailable()
+                for subject in reversed(ordered):
+                    if connection.scalar(_RELEASE_SESSION, {"subject": subject}) is not True:
+                        raise ProcessingGateUnavailable()
                 connection.commit()
             except BaseException:
                 connection.invalidate()

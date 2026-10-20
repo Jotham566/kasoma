@@ -16,6 +16,7 @@ from scripts.erasure_plan_sql import compile_plan_helpers
 from scripts.erasure_scope import FreshErasureScope
 from services.database import engine_for
 from services.erasure_capability_contract import CAPABILITY_VERSION, CRYPTO_VERSION
+from services.erasure_catalog import check_preinstall_catalog
 from services.erasure_inventory import check_source_shape
 from services.erasure_manifest import BASELINE
 from services.erasure_sources import PREDICATES
@@ -64,6 +65,7 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
         with engine.begin() as db:
             scope.verify()
             check_source_shape(db)
+            check_preinstall_catalog(db)
             if db.scalar(
                 text("""
               SELECT EXISTS(SELECT 1 FROM pg_catalog.pg_namespace
@@ -113,12 +115,13 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
                         .as_string()
                     )
                 )
-            oids = dict(
-                db.execute(
+            oids: dict[str, int] = {
+                str(row.rolname): int(row.oid)
+                for row in db.execute(
                     text("SELECT rolname,oid FROM pg_catalog.pg_roles WHERE rolname=ANY(:roles)"),
                     {"roles": [owner, authorizer, executor]},
-                ).all()
-            )
+                )
+            }
             phase = "LOGINS"
             for role, password in passwords.items():
                 db.execute(

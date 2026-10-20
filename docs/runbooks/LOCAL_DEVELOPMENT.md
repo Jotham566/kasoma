@@ -1722,3 +1722,54 @@ The fresh private plan recipe is v3: its source gate uses the installed public n
 not the authorizer's pg_catalog search path. `make test-erasure-plans` checks busy/stale
 transactions. Existing v1/v2 namespaces are not adopted; mismatched readiness fails closed.
 This does not activate erasure or change ordinary0045 migrations/review.
+
+
+ADR-073 adds `make erasure-catalog-baseline` to reproduce/check the versioned metadata
+artifact using a newly owned fake-only source and ordinary `make migrate`. It never opens
+the review database. `make update-erasure-catalog-baseline` explicitly rewrites the
+technical artifact from another such source after a reviewed migration/baseline change;
+ordinary setup/startup never regenerates or blesses a live catalog. No URL/schema/path
+argument selects a source. `make test-erasure-catalog` runs native drift/refusal tests.
+The artifact contains32 counts/digests and four approved migration code templates, never
+learner payloads/contacts/credentials. Private v4 readiness does not activate erasure;
+normal review and earlier private installations remain outside adoption/execution.
+
+
+ADR-073 raw safety stage: compare nine raw code/type and stored-expression
+metadata categories before any PostgreSQL expression/definition deparser. This rejects
+changed type I/O routines and unknown raw expressions before they could be invoked by
+constant formatting. Render only the checked expected four dynamic code templates;
+never normalize live code. Both stages return only counts/digests. Savepoint rollback
+restores local settings on mismatch/query failure; success restores them explicitly.
+The explicit fresh-migration generator can create the initial raw expectation, while
+the runtime verifier must load it from the versioned artifact. The32 full metadata
+categories are supplemented by these nine safety categories, not silently redefined.
+Pinned PostgreSQL/vector core and the privileged creator/host remain trusted; this does
+not claim protection from a hostile administrator controlling the engine or artifact.
+
+
+Use make test-erasure-credentials for ADR-074's owned fake-only closed-consumer and
+dispatch race cases. It always creates fresh resources and cannot select normal review.
+The future-state fixture is not an account-closure command or executor acceptance.
+Known retained closed LOGIN identifiers keep generic responses without issuing codes;
+pre-barrier unbound history is neither swept nor attributed by hash. There is no
+normal-stack activation or new environment key.
+
+
+make test-erasure-linked-dispatch verifies ADR-075's bounded one/two-subject gate
+protocol and owned fake-only LINK/GUARDIAN races. It cannot target normal review.
+Exact pending cleanup respects closure/consumption and keeps original clocks. This
+is not a closure/erasure command or proof of SQL executor acceptance. No new env key.
+
+
+ADR-076: make erasure-catalog-baseline reproduces the v2 artifact in a fresh fake-only
+source and checks the actual pre-install guard. CI runs it early. The explicit update
+command writes only from a newly migrated source; startup never learns a baseline.
+On the supported M4 Mac, make erasure-catalog-portability checks fixed ARM64/AMD64
+manifest variants of the approved image index, fetching immutable variants only when
+missing. It uses owned temporary databases, checks changed-constant refusal before
+deparsers and independently confirms exact cleanup. It accepts no URL/image/scope
+selector and never installs erasure authority. Existing services/images/volumes stay.
+Linux CI proves its native variant separately; the paired command refuses unsupported
+hosts instead of declaring an unexecuted matrix successful. Private v5 replaces no
+existing installation. Full installed SQL/ACL and erasure gates remain.

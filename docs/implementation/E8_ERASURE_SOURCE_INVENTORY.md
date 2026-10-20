@@ -1194,3 +1194,17 @@ The staged private v3 plan gate changes no public table/column or private contro
 public0045 remains74/545; fresh installed scope remains75/561. It changes only the
 trusted fresh private function recipe/readiness contract; existing installations are
 not upgraded or reused. Full source/hold/payload/ACL clearance remains pending.
+
+
+ADR-073's staged pre-install fence changes no public/private data schema:0045 remains
+74/545 and installed scope75/561. The32-category catalog/code-template artifact is
+engineering metadata, not an owned preservation table or full erasure clearance.
+The current fresh capability identity becomes v4; v3 gate SQL/HMAC-v2/public0045 identities
+remain separately versioned. Existing namespaces/roles are never adopted.
+
+
+ADR-076 changes pre-install representation provenance only: public0045 remains74
+tables/545 columns and installed private scope remains75/561. The v2 catalog artifact
+records unsigned-octet raw-tree serialization; private v5 keeps v3 plan SQL. No public
+source, disposition, ownership, payload/hold permission or retention clock changes.
+The historical v1 artifact remains recorded; no existing source is adopted.
