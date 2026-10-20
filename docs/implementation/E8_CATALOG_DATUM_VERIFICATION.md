@@ -66,3 +66,21 @@ ordinary short-text activation disabled. Guardian consumption, closed staff revo
 full installed-catalog/SQL/payload/preservation/export enforcement, durable removal
 and external-checkpoint quarantine recovery remain. Academic/privacy/provider/device
 and production release acceptance is not inferred from this correction.
+
+
+## Frozen portable-catalog combined source
+
+Exact9fece6ad03662eb6ba7f1a9b6f0d79037b364c0b is pushed on
+codex/catalog-datum-portability for complete own hosted39378996412, confirmed live.
+Preserve that remote head; only Markdown/aggregate evidence closeout follows its
+runtime/test/Make/workflow tree. Local engineering and123 browser executions pass;
+full native Linux642 integration, restricted-role, recovery, image/service and all
+remaining hosted gates are still required. Main remains37be6e3 and its separate
+follow-up39374776606 is not acceptance of this v5 correction. Catalog854afaa and
+LOGIN4e5b2ab remain failed at their exact recorded runs; linked2c37d4d has its own
+separate run39375073567. No failure is silently superseded by local or parent checks.
+Normal review stays eight healthy services on0045, with erasure/retirement/normal
+short-text disabled. Host-native Ollama connectivity passes without inference.
+Next complete guardian-consumption/closed staff-revocation guards and the full
+installed SQL/payload/preservation/export/erasure/checkpoint lifecycle. External
+academic/privacy/provider/device/production acceptance remains genuine required work.
