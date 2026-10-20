@@ -48,6 +48,9 @@ test-erasure-identity:
 .PHONY: test-erasure-dispatch
 test-erasure-dispatch:
 	$(UV) pytest tests/integration/test_short_text_processing.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-erasure-fresh-scope
+test-erasure-fresh-scope:
+	$(UV) pytest tests/contract/test_erasure_scope_contract.py tests/integration/test_erasure_scope.py tests/integration/test_erasure_capability.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: test-erasure-source-ownership
 test-erasure-source-ownership:
 	$(UV) pytest tests/contract/test_erasure_source_registry.py tests/integration/test_erasure_source_projection.py --allow-hosts=localhost,127.0.0.1,::1
@@ -103,7 +106,7 @@ build:
 containers:
 	docker compose --profile application build
 security:
-	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py scripts/e2e_failures.py scripts/browser_database.py scripts/erasure_identity_check.py -q
+	$(UV) bandit -r apps/api apps/worker services scripts/ci_runner_storage.py scripts/e2e_failures.py scripts/browser_database.py scripts/erasure_identity_check.py scripts/erasure_scope.py scripts/erasure_capability.py -q
 	$(UV) python scripts/check_secrets.py
 	$(UV) pip-audit --local
 	$(PNPM) audit --audit-level=high

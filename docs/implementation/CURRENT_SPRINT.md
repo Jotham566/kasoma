@@ -1258,3 +1258,122 @@ migrate container-smoke security-containers`. All eight normal services remain h
 on0045; no erasure provisioning, activation or account closure is performed. Main40aa7d2
 follow-up is terminal success; publication may advance main to this Markdown-only
 closeout of hosted-verified4db1cec. Separate live bootstrap/plan heads remain fixed.
+
+
+## ADR-061 SQL capability work — fresh-source bootstrap in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: begin the independently
+restricted SQL capability slice with an exclusively created source proof, issued before
+migrations. Bind exact owned container/label/loopback port and database/schema OIDs,
+fake-only profile and process-local issuance/lifetime. Reject configuration-only,
+reconstructed, retargeted, expired or already-populated source issuance. Standard test
+resource caps and exact cleanup remain; neither normal review data nor existing roles/
+schemas/volumes are adopted or removed. Preserve standard browser/test fixture behavior.
+
+The new prescribed make test-erasure-fresh-scope target always creates its own bounded
+source; never point it at an existing schema. This implementation is in progress,
+not an issued plan, SQL owner/executor, activation, closure, removal or completed first
+slice. Continue through independent SQL authority, server plan/authorization, permanent
+closure and durable continuation with all source/preservation/export guards. No new
+privacy/retention policy or architecture decision is inferred from this bootstrap proof.
+
+
+## ADR-071 disabled SQL installation — implementation in progress
+
+Record the technical bootstrap decision in ADR-071 under approved ADR-061. An explicit
+forward installer only accepts the live registered source proof, rejects existing roles/
+crypto/control namespaces and unknown source namespaces, and creates separate NOLOGIN
+owner/authorizer/maintenance principals without memberships or elevated flags. It adds
+one private16-column shared control table (K), purpose-specific HMAC key and qualified
+pgcrypto1.3 namespace; these are additional capability inventory, never learner-owned
+rows or a substitute for full source/guard/ACL validation. Normal migrations/startup
+never read this installer. Normal review remains dormant and untouched.
+
+A narrowly bound forward state guard records source/role OIDs and nonce only in this
+owned source. Creation/execution CHECKs remain false, plans/jobs remain unwritable and
+closed_at remains forbidden. The only login entrypoint is minimized disabled readiness;
+private initialization/scope functions and source/control tables are not granted to
+those logins. PostgreSQL-side fixed error handlers protect dynamic-login failures and
+rejected private-key row validation from uncaught secret-bearing SQL details. No audit
+suppression, trigger-disable flag, arbitrary SQL/cutoff or general DELETE grant exists.
+
+Initial actual-login/source checks pass7 cases after format fixes. Add later-failure
+rollback and PostgreSQL log-boundary proof, standard HMAC comparison, unknown-namespace
+and broader regression checks before acceptance. The SQL authorization/closure slice
+is still incomplete: no server plan, authorization, permanent closure, restartable job,
+full preservation/removal/retirement or completed DELETE exists. Keep this branch in
+progress until those requirements are implemented and independently verified.
+
+
+## ADR-071 bootstrap local checkpoint
+
+Final local format/lint/types (222 sources),1,487 unit/contract,110 resource controls,
+11 fresh-scope/SQL cases, OpenAPI/build and dependency/source/secret security pass.
+Actual logins prove only minimized disabled readiness, no source/control reads or
+protected writes, no owner role assumption, private function denial and temporary
+search-path shadowing resistance. Owner LOGIN drift and crypto-namespace rename make
+readiness fail. Replays, pre-existing role adoption and unknown namespaces fail.
+The complete installed inventory is75 tables/561 columns; ordinary public remains74/545.
+
+A late invalid-key initialization rolls back roles, extension/namespaces and source
+handoff. The corrected log probe captures both Docker streams, observes the fixed
+server error and finds neither the rejected key marker (text/hex) nor either generated
+login credential. The earlier stdout-only probe was insufficient evidence; the first
+corrected fixture failed because its credential callback was not wired. Earlier format,
+duplicate-basename and invalid-settings fixture failures stay recorded. No scanner
+exception is added; the privileged modules are explicitly included in make security.
+
+All123 browser executions pass after the shared factory extension (108 standard,
+12 short-text,three configuration), with12 recorded browser source containers
+independently absent and empty cleanup. Each native fresh-source/capability context
+also independently checks exact container absence. The legacy short-text runner keeps
+its existing schema scope. No existing schema/role, SDK/cache, volume or image cleanup.
+Main review remains eight healthy services on0045 with erasure/retirement disabled.
+
+This is disabled bootstrap engineering evidence, not completed FR-ID-006 or first-slice
+acceptance. Full source/private-catalog/ACL integrity, payload and exact-hold checks,
+server plan/authorization/closure, durable continuation, preservation/removal/retirement
+and erasure recovery remain required. No ordinary authorizer source CRUD is granted yet.
+No plan/job is created, closed_at is unchanged and no DELETE request is completed.
+Full exact-source hosted acceptance remains pending; do not infer it from parent runs.
+
+
+## Frozen ADR-071 disabled-bootstrap candidate
+
+Implementation/test/Make/workflow source3f865e440dae523b7c415efd0c6838b012d76435
+is pushed for complete hosted [39359471826](https://github.com/Jotham566/kasoma/actions/runs/39359471826),
+confirmed in progress. Preserve that remote head; only Markdown closeout follows it.
+Local11 fresh-source/SQL,110 resource,1,487 unit/contract and123 browser executions
+pass alongside quality/contracts/build/security. Its full548 integration and exact-source
+hosted/image/service acceptance remain pending. No normal-review erasure is enabled.
+
+The prepared coordination acceptancee37cd55 changes Markdown only beyond verified94feeab
+and integrates accepted main2f3031b. Main follow-up39355923737 remains separately live;
+do not move its head. Source ownership752cda1 and combined audit4db1cec have their own
+live runs; they cannot accept this bootstrap source. Full SQL server plan/authorization,
+permanent closure, durable continuation and complete ADR-061 fulfillment remain work.
+
+
+## Accepted disabled fresh-source bootstrap — hosted39359471826
+
+Complete hosted [39359471826](https://github.com/Jotham566/kasoma/actions/runs/39359471826)
+is SUCCESS at3f865e440dae523b7c415efd0c6838b012d76435:1,487 unit/contract,
+548 integration,35 tooling,29 identity/lifecycle,19 fake dispatch,16 source checks
+and123 browser executions. All required setup/migration/seed, focused/restricted-login,
+quality/contracts/build, dependency/source/image security and service smoke gates pass.
+Recovery74/692 passes571ms logical and330ms stopped-source PG/MinIO with one42,084-byte
+ciphertext, immutable/fault/dormant checks and empty cleanup. ProductionRPO/RTO remains
+false, and baseline recovery is not erasure checkpoint recovery.
+
+Accept only the disabled ADR-071 fresh-source capability v1: in-process registered
+pre-migration source proof, exclusive NOLOGIN owner and separate private authorizer/
+maintenance logins, qualified bundled pgcrypto1.3 HMAC, immutable private control and
+one-time fresh-source identity handoff. It never provisions normal migrations/startup
+or review, and readiness remains false. No plan/job/closure/DELETE completion is accepted
+from this source. Full catalog/ACL/source/payload/hold validation remains required.
+The later v2 planf645a54 and staff coordination have their own pending verification.
+
+This prepared merge preserves both Markdown evidence histories; executable/test/Make/
+workflow files equal hosted-verified3f865e4. Main600db71 and its follow-up39364455335
+remain live and fixed. Do not advance main, remove the unmerged bootstrap branch, or
+infer acceptance for newer work until the main follow-up is terminal successful.

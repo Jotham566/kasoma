@@ -738,3 +738,72 @@ migrate container-smoke security-containers`. All eight normal services remain h
 on0045; no erasure provisioning, activation or account closure is performed. Main40aa7d2
 follow-up is terminal success; publication may advance main to this Markdown-only
 closeout of hosted-verified4db1cec. Separate live bootstrap/plan heads remain fixed.
+
+
+ADR-071 disabled bootstrap candidate3f865e4 is pushed for complete hosted39359471826;
+keep its remote head fixed. Source proof is issued before migrations using a one-use
+registered ticket and registered immutable object/lifetime, binding exact owned local
+container/port/database/schema identity. Pre-connect checks reject a mismatched root URL
+without opening SQL. Normal review/configuration cannot manufacture that proof.
+The explicit private SQL installer creates exclusive NOLOGIN owner and separate limited
+authorizer/maintenance logins, a16-column private K control and qualified bundled
+pgcrypto1.3 HMAC namespace. It changes only its fresh owned source; normal Alembic/startup
+never installs it. Readiness is disabled only; no ordinary authorizer source CRUD,
+plan/job creation, account closure, erasure or completed DELETE is implemented.
+Local11 fresh-scope/SQL cases,110 resource controls,1,487 unit/contract,123 browsers and
+quality/contracts/build/security pass. Twelve browser source containers are independently
+absent; native contexts also assert exact absence. Actual role/namespace drift, forbidden
+reads/writes/role assumption, failed-key rollback/retry and standard HMAC checks pass.
+The fixed PostgreSQL error is observed in both-stream capture without the rejected key
+or either generated credential. Earlier format/collection/settings/probe fixture failures
+remain failures. Full548 integration and own hosted/image/service acceptance remain
+pending. Complete source/private-catalog/ACL/payload/hold validation and actual SQL
+plan/authorization/closure with durable continuation remain next, not optional work.
+Main2f3031b follow-up39355923737 remains live, and prepared coordinatione37cd55 is only
+Markdown beyond full hosted-verified94feeab. Do not move active remote heads. All eight
+normal review services are healthy on0045; retirement/erasure/short-text remain disabled.
+
+
+## Main coordination publication after parent follow-up
+
+Parent main2f3031b follow-up39355923737 is terminal SUCCESS. Accepted coordination
+94feeab/e37cd55 is now published through main40aa7d2dd4283012faa4f638e5dffacb56d8b8dd,
+with native image rebuild/migration/service smoke and HIGH/CRITICAL image checks passing.
+The merged local/remote coordination branch is removed after ancestry proof. All eight
+normal review services are healthy on0045, with false eligibility/creation/execution,
+no erasure principals and zero closed identities. Main follow-up39359937884 is confirmed
+live; preserve that head. This supersedes the preceding live2f3031b status only.
+
+Disabled-bootstrap3f865e4 hosted39359471826 stays live at its frozen remote head, with
+only Markdown following locally. Combined audit4db1cec hosted39355841664 remains separate
+and live. Neither parent acceptance proves new bootstrap/audit acceptance. The next work
+is the complete reviewed server plan and atomic authorization/closure with durable job
+continuation, full current authority, source/hold/payload/export checks and SQL enforcement.
+No empty-account/count-only substitute or manual mark-complete is permitted. Ordinary
+SQL-login possession alone must not impersonate a recently authenticated ADMIN caller;
+record any new internal command-authentication mechanism as a technical ADR before use.
+
+
+## Accepted disabled fresh-source bootstrap — hosted39359471826
+
+Complete hosted [39359471826](https://github.com/Jotham566/kasoma/actions/runs/39359471826)
+is SUCCESS at3f865e440dae523b7c415efd0c6838b012d76435:1,487 unit/contract,
+548 integration,35 tooling,29 identity/lifecycle,19 fake dispatch,16 source checks
+and123 browser executions. All required setup/migration/seed, focused/restricted-login,
+quality/contracts/build, dependency/source/image security and service smoke gates pass.
+Recovery74/692 passes571ms logical and330ms stopped-source PG/MinIO with one42,084-byte
+ciphertext, immutable/fault/dormant checks and empty cleanup. ProductionRPO/RTO remains
+false, and baseline recovery is not erasure checkpoint recovery.
+
+Accept only the disabled ADR-071 fresh-source capability v1: in-process registered
+pre-migration source proof, exclusive NOLOGIN owner and separate private authorizer/
+maintenance logins, qualified bundled pgcrypto1.3 HMAC, immutable private control and
+one-time fresh-source identity handoff. It never provisions normal migrations/startup
+or review, and readiness remains false. No plan/job/closure/DELETE completion is accepted
+from this source. Full catalog/ACL/source/payload/hold validation remains required.
+The later v2 planf645a54 and staff coordination have their own pending verification.
+
+This prepared merge preserves both Markdown evidence histories; executable/test/Make/
+workflow files equal hosted-verified3f865e4. Main600db71 and its follow-up39364455335
+remain live and fixed. Do not advance main, remove the unmerged bootstrap branch, or
+infer acceptance for newer work until the main follow-up is terminal successful.

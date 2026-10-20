@@ -5,7 +5,7 @@ import os
 import secrets
 import signal
 import sys
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from time import monotonic, sleep
 from types import FrameType
@@ -77,17 +77,22 @@ def pinned_local_docker() -> Iterator[None]:
                 os.environ[key] = value
 
 
-def require_test_profile(settings: Settings) -> None:
-    # Preserve the existing standard local Compose guard; never connect to its data.
-    local_database_url(settings)
+def require_fake_profile(settings: Settings) -> None:
     if (
-        settings.model_provider != "fake"
+        settings.app_env != "development"
+        or settings.model_provider != "fake"
         or settings.email_provider != "fake"
         or settings.sms_provider != "fake"
         or settings.whatsapp_provider != "fake"
         or settings.allow_external_api_calls
     ):
         raise ValueError("Synthetic fixtures require fake providers")
+
+
+def require_test_profile(settings: Settings) -> None:
+    # Preserve the existing standard local Compose guard; never connect to its data.
+    local_database_url(settings)
+    require_fake_profile(settings)
 
 
 @contextmanager
@@ -106,7 +111,10 @@ def erasure_test_database(settings: Settings) -> Iterator[Settings]:
 
 
 def _isolated_database(
-    settings: Settings, *, purpose: Literal["browser", "erasure"] = "browser"
+    settings: Settings,
+    *,
+    purpose: Literal["browser", "erasure"] = "browser",
+    attest: Callable[[OwnedServices, Settings], None] | None = None,
 ) -> Iterator[Settings]:
     invocation = uuid4().hex
     owned = OwnedServices(invocation, purpose=purpose)
@@ -169,6 +177,10 @@ def _isolated_database(
                 if observed != database:
                     raise ValueError("Synthetic test database identity mismatch")
                 break
+        if attest is not None:
+            if purpose != "erasure":
+                raise ValueError("Fresh erasure attestation requires its own test purpose")
+            attest(owned, isolated)
         yield isolated
     except Exception:
         raise RuntimeError("Synthetic test database unavailable; diagnostics withheld") from None
