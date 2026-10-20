@@ -135,6 +135,22 @@ constraints/policies, unrelated-role grants or source payload/hold/export graphs
 Those checks precede durable atomic authorization/closure and checkpoint recovery.
 
 
+## Complete own principal-fence hosted result
+
+[Hosted39383925992](https://github.com/Jotham566/kasoma/actions/runs/39383925992)
+is SUCCESS at exact4bf5a77347af725cdb05853392f73e14c6e68fef:1,502 unit/contract,
+676 integration (2225.73s),35 tooling and123 full browser executions, plus every
+required focused/setup/migration/seed, actual restricted-login, quality/contracts/
+build, security/image/service gate. Only optional registry authentication is skipped.
+Logical recovery verifies74 tables/692 rows in614ms. Actual stopped-source PostgreSQL/
+MinIO recovery verifies74/692/one42,060-byte ciphertext in331ms, with fault/immutable/
+dormant guards and empty cleanup. Production RPO/RTO remains false; this is not erasure
+checkpoint recovery. Earlier failures remain failures. This accepts only the frozen
+v6 principal fence; the newer preparation/installed-catalog work needs its own run.
+Main825d57e contains the separately verified portable catalog/credential/dispatch
+source. The accepted consumer1597a68 and principal4bf5a77 branches are retained pending
+publication after main's live follow-up39387033557. No branch is deleted prematurely.
+
 ## Consent consumers and principal-fence publication
 
 Main825d57e follow-up [39387033557](https://github.com/Jotham566/kasoma/actions/runs/39387033557)

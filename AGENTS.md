@@ -876,6 +876,16 @@ Main publishes this verified source; its new follow-up run requires separate sta
 Consumer1597a68 and principal4bf5a77 remain unmerged until their own acceptance.
 
 
+ADR-078 exact4bf5a77 passes complete own hosted39383925992:1,502 unit/contract,
+676 integration,35 tooling,123 browsers and every required engineering gate.
+Logical74/692 recovery614ms; actual stopped-source PG/MinIO74/692/one42,060-byte
+ciphertext331ms, faults/guards/cleanup[]; production RPO/RTOfalse. This accepts
+principal separation only. New ADR-079 preparation/compiler work is separate:
+trusted definitions are observed before control initialization and rolled back;
+complete code hashes and independent raw/full metadata reproduce locally. No v7
+artifact, SQL catalog interlock, closure or erasure acceptance is inferred. Keep
+normal review on0045 with false erasure flags; preserve live remote CI heads.
+
 Complete main825d57e follow-up39387033557 passes1,502 unit/contract,642 integration,
 35 tooling,123 browsers and all required gates. Independent ADR-077 consumer1597a68
 complete39380895685 and ADR-078 principal4bf5a77 complete39383925992 also pass.
@@ -885,3 +895,22 @@ fault/immutable/dormant guards/cleanup[], productionfalse. Promotion through732e
 has only Markdown differences from accepted4bf5a77 runtime/test/Make/typing.
 Separate af02686 preparation CI39393189109 stays live, not accepted here. V7 work
 is separate; no actual closure, removal or erasure checkpoint is enabled.
+
+
+## Catalog preparation publication after complete own acceptance
+
+FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: exactaf02686ee77064783c5ea8352b2899134da3a987
+passes complete own [39393189109](https://github.com/Jotham566/kasoma/actions/runs/39393189109):
+1,526 unit/contract,682 integration (2236.48s),35 tooling and123 full browser executions,
+plus every required setup/migration/seed/focused/role/quality/contracts/build/security/
+image/service gate. Logical74-table/692-row recovery573ms; actual stopped-source
+PostgreSQL/MinIO74/692/one42,084-byte ciphertext316ms, fault/immutable/dormant guards
+and empty cleanup. Production RPO/RTO remains false. Optional registry authentication
+alone is legitimately skipped. Mainf8a2afb follow-up39395023461 also succeeds.
+
+Publication merges this accepted preparation source with main's Markdown-only
+closeout; all non-Markdown files equal exactaf02686. This accepts rolled-back fresh
+preparation and typed expected metadata only. Separate v7 installed interlock and
+ADR-080 TEMP type correction remain local candidates requiring their own full CI.
+No closure, removal, DELETE completion or production acceptance is inferred. Existing
+failures remain failures. Review services stay healthy on0045 with erasure disabled.

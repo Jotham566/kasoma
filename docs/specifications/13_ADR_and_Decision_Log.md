@@ -574,3 +574,13 @@ mutations while keeping temporary-disable revocation. No execution or SQL accept
 fixed raw-catalog grant/role/ownership expectations to SQL scope identity. Refuse
 drift before private readiness/plan/expiry work. Preserve existing temporary-table
 behavior; no live ACL learning, public migration, activation or full erasure clearance.
+
+
+## ADR-079: Installed catalog expectations
+
+[Record](../decisions/ADR/079-installed-catalog-expectations.md): independently
+reproduce installed metadata expectations; render exact typed constants and complete
+expected code, including the checker, without learning a live accepted baseline.
+Fixed-width decimal OIDs preserve raw parser locations. An immutable private technical
+expectation field separates expected data from checker code. Full v7 SQL integration
+is pending; no normal-review, erasure, data-retention or production authority is added.

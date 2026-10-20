@@ -3,13 +3,14 @@
 import hashlib
 import json
 import secrets
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
 from psycopg import sql
 from pydantic import SecretStr
-from sqlalchemy import text
+from sqlalchemy import Connection, text
 from sqlalchemy.engine import make_url
 
 from scripts.erasure_acl_sql import compile_principal_fence, fenced_scope_definition
@@ -18,6 +19,7 @@ from scripts.erasure_scope import FreshErasureScope
 from services.database import engine_for
 from services.erasure_capability_contract import CAPABILITY_VERSION, CRYPTO_VERSION
 from services.erasure_catalog import check_preinstall_catalog
+from services.erasure_catalog_bindings import CatalogBindings
 from services.erasure_inventory import check_source_shape
 from services.erasure_manifest import BASELINE
 from services.erasure_sources import PREDICATES
@@ -47,8 +49,44 @@ class InstalledCapability:
     executor_url: SecretStr = field(repr=False)
 
 
+class _CatalogPrepared(Exception):
+    """Internal successful capture unwinds the entire definition transaction."""
+
+
+CatalogCollector = Callable[[Connection, CatalogBindings, tuple[str, ...]], None]
+
+
 def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> InstalledCapability:
     """Exclusively install disabled capability, never adopt roles or enable erasure."""
+    return _install(scope, plan_ttl_seconds=plan_ttl_seconds)
+
+
+def prepare_catalog(
+    scope: FreshErasureScope, collector: CatalogCollector, *, plan_ttl_seconds: int = 600
+) -> None:
+    """Trusted offline generator only: no key, initialization, handoff or credentials.
+
+    Collector code is part of the privileged repository generator, never a request,
+    plugin or SQL callback supplied by an application user. Fresh creation proof and
+    all ordinary pre-install fences are still mandatory. The callback observes only
+    this invocation's uninitialized definition transaction; its normal return causes
+    rollback rather than readiness or an InstalledCapability result.
+    """
+    try:
+        _install(scope, plan_ttl_seconds=plan_ttl_seconds, collector=collector)
+    except _CatalogPrepared:
+        return
+    raise CapabilityInstallUnavailable()
+
+
+def _install(
+    scope: FreshErasureScope,
+    *,
+    plan_ttl_seconds: int,
+    collector: CatalogCollector | None = None,
+) -> InstalledCapability:
+    if type(scope) is not FreshErasureScope:
+        raise CapabilityInstallUnavailable()
     if type(plan_ttl_seconds) is not int or not 1 <= plan_ttl_seconds <= 600:
         raise CapabilityInstallUnavailable()
     scope.verify()
@@ -145,6 +183,8 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
                   ALTER ROLE {} SET lock_timeout='100ms';
                 """).format(sql.Literal(role), *[sql.Identifier(role)] * 4)
                 db.execute(text(statement.as_string()))
+                # Metadata capture must not inherit the temporary plaintext GUC.
+                db.execute(text("SELECT set_config('kasoma.bootstrap_password','',true)"))
             phase = "CRYPTO"
             db.execute(
                 text(
@@ -213,36 +253,58 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
                 raise CapabilityInstallUnavailable()
             db.execute(text(ddl))
             base_ddl = ddl
-            db.execute(text(compile_plan_helpers(namespace, crypto)))
+            definitions = [base_ddl]
+            helpers = compile_plan_helpers(namespace, crypto)
+            db.execute(text(helpers))
+            definitions.append(helpers)
             ddl = SQL_PLAN_SOURCE.read_text()
             for marker, value in replacements.items():
                 ddl = ddl.replace(marker, value)
             if "__" in ddl:
                 raise CapabilityInstallUnavailable()
             db.execute(text(ddl))
+            definitions.append(ddl)
+            creator = db.scalar(
+                text(
+                    "SELECT d.datdba FROM pg_catalog.pg_database d "
+                    "JOIN pg_catalog.pg_roles r ON r.oid=d.datdba "
+                    "WHERE d.datname=current_database() AND r.rolname=current_user"
+                )
+            )
+            if not isinstance(creator, int):
+                raise CapabilityInstallUnavailable()
             if CAPABILITY_VERSION == "isolated-erasure-capability-v6":
-                creator = db.scalar(
-                    text(
-                        "SELECT d.datdba FROM pg_catalog.pg_database d "
-                        "JOIN pg_catalog.pg_roles r ON r.oid=d.datdba "
-                        "WHERE d.datname=current_database() AND r.rolname=current_user"
-                    )
+                principal_definition = compile_principal_fence(
+                    namespace, crypto, oids[owner], oids[authorizer], oids[executor], creator
                 )
-                if not isinstance(creator, int):
+                scope_definition = fenced_scope_definition(base_ddl, namespace)
+                db.execute(text(principal_definition))
+                db.execute(text(scope_definition))
+                definitions.extend([principal_definition, scope_definition])
+            if collector is not None:
+                scope.verify()
+                transaction = db.get_transaction()
+                if transaction is None or not transaction.is_active:
                     raise CapabilityInstallUnavailable()
-                db.execute(
-                    text(
-                        compile_principal_fence(
-                            namespace,
-                            crypto,
-                            oids[owner],
-                            oids[authorizer],
-                            oids[executor],
-                            creator,
-                        )
-                    )
+                collector(
+                    db,
+                    CatalogBindings(
+                        scope.database_oid,
+                        scope.namespace_oid,
+                        oids[owner],
+                        oids[authorizer],
+                        oids[executor],
+                        creator,
+                        scope.nonce,
+                    ),
+                    tuple(definitions),
                 )
-                db.execute(text(fenced_scope_definition(base_ddl, namespace)))
+                scope.verify()
+                if db.get_transaction() is not transaction or not transaction.is_active:
+                    raise CapabilityInstallUnavailable()
+                # Exception unwinding rolls back roles, grants, extension and DDL.
+                # No private fingerprint key has been generated or inserted yet.
+                raise _CatalogPrepared()
             phase = "CONTROL"
             # The server-side initializer catches row-validation failures before a
             # private key can appear in PostgreSQL CHECK error details.
@@ -292,6 +354,8 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
                 )
             ),
         )
+    except _CatalogPrepared:
+        raise
     except Exception:
         raise CapabilityInstallUnavailable(phase) from None
     finally:

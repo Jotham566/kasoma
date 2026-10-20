@@ -1,5 +1,22 @@
 # Changelog
 
+## Installed catalog expectation groundwork — in progress
+
+Added rollback-only fresh definition preparation, complete trusted-code hashing,
+independent raw/full metadata query reproduction and a strict future v7 envelope.
+No control initialization, artifact publication, v7 runtime switch or erasure authority.
+86 focused cases,1,526 unit/contract and35 tooling pass with quality/build/security
+and synthetic recovery. Own complete hosted acceptance remains required.
+
+ADR-079/FR-ID-006/BR-010: strict expected-tree bindings cover ten private/public
+variable expressions while preserving all other bytes and parser locations. Eleven
+contract cases and one independent two-source native case pass, with new OIDs/nonces.
+This is groundwork: the v7 SQL checker, immutable technical expectation field and
+full installed artifact remain unimplemented. Runtime stays v6; no API, schema,
+permission, activation or model-provider change.
+
+## Installed private principal fence — ADR-078 verified engineering
+
 Verified ADR-077/078 sources1597a68/4bf5a77 pass complete own39380895685/39383925992.
 Publication preserves their exact runtime tree; see the current sprint for evidence.
 
@@ -12,7 +29,9 @@ and ownership/default-privilege drift. Existing temporary shadowing and disabled
 execution remain. No public migration, data permission or actual erasure. Initial
 eight regressions and healthy handoff corrections are retained. Final21 principal,
 11 bootstrap,24 plan,1,502 unit/contract and123 browser executions pass with quality/
-security gates; complete own hosted acceptance remains pending.
+security gates. Complete own hosted39383925992 at exact4bf5a77 passes1,502
+unit/contract,676 integration,35 tooling,123 browser executions and all required
+engineering gates. It does not accept the newer installed-catalog preparation.
 
 ## Closed guardian/role consumers — ADR-077 verified
 
@@ -2818,3 +2837,22 @@ therefore retain failed hosted evidence; none is promoted or rerun as a substitu
 for the corrected source's own complete39378996412 verification. The controlled
 two-architecture reproduction/correction is local proof of the serialization defect,
 not a claimed successful hosted result for any old head.
+
+
+## Catalog preparation publication after complete own acceptance
+
+FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: exactaf02686ee77064783c5ea8352b2899134da3a987
+passes complete own [39393189109](https://github.com/Jotham566/kasoma/actions/runs/39393189109):
+1,526 unit/contract,682 integration (2236.48s),35 tooling and123 full browser executions,
+plus every required setup/migration/seed/focused/role/quality/contracts/build/security/
+image/service gate. Logical74-table/692-row recovery573ms; actual stopped-source
+PostgreSQL/MinIO74/692/one42,084-byte ciphertext316ms, fault/immutable/dormant guards
+and empty cleanup. Production RPO/RTO remains false. Optional registry authentication
+alone is legitimately skipped. Mainf8a2afb follow-up39395023461 also succeeds.
+
+Publication merges this accepted preparation source with main's Markdown-only
+closeout; all non-Markdown files equal exactaf02686. This accepts rolled-back fresh
+preparation and typed expected metadata only. Separate v7 installed interlock and
+ADR-080 TEMP type correction remain local candidates requiring their own full CI.
+No closure, removal, DELETE completion or production acceptance is inferred. Existing
+failures remain failures. Review services stay healthy on0045 with erasure disabled.
