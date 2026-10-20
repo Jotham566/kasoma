@@ -1941,3 +1941,24 @@ promotion. Review stays8/8healthy on0045, erasure disabled. See
 [E8 consumer verification](E8_CONSENT_CONSUMERS_VERIFICATION.md); no actual closure
 or erasure completion. Next implement installed SQL/catalog/payload/preservation
 checks before the durable atomic barrier and checkpoint recovery.
+
+
+## Frozen consumer source1597a68
+
+Exact1597a68192e9351f0bfbb14fcb44566536e3c851 is pushed on
+codex/erasure-consent-consumers for own hosted39380895685, confirmed in progress.
+Preserve that remote head: its concurrency group cancels on a later push. Only
+Markdown closeout follows the verified runtime/test/Make tree. Parent portable
+catalog9fece6a hosted39378996412 is independently in progress. Neither may be
+promoted from another source's result. Main37be6e3 follow-up39374776606 is SUCCESS;
+main remains37be6e3 and normal Docker is8/8healthy, execution disabled. The exact
+owner-approved orphan91c93448d8156695319097ff17e29cc9094e7265cb530d84bcbc809619559eff
+is independently confirmed absent; no broader removal is authorized or performed.
+
+Next implement the full installed capability/catalog/ACL and payload/source checks
+under ADR-061/072/073 before atomic durable authorization/closure. Existing v5
+pre-install verification and disabled plans do not prove those installed checks,
+permanent SQL guards, preservation, export drain, erasure or checkpoint recovery.
+Both long-lived local identity failures stay failed; fresh-owned70, consumer12 and
+all123 browsers plus engineering checks pass as recorded above. No MVP/release or
+physical/branded acceptance is inferred.
