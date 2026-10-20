@@ -112,3 +112,24 @@ are corrected; earlier installation failures remain recorded above.
 Next: full installed raw/code/catalog fence with checked expected templates and
 independent fresh-source reproduction, followed by complete payload/ownership/
 preservation/export checks before the durable atomic barrier and recovery checkpoint.
+
+
+## Frozen v6 source4bf5a77
+
+Exact4bf5a77347af725cdb05853392f73e14c6e68fef is pushed on
+codex/erasure-principal-fence for own hosted39383925992, confirmed in progress.
+Keep that remote head unchanged; workflow concurrency cancels on later pushes.
+Only Markdown closeout follows the verified runtime/test/Make/pyproject tree. Parent
+catalog9fece6a and consumer1597a68 remote SHAs are independently unchanged while
+39378996412 and39380895685 remain live. Neither parent accepts the v6 recipe.
+Main37be6e3 and its healthy normal preview remain unchanged; no branch is promoted
+from a partial or another source's result. The previous two long-lived local identity
+TRUNCATE57014 failures remain failures; native owned controls pass without a claimed
+cause or timeout correction. Full own hosted/recovery/restricted/image/service and
+remaining acceptance still apply. No account erasure, MVP completion or release claim.
+
+Next exact slice: the full installed raw/code/catalog fence with independently
+reproduced versioned expectations, including complete live-body comparisons rather
+than normalizing live code. The principal fence alone cannot clear altered code,
+constraints/policies, unrelated-role grants or source payload/hold/export graphs.
+Those checks precede durable atomic authorization/closure and checkpoint recovery.
