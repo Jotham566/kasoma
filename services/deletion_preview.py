@@ -6,6 +6,7 @@ from uuid import UUID
 from sqlalchemy import ColumnElement, and_, func, or_, select
 from sqlalchemy.orm import Session
 
+from services.account_processing import coordinate
 from services.data_request_contracts import DeletionPreview, DeletionSource, RetentionCategory
 from services.data_requests import DataRequestService
 from services.domain.account_erasure import ErasureJob, ErasurePlanRow
@@ -275,6 +276,10 @@ def preview(
         actor = authorize(identity, db, token, {"ADMIN"}, recent=True)[0]
         if not identity.rate(db, f"deletion-preview:{actor}", 10, 60):
             raise IdentityError("RATE_LIMITED", 429)
+        subject = db.scalar(select(DataRequest.user_id).where(DataRequest.id == target))
+        if subject is None:
+            raise IdentityError("RESOURCE_NOT_FOUND", 404)
+        coordinate(db, subject)
         request = db.get(DataRequest, target)
         if request is None:
             raise IdentityError("RESOURCE_NOT_FOUND", 404)

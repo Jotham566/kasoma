@@ -10,6 +10,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from services.account_processing import coordinate
 from services.data_request_contracts import DataRequestInput, DataRequestPage, DataRequestView
 from services.domain.content import AuditLog
 from services.domain.data_requests import DataRequest, DataRequestReceipt, DataRequestReview
@@ -143,6 +144,10 @@ class DataRequestService:
     def claim(self, token: str, target: UUID, key: UUID, request_id: UUID) -> DataRequestView:
         with self.identity.transaction() as db:
             actor = authorize(self.identity, db, token, {"ADMIN"}, recent=True)[0]
+            subject = db.scalar(select(DataRequest.user_id).where(DataRequest.id == target))
+            if subject is None:
+                raise IdentityError("RESOURCE_NOT_FOUND", 404)
+            coordinate(db, subject)
             fingerprint = self.identity.digest("data-request", "claim:" + str(target))
             old = self.replay(db, actor, key, fingerprint)
             if old:

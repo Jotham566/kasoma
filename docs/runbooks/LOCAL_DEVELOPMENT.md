@@ -1710,3 +1710,9 @@ caller cutoff or rewritten plan timestamp is used. V1 namespaces/roles are never
 or silently upgraded: the new recipe is for a newly created source only. Plans currently
 remain blocked for execution, pending complete source/hold/payload/ACL validation and
 actual authorization/closure/removal/retirement/recovery. Normal Docker stays disabled.
+
+
+Staff preservation/flag source coordination follows the ADR-070 staff addendum.
+Run `make test-erasure-identity-isolated` for the owned-source lock-order regressions;
+normal review remains dormant. Shared coordination does not enable account erasure or
+replace independent SQL/preservation/retention clearance.

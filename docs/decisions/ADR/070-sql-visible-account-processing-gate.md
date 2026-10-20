@@ -90,3 +90,27 @@ Publish native and exact-source full hosted results separately. Do not infer clo
 or erasure acceptance from these prerequisite tests. Roll back only before activation;
 removing a coordination barrier after erasure enablement requires a forward safety
 repair preserving closed identities and accepted work.
+
+## Staff source mutation ordering —20 October2026
+
+Extend the same shared subject gate to independent staff operations on an owned case
+and flag. After authenticating/locking the staff actor, pre-read only the immutable
+case user_id or flag reporter_id, acquire the subject's shared gate, then take/re-read
+the case/flag row lock and apply the existing ownership/revision/claim checks. Do not
+lock a case or flag first: closure takes the subject gate before source rows, and the
+reverse order could deadlock preservation or allow late source evidence after the
+barrier. Keep existing actor locks/rate limits/retry checks and all lawful hold rules.
+No subject identity/contact/answer is added to a DTO. Immutable ownership is guaranteed
+by existing SQL constraints/triggers; missing resources still return the existing404.
+
+Apply this order to case claims and audited deletion previews, the shared legal-hold access path (including exact
+channel capture) and staff flag detail/triage, including retry reads that append audit.
+Queue reads have actor-only audit and no subject source mutation. This is coordination,
+not post-closure custody permission or a new blanket refusal of preservation/release.
+Future closure/preservation SQL still needs independent source/hold guards and bounded
+post-completion custody. Do not infer those controls from a shared gate.
+
+Test actual PostgreSQL wait state under an exclusive subject gate and independently
+acquire the same case/flag row NOWAIT while the staff operation waits. Verify completion
+after release, unrelated subject independence, unchanged audit/retry authorization and
+normal flag/hold/channel regression. No custom sleep or trigger bypass establishes proof.

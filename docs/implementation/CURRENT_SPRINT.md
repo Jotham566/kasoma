@@ -1296,3 +1296,63 @@ Full local browsers are running. Exact-source hosted integration/browser/image/s
 acceptance remains pending. No job, closure or DELETE completion is implemented; source
 semantic/payload/hold/catalog clearance, atomic authorization/barrier and complete durable
 fulfillment remain required. Normal review is healthy and dormant on main40aa7d2.
+
+
+## Staff preservation/triage coordination — implementation in progress
+
+FR-ID-006/BR-010, FR-GRD-009/FR-CNT-006, FR-OPS-003 and NFR-SEC-002/MNT-001:
+ADR-070's staff addendum requires subject shared coordination before case/flag row locks.
+Use immutable server-owned case user_id/flag reporter_id after current staff authority;
+re-read the resource under its existing row/ownership/revision checks. Cover case claim/preview,
+legal-hold access (including channel capture), flag detail and triage/replay audit.
+No API/schema/retention permission or closure capability is added. Concurrency regression
+and full acceptance remain pending; the existing dormant normal review is not an erasure
+execution target. Source/audit main600db71 is separately hosted-verified at4db1cec;
+main follow-up39364455335 is live. Preserve bootstrap3f865e4 and planf645a54 live heads.
+
+
+Plan candidatef645a54 passes all123 local browser executions across Chromium/Firefox/
+WebKit, including encrypted fake short text and operations configuration. All12 recorded
+owned browser containers are independently absent. Runtime staff source changes began
+only after that browser command exited0. Exact-source hosted39364234883 remains live;
+this local result is not hosted acceptance or account erasure completion.
+
+Disabled-bootstrap3f865e4 passes complete hosted39359471826:1,487 unit/contract,
+548 integration,35 tooling and123 browsers plus setup/migration/seed, focused/restricted
+login, quality/contracts/build, dependency/source/image security and service smoke gates.
+Recovery74/692 passes571ms logical and330ms stopped-source PG/MinIO with one42,084-byte
+ciphertext, immutable/fault/dormant guards and empty cleanup. ProductionRPO/RTO stays
+false; baseline restoration is not erasure checkpoint recovery. Only its disabled fresh
+bootstrap is accepted, not planf645a54 or new staff coordination. Preserve main600db71
+while follow-up39364455335 is live; later promote bootstrap only with its exact verified
+runtime/test/Make/workflow tree and explicit documentation closeout.
+
+The first staff regression confirms3 bypasses (hold create/release/case claim), with
+28 passing cases and one disposable fixture STORAGE_EXHAUSTED error at512MiB. That run
+remains failed and its resource is cleaned. Move the six staff cases into a fourth
+closed independently owned cohort rather than enlarge tmpfs or touch review volumes.
+Staff coordination is now implemented before resource row locks; green verification
+is running and does not yet establish acceptance. No account is closed or erased.
+
+
+## Staff gate local candidate verification
+
+Six real-PostgreSQL concurrency cases pass in their own fresh512MiB source: hold
+creation/release, case claim, audited deletion preview, flag detail and triage wait at
+the subject shared gate while an independent transaction can lock the target row
+NOWAIT. Unrelated subjects remain independent. Four exact owned source containers are
+independently absent after the first green29/19/16/6 cohort run. That run passes1,490
+unit/contract tests, contracts/build/security/source checks; final format/lint/types
+also pass after adding preview coordination. A final unchanged-source owned-cohort run
+and full browser regression are still running; full570 integration and exact hosted/
+image/service acceptance remain pending. No grant, migration, API contract, retention
+permission, account closure or erasure is added by this staff amendment.
+
+Record the original3 regression bypass failures and disposable STORAGE_EXHAUSTED setup
+error as failures, not passes. Splitting staff tests into a fourth closed cohort keeps
+source RAM bounded and leaves normal Docker volumes untouched. The normal review has
+eight healthy services on0045 with erasure/retirement/normal short text disabled.
+The exact disabled-bootstrap source passes hosted39359471826; its prepared main merge
+7c621de is Markdown only beyond3f865e4 and waits for live main39364455335. New plan
+candidatef645a54 hosted39364234883 remains separate. Full approved ADR-061 erasure and
+external acceptance gates remain unfinished; this is prerequisite work only.
