@@ -2585,3 +2585,62 @@ complete private source-catalog/ACL and ownership/payload clearance, exact prese
 coverage and permanent closed-write/credential/export gates before atomic authorization/
 closure, bounded durable removal and quarantined checkpoint recovery. Academic/privacy/
 provider/physical-device/production approval remains genuine external acceptance work.
+
+
+## ADR-073 frozen pre-install catalog — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: pin32 technical catalog categories
+from independently created fake-only sources migrated to0045. Compare behavior/privilege
+metadata before creating any erasure principal; the existing shape check cannot detect
+body-only trigger/function drift. The new regression demonstrates old bootstrap accepting
+a changed closure guard (one failed/six passed). The read-only verifier already rejects
+that drift; connect it to privileged installation before any role/schema/key mutation.
+
+Counts/SHA256 are computed within PG, without learner-row reads or live body transfer.
+The four approved ADR-060 owner-dependent code templates are generated only from fresh
+migrations. Render their checked expected code with the exact database/public owner;
+never normalize live body literals or approve arbitrary role prefixes. The artifact also
+binds the ordinary migration helper/source files. Separate fresh resources reproduce
+identical metadata despite different database names; transient connection search path,
+timezone and timeout settings are restored. Query budgets are5s/100ms; no LIMIT truncates
+the catalog reader. Physical statistics/storage IDs and passwords are excluded.
+
+Fresh private capability v4 records the stricter installation provenance, reusing the v3
+SQL plan gate. The API refuses legacy v2/v3 readiness; no old source is adopted. Public
+0045 stays74 tables/545 columns; installed private scope stays75/561. No erasure execution
+or new preservation/retention permission. Complete installed-catalog/ACL, SQL ownership/
+payload/hold/export validation, exact richer preservation, permanent closed-write gates,
+atomic authorization/closure and bounded durable fulfillment remain mandatory.
+
+Broader strict type checking finds three existing trusted-script errors: psycopg SQL
+composition inference and an untyped role-OID map. Explicit composable/map types preserve
+behavior. Initial formatting failures are recorded; native drift/role/API/bootstrap,
+full unit/browser/security and own hosted verification remain pending. Keep main600db71
+and all live earlier candidate heads fixed. Normal Docker review remains healthy/dormant.
+
+
+ADR-073 raw safety stage: compare nine raw code/type and stored-expression
+metadata categories before any PostgreSQL expression/definition deparser. This rejects
+changed type I/O routines and unknown raw expressions before they could be invoked by
+constant formatting. Render only the checked expected four dynamic code templates;
+never normalize live code. Both stages return only counts/digests. Savepoint rollback
+restores local settings on mismatch/query failure; success restores them explicitly.
+The explicit fresh-migration generator can create the initial raw expectation, while
+the runtime verifier must load it from the versioned artifact. The32 full metadata
+categories are supplemented by these nine safety categories, not silently redefined.
+Pinned PostgreSQL/vector core and the privileged creator/host remain trusted; this does
+not claim protection from a hostile administrator controlling the engine or artifact.
+
+
+## ADR-073 final native catalog boundary
+
+The final nine-raw/32-full-category candidate passes25 catalog,22 plan and11
+fresh-scope/bootstrap cases,1,495 unit/contract and35 tooling checks, lint/type checks
+(228 Python sources), baseline reproduction, generated contracts, build and dependency/
+source security. The initial subprocess scan failure is corrected using the existing
+bounded command helper without scanner suppression. Full browser/own hosted acceptance
+remains pending. The interrupted earlier run remains unaccepted. The owner-authorized
+exact orphan removal is independently confirmed; all eight review services are healthy
+and host-native Ollama connectivity passes without inference. See the
+[catalog verification record](E8_ERASURE_CATALOG_VERIFICATION.md) for exact evidence
+and remaining installed-catalog/SQL/hold/payload/closure/removal/recovery gaps.

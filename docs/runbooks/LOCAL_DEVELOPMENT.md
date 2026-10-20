@@ -1722,3 +1722,27 @@ The fresh private plan recipe is v3: its source gate uses the installed public n
 not the authorizer's pg_catalog search path. `make test-erasure-plans` checks busy/stale
 transactions. Existing v1/v2 namespaces are not adopted; mismatched readiness fails closed.
 This does not activate erasure or change ordinary0045 migrations/review.
+
+
+ADR-073 adds `make erasure-catalog-baseline` to reproduce/check the versioned metadata
+artifact using a newly owned fake-only source and ordinary `make migrate`. It never opens
+the review database. `make update-erasure-catalog-baseline` explicitly rewrites the
+technical artifact from another such source after a reviewed migration/baseline change;
+ordinary setup/startup never regenerates or blesses a live catalog. No URL/schema/path
+argument selects a source. `make test-erasure-catalog` runs native drift/refusal tests.
+The artifact contains32 counts/digests and four approved migration code templates, never
+learner payloads/contacts/credentials. Private v4 readiness does not activate erasure;
+normal review and earlier private installations remain outside adoption/execution.
+
+
+ADR-073 raw safety stage: compare nine raw code/type and stored-expression
+metadata categories before any PostgreSQL expression/definition deparser. This rejects
+changed type I/O routines and unknown raw expressions before they could be invoked by
+constant formatting. Render only the checked expected four dynamic code templates;
+never normalize live code. Both stages return only counts/digests. Savepoint rollback
+restores local settings on mismatch/query failure; success restores them explicitly.
+The explicit fresh-migration generator can create the initial raw expectation, while
+the runtime verifier must load it from the versioned artifact. The32 full metadata
+categories are supplemented by these nine safety categories, not silently redefined.
+Pinned PostgreSQL/vector core and the privileged creator/host remain trusted; this does
+not claim protection from a hostile administrator controlling the engine or artifact.

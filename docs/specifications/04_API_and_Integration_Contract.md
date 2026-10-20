@@ -983,3 +983,9 @@ Legacy private v1/v2 recipes return the same fixed503 unavailable boundary befor
 writes. SQL derives the learner from the case, tries the installed-namespace shared
 processing gate before case locks and rejects a stale subject-row snapshot. Busy/stale
 calls cannot publish a plan/read audit. No authorization or erasure POST is enabled.
+
+
+The staged private plan transport now requires exact v4 readiness, identifying the
+ADR-073 pre-install catalog fence. Existing v2/v3 installations fail the same fixed503
+before plan writes; no new public request/response field or erasure POST is introduced.
+Normal review remains excluded and creation/execution remain false.

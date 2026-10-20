@@ -522,3 +522,11 @@ Recheck current authenticated ADMIN case ownership in SQL, issue database-clock 
 plans, and ultimately commit authorization plus permanent closure atomically. No
 identity signing/lookup key sharing, client actor/subject/clock input or new privacy
 permission. Implementation and complete first-slice verification remain in progress.
+
+## ADR-073: Frozen pre-install source catalog
+
+[Record](../decisions/ADR/073-frozen-preinstall-source-catalog.md): compare a new source's
+behavior/privilege catalog against metadata reproduced only from approved migrations in
+an independently owned fake-only source. Never approve the live source as its own baseline.
+No source rows, credentials, erasure activation or new preservation/retention authority.
+Installed-catalog/SQL/payload/hold clearance and full execution remain required work.

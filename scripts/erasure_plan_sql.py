@@ -52,7 +52,7 @@ def compile_plan_helpers(namespace: str, crypto: str) -> str:
     for name in sorted(PREDICATES):
         source = BASELINE[name]
         predicate = PREDICATES[name]
-        query = sql.SQL("")
+        query: sql.Composable = sql.SQL("")
         if predicate is not None:
             body = sql.SQL("to_jsonb(x)")
             if name == "account_erasure_plans":
