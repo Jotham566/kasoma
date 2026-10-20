@@ -403,3 +403,20 @@ Full local browsers and exact-source hosted/full integration acceptance remain p
 No account is closed or erased, and no request is completed. The next implementation
 is the independent isolated capability plus atomic authorization/closure and durable
 worker continuation under the approved ADR-061 locks and preservation barriers.
+
+## Frozen lifecycle sourcecb0cd22 — complete local browser checkpoint
+
+All123 browser executions pass on the0045 candidate:108 standard,12 short-text and
+three configuration. Twelve owned standard/configuration source containers report
+empty cleanup and independently confirmed exact-ID absence; all three owned native
+identity sources from this iteration are also independently absent. The separate
+short-text runner retains its legacy isolated-schema scope; no older schemas, roles,
+volumes, images or caches were cleaned. Actual restricted-login verification passes
+(one case,15.40s). Existing review Docker is8/8 healthy on verified main72c9c17/0044.
+
+Exact sourcecb0cd2211c7ae82611c6d430d78e913f49f15bec is frozen for complete hosted
+[39346406621](https://github.com/Jotham566/kasoma/actions/runs/39346406621), confirmed
+in progress. Only Markdown closeout follows that runtime/test/Make/workflow tree;
+full522 integration and hosted image/service acceptance remain pending. Do not promote
+this candidate from local/browser checks alone. No account closure, erasure, completed
+DELETE, production recovery, normal short-text activation or full MVP acceptance.
