@@ -1589,6 +1589,60 @@ closure, bounded durable removal and quarantined checkpoint recovery. Academic/p
 provider/physical-device/production approval remains genuine external acceptance work.
 
 
+## Accepted private plan and staff coordination — prepared publication
+
+Complete hosted 39365821234 is SUCCESS at exact combined source
+81f1d843e6e7d3fdbfd342f0626a883981bf9aef: 1,490 unit/contract, 573 integration,
+35 tooling and 123 full browser executions plus every focused/setup/migration/seed/
+restricted-role/quality/contracts/build/security/image/service gate. Logical recovery
+verifies 74 tables/692 rows in 626 ms; actual stopped-source PostgreSQL/MinIO recovery
+verifies 74/692 and one 42,060-byte ciphertext in 329 ms, fault/immutable/dormant
+guards and empty cleanup. Production RPO/RTO and erasure checkpoint recovery remain false.
+
+This accepts ADR-072's disabled server plan/current-authority path, independent
+SQL rechecks, uncapped keyed source seal, bounded maintenance expiry, private v3
+subject gate and stale-snapshot rejection, together with staff claim/preview/hold/flag
+coordination before row locks. It includes earlier separately successful plan f645a54
+(39364234883) and staff 41c6eaa (39365013049). It does not clear catalog/payload/hold/
+export policy, enable creation/execution, close accounts or complete DELETE requests.
+
+The prepared merge preserves both evidence histories; all non-Markdown files equal
+that exact verified source. Main 0053a7b follow-up 39371028143 remains live and must
+finish successfully before main advances or these unmerged source branches are removed.
+The separate v4 catalog source 854afaa has its own live hosted 39371164944 and cannot
+inherit this acceptance. Normal review stays on 0045 with all erasure/retirement/ordinary
+short-text activation disabled. Full ADR-061 fulfillment and external release gates remain.
+
+
+Native prepared-plan publication checks pass: make containers migrate container-smoke
+security-containers. All eight normal services are healthy on 0045 and the Docker preview
+now runs the hosted-verified v3 source. Direct read-only SQL confirms eligibility, creation
+and execution false, zero closed identities and zero erasure principals in normal review.
+No review data is erased or new private capability installed. Main 0053a7b follow-up
+39371028143 remains live; the prepared branch stays separate and source heads are kept.
+Only Markdown follows verified 81f1d84.
+
+
+## Verified private-plan publication after parent follow-up
+
+Main 0053a7b follow-up 39371028143 is terminal SUCCESS. Prepared private-plan/staff
+source 81f1d84 already passes complete own 39365821234 with 1,490 unit/contract,
+573 integration, 35 tooling and 123 full browser executions plus all engineering
+gates. Native image/migration/service/image-security checks pass for the prepared
+publication; only Markdown follows the verified runtime/test/Make/workflow tree.
+Recovery verifies 74/692 logically in626 ms and stopped-source database/MinIO with
+one42,060-byte ciphertext in329 ms, immutable/fault/dormant checks and empty cleanup.
+Production recovery and erasure checkpoint recovery remain false.
+
+This accepts disabled v3 server plans/current authority, subject/shared coordination,
+stale-snapshot refusal and bounded maintenance expiry, including verified earlier
+plan/staff sources. Creation/execution remain false; no identity closes and no DELETE
+completes. Catalog854afaa/39371164944 and LOGIN4e5b2ab/39373055520 remain separate live
+candidates; newer linked/guardian dispatch is also not accepted by these results.
+All eight review services remain healthy on0045. Full SQL/payload/preservation/export
+clearance, durable removal, checkpoint recovery and external release gates remain.
+
+
 ## ADR-073 frozen pre-install catalog — implementation in progress
 
 FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: pin32 technical catalog categories
@@ -1754,3 +1808,13 @@ also assert their own exact cleanup. Initial eight failures remain retained. See
 E8_LINKED_DISPATCH_VERIFICATION.md. Own complete hosted/image/service/recovery
 acceptance remains pending; guardian consumption, staff revocation and full erasure
 SQL/preservation/checkpoint controls remain required before any activation.
+
+
+Verified private-plan/staff source is published through main37be6e3 after parent
+main0053a7b follow-up39371028143 succeeds. Its three exact verified remote source
+branches and local publication/source branches are removed after SHA/ancestry and
+terminal-success checks with lease-protected deletion; independent remote inventory
+confirms absence. Main follow-up39374776606 is live; preserve that head. This merge
+adds only Markdown to linked-dispatch source d7a9a12; its local engineering/browser
+results remain source-specific, with own complete hosted acceptance still required.
+Catalog854afaa and LOGIN4e5b2ab remain frozen for their separate live pipelines.

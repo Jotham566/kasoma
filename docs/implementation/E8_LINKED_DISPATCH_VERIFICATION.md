@@ -88,3 +88,13 @@ paths. Full installed SQL/ACL/ownership/payload/preservation/export guards, dura
 fulfillment and checkpoint recovery remain. Normal review stays healthy/dormant on0045
 and its actual source is the separately verified v3 preview. This candidate still
 requires its own full639-integration/image/service/recovery hosted acceptance.
+
+
+Verified private-plan/staff source is published through main37be6e3 after parent
+main0053a7b follow-up39371028143 succeeds. Its three exact verified remote source
+branches and local publication/source branches are removed after SHA/ancestry and
+terminal-success checks with lease-protected deletion; independent remote inventory
+confirms absence. Main follow-up39374776606 is live; preserve that head. This merge
+adds only Markdown to linked-dispatch source d7a9a12; its local engineering/browser
+results remain source-specific, with own complete hosted acceptance still required.
+Catalog854afaa and LOGIN4e5b2ab remain frozen for their separate live pipelines.
