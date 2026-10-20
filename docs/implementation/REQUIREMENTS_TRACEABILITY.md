@@ -758,7 +758,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests; [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending; ADR-075 dispatch guards pending own hosted acceptance ; ADR-077 pending own hosted acceptance |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance ; ADR-077 pending own hosted acceptance |
-| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance ; ADR-077 pending own hosted acceptance |
+| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) ; [installed principal candidate](E8_ERASURE_PRINCIPALS_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance ; ADR-077 pending own hosted acceptance ; ADR-078 pending own hosted acceptance |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -3113,3 +3113,37 @@ permanent SQL guards, preservation, export drain, erasure or checkpoint recovery
 Both long-lived local identity failures stay failed; fresh-owned70, consumer12 and
 all123 browsers plus engineering checks pass as recorded above. No MVP/release or
 physical/branded acceptance is inferred.
+
+
+## Installed principal separation — ADR-078 candidate
+
+FR-ID-006/FR-OPS-003, BR-010 and NFR-SEC-002/MNT-001: closed v6 principal/grant
+expectations run inside scope_identity_ok, before private readiness/plan/expiry.
+Expectations come from the checked recipe/manifest, not observed live grants. Public
+0045 and disabled lifecycle remain. Historical v5 is added to actual legacy refusal.
+Initial8 pre-change drift regressions fail;8 corrected drift,11 bootstrap and24 plan
+controls pass. Expanded21 privilege controls and full engineering verification are
+in progress. See [installed principal verification](E8_ERASURE_PRINCIPALS_VERIFICATION.md).
+Full installed catalog/body/payload/preservation/export checks remain required; this
+component is not authorization/closure, retention permission, erasure or completion.
+Remote9fece6a and1597a68 stay frozen for their own live runs39378996412/39380895685.
+Main37be6e3 and the healthy eight-service review stack remain unchanged.
+
+
+ADR-078 backend local gates pass21 principal drift,11 bootstrap,24 plan/legacy,
+12 consumer,28 catalog/codec,1,502 unit/contract and35 tooling, plus231-file typing,
+quality/contracts/build/security/source.676 integration is collection only, not a
+full pass. Browser and own hosted/restricted/recovery/image/service remain pending.
+See [principal evidence](E8_ERASURE_PRINCIPALS_VERIFICATION.md). Remote parent heads
+stay unchanged and the normal eight services remain healthy with execution disabled.
+
+
+ADR-078 final local native21/11/24 and1,502 unit/contract/35 tooling pass after
+strict grant multiplicity and exact control-TOAST privilege checks. Earlier12
+consumer/28 catalog and123 browser executions pass; application/browser tree is
+unchanged by the final private compiler adjustment. Quality/contracts/build/security/
+docs pass; complete own hosted676 integration/recovery/role/image/service acceptance
+remains required. All45 captured owned IDs are independently absent. Review remains
+8/8healthy,0045, three lifecycle flagsfalse, zero private principals/closed users.
+See [final principal evidence](E8_ERASURE_PRINCIPALS_VERIFICATION.md). No erasure or
+MVP/release acceptance. Parent remote heads9fece6a/1597a68 remain frozen while live.

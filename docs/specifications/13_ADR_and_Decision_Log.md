@@ -566,3 +566,11 @@ activation, live-source baseline learning or new data permission.
 guardian recipients before challenge locks; recheck exact binding/closure before
 consumption/evidence. Preserve replay and withdrawal. Refuse closed local role
 mutations while keeping temporary-disable revocation. No execution or SQL acceptance.
+
+
+## ADR-078: Installed erasure principal fence
+
+[Record](../decisions/ADR/078-installed-erasure-principal-fence.md): fresh v6 adds
+fixed raw-catalog grant/role/ownership expectations to SQL scope identity. Refuse
+drift before private readiness/plan/expiry work. Preserve existing temporary-table
+behavior; no live ACL learning, public migration, activation or full erasure clearance.

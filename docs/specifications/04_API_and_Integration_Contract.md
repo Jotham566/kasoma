@@ -1023,3 +1023,13 @@ it does not consume or increment that challenge. Unbound contacts require no acc
 Current recent actor authentication, policy/age/own-contact rules and ordinary failed
 code accounting still apply. Already accepted idempotent replay and withdrawal retain
 their existing semantics. No public DTO or actual closure endpoint is introduced.
+
+
+### Private erasure principal recipe identity
+
+The staged case-only erasure-plan service requires fresh capability v6 under
+[ADR-078](../decisions/ADR/078-installed-erasure-principal-fence.md). SQL independently
+refuses grant/principal drift before readiness, plan or expiry writes; no client sends
+principals, ACLs or SQL. Earlier private v1-v5 recipes are unavailable rather than
+silently adopted. Public DTOs, execution-disabled blockers and normal review settings
+remain unchanged. This does not establish full installed-catalog/payload clearance.

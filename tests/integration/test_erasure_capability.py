@@ -79,7 +79,7 @@ def test_actual_logins_have_only_disabled_readiness_and_no_owner_or_source_right
                     assert principal[0] in [capability.authorizer_oid, capability.executor_oid]
                     assert tuple(principal[1:]) == (False,) * 6
                     assert db.scalar(text(f"SELECT {namespace}.readiness()")) == {
-                        "version": "isolated-erasure-capability-v5",
+                        "version": "isolated-erasure-capability-v6",
                         "creation_enabled": False,
                         "execution_enabled": False,
                     }
@@ -91,6 +91,7 @@ def test_actual_logins_have_only_disabled_readiness_and_no_owner_or_source_right
                     "SELECT * FROM public.users",
                     f"SELECT * FROM {namespace}.control",
                     f"SELECT {namespace}.scope_identity_ok()",
+                    f"SELECT {namespace}.principal_acl_ok()",
                     f"SELECT {namespace}.initialize_control(NULL)",
                     "UPDATE public.users SET closed_at=clock_timestamp()",
                     "INSERT INTO public.account_erasure_jobs DEFAULT VALUES",

@@ -1962,3 +1962,37 @@ permanent SQL guards, preservation, export drain, erasure or checkpoint recovery
 Both long-lived local identity failures stay failed; fresh-owned70, consumer12 and
 all123 browsers plus engineering checks pass as recorded above. No MVP/release or
 physical/branded acceptance is inferred.
+
+
+## Installed principal separation — ADR-078 candidate
+
+FR-ID-006/FR-OPS-003, BR-010 and NFR-SEC-002/MNT-001: closed v6 principal/grant
+expectations run inside scope_identity_ok, before private readiness/plan/expiry.
+Expectations come from the checked recipe/manifest, not observed live grants. Public
+0045 and disabled lifecycle remain. Historical v5 is added to actual legacy refusal.
+Initial8 pre-change drift regressions fail;8 corrected drift,11 bootstrap and24 plan
+controls pass. Expanded21 privilege controls and full engineering verification are
+in progress. See [installed principal verification](E8_ERASURE_PRINCIPALS_VERIFICATION.md).
+Full installed catalog/body/payload/preservation/export checks remain required; this
+component is not authorization/closure, retention permission, erasure or completion.
+Remote9fece6a and1597a68 stay frozen for their own live runs39378996412/39380895685.
+Main37be6e3 and the healthy eight-service review stack remain unchanged.
+
+
+ADR-078 backend local gates pass21 principal drift,11 bootstrap,24 plan/legacy,
+12 consumer,28 catalog/codec,1,502 unit/contract and35 tooling, plus231-file typing,
+quality/contracts/build/security/source.676 integration is collection only, not a
+full pass. Browser and own hosted/restricted/recovery/image/service remain pending.
+See [principal evidence](E8_ERASURE_PRINCIPALS_VERIFICATION.md). Remote parent heads
+stay unchanged and the normal eight services remain healthy with execution disabled.
+
+
+ADR-078 final local native21/11/24 and1,502 unit/contract/35 tooling pass after
+strict grant multiplicity and exact control-TOAST privilege checks. Earlier12
+consumer/28 catalog and123 browser executions pass; application/browser tree is
+unchanged by the final private compiler adjustment. Quality/contracts/build/security/
+docs pass; complete own hosted676 integration/recovery/role/image/service acceptance
+remains required. All45 captured owned IDs are independently absent. Review remains
+8/8healthy,0045, three lifecycle flagsfalse, zero private principals/closed users.
+See [final principal evidence](E8_ERASURE_PRINCIPALS_VERIFICATION.md). No erasure or
+MVP/release acceptance. Parent remote heads9fece6a/1597a68 remain frozen while live.

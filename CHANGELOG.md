@@ -1,5 +1,16 @@
 # Changelog
 
+## Installed private principal fence — ADR-078 candidate
+
+FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: fresh private v6
+installation checks a closed principal/grant recipe through SQL scope identity.
+Readiness, plans and expiry refuse extra/lost rights, unsafe global role settings
+and ownership/default-privilege drift. Existing temporary shadowing and disabled
+execution remain. No public migration, data permission or actual erasure. Initial
+eight regressions and healthy handoff corrections are retained. Final21 principal,
+11 bootstrap,24 plan,1,502 unit/contract and123 browser executions pass with quality/
+security gates; complete own hosted acceptance remains pending.
+
 ## Closed guardian/role consumers — local candidate
 
 FR-ID-003/005/006 and BR-010: coordinate and recheck known guardian recipients

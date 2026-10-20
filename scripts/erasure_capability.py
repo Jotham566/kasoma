@@ -12,6 +12,7 @@ from pydantic import SecretStr
 from sqlalchemy import text
 from sqlalchemy.engine import make_url
 
+from scripts.erasure_acl_sql import compile_principal_fence, fenced_scope_definition
 from scripts.erasure_plan_sql import compile_plan_helpers
 from scripts.erasure_scope import FreshErasureScope
 from services.database import engine_for
@@ -211,6 +212,7 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
             if "__" in ddl:
                 raise CapabilityInstallUnavailable()
             db.execute(text(ddl))
+            base_ddl = ddl
             db.execute(text(compile_plan_helpers(namespace, crypto)))
             ddl = SQL_PLAN_SOURCE.read_text()
             for marker, value in replacements.items():
@@ -218,6 +220,29 @@ def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> Install
             if "__" in ddl:
                 raise CapabilityInstallUnavailable()
             db.execute(text(ddl))
+            if CAPABILITY_VERSION == "isolated-erasure-capability-v6":
+                creator = db.scalar(
+                    text(
+                        "SELECT d.datdba FROM pg_catalog.pg_database d "
+                        "JOIN pg_catalog.pg_roles r ON r.oid=d.datdba "
+                        "WHERE d.datname=current_database() AND r.rolname=current_user"
+                    )
+                )
+                if not isinstance(creator, int):
+                    raise CapabilityInstallUnavailable()
+                db.execute(
+                    text(
+                        compile_principal_fence(
+                            namespace,
+                            crypto,
+                            oids[owner],
+                            oids[authorizer],
+                            oids[executor],
+                            creator,
+                        )
+                    )
+                )
+                db.execute(text(fenced_scope_definition(base_ddl, namespace)))
             phase = "CONTROL"
             # The server-side initializer catches row-validation failures before a
             # private key can appear in PostgreSQL CHECK error details.

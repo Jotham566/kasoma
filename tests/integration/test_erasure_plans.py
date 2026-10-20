@@ -10,7 +10,7 @@ from sqlalchemy import select, text
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 
-from scripts.erasure_capability import install
+from scripts.erasure_capability import CapabilityInstallUnavailable, install
 from services.data_request_contracts import DataRequestInput
 from services.data_requests import DataRequestService
 from services.database import engine_for
@@ -28,7 +28,14 @@ pytestmark = pytest.mark.integration
 @contextmanager
 def planned_source(*, lifetime=600):
     with source() as proof:
-        capability = install(proof, plan_ttl_seconds=lifetime)
+        try:
+            capability = install(proof, plan_ttl_seconds=lifetime)
+        except CapabilityInstallUnavailable as rejected:
+            import sys
+
+            # Closed installation phase only; never a statement, key or connection URL.
+            print("Synthetic private installation failed at " + rejected.phase, file=sys.stderr)
+            raise
         admin = engine_for(proof.settings)
 
         def now():
@@ -549,7 +556,7 @@ def test_private_plan_rejects_subject_row_changed_after_snapshot_before_gate():
         assert issue(proof, capability, authorizer, admin[1], case).request_id == case
 
 
-@pytest.mark.parametrize("version", [2, 3, 4])
+@pytest.mark.parametrize("version", [2, 3, 4, 5])
 def test_http_refuses_legacy_private_recipe_before_plan_writes(monkeypatch, version):
     from fastapi.testclient import TestClient
 
@@ -558,7 +565,7 @@ def test_http_refuses_legacy_private_recipe_before_plan_writes(monkeypatch, vers
     from services import erasure_plans
     from services.erasure_config import ErasureSettings
 
-    # Rehearse the actual historical v2/v3/v4 recipes in a fresh disposable source only.
+    # Rehearse the actual historical v2/v3/v4/v5 recipes in a fresh disposable source only.
     with monkeypatch.context() as legacy:
         legacy.setattr(
             erasure_capability, "CAPABILITY_VERSION", f"isolated-erasure-capability-v{version}"
