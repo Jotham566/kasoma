@@ -755,10 +755,10 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | --- | --- | --- | --- |
 | FR-ID-001 | Email/phone OTP, purpose binding, five-attempt/ten-minute limits, per-contact/peer/device sends; initial UI check serializes sign-in actions | `tests/integration/test_identity.py`, `tests/e2e/identity.spec.ts`; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented; SES/SMS production gates pending; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance |
 | FR-ID-002 | Verified identifier linking with uniqueness, encryption and keyed lookup; existing identities never auto-merge | API linking, collision and one-identity tests; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance |
-| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests; [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending; ADR-075 dispatch guards pending own hosted acceptance |
+| FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests; [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending; ADR-075 dispatch guards pending own hosted acceptance ; ADR-077 pending own hosted acceptance |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
-| FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) | Local implemented; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance |
-| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance |
+| FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance ; ADR-077 pending own hosted acceptance |
+| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 consumer guard remains pending own hosted acceptance; ADR-075 dispatch guards pending own hosted acceptance ; ADR-077 pending own hosted acceptance |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -3062,3 +3062,33 @@ therefore retain failed hosted evidence; none is promoted or rerun as a substitu
 for the corrected source's own complete39378996412 verification. The controlled
 two-architecture reproduction/correction is local proof of the serialization defect,
 not a claimed successful hosted result for any old head.
+
+
+## Closed consent/role consumers — ADR-077 candidate
+
+FR-ID-003/005/006, BR-010 and NFR-SEC-002/MNT-001: new guardian grants
+coordinate the exact pre-read known recipient before challenge locking and recheck
+binding/closure before consuming or recording evidence. Changed bindings require
+fresh verification. Accepted replay and withdrawal remain available. Local staff
+revocation refuses closed identities before role/audit writes but still revokes
+nonclosed temporarily disabled identities. No new ownership or retention permission.
+
+Ten fresh-owned native cases pass, including actual PostgreSQL gate waiting,
+challenge NOWAIT availability and committed closure recheck; open/unbound/disabled
+consent, replay/withdrawal, changed binding and role controls pass. Initial harness
+SQL table-name errors were corrected; the corrected pre-change run has three actual
+failures and two passing role controls. Broader local and own hosted verification
+remain pending. This is not actual closure, SQL guard or erasure acceptance. See
+[E8 consent consumer verification](E8_CONSENT_CONSUMERS_VERIFICATION.md).
+
+
+ADR-077 final local candidate:12 consumer,18 credential,44 gate/linked and70
+fresh-owned prerequisite executions pass;1,502 unit/contract,35 tooling, quality/
+contracts/build/security/docs and123 browsers pass. All16 captured owned/browser
+containers are independently absent. Two long-lived-database identity runs retain
+28pass/one57014 timeout each; clean-owned29pass does not explain the cause. Complete
+own hosted, recovery/roles/image/service acceptance remains required before main
+promotion. Review stays8/8healthy on0045, erasure disabled. See
+[E8 consumer verification](E8_CONSENT_CONSUMERS_VERIFICATION.md); no actual closure
+or erasure completion. Next implement installed SQL/catalog/payload/preservation
+checks before the durable atomic barrier and checkpoint recovery.

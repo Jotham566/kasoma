@@ -1011,3 +1011,15 @@ ADR-076 fresh private capability v5 records the portable raw-octet pre-install f
 The current private readiness contract refuses older v2/v3/v4 identities before plan
 writes; it does not adopt or upgrade them. Public DTOs,0045 structure and disabled
 execution behavior remain. Catalog portability is not full SQL/erasure clearance.
+
+
+### Guardian consumption after the bounded closure barrier
+
+Under [ADR-077](../decisions/ADR/077-closed-consent-consumer-guards.md), a new
+POST /me/consents GUARDIAN grant independently rechecks its exact challenge owner,
+current verified recipient binding and recipient closure before consumption or new
+evidence. A closed or changed binding returns the existing generic OTP_INVALID;
+it does not consume or increment that challenge. Unbound contacts require no account.
+Current recent actor authentication, policy/age/own-contact rules and ordinary failed
+code accounting still apply. Already accepted idempotent replay and withdrawal retain
+their existing semantics. No public DTO or actual closure endpoint is introduced.

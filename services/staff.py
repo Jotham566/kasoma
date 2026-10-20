@@ -44,6 +44,8 @@ def provision(identity: IdentityService, email: str, role: str, revoke: bool = F
             raise ValueError("Verify the synthetic identity first")
         identity.lock_user(db, identifier.user_id)
         user = db.get(User, identifier.user_id, populate_existing=True)
+        if user is None or (user.status != "ACTIVE" and user.closed_at is not None):
+            raise ValueError("Closed identities cannot change staff roles")
         if not revoke and (user is None or user.status != "ACTIVE"):
             raise ValueError("Disabled identities cannot receive staff roles")
         existing = db.get(UserRole, (identifier.user_id, role))

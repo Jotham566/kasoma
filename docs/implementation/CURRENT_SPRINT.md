@@ -1911,3 +1911,33 @@ therefore retain failed hosted evidence; none is promoted or rerun as a substitu
 for the corrected source's own complete39378996412 verification. The controlled
 two-architecture reproduction/correction is local proof of the serialization defect,
 not a claimed successful hosted result for any old head.
+
+
+## Closed consent/role consumers — ADR-077 candidate
+
+FR-ID-003/005/006, BR-010 and NFR-SEC-002/MNT-001: new guardian grants
+coordinate the exact pre-read known recipient before challenge locking and recheck
+binding/closure before consuming or recording evidence. Changed bindings require
+fresh verification. Accepted replay and withdrawal remain available. Local staff
+revocation refuses closed identities before role/audit writes but still revokes
+nonclosed temporarily disabled identities. No new ownership or retention permission.
+
+Ten fresh-owned native cases pass, including actual PostgreSQL gate waiting,
+challenge NOWAIT availability and committed closure recheck; open/unbound/disabled
+consent, replay/withdrawal, changed binding and role controls pass. Initial harness
+SQL table-name errors were corrected; the corrected pre-change run has three actual
+failures and two passing role controls. Broader local and own hosted verification
+remain pending. This is not actual closure, SQL guard or erasure acceptance. See
+[E8 consent consumer verification](E8_CONSENT_CONSUMERS_VERIFICATION.md).
+
+
+ADR-077 final local candidate:12 consumer,18 credential,44 gate/linked and70
+fresh-owned prerequisite executions pass;1,502 unit/contract,35 tooling, quality/
+contracts/build/security/docs and123 browsers pass. All16 captured owned/browser
+containers are independently absent. Two long-lived-database identity runs retain
+28pass/one57014 timeout each; clean-owned29pass does not explain the cause. Complete
+own hosted, recovery/roles/image/service acceptance remains required before main
+promotion. Review stays8/8healthy on0045, erasure disabled. See
+[E8 consumer verification](E8_CONSENT_CONSUMERS_VERIFICATION.md); no actual closure
+or erasure completion. Next implement installed SQL/catalog/payload/preservation
+checks before the durable atomic barrier and checkpoint recovery.

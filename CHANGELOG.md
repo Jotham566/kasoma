@@ -1,5 +1,15 @@
 # Changelog
 
+## Closed guardian/role consumers — local candidate
+
+FR-ID-003/005/006 and BR-010: coordinate and recheck known guardian recipients
+before new consent-code consumption; preserve replay/withdrawal. Refuse closed
+subjects in local role revocation without blocking ordinary temporary-disable
+revocation. ADR-077; 12 focused native,70 owned prerequisite,1,502 unit/contract and123 browser cases
+pass with quality/security gates; complete own hosted acceptance pending. Two local
+long-lived identity TRUNCATE timeouts remain failed and unexplained.
+No schema, retention, closure execution or review activation change.
+
 ## Dormant lifecycle0045 — isolated verification candidate
 
 FR-ID-006/BR-010/FR-OPS-003 and NFR-SEC-002/MNT-001: additive0045 registers the

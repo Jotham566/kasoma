@@ -558,3 +558,11 @@ AMD64 image variants. Keep all surrounding trees, live code bodies and32 full
 metadata categories strict. Versioned v2 artifact/private v5 provenance, independent
 fresh reproduction and raw-before-deparser denials remain required. No erasure
 activation, live-source baseline learning or new data permission.
+
+
+## ADR-077: Closed consent consumer guards
+
+[Record](../decisions/ADR/077-closed-consent-consumer-guards.md): coordinate known
+guardian recipients before challenge locks; recheck exact binding/closure before
+consumption/evidence. Preserve replay and withdrawal. Refuse closed local role
+mutations while keeping temporary-disable revocation. No execution or SQL acceptance.

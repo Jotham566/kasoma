@@ -574,6 +574,33 @@ class IdentityService:
                         and body.code
                     ):
                         raise IdentityError("VALIDATION_FAILED", 422)
+                    # Pre-read is coordination input, never consumption authority.
+                    source = db.execute(
+                        select(Challenge.type, Challenge.lookup_hash).where(
+                            Challenge.id == body.challenge_id,
+                            Challenge.purpose == "GUARDIAN",
+                            Challenge.user_id == user_id,
+                        )
+                    ).one_or_none()
+                    if source is None:
+                        raise IdentityError("OTP_INVALID")
+                    recipient = self.identifier_binding(db, source.type, source.lookup_hash)
+                    if recipient is not None and recipient != user_id:
+                        coordinate(db, recipient)
+                    guarded = db.scalar(
+                        select(Challenge)
+                        .where(Challenge.id == body.challenge_id)
+                        .with_for_update()
+                        .execution_options(populate_existing=True)
+                    )
+                    if (
+                        guarded is None
+                        or guarded.user_id != user_id
+                        or guarded.purpose != "GUARDIAN"
+                        or (guarded.type, guarded.lookup_hash) != tuple(source)
+                        or not self.otp_binding_open(db, source.type, source.lookup_hash, recipient)
+                    ):
+                        raise IdentityError("OTP_INVALID")
                     challenge = self.consume(
                         db,
                         OTPVerify(challenge_id=body.challenge_id, code=body.code),

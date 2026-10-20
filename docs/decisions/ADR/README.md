@@ -196,3 +196,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-075: Linked credential dispatch gates](075-linked-credential-dispatch-gates.md)
 
 - [ADR-076: Portable raw catalog Datum octets](076-portable-catalog-datum-octets.md)
+
+- [ADR-077: Closed consent consumer guards](077-closed-consent-consumer-guards.md)
