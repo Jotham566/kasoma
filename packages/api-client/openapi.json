@@ -1751,6 +1751,84 @@
         "title": "EquivalentItem",
         "type": "object"
       },
+      "ErasurePlan": {
+        "additionalProperties": false,
+        "properties": {
+          "authorization_available": {
+            "title": "Authorization Available",
+            "type": "boolean"
+          },
+          "blockers": {
+            "items": {
+              "enum": [
+                "EXECUTION_DISABLED",
+                "ISOLATED_SCOPE_REQUIRED",
+                "SOURCE_MANIFEST_CHANGED",
+                "SOURCE_OWNERSHIP_UNCERTAIN",
+                "STAFF_PROVENANCE_REQUIRES_REVIEW",
+                "EMBEDDED_REFERENCES_REQUIRE_REVIEW",
+                "PRESERVATION_INCOMPLETE",
+                "EXPORT_DRAIN_REQUIRED",
+                "CLAIMANT_AUTHORITY_UNAVAILABLE",
+                "PROCESSOR_UNAVAILABLE",
+                "VERIFICATION_INCOMPLETE"
+              ],
+              "type": "string"
+            },
+            "maxItems": 11,
+            "title": "Blockers",
+            "type": "array"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "manifest": {
+            "const": "erasure-0045-v1",
+            "default": "erasure-0045-v1",
+            "title": "Manifest",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "plan_id": {
+            "format": "uuid",
+            "title": "Plan Id",
+            "type": "string"
+          },
+          "policy": {
+            "const": "synthetic-account-erasure-v1",
+            "default": "synthetic-account-erasure-v1",
+            "title": "Policy",
+            "type": "string"
+          },
+          "request_id": {
+            "format": "uuid",
+            "title": "Request Id",
+            "type": "string"
+          },
+          "version": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "request_id",
+          "plan_id",
+          "version",
+          "observed_at",
+          "expires_at",
+          "authorization_available",
+          "blockers"
+        ],
+        "title": "ErasurePlan",
+        "type": "object"
+      },
       "ErrorEnvelope": {
         "additionalProperties": false,
         "properties": {
@@ -7936,6 +8014,116 @@
           }
         },
         "summary": "Deletion Preview"
+      }
+    },
+    "/api/v1/admin/data-requests/{target}/erasure-plan": {
+      "get": {
+        "operationId": "erasure_plan_api_v1_admin_data_requests__target__erasure_plan_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "target",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Target",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErasurePlan"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "410": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Gone"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Erasure Plan"
       }
     },
     "/api/v1/admin/data-requests/{target}/holds": {

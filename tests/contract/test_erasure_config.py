@@ -117,3 +117,21 @@ def test_private_loader_refuses_unknown_oversized_or_interpolated_configuration(
     with pytest.raises(ValueError) as failure:
         load_erasure(path)
     assert "canary-secret" not in str(failure.value)
+
+
+def test_private_authorizer_fields_are_closed_local_and_secret():
+    from pydantic import ValidationError
+
+    database = "kasoma_erasure_test_" + "a" * 32
+    uri = f"postgresql+psycopg://private:synthetic@localhost:12345/{database}"
+    value = ErasureSettings(
+        authorizer_database_url=uri, capability_namespace="kasoma_cap_" + "b" * 32
+    )
+    assert "synthetic" not in repr(value.authorizer_database_url)
+    for change in [
+        {"authorizer_database_url": uri.replace("localhost", "remote.invalid")},
+        {"authorizer_database_url": uri + "?options=-csearch_path=public"},
+        {"capability_namespace": "public"},
+    ]:
+        with pytest.raises(ValidationError):
+            ErasureSettings(**change)

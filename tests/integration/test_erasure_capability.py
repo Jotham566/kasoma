@@ -79,7 +79,7 @@ def test_actual_logins_have_only_disabled_readiness_and_no_owner_or_source_right
                     assert principal[0] in [capability.authorizer_oid, capability.executor_oid]
                     assert tuple(principal[1:]) == (False,) * 6
                     assert db.scalar(text(f"SELECT {namespace}.readiness()")) == {
-                        "version": "isolated-erasure-capability-v1",
+                        "version": "isolated-erasure-capability-v3",
                         "creation_enabled": False,
                         "execution_enabled": False,
                     }

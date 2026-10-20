@@ -36,6 +36,8 @@ class ErasureSettings(BaseSettings):
     enabled: bool = False
     namespace: str = Field(default="public", pattern=r"^[a-z_][a-z_0-9]{0,62}$")
     database_url: SecretStr | None = None
+    authorizer_database_url: SecretStr | None = None
+    capability_namespace: str | None = Field(default=None, pattern=r"^kasoma_cap_[0-9a-f]{32}$")
     model_provider: Literal["fake"] = "fake"
     email_provider: Literal["fake"] = "fake"
     sms_provider: Literal["fake"] = "fake"
@@ -45,9 +47,11 @@ class ErasureSettings(BaseSettings):
     def synthetic_only(self) -> Self:
         if self.enabled and self.database_url is None:
             raise ValueError("A separate isolated erasure capability is required")
-        if self.database_url is not None:
+        for value in [self.database_url, self.authorizer_database_url]:
+            if value is None:
+                continue
             try:
-                raw = self.database_url.get_secret_value()
+                raw = value.get_secret_value()
                 url = make_url(raw)
                 require_local(raw)
                 if (

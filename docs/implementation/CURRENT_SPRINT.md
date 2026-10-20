@@ -1403,3 +1403,212 @@ publication. All eight normal review services remain healthy on 0045; no private
 erasure capability is installed there, no identity closed and no DELETE completed.
 Later plan, staff, private-gate and catalog candidates retain separate exact-source
 acceptance; bootstrap acceptance does not clear them or full ADR-061 execution.
+
+
+## ADR-072 server plan/authority path — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: extend the explicit fresh-source
+recipe to private capability v2, leaving ordinary0045 migrations and normal review
+unchanged. The separate authorizer is EXECUTE-only; it receives no ordinary API source
+CRUD. SQL checks its actual principal, server-observed source binding, current recent
+ADMIN session and independent current claimant of a pending verified DELETE case.
+The API must end normal authentication before the private call, then SQL revalidates.
+ADR-072 records this delegation and future atomic authorization/barrier decision.
+
+Compile fixed manifest/ownership SQL at installation, with qualified names and UUID
+parameters. Issue database-clock plans and exact read audits before an uncapped keyed
+source fold. Normalize only this plan's self-referential version. Keep creation and
+execution false and return explicit disabled/incomplete blockers; this is not full
+source/preservation/hold clearance or first-slice completion. Only maintenance expires
+plans, at most100 removals from200 candidates, using database time and fixed cleanup.
+The trusted installer may choose a bounded1–600-second plan lifetime (default600);
+no API/maintenance caller supplies a cutoff or rewrites an existing clock.
+
+Exact new erasure_plan_read and erasure_plan_expiry_batch action names are classified
+under ADR-061's approved security/access/batch rule, without wildcard acceptance or a
+new retention permission. Native SQL, server/API, stale-source/clock/role/ownership,
+large-history and full own-source checks remain in progress. Job creation, actual
+closure and erasure/removal/retirement are still required implementation work.
+
+
+## ADR-072 v2 local verification before hosted acceptance
+
+The private plan/API candidate passes `make format lint test-erasure-plans
+ test-erasure-fresh-scope test-erasure-identity-isolated test-unit openapi-check build
+ security security-source`:18 plan/compiler/API cases,11 fresh-scope/SQL cases,
+29 identity/lifecycle,19 fake dispatch,16 source checks and1,490 unit/contract tests.
+Actual authorizer/maintenance/ordinary logins enforce separation; a revoked ADMIN
+between ordinary authentication and private SQL is refused. Native tests verify
+10,001-event nontruncation, self-seal reconciliation, unrelated-subject stability,
+server clocks and100/10/0 expiry batches over110 plans. Trusted lifetime input is
+strictly1–600 seconds; maintenance/API cannot choose a cleanup clock. The first positive
+run failed permission checks despite nine passing denials; narrow NOLOGIN-owner ID
+UPDATE grants enable PostgreSQL row locks. That earlier run remains a failure.
+
+Full local browsers are running. Exact-source hosted integration/browser/image/service
+acceptance remains pending. No job, closure or DELETE completion is implemented; source
+semantic/payload/hold/catalog clearance, atomic authorization/barrier and complete durable
+fulfillment remain required. Normal review is healthy and dormant on main40aa7d2.
+
+
+## Staff preservation/triage coordination — implementation in progress
+
+FR-ID-006/BR-010, FR-GRD-009/FR-CNT-006, FR-OPS-003 and NFR-SEC-002/MNT-001:
+ADR-070's staff addendum requires subject shared coordination before case/flag row locks.
+Use immutable server-owned case user_id/flag reporter_id after current staff authority;
+re-read the resource under its existing row/ownership/revision checks. Cover case claim/preview,
+legal-hold access (including channel capture), flag detail and triage/replay audit.
+No API/schema/retention permission or closure capability is added. Concurrency regression
+and full acceptance remain pending; the existing dormant normal review is not an erasure
+execution target. Source/audit main600db71 is separately hosted-verified at4db1cec;
+main follow-up39364455335 is live. Preserve bootstrap3f865e4 and planf645a54 live heads.
+
+
+Plan candidatef645a54 passes all123 local browser executions across Chromium/Firefox/
+WebKit, including encrypted fake short text and operations configuration. All12 recorded
+owned browser containers are independently absent. Runtime staff source changes began
+only after that browser command exited0. Exact-source hosted39364234883 remains live;
+this local result is not hosted acceptance or account erasure completion.
+
+Disabled-bootstrap3f865e4 passes complete hosted39359471826:1,487 unit/contract,
+548 integration,35 tooling and123 browsers plus setup/migration/seed, focused/restricted
+login, quality/contracts/build, dependency/source/image security and service smoke gates.
+Recovery74/692 passes571ms logical and330ms stopped-source PG/MinIO with one42,084-byte
+ciphertext, immutable/fault/dormant guards and empty cleanup. ProductionRPO/RTO stays
+false; baseline restoration is not erasure checkpoint recovery. Only its disabled fresh
+bootstrap is accepted, not planf645a54 or new staff coordination. Preserve main600db71
+while follow-up39364455335 is live; later promote bootstrap only with its exact verified
+runtime/test/Make/workflow tree and explicit documentation closeout.
+
+The first staff regression confirms3 bypasses (hold create/release/case claim), with
+28 passing cases and one disposable fixture STORAGE_EXHAUSTED error at512MiB. That run
+remains failed and its resource is cleaned. Move the six staff cases into a fourth
+closed independently owned cohort rather than enlarge tmpfs or touch review volumes.
+Staff coordination is now implemented before resource row locks; green verification
+is running and does not yet establish acceptance. No account is closed or erased.
+
+
+## Staff gate local candidate verification
+
+Six real-PostgreSQL concurrency cases pass in their own fresh512MiB source: hold
+creation/release, case claim, audited deletion preview, flag detail and triage wait at
+the subject shared gate while an independent transaction can lock the target row
+NOWAIT. Unrelated subjects remain independent. Four exact owned source containers are
+independently absent after the first green29/19/16/6 cohort run. That run passes1,490
+unit/contract tests, contracts/build/security/source checks; final format/lint/types
+also pass after adding preview coordination. A final unchanged-source owned-cohort run
+and full browser regression are still running; full570 integration and exact hosted/
+image/service acceptance remain pending. No grant, migration, API contract, retention
+permission, account closure or erasure is added by this staff amendment.
+
+Record the original3 regression bypass failures and disposable STORAGE_EXHAUSTED setup
+error as failures, not passes. Splitting staff tests into a fourth closed cohort keeps
+source RAM bounded and leaves normal Docker volumes untouched. The normal review has
+eight healthy services on0045 with erasure/retirement/normal short text disabled.
+The exact disabled-bootstrap source passes hosted39359471826; its prepared main merge
+7c621de is Markdown only beyond3f865e4 and waits for live main39364455335. New plan
+candidatef645a54 hosted39364234883 remains separate. Full approved ADR-061 erasure and
+external acceptance gates remain unfinished; this is prerequisite work only.
+
+
+## Private plan processing coordination — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: extend the fresh isolated
+recipe to private capability v3 under the ADR-070/072 amendments. After principal,
+source and current ADMIN authority checks, derive the subject from its immutable case,
+try its shared transaction gate using the pinned public namespace OID, then lock/recheck
+case/review/subject. Busy calls must write no plan or audit. The subject row lock must
+reject a REPEATABLE READ snapshot predating a committed subject change. The API verifies
+exact private readiness version before issuing; an older credential/namespace is not
+silently adopted. The v2 fingerprint algorithm/public0045 remain unchanged. Normal
+review remains dormant; there is still no authorization/job/closure/removal/completion.
+
+The added busy regression fails before correction (one failure/18 passes) with exact
+owned cleanup. Verification of the new v3 recipe and stale-snapshot regression is pending.
+Staff41c6eaa's unchanged runtime passes final29/19/16/6 owned checks and all123 local
+browsers; its separate hosted39365013049 remains live. Preserve all live remote heads.
+
+
+## Private v3 plan gate — local verification candidate
+
+`make format lint test-erasure-plans test-erasure-fresh-scope test-unit openapi-check
+build security security-source` passes:21 plan/compiler/API cases,11 fresh-source/SQL
+checks and1,490 unit/contract tests. Strengthened contention rerun passes all21 cases:
+an independently held case row cannot delay the fixed busy-gate denial; successful
+plans hold the correct public-subject gate until commit, unrelated subjects proceed,
+and a changed subject row after snapshot raises40001 before any plan/read audit.
+The API refuses an actual fresh historical v2 recipe without creating a plan. All
+recorded owned native source containers from both runs are independently absent.
+
+The initial added busy regression stays failed (one failure/18 passes before repair).
+An initial formatting-only run also failed two long test SQL literals; split literals
+and final format/lint/types pass. No broader scanner exclusion was introduced.
+Full local browser regression is running; full573 integration and exact-source hosted/
+image/service acceptance remain pending. Keep existing remote candidates fixed. Normal
+review remains dormant and healthy on0045. Full catalog/ACL/payload/hold/export clearance,
+exact richer preservation, permanent SQL write barriers, atomic authorization/closure,
+durable bounded removal/verification/retirement and quarantined erasure recovery remain
+required. No case completion or full MVP acceptance is inferred from these prerequisites.
+
+
+Private gate candidate81f1d843e6e7d3fdbfd342f0626a883981bf9aef is pushed for complete
+hosted39365821234. Preserve that remote head. Native exact-container cleanup evidence
+comes from assertions inside each fresh scope/source context after its cleanup, using
+independent Docker inventory. Successful pytest captures those container logs: the
+separate quiet-log scan found no IDs and provides no additional cleanup evidence.
+The21-case strengthened gate run and11-case bootstrap run pass; local browsers remain
+in progress. Full573 hosted integration/image/service acceptance is pending.
+
+Main600db71 follow-up39364455335 remains live. Prepared accepted-bootstrapf9cd1fb is
+only Markdown beyond hosted-verified3f865e4 and has passing native image/migration/
+service/security checks; keep main fixed while its run is live. Staff41c6eaa passes
+final29/19/16/6 local owned cohorts and123 local browsers, with four wrapper-source
+and twelve browser source IDs independently confirmed absent; its hosted39365013049
+and planf645a54 hosted39364234883 stay separate. All eight normal review services are
+healthy on0045. No erasure/retirement/normal short-text activation or case completion.
+
+
+## Private v3 full local browser closeout
+
+Source81f1d84 passes `make e2e`:123 executions across Chromium/Firefox/WebKit,
+including the fake encrypted short-text and operations configuration journeys. The
+command exits0. All12 recorded exact owned browser containers are independently absent.
+This complements21 plan/compiler/API,11 bootstrap and1,490 unit/contract passes, final
+lint/types/format, contracts/build and dependency/source security. It does not replace
+full573 integration, exact hosted39365821234, image/service acceptance or erasure recovery.
+
+Only Markdown closeout follows the frozen81f1d84 runtime/test/Make/workflow tree; do not
+move its live remote head. Main600db71 follow-up39364455335, planf645a54 hosted39364234883
+and staff41c6eaa hosted39365013049 remain live and separate. Accepted disabled bootstrap
+3f865e4 is prepared atf9cd1fb with native checks; main stays fixed during its follow-up.
+All eight normal review services remain healthy on0045. No ordinary review erasure is
+provisioned or activated, no account closed and no DELETE completed. Next implement
+complete private source-catalog/ACL and ownership/payload clearance, exact preservation
+coverage and permanent closed-write/credential/export gates before atomic authorization/
+closure, bounded durable removal and quarantined checkpoint recovery. Academic/privacy/
+provider/physical-device/production approval remains genuine external acceptance work.
+
+
+## Accepted private plan and staff coordination — prepared publication
+
+Complete hosted 39365821234 is SUCCESS at exact combined source
+81f1d843e6e7d3fdbfd342f0626a883981bf9aef: 1,490 unit/contract, 573 integration,
+35 tooling and 123 full browser executions plus every focused/setup/migration/seed/
+restricted-role/quality/contracts/build/security/image/service gate. Logical recovery
+verifies 74 tables/692 rows in 626 ms; actual stopped-source PostgreSQL/MinIO recovery
+verifies 74/692 and one 42,060-byte ciphertext in 329 ms, fault/immutable/dormant
+guards and empty cleanup. Production RPO/RTO and erasure checkpoint recovery remain false.
+
+This accepts ADR-072's disabled server plan/current-authority path, independent
+SQL rechecks, uncapped keyed source seal, bounded maintenance expiry, private v3
+subject gate and stale-snapshot rejection, together with staff claim/preview/hold/flag
+coordination before row locks. It includes earlier separately successful plan f645a54
+(39364234883) and staff 41c6eaa (39365013049). It does not clear catalog/payload/hold/
+export policy, enable creation/execution, close accounts or complete DELETE requests.
+
+The prepared merge preserves both evidence histories; all non-Markdown files equal
+that exact verified source. Main 0053a7b follow-up 39371028143 remains live and must
+finish successfully before main advances or these unmerged source branches are removed.
+The separate v4 catalog source 854afaa has its own live hosted 39371164944 and cannot
+inherit this acceptance. Normal review stays on 0045 with all erasure/retirement/ordinary
+short-text activation disabled. Full ADR-061 fulfillment and external release gates remain.

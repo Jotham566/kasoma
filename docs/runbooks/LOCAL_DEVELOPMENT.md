@@ -1685,3 +1685,40 @@ install it. Creation/execution stay false; the logins have only disabled readine
 no source/control reads or owner membership. Authorization/closure and the full approved
 preservation/removal/retirement/recovery workflow remain implementation work. Never
 point a destructive rehearsal at the normal review profile or infer release clearance.
+
+
+### Case-only erasure-plan checks (ADR-072, private v2)
+
+Run `make test-erasure-plans` for actual source/role/session/claimant, HMAC self-write,
+large-history, HTTP, revocation-gap and bounded expiry checks. Positive cases create
+new owned fake-only sources; the normal-review refusal case creates only its existing
+synthetic integration schema and refuses before private configuration. No test runs
+account erasure on the normal review source. Use `make test-erasure-fresh-scope` for
+bootstrap/replay/role/key-log boundaries. Both remain necessary parts of the full slice.
+
+Private v2 planning uses ACCOUNT_ERASURE_AUTHORIZER_DATABASE_URL and
+ACCOUNT_ERASURE_CAPABILITY_NAMESPACE in the same owned0600 bounded private file, with
+ACCOUNT_ERASURE_ENABLED and the separate maintenance DATABASE_URL. Do not put either
+credential in ordinary/client environment examples, URLs, screenshots or source. Neither
+a file nor a switch installs or authorizes an ordinary review database. Source metadata
+must already be eligible and SQL independently rechecks the exact principal/binding.
+Missing/disabled/invalid configuration gives fixed unavailability, not a fallback.
+
+The trusted fresh installer defaults to600-second plan lifetime and validates1–600.
+Tests may use a short lifetime and wait for actual stored database expiry; no clock GUC,
+caller cutoff or rewritten plan timestamp is used. V1 namespaces/roles are never adopted
+or silently upgraded: the new recipe is for a newly created source only. Plans currently
+remain blocked for execution, pending complete source/hold/payload/ACL validation and
+actual authorization/closure/removal/retirement/recovery. Normal Docker stays disabled.
+
+
+Staff preservation/flag source coordination follows the ADR-070 staff addendum.
+Run `make test-erasure-identity-isolated` for the owned-source lock-order regressions;
+normal review remains dormant. Shared coordination does not enable account erasure or
+replace independent SQL/preservation/retention clearance.
+
+
+The fresh private plan recipe is v3: its source gate uses the installed public namespace,
+not the authorizer's pg_catalog search path. `make test-erasure-plans` checks busy/stale
+transactions. Existing v1/v2 namespaces are not adopted; mismatched readiness fails closed.
+This does not activate erasure or change ordinary0045 migrations/review.

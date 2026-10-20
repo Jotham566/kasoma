@@ -17,7 +17,7 @@ def test_unknown_action_has_only_a_fixed_private_failure(action):
 
 
 def test_rules_are_immutable_and_do_not_invent_deadlines():
-    assert len(AUDIT_RULES) == 33
+    assert len(AUDIT_RULES) == 35
     assert rule_for("data_request.created").classification == "MATERIAL_CASE"
     assert rule_for("content.flag.created").subject_is_actor
     assert not rule_for("content.flag.updated").subject_is_actor

@@ -8,6 +8,7 @@ from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.elements import ColumnElement
 
+from services.account_processing import coordinate
 from services.data_requests import DataRequestService
 from services.domain.assessment import Attempt, Grade
 from services.domain.channel_preservation import ChannelSnapshot, ChannelSnapshotBody
@@ -97,6 +98,11 @@ class LegalHoldService:
 
     def access(self, db: Session, token: str, target: UUID) -> tuple[UUID, DataRequest]:
         actor = authorize(self.identity, db, token, {"ADMIN"}, recent=True)[0]
+        subject = db.scalar(select(DataRequest.user_id).where(DataRequest.id == target))
+        if subject is None:
+            raise IdentityError("RESOURCE_NOT_FOUND", 404)
+        # Immutable ownership first; never hold a case row while waiting on closure.
+        coordinate(db, subject)
         request = db.scalar(select(DataRequest).where(DataRequest.id == target).with_for_update())
         if request is None:
             raise IdentityError("RESOURCE_NOT_FOUND", 404)

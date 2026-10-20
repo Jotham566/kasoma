@@ -1175,3 +1175,22 @@ The key is private cryptographic material, never an API/status/log/export field.
 and both login roles have no control-table rights. Installed function/role identity and
 all activation controls remain separate gates; no borrower may treat these totals as
 preservation, ownership, erasure or production clearance.
+
+
+## ADR-072 private v2 plan recipe
+
+The installed source still has75 tables/561 columns (public0045 plus the unchanged
+16-column private K control). V2 adds only qualified private SQL functions and permits
+owner-only server plan insertion/one-time sealing and bounded due plan expiry; it adds
+no source body table, contact/credential copy or new retained dataset. Plans remain T
+with their original at-most-ten-minute clocks and no plan FK from durable jobs. The
+source seal normalizes only its current plan version field, retaining all other rows.
+New exact erasure_plan_read and erasure_plan_expiry_batch audits use the approved access/
+system security class. Full private/public catalog/ACL integrity and actual execution
+remain separate required gates; these counts are not erasure clearance.
+
+
+The staged private v3 plan gate changes no public table/column or private control shape:
+public0045 remains74/545; fresh installed scope remains75/561. It changes only the
+trusted fresh private function recipe/readiness contract; existing installations are
+not upgraded or reused. Full source/hold/payload/ACL clearance remains pending.

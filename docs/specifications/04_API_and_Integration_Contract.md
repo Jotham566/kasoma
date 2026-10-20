@@ -945,3 +945,41 @@ OperationsView adds configuration_state and OPERATIONS_CONFIGURATION_UNAVAILABLE
 UNAVAILABLE_DEFAULTS_APPLIED labels warning-only startup fallback explicitly.
 Implementation/acceptance status is tracked in ADR-067 and current sprint, not inferred
 from this contract description. Existing processing/authorization policies remain binding.
+
+
+## ADR-072 bounded synthetic erasure-plan issuance
+
+`GET /api/v1/admin/data-requests/{target}/erasure-plan` requires recent OTP, current
+ADMIN, independence and current ownership of the review of that pending verified
+DELETE request. It is available only in an explicitly installed fresh synthetic source.
+Normal review refuses with503 `ERASURE_UNAVAILABLE` before loading a private profile.
+Anonymous/learner/support/non-ADMIN callers remain401/403; self review or another
+claimant is403; non-DELETE/completed cases are409. Ordinary SQL login credentials and
+client session/actor/subject/namespace/clock parameters do not grant access.
+
+The normal authentication transaction ends before the private authorizer call. SQL
+rechecks the actual private principal, source binding, current session/access/refresh
+expiry/revocation/rotation, ADMIN/active status and exact independent claimant under
+locks. A changed role/session/source fails closed; transport/configuration/driver
+failures return the fixed503 error without private URLs, session IDs or SQL details.
+
+Response fields are request_id, plan_id, version, policy, manifest, observed_at,
+expires_at, authorization_available and distinct blockers. Dates come from PostgreSQL;
+lifetime is at most ten minutes. The sealed version binds complete uncapped owned rows
+and this server-issued plan; it does not return source bodies, credentials, key lists,
+private metadata or a learner search result. Current staged v2 always reports false
+and EXECUTION_DISABLED/VERIFICATION_INCOMPLETE. No POST erasure, job creation, permanent
+closure or DELETE completion exists yet. Those require the complete approved guards.
+
+Private maintenance has a separate zero-argument expiry function, examining at most200
+candidates and removing at most100 expired plan rows per transaction. It uses actual
+database time, accepts no cutoff/ID list and writes count-only security audit. Finite
+plan expiry does not complete a request, move a case deadline or remove learning data.
+Generated OpenAPI and TypeScript contracts include this GET and its closed response.
+
+
+The staged erasure-plan private transport additionally requires exact v3 readiness.
+Legacy private v1/v2 recipes return the same fixed503 unavailable boundary before plan
+writes. SQL derives the learner from the case, tries the installed-namespace shared
+processing gate before case locks and rejects a stale subject-row snapshot. Busy/stale
+calls cannot publish a plan/read audit. No authorization or erasure POST is enabled.

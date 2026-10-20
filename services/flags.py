@@ -8,6 +8,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from services.account_processing import coordinate
 from services.assessment import AssessmentService
 from services.domain.assessment import AssessmentSession, Attempt, SessionItem
 from services.domain.content import AuditLog, ContentEvent, Item, ItemVersion
@@ -255,6 +256,10 @@ class FlagService:
         with Session(self.identity.engine) as db, db.begin():
             actor, _ = authorize(self.identity, db, token, STAFF)
             self.limit(db, actor)
+            subject = db.scalar(select(ContentFlag.reporter_id).where(ContentFlag.id == flag_id))
+            if subject is None:
+                raise IdentityError("RESOURCE_NOT_FOUND", 404)
+            coordinate(db, subject)
             row = db.get(ContentFlag, flag_id)
             if row is None:
                 raise IdentityError("RESOURCE_NOT_FOUND", 404)
@@ -267,6 +272,10 @@ class FlagService:
         with Session(self.identity.engine) as db, db.begin():
             actor, _ = authorize(self.identity, db, token, STAFF, recent=True)
             self.limit(db, actor)
+            subject = db.scalar(select(ContentFlag.reporter_id).where(ContentFlag.id == flag_id))
+            if subject is None:
+                raise IdentityError("RESOURCE_NOT_FOUND", 404)
+            coordinate(db, subject)
             fingerprint = self.fingerprint(
                 {"action": "triage", "flag": str(flag_id), "body": body.model_dump()}
             )

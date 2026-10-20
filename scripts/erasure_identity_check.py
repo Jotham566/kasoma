@@ -9,7 +9,12 @@ import subprocess  # nosec B404
 from scripts.browser_database import cleanup_on_termination, erasure_test_database
 from services.config import Settings
 
-COHORTS = ("test-erasure-identity", "test-erasure-dispatch", "test-erasure-source-ownership")
+COHORTS = (
+    "test-erasure-identity",
+    "test-erasure-dispatch",
+    "test-erasure-source-ownership",
+    "test-erasure-staff-processing",
+)
 
 
 def verify(environment: dict[str, str], target: str = "test-erasure-identity") -> None:

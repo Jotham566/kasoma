@@ -1,5 +1,7 @@
 """ADR-061/071 privileged fresh-source SQL installer; never an API/worker import."""
 
+import hashlib
+import json
 import secrets
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -10,12 +12,18 @@ from pydantic import SecretStr
 from sqlalchemy import text
 from sqlalchemy.engine import make_url
 
+from scripts.erasure_plan_sql import compile_plan_helpers
 from scripts.erasure_scope import FreshErasureScope
 from services.database import engine_for
 from services.erasure_capability_contract import CAPABILITY_VERSION, CRYPTO_VERSION
 from services.erasure_inventory import check_source_shape
+from services.erasure_manifest import BASELINE
+from services.erasure_sources import PREDICATES
 
 SQL_SOURCE = Path(__file__).parents[1] / "apps/api/migrations/sql/erasure_capability_v1.sql"
+
+
+SQL_PLAN_SOURCE = SQL_SOURCE.parent / "erasure_plans_v3.sql"
 
 
 InstallPhase = Literal["SOURCE", "ROLES", "LOGINS", "CRYPTO", "DEFINITION", "CONTROL", "HANDOFF"]
@@ -37,8 +45,10 @@ class InstalledCapability:
     executor_url: SecretStr = field(repr=False)
 
 
-def install(scope: FreshErasureScope) -> InstalledCapability:
+def install(scope: FreshErasureScope, *, plan_ttl_seconds: int = 600) -> InstalledCapability:
     """Exclusively install disabled capability, never adopt roles or enable erasure."""
+    if type(plan_ttl_seconds) is not int or not 1 <= plan_ttl_seconds <= 600:
+        raise CapabilityInstallUnavailable()
     scope.verify()
     suffix = scope.nonce.hex
     namespace, crypto = "kasoma_cap_" + suffix, "kasoma_ec_" + suffix
@@ -167,7 +177,39 @@ def install(scope: FreshErasureScope) -> InstalledCapability:
                 "__INSTALLATION_NONCE__": str(scope.nonce),
             }
             phase = "DEFINITION"
-            ddl = SQL_SOURCE.read_text()
+            manifest_hash = hashlib.sha256(
+                json.dumps(
+                    {
+                        "sources": {
+                            name: {
+                                "disposition": source.disposition,
+                                "key": source.primary_key,
+                                "columns": [
+                                    (c.name, c.type_name, c.nullable) for c in source.columns
+                                ],
+                                "ownership": PREDICATES[name],
+                            }
+                            for name, source in BASELINE.items()
+                        },
+                        "capability": CAPABILITY_VERSION,
+                        "plan_ttl_seconds": plan_ttl_seconds,
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode()
+            ).hexdigest()
+            replacements["__MANIFEST_HASH__"] = manifest_hash
+            replacements["__PLAN_TTL_SECONDS__"] = str(plan_ttl_seconds)
+            ddl = SQL_SOURCE.read_text().replace(
+                "isolated-erasure-capability-v1", CAPABILITY_VERSION
+            )
+            for marker, value in replacements.items():
+                ddl = ddl.replace(marker, value)
+            if "__" in ddl:
+                raise CapabilityInstallUnavailable()
+            db.execute(text(ddl))
+            db.execute(text(compile_plan_helpers(namespace, crypto)))
+            ddl = SQL_PLAN_SOURCE.read_text()
             for marker, value in replacements.items():
                 ddl = ddl.replace(marker, value)
             if "__" in ddl:
