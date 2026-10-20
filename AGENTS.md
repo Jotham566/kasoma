@@ -637,3 +637,27 @@ owner/executor and zero closed identities after rebuild/migration/smoke/image sc
 Keep main and other active remote heads fixed; next complete ADR-061 work is the
 independently restricted SQL capability, server plan/authorization/closure and durable
 continuation with all preservation/export-drain/payload gates, not partial fulfillment.
+
+
+ADR-071 disabled bootstrap candidate3f865e4 is pushed for complete hosted39359471826;
+keep its remote head fixed. Source proof is issued before migrations using a one-use
+registered ticket and registered immutable object/lifetime, binding exact owned local
+container/port/database/schema identity. Pre-connect checks reject a mismatched root URL
+without opening SQL. Normal review/configuration cannot manufacture that proof.
+The explicit private SQL installer creates exclusive NOLOGIN owner and separate limited
+authorizer/maintenance logins, a16-column private K control and qualified bundled
+pgcrypto1.3 HMAC namespace. It changes only its fresh owned source; normal Alembic/startup
+never installs it. Readiness is disabled only; no ordinary authorizer source CRUD,
+plan/job creation, account closure, erasure or completed DELETE is implemented.
+Local11 fresh-scope/SQL cases,110 resource controls,1,487 unit/contract,123 browsers and
+quality/contracts/build/security pass. Twelve browser source containers are independently
+absent; native contexts also assert exact absence. Actual role/namespace drift, forbidden
+reads/writes/role assumption, failed-key rollback/retry and standard HMAC checks pass.
+The fixed PostgreSQL error is observed in both-stream capture without the rejected key
+or either generated credential. Earlier format/collection/settings/probe fixture failures
+remain failures. Full548 integration and own hosted/image/service acceptance remain
+pending. Complete source/private-catalog/ACL/payload/hold validation and actual SQL
+plan/authorization/closure with durable continuation remain next, not optional work.
+Main2f3031b follow-up39355923737 remains live, and prepared coordinatione37cd55 is only
+Markdown beyond full hosted-verified94feeab. Do not move active remote heads. All eight
+normal review services are healthy on0045; retirement/erasure/short-text remain disabled.
