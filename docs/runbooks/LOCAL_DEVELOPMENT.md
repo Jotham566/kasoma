@@ -1643,10 +1643,20 @@ stack stays on its accepted main migration until full candidate acceptance.
 
 ### SQL account-processing verification — ADR-070 candidate
 
-`make test-erasure-identity-isolated` now runs two fixed sequential cohorts, each in a
-new owned PostgreSQL source: identity/lifecycle/preview, then fake grading dispatch.
+`make test-erasure-identity-isolated` runs three fixed sequential cohorts, each in a
+new owned PostgreSQL source: identity/lifecycle/preview, fake grading dispatch, then
+read-only source ownership.
 `make test-erasure-dispatch` is the prescribed direct dispatch target; prefer the
 owned orchestrator. Source caps and deadlines stay unchanged. The controller rejects
 unknown targets and never reuses a preceding source. Keep the remote0045 verification
 head frozen while developing this separate candidate. Neither advisory locks nor their
 non-secret keys authorize account closure or bypass any case/preservation/SQL guard.
+
+### Read-only erasure source ownership verification
+
+`make test-erasure-source-ownership` checks the closed registry, snapshot/fingerprint
+and corrupt-relational-input handling. Prefer `make test-erasure-identity-isolated`,
+which runs it as a third fixed fresh-source cohort after identity and model dispatch.
+Memory/tmpfs/deadline caps stay unchanged. It never issues a plan, grants clearance,
+provisions a role, modifies original guards or executes erasure. The private corruption
+mirror belongs solely to the disposable test invocation and is never a serving source.

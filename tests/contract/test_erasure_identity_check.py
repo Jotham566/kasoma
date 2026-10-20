@@ -78,7 +78,7 @@ def test_child_environment_is_fake_and_uses_only_new_private_database(
     verify = Mock()
     monkeypatch.setattr(check, "verify", verify)
     check.run()
-    assert factory.call_count == verify.call_count == 2
+    assert factory.call_count == verify.call_count == 3
     assert [call.args[1] for call in verify.call_args_list] == list(check.COHORTS)
     environment = verify.call_args.args[0]
     assert environment["DATABASE_URL"] == isolated.database_url.get_secret_value()
@@ -149,5 +149,8 @@ def test_each_cohort_finishes_cleanup_before_next_source(settings, monkeypatch):
         "exit",
         "enter",
         "test-erasure-dispatch",
+        "exit",
+        "enter",
+        "test-erasure-source-ownership",
         "exit",
     ]

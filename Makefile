@@ -48,6 +48,9 @@ test-erasure-identity:
 .PHONY: test-erasure-dispatch
 test-erasure-dispatch:
 	$(UV) pytest tests/integration/test_short_text_processing.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-erasure-source-ownership
+test-erasure-source-ownership:
+	$(UV) pytest tests/contract/test_erasure_source_registry.py tests/integration/test_erasure_source_projection.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: test-erasure-source
 test-erasure-source:
 	$(UV) pytest tests/integration/test_erasure_source_shape.py tests/integration/test_erasure_staff_barrier.py --allow-hosts=localhost,127.0.0.1,::1

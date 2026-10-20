@@ -1912,3 +1912,47 @@ separate and in progress; main stays72c9c17 with its successful39345752803 follo
 All local commands have terminated; thirty recorded source containers are independently
 absent. Normal Docker is kept running on0044 with erasure/retirement/short-text disabled.
 No closure/erasure/DELETE completion or production/academic/device acceptance is inferred.
+
+## ADR-061 source ownership reader — local verification
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: add a closed74-source
+relational selection registry and bidirectional ownership-edge checks for the future
+versioned plan. K/shared opaque T sources have no account predicate; owned ephemeral
+plans remain case-scoped. Unbound OTPs are never attributed by lookup hash. Return
+only counts and a keyed streaming fingerprint, with PostgreSQL row digests, ordered
+primary keys and xmin versions under a read-only repeatable-read snapshot. Bind the
+fold to subject/database/schema; never transfer source bodies, credentials or key lists.
+No LIMIT truncates the reader; test above10,000 owned events.
+
+This reference is explicitly NOT semantic clearance or an issued plan. Payload/version
+validation, staff/audit classification, exact holds, lifecycle self-write reconciliation,
+independent SQL privileges/scope and server authorization/closure remain required.
+No route, executor, role, deletion, identity closure or completion is added. A malicious
+relation is tested only in a separately created disposable mirror; original guards
+and rows are never disabled or rewritten.
+
+Preserve frozen parentb4b20f1 hosted39350745638 and coordination94feeab hosted39352281782
+while this separate branch develops. Add a third closed fresh-source cohort for the
+reader/corruption cases, keeping existing resource/supervision caps and no caller target.
+Initial format failures and a registry check incorrectly treating every T disposition
+as shared are corrected; owned temporary plans are explicit. The first mirror fixture
+failed its existing revision-session topic constraint; correct the fixture, preserving
+all original guards. Earlier failed runs remain failed.
+
+Final local quality/contracts/build,1,476 unit/contract,110 resource controls and all
+three owned cohorts pass:29 identity/lifecycle/preview,19 fake dispatch and nine reader
+checks (five contract/four native). Tests include10,001 owned events without truncation,
+unrelated learner stability, changed private key, immutable counts, cross-owner inputs,
+revoked staff roles and original learner reporting after independent staff triage.
+The reader always returns semantic_clearance=false. It has no serving consumer.
+
+The first security run reports five B608 findings in SQL templates interpolating only
+fixed registry constants. Review UUID parameter binding and psycopg identifier quoting;
+add five line-specific B608 exceptions, not a global exclusion. Executable AST equality
+is checked before/after annotations. Final format/lint/types/contracts/build and security/
+source/dependency checks pass. All nine recorded owned source containers are independently
+absent; cleanup reports are empty. The initial independent absence probe falsely rejects
+Docker's lowercase no-such-object message; the corrected case-insensitive probe verifies
+all nine without removing anything. Full exact-source hosted acceptance remains pending.
+No migration, route, dependency, provider, retention or new architectural decision is
+introduced. Normal review stays disabled on0044, with eight healthy services.
