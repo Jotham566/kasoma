@@ -2123,3 +2123,49 @@ and integrates accepted main2f3031b. Main follow-up39355923737 remains separatel
 do not move its head. Source ownership752cda1 and combined audit4db1cec have their own
 live runs; they cannot accept this bootstrap source. Full SQL server plan/authorization,
 permanent closure, durable continuation and complete ADR-061 fulfillment remain work.
+
+
+## ADR-072 server plan/authority path — implementation in progress
+
+FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: extend the explicit fresh-source
+recipe to private capability v2, leaving ordinary0045 migrations and normal review
+unchanged. The separate authorizer is EXECUTE-only; it receives no ordinary API source
+CRUD. SQL checks its actual principal, server-observed source binding, current recent
+ADMIN session and independent current claimant of a pending verified DELETE case.
+The API must end normal authentication before the private call, then SQL revalidates.
+ADR-072 records this delegation and future atomic authorization/barrier decision.
+
+Compile fixed manifest/ownership SQL at installation, with qualified names and UUID
+parameters. Issue database-clock plans and exact read audits before an uncapped keyed
+source fold. Normalize only this plan's self-referential version. Keep creation and
+execution false and return explicit disabled/incomplete blockers; this is not full
+source/preservation/hold clearance or first-slice completion. Only maintenance expires
+plans, at most100 removals from200 candidates, using database time and fixed cleanup.
+The trusted installer may choose a bounded1–600-second plan lifetime (default600);
+no API/maintenance caller supplies a cutoff or rewrites an existing clock.
+
+Exact new erasure_plan_read and erasure_plan_expiry_batch action names are classified
+under ADR-061's approved security/access/batch rule, without wildcard acceptance or a
+new retention permission. Native SQL, server/API, stale-source/clock/role/ownership,
+large-history and full own-source checks remain in progress. Job creation, actual
+closure and erasure/removal/retirement are still required implementation work.
+
+
+## ADR-072 v2 local verification before hosted acceptance
+
+The private plan/API candidate passes `make format lint test-erasure-plans
+ test-erasure-fresh-scope test-erasure-identity-isolated test-unit openapi-check build
+ security security-source`:18 plan/compiler/API cases,11 fresh-scope/SQL cases,
+29 identity/lifecycle,19 fake dispatch,16 source checks and1,490 unit/contract tests.
+Actual authorizer/maintenance/ordinary logins enforce separation; a revoked ADMIN
+between ordinary authentication and private SQL is refused. Native tests verify
+10,001-event nontruncation, self-seal reconciliation, unrelated-subject stability,
+server clocks and100/10/0 expiry batches over110 plans. Trusted lifetime input is
+strictly1–600 seconds; maintenance/API cannot choose a cleanup clock. The first positive
+run failed permission checks despite nine passing denials; narrow NOLOGIN-owner ID
+UPDATE grants enable PostgreSQL row locks. That earlier run remains a failure.
+
+Full local browsers are running. Exact-source hosted integration/browser/image/service
+acceptance remains pending. No job, closure or DELETE completion is implemented; source
+semantic/payload/hold/catalog clearance, atomic authorization/barrier and complete durable
+fulfillment remain required. Normal review is healthy and dormant on main40aa7d2.

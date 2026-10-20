@@ -22,6 +22,7 @@ from services.data_request_contracts import (
     DeletionPreview,
 )
 from services.data_requests import DataRequestService
+from services.erasure_contracts import ErasurePlan
 from services.legal_hold_contracts import (
     ExportHoldSources,
     HoldInput,
@@ -186,3 +187,10 @@ def export_hold_sources(
     return LegalHoldService(service(request)).export_sources(
         bearer(request), target, source, cursor, limit, UUID(request.state.request_id)
     )
+
+
+@router.get("/admin/data-requests/{target}/erasure-plan", response_model=ErasurePlan)
+def erasure_plan(target: UUID, request: Request) -> ErasurePlan:
+    from services.erasure_plans import plan
+
+    return plan(service(request), bearer(request), target, UUID(request.state.request_id))

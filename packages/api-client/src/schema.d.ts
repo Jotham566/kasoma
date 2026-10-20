@@ -227,6 +227,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/data-requests/{target}/erasure-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Erasure Plan */
+        get: operations["erasure_plan_api_v1_admin_data_requests__target__erasure_plan_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/data-requests/{target}/holds": {
         parameters: {
             query?: never;
@@ -1818,6 +1835,47 @@ export interface components {
              * Format: uuid
              */
             version_id: string;
+        };
+        /** ErasurePlan */
+        ErasurePlan: {
+            /** Authorization Available */
+            authorization_available: boolean;
+            /** Blockers */
+            blockers: ("EXECUTION_DISABLED" | "ISOLATED_SCOPE_REQUIRED" | "SOURCE_MANIFEST_CHANGED" | "SOURCE_OWNERSHIP_UNCERTAIN" | "STAFF_PROVENANCE_REQUIRES_REVIEW" | "EMBEDDED_REFERENCES_REQUIRE_REVIEW" | "PRESERVATION_INCOMPLETE" | "EXPORT_DRAIN_REQUIRED" | "CLAIMANT_AUTHORITY_UNAVAILABLE" | "PROCESSOR_UNAVAILABLE" | "VERIFICATION_INCOMPLETE")[];
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /**
+             * Manifest
+             * @default erasure-0045-v1
+             * @constant
+             */
+            manifest: "erasure-0045-v1";
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /**
+             * Plan Id
+             * Format: uuid
+             */
+            plan_id: string;
+            /**
+             * Policy
+             * @default synthetic-account-erasure-v1
+             * @constant
+             */
+            policy: "synthetic-account-erasure-v1";
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /** Version */
+            version: string;
         };
         /** ErrorEnvelope */
         ErrorEnvelope: {
@@ -5007,6 +5065,100 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DeletionPreview"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    erasure_plan_api_v1_admin_data_requests__target__erasure_plan_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                target: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErasurePlan"];
                 };
             };
             /** @description Unauthorized */

@@ -31,6 +31,8 @@ class AuditRule:
 # checks: classifying an audit never manufactures a completed case or closure clock.
 AUDIT_RULES = MappingProxyType(
     {
+        "data_request.erasure_plan_read": AuditRule("SECURITY", "CASE"),
+        "data_request.erasure_plan_expiry_batch": AuditRule("SYSTEM", "SYSTEM"),
         "data_request.created": AuditRule("MATERIAL_CASE", "CASE", True),
         "data_request.review_started": AuditRule("MATERIAL_CASE", "CASE"),
         "data_export.queued": AuditRule("MATERIAL_CASE", "CASE", True, "EXPORT"),

@@ -186,3 +186,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-070: SQL-visible account processing coordination](070-sql-visible-account-processing-gate.md)
 
 - [ADR-071: Isolated erasure SQL capability bootstrap](071-isolated-erasure-capability-bootstrap.md)
+
+- [ADR-072: Private erasure authority and atomic barrier](072-private-erasure-authority-and-atomic-barrier.md)

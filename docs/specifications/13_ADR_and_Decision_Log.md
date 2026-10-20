@@ -512,3 +512,13 @@ exclusive NOLOGIN/authorizer/maintenance roles and a private versioned SQL contr
 namespace. Normal migrations/startup cannot install it; creation/execution remain false.
 No new privacy, retention, cloud/provider or real-data permission. Verification and the
 complete SQL authorization/closure/preservation/removal workflow remain in progress.
+
+
+## ADR-072: Private erasure authority and atomic barrier
+
+[Record](../decisions/ADR/072-private-erasure-authority-and-atomic-barrier.md): keep
+private authorizer/maintenance credentials separate from ordinary API SQL authority.
+Recheck current authenticated ADMIN case ownership in SQL, issue database-clock sealed
+plans, and ultimately commit authorization plus permanent closure atomically. No
+identity signing/lookup key sharing, client actor/subject/clock input or new privacy
+permission. Implementation and complete first-slice verification remain in progress.
