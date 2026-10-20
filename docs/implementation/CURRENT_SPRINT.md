@@ -1138,3 +1138,21 @@ source only after its own full hosted acceptance. No source classifier establish
 payload, exact-hold, deadline, SQL-scope or closure/removal clearance. The next complete
 ADR-061 slice remains independently restricted SQL plan/authorization/closure, not a
 count-only or empty-account erasure substitute. Keep normal review execution disabled.
+
+
+## Frozen combined audit candidate and accepted parent publication
+
+Runtime/test/Make/workflow source4db1cec65674419bab9a81eeaf4e5da0262f927c is frozen
+for complete hosted [39355841664](https://github.com/Jotham566/kasoma/actions/runs/39355841664),
+confirmed in progress. Preserve its remote head; only Markdown closeout follows it.
+Predecessor752cda1 hosted39354774163 is separate, and cannot accept the correction for
+unknown audits demonstrated by the failing before-regression. Source/hold/payload/SQL
+capability and account closure/removal/DELETE completion remain unaccepted.
+
+Dormant0045 parentb4b20f1 is accepted by complete hosted39350745638 and published
+through main2f3031b4100cbaa3856a1561260d62e9451166a2 after native images/migration/
+service smoke and HIGH/CRITICAL scans pass. Its merged local/remote branch is removed
+with ancestry proof. Main follow-up39355923737 is confirmed live; do not move main while
+that run needs its fixed head. Coordination94feeab hosted39352281782 is still separate
+and live. Normal review has eight healthy services on0045, scope/creation/executionfalse,
+no erasure owner/executor and zero closed identities. No data/cache/volume sweep.

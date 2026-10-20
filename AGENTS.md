@@ -614,3 +614,26 @@ B608 exceptions are line-specific and reviewed; no scanner-wide exception. Initi
 registry/fixture/security/probe failures remain failures. Parentb4b20f1 and coordination
 94feeab hosted runs remain separate and live; do not move their remote heads or promote
 unverified source. Main72c9c17 and normal healthy review0044 remain disabled for erasure.
+
+
+The combined read-only audit correction4db1cec is separately pushed for complete
+hosted39355841664; preserve that live head. Local1,483 unit/contract and29/19/16 owned
+identity/dispatch/source cohorts pass, plus format/lint/types/contracts/build/security.
+The unknown other-actor audit on an owned case fails before correction (one failure/
+nine passes); unknown owned-attempt coverage, exact33 approved action/actor/target/
+case-kind rules, original learner flags after independent triage and invalid-clock/
+missing-actor/staff-actor denials pass. No composite retry-key ownership is inferred.
+Nine owned sources are independently absent. No deadline, route, role, closure or
+execution authority is introduced. The separate classifier returns counts only and
+is not full preservation/retention/source/SQL clearance. Full engineering acceptance
+still requires its own hosted run, not752cda1's predecessor CI.
+Dormant0045 parentb4b20f1 passes complete hosted39350745638:1,445 unit,522 integration,
+35 tooling,22 owned checks and123 full browsers plus all mandatory gates. Recovery74/
+692 passes559ms logical/316ms actual PG+MinIO one42,084-byte object; productionRPO/RTO
+false. Published main2f3031b includes only Markdown closeout beyond that verified tree;
+its follow-up39355923737 is live. Merged erasure-barrier local/remote branch is removed.
+All eight review services are healthy on0045 with false scope/creation/execution, no
+owner/executor and zero closed identities after rebuild/migration/smoke/image scans.
+Keep main and other active remote heads fixed; next complete ADR-061 work is the
+independently restricted SQL capability, server plan/authorization/closure and durable
+continuation with all preservation/export-drain/payload gates, not partial fulfillment.
