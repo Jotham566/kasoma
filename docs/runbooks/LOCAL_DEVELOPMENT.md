@@ -1746,3 +1746,11 @@ the runtime verifier must load it from the versioned artifact. The32 full metada
 categories are supplemented by these nine safety categories, not silently redefined.
 Pinned PostgreSQL/vector core and the privileged creator/host remain trusted; this does
 not claim protection from a hostile administrator controlling the engine or artifact.
+
+
+Use make test-erasure-credentials for ADR-074's owned fake-only closed-consumer and
+dispatch race cases. It always creates fresh resources and cannot select normal review.
+The future-state fixture is not an account-closure command or executor acceptance.
+Known retained closed LOGIN identifiers keep generic responses without issuing codes;
+pre-barrier unbound history is neither swept nor attributed by hash. There is no
+normal-stack activation or new environment key.

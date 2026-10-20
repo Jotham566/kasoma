@@ -12,8 +12,9 @@ from services.database import Base
 class User(Base):
     __tablename__ = "users"
     # Historical upgrade fixtures may still seed pre-closure schemas. Ordinary
-    # identity reads use ACTIVE plus SQL's closed=>DISABLED invariant; private
-    # closure code explicitly selects this deferred column only on its current schema.
+    # ACTIVE identity reads use SQL's closed=>DISABLED invariant. Credential
+    # consumers inspect the deferred marker only after observing non-ACTIVE state;
+    # there is no missing-column fallback for current closure checks.
     __mapper_args__ = {"eager_defaults": False}
     closed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), server_default=text("NULL"), deferred=True

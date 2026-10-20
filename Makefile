@@ -51,6 +51,9 @@ test-erasure-dispatch:
 .PHONY: test-erasure-catalog
 test-erasure-catalog:
 	$(UV) pytest tests/contract/test_erasure_catalog_contract.py tests/integration/test_erasure_catalog.py --allow-hosts=localhost,127.0.0.1,::1
+.PHONY: test-erasure-credentials
+test-erasure-credentials:
+	$(UV) pytest tests/integration/test_closed_credentials.py --allow-hosts=localhost,127.0.0.1,::1
 .PHONY: erasure-catalog-baseline update-erasure-catalog-baseline
 erasure-catalog-baseline:
 	$(UV) python -m scripts.erasure_catalog_baseline

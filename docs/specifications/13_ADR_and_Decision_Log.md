@@ -530,3 +530,12 @@ behavior/privilege catalog against metadata reproduced only from approved migrat
 an independently owned fake-only source. Never approve the live source as its own baseline.
 No source rows, credentials, erasure activation or new preservation/retention authority.
 Installed-catalog/SQL/payload/hold clearance and full execution remain required work.
+
+
+## ADR-074: Closed-identity credential dispatch
+
+[Record](../decisions/ADR/074-closed-identity-credential-dispatch.md): coordinate retained
+LOGIN bindings before rate/identifier work, reject closed credential mutations and
+hold only an idle shared subject gate through bound OTP dispatch. Keep generic responses,
+actual provider-only observations, exact newly created challenge cleanup and unchanged
+active reuse protection. No closure, hash-based attribution or execution authority.

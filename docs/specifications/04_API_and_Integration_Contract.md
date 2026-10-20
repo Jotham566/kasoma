@@ -989,3 +989,11 @@ The staged private plan transport now requires exact v4 readiness, identifying t
 ADR-073 pre-install catalog fence. Existing v2/v3 installations fail the same fixed503
 before plan writes; no new public request/response field or erasure POST is introduced.
 Normal review remains excluded and creation/execution remain false.
+
+
+ADR-074 credential barrier: the existing LOGIN acceptance schema/status stays generic
+for a retained closed identifier; no code or provider dispatch is issued. Known-user
+dispatch coordinates/rechecks against closure. Changed lookup ownership requires
+fresh issuance, with no caller-selected owner or lock. Closed refresh and existing
+LOGIN verification fail before family/challenge mutation. This is a consumer guard,
+not an account-closure or DELETE-completion endpoint. All execution remains disabled.

@@ -4,7 +4,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from uuid import UUID
 
-from sqlalchemy import Engine, text
+from sqlalchemy import Connection, Engine, text
 from sqlalchemy.orm import Session
 
 # A non-secret coordination namespace, computed by PostgreSQL on both sides.
@@ -35,6 +35,13 @@ def coordinate(db: Session, subject: UUID) -> None:
 
 @contextmanager
 def dispatch_gate(engine: Engine, subject: UUID) -> Iterator[None]:
+    """Preserve the side-effect-only guard port used by the model gateway."""
+    with dispatch_connection(engine, subject):
+        yield
+
+
+@contextmanager
+def dispatch_connection(engine: Engine, subject: UUID) -> Iterator[Connection]:
     """One owned idle connection; no transaction, row or HMAC lock spans inference.
 
     Invalidate on an uncertain acquisition/release: pool rollback does not release
@@ -49,7 +56,9 @@ def dispatch_gate(engine: Engine, subject: UUID) -> Iterator[None]:
             connection.invalidate()
             raise
         try:
-            yield
+            # A caller may reuse this same connection for its short recheck, then
+            # commit before dispatch. No spare pool checkout is required.
+            yield connection
         finally:
             try:
                 if connection.in_transaction():

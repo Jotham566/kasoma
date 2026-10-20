@@ -190,3 +190,5 @@ This directory location follows the user-requested repository organization. It d
 - [ADR-072: Private erasure authority and atomic barrier](072-private-erasure-authority-and-atomic-barrier.md)
 
 - [ADR-073: Frozen pre-install source catalog](073-frozen-preinstall-source-catalog.md)
+
+- [ADR-074: Closed-identity credential dispatch](074-closed-identity-credential-dispatch.md)

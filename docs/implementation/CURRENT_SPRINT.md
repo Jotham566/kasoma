@@ -1656,3 +1656,49 @@ verified disabled bootstrap, whose merged branches are removed. V3 plan/staff so
 81f1d84 independently passes complete hosted 39365821234 and has a prepared publication;
 main follow-up 39371028143 remains live. None of these accepts catalog hosted results,
 erasure execution, physical devices or full release. See the catalog verification record.
+
+
+## ADR-074 closed credential intake/dispatch — implementation candidate
+
+FR-ID-001/002/005/006, BR-010, NFR-SEC-002/MNT-001: coordinate current retained LOGIN binding
+before rates/identifier serialization, recheck that exact binding and closure, and
+return generic acceptance without a code/provider call for a closed identity. A
+changed binding requires fresh issuance instead of a late account-lock inversion.
+Bound dispatch holds only the existing idle session-shared subject gate and rechecks
+before the provider, with no row/HMAC/open transaction across send. Suppression and
+gate failure do not masquerade as provider failures; cleanup targets only this
+invocation's exact newly created challenge. Closed LOGIN rejects before challenge
+consumption; closed refresh rejects before unbounded family mutation. Ordinary
+nonclosed reuse protection remains. See ADR-074 for protocol and fixture limitations.
+
+The first four native cases produce three failures/one pass on the unchanged parent:
+closed email/phone still dispatch and closed rotated refresh rewrites its family.
+After the change those four pass. The expanded matrix, full local/own hosted checks
+remain pending. Synthetic future-state fixtures restore the exact closure trigger
+before consumer checks; they do not prove a closure executor or authorization. No
+erasure is activated, no DELETE completed, no real data or normal review changed.
+Full installed catalog/SQL/payload/hold/export validation, unbound ten-minute drain,
+permanent write guards, durable fulfillment and checkpoint recovery remain required.
+Catalog remote 854afaa stays fixed for live 39371164944; main 0053a7b follow-up
+39371028143 remains live. V3 plan publication is prepared separately.
+
+
+ADR-074 correction evidence: the one-connection case fails before gate-connection reuse
+(17 pass/one failure). A separate broad identity run fails the unchanged pre0045
+fixture on deferred closed_at access (28 pass/one failure). ACTIVE consumers now use
+the existing immutable closed-implies-DISABLED SQL invariant; non-ACTIVE closure
+checks do not gain a missing-column fallback. The existing None-valued model gate
+port is preserved while OTP rechecks reuse the same owned connection. All18 native
+credential cases now pass; full broader/browser/own hosted gates remain pending.
+See the closed credential verification record for failure history and fixture limits.
+
+
+ADR-074 final local gates pass: 18 closed-consumer/dispatch cases, 29 identity/lifecycle,
+19 model dispatch, 16 source ownership and six staff cases, one OTP observation API
+case, 1,495 unit/contract, 35 tooling and 123 browser executions, plus lint/types
+(228 Python sources), unchanged generated contracts, build and dependency/source
+security. The unchanged populated0044 upgrade passes. Twelve exact browser IDs and
+nine captured native IDs are independently absent; final native contexts also assert
+exact cleanup. See E8_CLOSED_CREDENTIAL_VERIFICATION.md for retained failures, fixture
+limits and the pending LINK/GUARDIAN dispatch race. Full own hosted/image/service/
+recovery acceptance remains pending; no erasure or DELETE completion is enabled.
