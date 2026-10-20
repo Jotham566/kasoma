@@ -71,3 +71,28 @@ remains live. Combined v3 plan/staff source 81f1d84 passes full own hosted
 39365821234 (1,490 unit/contract, 573 integration, 35 tooling, 123 browsers and all
 engineering gates); its prepared publication remains separate from catalog acceptance.
 No new closure, removal, DELETE completion or production permission follows.
+
+
+## Frozen linked-dispatch source and failed parent catalog gate
+
+Linked-dispatch source d7a9a12 is integrated with published main through Markdown
+only at 2c37d4da9eaae44e98420b69927eaaa45bb8709e. Its own full hosted
+39375073567 is confirmed live; keep that remote head fixed. No parent result
+accepts it. Main37be6e3 follow-up39374776606 is separately live.
+
+Parent catalog hosted39371164944 is terminal FAILED at exact854afaa:1,495
+unit/contract and35 tooling pass, but integration has42 failures/552 passes.
+Failures are the catalog/private-bootstrap/plan cohorts; the shared fresh-source
+wrapper withholds their underlying diagnostics, so the exact cause is not established.
+Later contracts/build/full-browser/security/image/service stages are unexecuted.
+Earlier setup, focused and recovery stages do not make this a complete pass.
+Its 74-table/692-row baseline recovery is not erasure checkpoint recovery.
+
+The M4/CI platform difference and raw catalog representation are investigation
+hypotheses, not a proved diagnosis or permission to weaken the fence/regenerate a
+baseline from a live source. The next priority is a controlled fresh-source catalog
+diagnosis/correction and complete own combined verification. Parent LOGIN4e5b2ab
+run39373055520 and this linked-dispatch run stay live and unchanged; acceptance
+remains pending and neither may be promoted from local checks alone. Current main
+and healthy review preview contain only the separately accepted v3 plan source,
+not the failed catalog candidate. Activation stays false.
