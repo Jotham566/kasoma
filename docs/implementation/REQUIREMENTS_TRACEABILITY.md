@@ -2191,6 +2191,76 @@ All local commands have terminated; thirty recorded source containers are indepe
 absent. Normal Docker is kept running on0044 with erasure/retirement/short-text disabled.
 No closure/erasure/DELETE completion or production/academic/device acceptance is inferred.
 
+
+
+## Accepted dormant lifecycle source — hosted39350745638
+
+Complete hosted [39350745638](https://github.com/Jotham566/kasoma/actions/runs/39350745638)
+is SUCCESS atb4b20f1b0e44d1ae08ae58091f35bb9c060e957f:1,445 unit/contract,
+522 integration,35 tooling,22 owned identity/lifecycle checks and123 full browser
+executions. All required setup, clean/additive migrations, seed, focused/restricted
+login, quality/contracts/build, recovery, dependency/source/image security and service
+smoke gates pass. Logical recovery verifies74 tables/692 rows in559ms. Actual stopped-
+source PostgreSQL/MinIO restore verifies74/692/one42,084-byte ciphertext in316ms,
+with fault/immutable/dormant guards, stripped retirement denied and empty cleanup.
+Production RPO/RTO remains false. Prior39346406621 stays failed; this source corrects
+only the additive-upgrade test's expected closed_at:null, preserving all old fields.
+
+Accept0045 dormant lifecycle persistence, the structural manifest and denial tests.
+No plan/job creation, SQL erasure owner/executor, authorization, permanent closure,
+removal or DELETE completion is accepted. Normal review activation stays false.
+Coordination94feeab and source ownership752cda1 need their own complete hosted runs;
+this acceptance covers neither. Only Markdown closeout follows the verified runtime/
+test/Make/workflow tree. Native review images rebuild successfully; make migrate and
+container-smoke pass with all eight services healthy on0045. Direct count-only inspection
+confirms scope/creation/execution=false, owner/executor absent and zero closed users.
+Existing review data/volumes remain; no account-erasure operation is performed.
+
+Native rebuilt API/web image HIGH/CRITICAL scanning also passes before publication.
+
+
+## Accepted account-processing coordination source — hosted39352281782
+
+Complete hosted [39352281782](https://github.com/Jotham566/kasoma/actions/runs/39352281782)
+is SUCCESS at94feeab6e946c2905202da19a0a85952f5b26036:1,471 unit/contract,
+531 integration,35 tooling,29 owned identity/lifecycle and19 owned fake-dispatch
+checks, plus123 full browsers and every mandatory engineering gate. Logical recovery
+verifies74 tables/692 rows in438ms; actual stopped-source PostgreSQL/MinIO restore
+verifies74/692/one42,060-byte ciphertext in217ms, with fault/immutable/dormant guards,
+stripped retirement denied and empty cleanup. Production RPO/RTO remains false.
+
+Accept ADR-070's compatible SQL-visible shared gate, fresh authority reads and bounded
+idle-connection fake-dispatch coordination, alongside the unchanged original HMAC locks.
+No permanent closure, erasure authorization/executor or completed DELETE exists. The
+future exclusive closure must use nonblocking transaction acquisition and all independent
+case/source/hold/export/SQL guards. Provider cancellation after process loss remains
+unproved outside the fake lane. Normal review execution stays disabled.
+
+Integrate accepted main2f3031b's Markdown closeout only. Resolve five competing appended
+verification sections by preserving both histories; there is no application/test/Make/
+workflow change relative to hosted94feeab. Main follow-up39355923737 remains live and
+unchanged. Promotion to main and corresponding review rebuild wait for that fixed-head
+run; do not cancel it. Source ownership/audit752cda1/4db1cec remain separate candidates.
+
+
+## Publication of accepted ADR-070 coordination
+
+Main parent2f3031b follow-up [39355923737](https://github.com/Jotham566/kasoma/actions/runs/39355923737)
+is terminal SUCCESS. Promote the separately complete hosted39352281782 coordination
+source94feeab through prepared Markdown mergee37cd55. Runtime/test/Make/workflow content
+remains exactly that verified source; publication closeout adds Markdown only.
+Native make containers migrate container-smoke security-containers all pass. All eight
+review services are healthy on0045; direct aggregate inspection confirms false scope/
+creation/execution, absent erasure owner/executor and zero closed users. No normal review
+erasure, retirement, short-text enablement, data/cache/volume cleanup or real inference.
+
+This accepts compatible account processing/fake-dispatch coordination, not SQL erasure
+execution. Full reviewed plan/authorization/closure, preservation/removal/retirement,
+closed-account support and genuine release gates remain. Source audit4db1cec and disabled
+bootstrap3f865e4 are separate pending candidates with fixed live remote heads. Remove
+only the merged coordination branch after successful main publication and ancestry proof.
+
+
 ## ADR-061 source ownership reader — local verification
 
 FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: add a closed74-source
@@ -2309,6 +2379,38 @@ and live. Normal review has eight healthy services on0045, scope/creation/execut
 no erasure owner/executor and zero closed identities. No data/cache/volume sweep.
 
 
+## Accepted read-only source and audit policy — hosted39355841664
+
+Complete hosted [39355841664](https://github.com/Jotham566/kasoma/actions/runs/39355841664)
+is SUCCESS at4db1cec65674419bab9a81eeaf4e5da0262f927c:1,483 unit/contract,
+541 integration,35 tooling,29 identity/lifecycle,19 fake dispatch,16 owned-source
+checks and123 full browser executions. All setup/migration/seed, focused/restricted
+login, quality/contracts/build, dependency/source/image security and service smoke gates
+pass. Logical recovery verifies74 tables/692 rows in613ms. Actual stopped-source PG/
+MinIO recovery verifies74/692/one42,084-byte ciphertext in325ms, with fault/immutable/
+dormant checks and empty cleanup; productionRPO/RTO remains false.
+
+Accept the closed ownership reader and exact33-action audit classifier together, including
+rejection of unknown other-actor audit on an owned case/attempt. Predecessor752cda1's
+success does not cure its known audit omission; this combined corrected source does.
+Source hashes/counts remain read-only with semantic_clearance=false. They are not full
+payload/retention/hold/private-catalog clearance, authorization, closure or fulfillment.
+The initial unknown-audit regression remains a recorded failure before correction.
+
+Main40aa7d2 follow-up39359937884 is terminal SUCCESS. This merge preserves both
+Markdown evidence histories; its executable/test/Make/workflow tree is identical to
+hosted-verified4db1cec. New bootstrap3f865e4 and planf645a54 have separate frozen live
+heads39359471826/39364234883; do not move or infer acceptance for them. Normal review
+remains dormant; remove only ancestry-proven merged source/audit branches after publication.
+
+
+Native publication checks for the accepted audit/source tree pass: `make containers
+migrate container-smoke security-containers`. All eight normal services remain healthy
+on0045; no erasure provisioning, activation or account closure is performed. Main40aa7d2
+follow-up is terminal success; publication may advance main to this Markdown-only
+closeout of hosted-verified4db1cec. Separate live bootstrap/plan heads remain fixed.
+
+
 ## ADR-061 SQL capability work — fresh-source bootstrap in progress
 
 FR-ID-006/BR-010, FR-OPS-003 and NFR-SEC-002/MNT-001: begin the independently
@@ -2401,6 +2503,57 @@ and integrates accepted main2f3031b. Main follow-up39355923737 remains separatel
 do not move its head. Source ownership752cda1 and combined audit4db1cec have their own
 live runs; they cannot accept this bootstrap source. Full SQL server plan/authorization,
 permanent closure, durable continuation and complete ADR-061 fulfillment remain work.
+
+
+## Accepted disabled fresh-source bootstrap — hosted39359471826
+
+Complete hosted [39359471826](https://github.com/Jotham566/kasoma/actions/runs/39359471826)
+is SUCCESS at3f865e440dae523b7c415efd0c6838b012d76435:1,487 unit/contract,
+548 integration,35 tooling,29 identity/lifecycle,19 fake dispatch,16 source checks
+and123 browser executions. All required setup/migration/seed, focused/restricted-login,
+quality/contracts/build, dependency/source/image security and service smoke gates pass.
+Recovery74/692 passes571ms logical and330ms stopped-source PG/MinIO with one42,084-byte
+ciphertext, immutable/fault/dormant checks and empty cleanup. ProductionRPO/RTO remains
+false, and baseline recovery is not erasure checkpoint recovery.
+
+Accept only the disabled ADR-071 fresh-source capability v1: in-process registered
+pre-migration source proof, exclusive NOLOGIN owner and separate private authorizer/
+maintenance logins, qualified bundled pgcrypto1.3 HMAC, immutable private control and
+one-time fresh-source identity handoff. It never provisions normal migrations/startup
+or review, and readiness remains false. No plan/job/closure/DELETE completion is accepted
+from this source. Full catalog/ACL/source/payload/hold validation remains required.
+The later v2 planf645a54 and staff coordination have their own pending verification.
+
+This prepared merge preserves both Markdown evidence histories; executable/test/Make/
+workflow files equal hosted-verified3f865e4. Main600db71 and its follow-up39364455335
+remain live and fixed. Do not advance main, remove the unmerged bootstrap branch, or
+infer acceptance for newer work until the main follow-up is terminal successful.
+
+
+Native prepared-bootstrap publication checks pass: `make containers migrate
+container-smoke security-containers`. All eight normal review services are healthy
+on0045; the ordinary source remains ineligible/dormant with no erasure provisioning.
+Main600db71 follow-up39364455335 is still live; preserve main. New plan/staff/private
+gate work has separate frozen candidates and cannot inherit this bootstrap acceptance.
+The prepared merge remains only Markdown beyond complete hosted-verified3f865e4.
+
+
+## Disabled bootstrap publication after parent acceptance
+
+Main 600db71 follow-up 39364455335 is terminal SUCCESS. Disabled bootstrap
+3f865e4 passes complete own hosted 39359471826: 1,487 unit/contract, 548 integration,
+35 tooling and 123 full browser executions, plus every focused/setup/migration/seed/
+restricted-role/quality/contracts/build/security/image/service gate. Recovery verifies
+74 tables/692 rows logically in 571 ms and one 42,084-byte private ciphertext with
+stopped source PostgreSQL/MinIO in 330 ms; fault/immutable/dormant guards and empty
+cleanup pass. Production RPO/RTO remains false.
+
+Only Markdown differs from that verified runtime/test/Make/workflow tree. Native
+image rebuild/migration/service smoke and image security pass for the prepared
+publication. All eight normal review services remain healthy on 0045; no private
+erasure capability is installed there, no identity closed and no DELETE completed.
+Later plan, staff, private-gate and catalog candidates retain separate exact-source
+acceptance; bootstrap acceptance does not clear them or full ADR-061 execution.
 
 
 ## ADR-072 server plan/authority path — implementation in progress
