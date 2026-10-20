@@ -2124,3 +2124,10 @@ Markdown evidence histories; its executable/test/Make/workflow tree is identical
 hosted-verified4db1cec. New bootstrap3f865e4 and planf645a54 have separate frozen live
 heads39359471826/39364234883; do not move or infer acceptance for them. Normal review
 remains dormant; remove only ancestry-proven merged source/audit branches after publication.
+
+
+Native publication checks for the accepted audit/source tree pass: `make containers
+migrate container-smoke security-containers`. All eight normal services remain healthy
+on0045; no erasure provisioning, activation or account closure is performed. Main40aa7d2
+follow-up is terminal success; publication may advance main to this Markdown-only
+closeout of hosted-verified4db1cec. Separate live bootstrap/plan heads remain fixed.
