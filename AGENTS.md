@@ -585,3 +585,29 @@ pass; the sole failure is the0042 configuration upgrade's whole-user JSON compar
 not expecting closed_at:null. The correction must require exactly that addition while
 preserving all old fields/rows. It remains unaccepted pending focused and full hosted
 verification; do not enable closure or erasure. Main72c9c17 follow-up39345752803 is SUCCESS.
+
+
+## Accepted dormant lifecycle source — hosted39350745638
+
+Complete hosted [39350745638](https://github.com/Jotham566/kasoma/actions/runs/39350745638)
+is SUCCESS atb4b20f1b0e44d1ae08ae58091f35bb9c060e957f:1,445 unit/contract,
+522 integration,35 tooling,22 owned identity/lifecycle checks and123 full browser
+executions. All required setup, clean/additive migrations, seed, focused/restricted
+login, quality/contracts/build, recovery, dependency/source/image security and service
+smoke gates pass. Logical recovery verifies74 tables/692 rows in559ms. Actual stopped-
+source PostgreSQL/MinIO restore verifies74/692/one42,084-byte ciphertext in316ms,
+with fault/immutable/dormant guards, stripped retirement denied and empty cleanup.
+Production RPO/RTO remains false. Prior39346406621 stays failed; this source corrects
+only the additive-upgrade test's expected closed_at:null, preserving all old fields.
+
+Accept0045 dormant lifecycle persistence, the structural manifest and denial tests.
+No plan/job creation, SQL erasure owner/executor, authorization, permanent closure,
+removal or DELETE completion is accepted. Normal review activation stays false.
+Coordination94feeab and source ownership752cda1 need their own complete hosted runs;
+this acceptance covers neither. Only Markdown closeout follows the verified runtime/
+test/Make/workflow tree. Native review images rebuild successfully; make migrate and
+container-smoke pass with all eight services healthy on0045. Direct count-only inspection
+confirms scope/creation/execution=false, owner/executor absent and zero closed users.
+Existing review data/volumes remain; no account-erasure operation is performed.
+
+Native rebuilt API/web image HIGH/CRITICAL scanning also passes before publication.
