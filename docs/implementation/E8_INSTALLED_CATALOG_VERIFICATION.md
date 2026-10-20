@@ -68,3 +68,71 @@ its own body, code/constraint/type/trigger/policy/rule/operator/ACL/namespace dr
 and actual private-principal refusals before any plan/expiry write. Full payload/
 ownership/hold/preservation/export checks still precede atomic durable closure,
 permanent write guards, bounded removal and checkpoint/quarantined restore.
+
+
+## ADR-079 rollback-only preparation and independent metadata compiler
+
+FR-ID-006/FR-OPS-003, BR-010 and NFR-SEC-002/MNT-001: the trusted offline
+preparation path accepts only an actual registered FreshErasureScope, follows the
+ordinary pre-install fences and creates private definitions inside one transaction.
+It clears the temporary password GUC, captures technical metadata before generating
+a fingerprint key or initializing control, then rolls back on normal return, error
+or interruption. It returns no initialized capability, credentials or ready scope.
+No callback, source URL, SQL or baseline is accepted from an application user.
+
+The expected-code compiler hashes complete trusted repository definitions and the
+four existing frozen public bodies. A PostgreSQL comparison checks all14 complete
+v6 bodies before metadata observation; a replaced scope-identity body is rejected.
+The metadata compiler covers all application namespaces with exact private technical
+aliases, nine raw safety categories followed by32 full categories, and typed exact
+expression hashes. Independent fresh preparations with changed OIDs/nonces reproduce
+all category counts/digests. An initial function-ACL digest difference is retained:
+the fixed technical function-signature reference had not been aliased. Correcting
+that specific reference makes both stages reproduce; live code is never normalized.
+
+A strict v7 artifact envelope pins the migration and trusted recipe source digests,
+closed category/expression sets and exact recipe identity. Missing or changed files
+fail rather than regenerating/adopting a baseline. No frozen v7 artifact is written,
+no ordinary installer loads this envelope yet, and the private runtime remains v6.
+The SQL checker, immutable expectation field, generator CLI/architecture matrix and
+runtime raw-before-deparser interlock remain unimplemented. Producer reproduction
+is not installed-catalog clearance, payload/hold/export validation, closure/erasure,
+checkpoint recovery or production/MVP acceptance.
+
+
+## Preparation checkpoint — local engineering results
+
+Commands: make format lint; make test-erasure-installed-queries
+(test envelope plus native reproduction/body refusal); make test-erasure-catalog-preparation;
+make test-erasure-fresh-scope test-erasure-principals test-erasure-catalog-bindings;
+make test-erasure-plans; make test-unit openapi-check build security security-source;
+make erasure-catalog-baseline recovery-drill recovery-objects; make check-docs.
+The six focused targets pass86 cases (9+9+11+21+12+24), including changed-code
+rejection and normal/error/interruption rollback with exact-ID absence. Unit/contract
+passes1,526; tooling35; typing236 files. Public generated contracts/build remain equal.
+682 integration is collection only; no complete native integration or new browser
+pass is claimed. Own full hosted verification remains required for this source.
+
+Retain the initial mypy Literal default failure and correction, initial three
+B608 static-SQL construction findings and their correction to psycopg composables.
+The final format/lint, direct native reproduction/preparation/plan tests, secret,
+dependency and source scans pass without adding scan exclusions. Earlier query/ACL
+failures remain recorded; they are not application acceptance. No timeout/assertion
+relaxation, external provider call or older resource cleanup occurs.
+
+The fresh unchanged v2 pre-install catalog reproduces32 metadata/nine raw categories.
+Logical recovery verifies74 tables/692 rows in341ms. Actual stopped-source database/
+MinIO recovery verifies74/692/one42,084-byte ciphertext in144ms, integrity/fault/
+immutable/dormant guards and cleanup[]. Production RPO/RTO remainsfalse; this is not
+closure checkpoint recovery. Every fresh native source asserts exact cleanup; the
+owner-approved orphan91c93448 is independently absent. The normal review remains
+8/8healthy on0045 and no private installation/activation is performed there.
+
+Created scripts/erasure_catalog_code.py, erasure_installed_queries.py and
+ erasure_installed_profile.py; services/erasure_installed_profile.py; three contract
+modules and two native modules. Changed the privileged installer, Makefile and mypy/
+security scan scope, plus changelog/sprint/traceability/AGENTS/ADR verification records.
+No public migration, dependency, DTO, runtime version or model/messaging change.
+The accepted ADR-079 design remains unchanged. Next implement the v7-only private
+field and raw-before-full SQL checker, independent artifact generator/matrix and
+scope interlock before any closure authority; the current preparation is not that gate.

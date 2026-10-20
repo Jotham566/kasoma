@@ -1,7 +1,7 @@
 # ADR-079: Independently reproduced installed catalog expectations
 
 Date: 20 October 2026 (Africa/Kampala)
-Status: Accepted technical implementation under approved ADR-061/071/072/073; implementation in progress; typed binding groundwork verified locally only
+Status: Accepted technical implementation under approved ADR-061/071/072/073; implementation in progress; typed binding/preparation/metadata groundwork; full fence acceptance pending
 Requirements: FR-ID-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001
 
 ## Decision

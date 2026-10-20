@@ -758,7 +758,7 @@ production-pilot acceptance; delivery-provider and legal approval gates remain. 
 | FR-ID-003 | Birth date, adult consent, separately verified guardian evidence/learner assent, withdrawal, policy gate | Minor/adult API and browser tests; ownership, idempotency and policy-change tests; [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented, including channel issue/consume/delivery consent checks; approved wording remains pending; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 pending own hosted acceptance |
 | FR-ID-004 | Server-restricted S4 Mathematics/Physics profile and subject selection | Profile validation and browser journeys | Local implemented |
 | FR-ID-005 | Opaque sessions, refresh rotation/reuse revocation, current/all logout | Expiry, family reuse and revocation API tests; browser logout; [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) | Local implemented; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 pending own hosted acceptance |
-| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) ; [installed principal candidate](E8_ERASURE_PRINCIPALS_VERIFICATION.md) ; [installed catalog groundwork](E8_INSTALLED_CATALOG_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 pending own hosted acceptance ; ADR-078 pending own hosted acceptance ; ADR-079 full fence pending |
+| FR-ID-006 | Recent-OTP intake/review, encrypted bounded JSON and asynchronous private artifacts with 24-hour copy expiry; deletion preview and exact-record holds | [Export evidence](E8_DATA_EXPORTS_VERIFICATION.md); [hold evidence](E8_LEGAL_HOLDS_VERIFICATION.md); [review privacy candidate](E4_EXPERT_REVIEW_VERIFICATION.md); [closed credential candidate](E8_CLOSED_CREDENTIAL_VERIFICATION.md); [linked dispatch candidate](E8_LINKED_DISPATCH_VERIFICATION.md); [portable catalog candidate](E8_CATALOG_DATUM_VERIFICATION.md) ; [consent/role consumer candidate](E8_CONSENT_CONSUMERS_VERIFICATION.md) ; [installed principal candidate](E8_ERASURE_PRINCIPALS_VERIFICATION.md) ; [installed catalog groundwork](E8_INSTALLED_CATALOG_VERIFICATION.md) | Partial: intake/export/async delivery/expiry and advisory deletion preview merged; independent review privacy merged; erasure/anonymization, full hold coverage and accountability expiry pending; ADR-074 LOGIN guard passes combined hosted39378996412; ADR-075 dispatch guards pass combined hosted39378996412 ; ADR-077 accepted own hosted39380895685 ; ADR-078 accepted own hosted39383925992 ; ADR-079 full fence pending |
 | FR-DIAG-001 | Subject diagnostic start/resume; actor lock and partial unique index | Concurrent start and browser reload tests | Local synthetic implemented |
 | FR-DIAG-002 | Versioned 15-item adaptive plan; database bounds 10–15 | Full choice/numeric diagnostics; client count override rejected | Local synthetic implemented; early stop intentionally not configured |
 | FR-DIAG-003 | CORE first per available topic; competency coverage and response-dependent difficulty | Three-topic/two-competency coverage; strong/weak trajectories | Local synthetic implemented; academic inventory/mapping approval pending |
@@ -3251,3 +3251,63 @@ failed/unexplained; clean hosted acceptance does not turn them into passes.
 The candidate is not yet published to main. Main825d57e follow-up39387033557 remains
 live and unchanged; the principal4bf5a77/39383925992 result is independently pending.
 No v6/v7, actual erasure or production acceptance is inferred from this consumer run.
+
+
+## Complete own principal-fence hosted result
+
+[Hosted39383925992](https://github.com/Jotham566/kasoma/actions/runs/39383925992)
+is SUCCESS at exact4bf5a77347af725cdb05853392f73e14c6e68fef:1,502 unit/contract,
+676 integration (2225.73s),35 tooling and123 full browser executions, plus every
+required focused/setup/migration/seed, actual restricted-login, quality/contracts/
+build, security/image/service gate. Only optional registry authentication is skipped.
+Logical recovery verifies74 tables/692 rows in614ms. Actual stopped-source PostgreSQL/
+MinIO recovery verifies74/692/one42,060-byte ciphertext in331ms, with fault/immutable/
+dormant guards and empty cleanup. Production RPO/RTO remains false; this is not erasure
+checkpoint recovery. Earlier failures remain failures. This accepts only the frozen
+v6 principal fence; the newer preparation/installed-catalog work needs its own run.
+Main825d57e contains the separately verified portable catalog/credential/dispatch
+source. The accepted consumer1597a68 and principal4bf5a77 branches are retained pending
+publication after main's live follow-up39387033557. No branch is deleted prematurely.
+
+
+## ADR-079 rollback-only preparation and independent metadata compiler
+
+FR-ID-006/FR-OPS-003, BR-010 and NFR-SEC-002/MNT-001: the trusted offline
+preparation path accepts only an actual registered FreshErasureScope, follows the
+ordinary pre-install fences and creates private definitions inside one transaction.
+It clears the temporary password GUC, captures technical metadata before generating
+a fingerprint key or initializing control, then rolls back on normal return, error
+or interruption. It returns no initialized capability, credentials or ready scope.
+No callback, source URL, SQL or baseline is accepted from an application user.
+
+The expected-code compiler hashes complete trusted repository definitions and the
+four existing frozen public bodies. A PostgreSQL comparison checks all14 complete
+v6 bodies before metadata observation; a replaced scope-identity body is rejected.
+The metadata compiler covers all application namespaces with exact private technical
+aliases, nine raw safety categories followed by32 full categories, and typed exact
+expression hashes. Independent fresh preparations with changed OIDs/nonces reproduce
+all category counts/digests. An initial function-ACL digest difference is retained:
+the fixed technical function-signature reference had not been aliased. Correcting
+that specific reference makes both stages reproduce; live code is never normalized.
+
+A strict v7 artifact envelope pins the migration and trusted recipe source digests,
+closed category/expression sets and exact recipe identity. Missing or changed files
+fail rather than regenerating/adopting a baseline. No frozen v7 artifact is written,
+no ordinary installer loads this envelope yet, and the private runtime remains v6.
+The SQL checker, immutable expectation field, generator CLI/architecture matrix and
+runtime raw-before-deparser interlock remain unimplemented. Producer reproduction
+is not installed-catalog clearance, payload/hold/export validation, closure/erasure,
+checkpoint recovery or production/MVP acceptance.
+
+
+### ADR-079 preparation checkpoint
+
+The rollback-only metadata preparation/compiler/envelope passes86 focused cases,
+1,526 unit/contract,35 tooling,236 typed files and quality/contracts/build/security/
+source gates.32+9 pre-install categories reproduce. Logical74/692 recovery341ms;
+actual stopped-source74/692/one42,084-byte object144ms, faults/guards/cleanup[].
+Earlier Literal and static-SQL scan failures are retained and corrected; no exclusions.
+No complete682-case native integration, new browser or own hosted acceptance is
+inferred. See [exact scope and evidence](E8_INSTALLED_CATALOG_VERIFICATION.md).
+v6 runtime/public0045 remain unchanged. V7 artifact/field/SQL interlock and payload/
+hold/export/permanent-closure/removal/checkpoint work remain pending. Review8/8healthy.

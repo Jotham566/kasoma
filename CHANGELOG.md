@@ -2,6 +2,12 @@
 
 ## Installed catalog expectation groundwork — in progress
 
+Added rollback-only fresh definition preparation, complete trusted-code hashing,
+independent raw/full metadata query reproduction and a strict future v7 envelope.
+No control initialization, artifact publication, v7 runtime switch or erasure authority.
+86 focused cases,1,526 unit/contract and35 tooling pass with quality/build/security
+and synthetic recovery. Own complete hosted acceptance remains required.
+
 ADR-079/FR-ID-006/BR-010: strict expected-tree bindings cover ten private/public
 variable expressions while preserving all other bytes and parser locations. Eleven
 contract cases and one independent two-source native case pass, with new OIDs/nonces.
@@ -9,7 +15,7 @@ This is groundwork: the v7 SQL checker, immutable technical expectation field an
 full installed artifact remain unimplemented. Runtime stays v6; no API, schema,
 permission, activation or model-provider change.
 
-## Installed private principal fence — ADR-078 candidate
+## Installed private principal fence — ADR-078 verified engineering
 
 FR-ID-006/FR-OPS-003/BR-010 and NFR-SEC-002/MNT-001: fresh private v6
 installation checks a closed principal/grant recipe through SQL scope identity.
@@ -18,7 +24,9 @@ and ownership/default-privilege drift. Existing temporary shadowing and disabled
 execution remain. No public migration, data permission or actual erasure. Initial
 eight regressions and healthy handoff corrections are retained. Final21 principal,
 11 bootstrap,24 plan,1,502 unit/contract and123 browser executions pass with quality/
-security gates; complete own hosted acceptance remains pending.
+security gates. Complete own hosted39383925992 at exact4bf5a77 passes1,502
+unit/contract,676 integration,35 tooling,123 browser executions and all required
+engineering gates. It does not accept the newer installed-catalog preparation.
 
 ## Closed guardian/role consumers — local candidate
 

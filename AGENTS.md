@@ -874,3 +874,14 @@ services are healthy on0045. Only Markdown closeout differs from exact9fece6a;
 no extra application/test/Make/workflow change is accepted by this publication.
 Main publishes this verified source; its new follow-up run requires separate status.
 Consumer1597a68 and principal4bf5a77 remain unmerged until their own acceptance.
+
+
+ADR-078 exact4bf5a77 passes complete own hosted39383925992:1,502 unit/contract,
+676 integration,35 tooling,123 browsers and every required engineering gate.
+Logical74/692 recovery614ms; actual stopped-source PG/MinIO74/692/one42,060-byte
+ciphertext331ms, faults/guards/cleanup[]; production RPO/RTOfalse. This accepts
+principal separation only. New ADR-079 preparation/compiler work is separate:
+trusted definitions are observed before control initialization and rolled back;
+complete code hashes and independent raw/full metadata reproduce locally. No v7
+artifact, SQL catalog interlock, closure or erasure acceptance is inferred. Keep
+normal review on0045 with false erasure flags; preserve live remote CI heads.

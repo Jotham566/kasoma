@@ -1,7 +1,7 @@
 # ADR-078: Installed erasure principal and grant fence
 
 Date: 20 October 2026 (Africa/Kampala)
-Status: Accepted technical implementation under approved ADR-061/071/072; local engineering verified; complete own hosted acceptance pending
+Status: Accepted technical implementation under approved ADR-061/071/072; engineering accepted after complete own hosted39383925992 at exact4bf5a77347af725cdb05853392f73e14c6e68fef
 Requirements: FR-ID-006, FR-OPS-003, BR-010, NFR-SEC-002, NFR-MNT-001
 
 Add a fresh-only v6 recipe with a closed SQL principal/ACL predicate called by
