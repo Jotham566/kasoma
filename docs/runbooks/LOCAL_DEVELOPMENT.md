@@ -186,6 +186,26 @@ for manual local walkthroughs. Automated Playwright starts its own isolated sche
 and in-memory provider with deterministic test-only codes through scripts/e2e_api.py.
 That script is never used by the development/production application entry point.
 
+The page labels this shared flow **Create an account or sign in**. Enter a fictional
+email in **Email address**, select **Send code**, then **Open local inbox (Mailpit)**.
+Find the latest message addressed to that email and enter its six-digit code in
+**Verification code**, followed by **Verify and continue**. A newly verified email
+creates an account; an existing email returns to the same account. No password or
+separate registration endpoint is used. Resending is disabled for 60 seconds.
+
+After verification the profile form shows the fixed Senior 4 level, display name,
+date of birth and Mathematics/Physics checkboxes. Select at least one subject and
+save, then record the age-appropriate declarations. Profile fields are intentionally
+shown after contact verification. **Verify contact again** is shown only for a
+loaded authenticated profile; **Resume saved session** is for returning devices.
+
+`GET /api/v1/auth/options` reports only local delivery modes and an optional Mailpit
+inbox link. The web gateway allowlists this read-only route. The UI offers email
+entry, explains that local SMS cannot deliver codes, and shows the inbox link only
+when the API reports the Mailpit adapter. Guardian and linking forms use the same
+email guidance. Fake-adapter tests capture codes in memory and expose no debug-code
+endpoint. Generic request responses, expiration, limits and consent gates remain.
+
 Use synthetic birth dates and names. Adult test profiles need their own declaration;
 under-18 profiles need distinct guardian-contact verification and separate assent.
 The development notice is explicitly not approved legal wording. Use Verify contact

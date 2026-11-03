@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 async function signIn(page: Page, role: string) {
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill(`e2e-content-${role}@example.invalid`);
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");

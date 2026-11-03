@@ -1,6 +1,38 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+test("FR-ID-001: local delivery guidance matches API options and rejects phone entry", async ({
+  page,
+}) => {
+  await page.route("**/api/v1/auth/options", (route) =>
+    route.fulfill({
+      json: {
+        email_delivery: "mailpit",
+        sms_delivery: "fake",
+        local_inbox_url: "http://localhost:8025",
+      },
+    }),
+  );
+  await page.goto("/onboarding");
+  await expect(
+    page.getByRole("link", { name: "Open local inbox (Mailpit)" }),
+  ).toHaveAttribute("href", "http://localhost:8025");
+  const email = page.getByLabel("Email address", { exact: true });
+  await expect(email).toHaveAttribute("type", "email");
+  await expect(page.getByText(/Mobile SMS is unavailable/)).toBeVisible();
+  await email.fill("+256700000001");
+  await page.getByRole("button", { name: "Send code", exact: true }).click();
+  expect(
+    await email.evaluate(
+      (input: HTMLInputElement) => input.validity.typeMismatch,
+    ),
+  ).toBeTruthy();
+  await expect(
+    page.getByLabel("Verification code", { exact: true }),
+  ).toHaveCount(0);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
 test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", async ({
   page,
   context,
@@ -14,10 +46,26 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
     path: testInfo.outputPath("signed-out-profile.png"),
     fullPage: true,
   });
+  await expect(
+    page.getByRole("heading", { name: "Create an account or sign in" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Verify contact again" }),
+  ).toHaveCount(0);
+  await expect(page.getByLabel("Account setup steps")).toBeVisible();
+  await expect(page.getByLabel("Display name", { exact: true })).toHaveCount(0);
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("e2e-adult@example.invalid");
   await page.getByRole("button", { name: "Send code", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Send code", exact: true }),
+  ).toBeDisabled();
+  await page.getByLabel("Verification code", { exact: true }).fill("000000");
+  await page.getByRole("button", { name: "Verify and continue" }).click();
+  await expect(
+    page.getByRole("alert").filter({ hasText: "incorrect or has expired" }),
+  ).toBeVisible();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");
   const verification = page.waitForResponse("**/api/v1/auth/otp/verify");
   await page.getByRole("button", { name: "Verify and continue" }).click();
@@ -25,10 +73,17 @@ test("FR-ID-001/003/004/005: adult profile, consent, withdrawal and logout", asy
   await expect(
     page.getByRole("button", { name: "Verify contact again", exact: true }),
   ).toBeVisible();
+  await expect(page.getByLabel("Level", { exact: true })).toHaveValue(
+    "Senior 4",
+  );
   await page
     .getByLabel("Display name", { exact: true })
     .fill("Synthetic adult");
   await page.getByLabel("Date of birth").fill("2000-01-01");
+  await page.getByRole("button", { name: "Save profile" }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "Choose Mathematics, Physics, or both",
+  );
   await page.getByLabel("Mathematics", { exact: true }).check();
   await page.getByRole("button", { name: "Save profile" }).click();
   await expect(page.getByRole("status")).toHaveText("Profile saved.");
@@ -81,7 +136,7 @@ test("FR-ID-003: minor remains blocked until distinct guardian consent and assen
 }) => {
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("e2e-minor@example.invalid");
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");
@@ -101,7 +156,7 @@ test("FR-ID-003: minor remains blocked until distinct guardian consent and assen
     page.getByRole("link", { name: "Find your starting point", exact: true }),
   ).toHaveCount(0);
   await page
-    .getByLabel("Guardian email or mobile number")
+    .getByLabel("Guardian email address")
     .fill("e2e-guardian@example.invalid");
   await page.getByRole("button", { name: "Send guardian code" }).click();
   await page
@@ -145,7 +200,7 @@ test("web rejects cross-origin mutations and recovers from offline requests", as
   resumeCatalog();
   await expect(page.getByRole("status")).toHaveText("Sign in to continue.");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("offline@example.invalid");
   await page.route("**/api/v1/auth/otp/request", (route) => route.abort());
   await page.getByRole("button", { name: "Send code", exact: true }).click();

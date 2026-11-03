@@ -22,6 +22,12 @@ class OTPAccepted(Contract):
     message: str = "If eligible, a verification code will be delivered."
 
 
+class AuthOptions(Contract):
+    email_delivery: Literal["mailpit", "fake"]
+    sms_delivery: Literal["fake"]
+    local_inbox_url: Literal["http://localhost:8025"] | None
+
+
 class OTPVerify(Contract):
     purpose: Literal["LOGIN", "LINK"] = "LOGIN"
     challenge_id: UUID

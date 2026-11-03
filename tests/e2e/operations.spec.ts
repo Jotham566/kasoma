@@ -9,7 +9,7 @@ test("FR-OPS-002: admin operations snapshot, unavailable heartbeat and accessibl
   await expect(page.getByRole("status")).toContainText("Snapshot unavailable.");
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("e2e-content-operations-admin@example.invalid");
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");

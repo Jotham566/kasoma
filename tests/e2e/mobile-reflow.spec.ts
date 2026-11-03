@@ -30,7 +30,7 @@ test("NFR-ACC-001/NFR-COMP-001: narrow touch journey reflows and retains saved l
 }) => {
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("e9-mobile@example.invalid");
   await reflows(page);
   await touchTarget(

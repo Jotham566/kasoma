@@ -7,6 +7,7 @@ from fastapi import APIRouter, Header, Request, Response
 
 from services.identity import IdentityService
 from services.identity_contracts import (
+    AuthOptions,
     ConsentInput,
     Credentials,
     OTPAccepted,
@@ -29,6 +30,16 @@ def service(request: Request) -> IdentityService:
 def bearer(request: Request) -> str:
     header = request.headers.get("authorization", "")
     return header[7:] if header.startswith("Bearer ") and len(header) <= 160 else ""
+
+
+@router.get("/auth/options", response_model=AuthOptions)
+def auth_options(request: Request) -> AuthOptions:
+    settings = service(request).settings
+    return AuthOptions(
+        email_delivery=settings.email_provider,
+        sms_delivery=settings.sms_provider,
+        local_inbox_url="http://localhost:8025" if settings.email_provider == "mailpit" else None,
+    )
 
 
 @router.post("/auth/otp/request", status_code=202, response_model=OTPAccepted)

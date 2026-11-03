@@ -266,6 +266,43 @@
         "title": "AuditReviewReceipt",
         "type": "object"
       },
+      "AuthOptions": {
+        "additionalProperties": false,
+        "properties": {
+          "email_delivery": {
+            "enum": [
+              "mailpit",
+              "fake"
+            ],
+            "title": "Email Delivery",
+            "type": "string"
+          },
+          "local_inbox_url": {
+            "anyOf": [
+              {
+                "const": "http://localhost:8025",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Local Inbox Url"
+          },
+          "sms_delivery": {
+            "const": "fake",
+            "title": "Sms Delivery",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email_delivery",
+          "sms_delivery",
+          "local_inbox_url"
+        ],
+        "title": "AuthOptions",
+        "type": "object"
+      },
       "BlindedReviewTask": {
         "additionalProperties": false,
         "properties": {
@@ -10812,6 +10849,24 @@
           }
         },
         "summary": "Logout All"
+      }
+    },
+    "/api/v1/auth/options": {
+      "get": {
+        "operationId": "auth_options_api_v1_auth_options_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthOptions"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Auth Options"
       }
     },
     "/api/v1/auth/otp/request": {
