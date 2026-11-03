@@ -6,7 +6,7 @@ test("FR-REV-001/006: explained recommendation, lost start acknowledgement and d
 }) => {
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("e5-recommendation@example.invalid");
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");

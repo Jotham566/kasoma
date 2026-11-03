@@ -9,7 +9,7 @@ test("FR-WA-001/004/006: consent-gated code, signed local linking, STOP and unli
 }) => {
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("e2e-channel@example.invalid");
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");

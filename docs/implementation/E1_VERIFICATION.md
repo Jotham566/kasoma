@@ -1,5 +1,70 @@
 # E1 identity and consent verification
 
+## Workspace reconciliation — 3 November 2026
+
+Reconcile the local onboarding correction from snapshot `46a0f8a` onto upstream
+`1afed82` on `reconcile/local-onboarding`. Preserve upstream OTP observation,
+identity coordination, signed-out reverification visibility and browser assertions.
+Regenerate contracts from the current API rather than restoring older generated
+files. The original workspace is retained in a named local Git stash; ignored
+environment and runtime files remain local. No database migration or ADR is added.
+
+The earlier Windows verification below describes the original local correction,
+not acceptance of this combined source. Current combined-source checks:
+
+- Ten focused auth-options/identity contract cases pass. Windows' event loop needs
+  the repository's loopback allowlist (`--allow-hosts=localhost,127.0.0.1,::1`);
+  the first default socket-disabled invocation failed before API execution.
+- Focused Ruff lint/format, ESLint for onboarding/gateway and browser tests,
+  Linux-target Python type checks, all three workspace
+  TypeScript checks, production Next.js build, focused Prettier, repeated
+  OpenAPI/client generation, local
+  secret boundaries and Git whitespace checks pass.
+- Documentation checks pass for 211 Markdown files and all 61 requirements using
+  Python UTF-8 mode. The Make-based contract wrapper cannot run without Windows
+  `make`; repeated direct generation confirms identical contract bytes.
+- Docker's Linux engine is unavailable. Database integration and real-API browser
+  acceptance were not rerun; historical walkthroughs do not establish combined-source
+  acceptance. The Windows-default mypy target also reports the unchanged upstream
+  Unix-only `os.getuid` call; the supported Linux target passes.
+
+## Local onboarding correction — 18 October 2026
+
+FR-ID-001–005 / NFR-ACC-001: clarify shared registration/sign-in and make local
+delivery guidance reflect backend configuration. Add a minimized public auth-options
+contract and allowlisted gateway route, explicit email entry/Mailpit access, setup
+steps, visible Senior 4 level, resend cooldown, verification errors and missing-subject
+guidance. Guardian and identifier-link forms use the same local email instructions.
+ADR-014's verification, session, enumeration and age/consent controls remain in place.
+
+Validation on the Windows development machine:
+
+- Ten focused Python contract cases pass (delivery configuration and identity
+  contracts); seven PostgreSQL identity integration cases pass in isolated schemas.
+- Six focused Chromium browser cases pass across the identity and learner-home
+  suites, covering delivery guidance, invalid phone/email entry, incorrect-code
+  recovery, adult profile/consent/withdrawal/logout, distinct guardian consent and
+  assent, offline retry, CSRF, axe, and navigation/reflow at 320/1280 pixels.
+  Five passed on the first focused run; the adult case passed after correcting its
+  alert locator to exclude Next's empty announcement element.
+- The shared all-feature browser fixture bootstrap exceeded its normal startup
+  timeout on this machine. The focused run used an ignored local launcher with
+  an independent schema, the same migrations/API/identity service and deterministic
+  fake messaging, plus only the base catalog. No developer schemas were reset.
+- Live collaborative-browser walkthrough against normal Mailpit delivery verifies
+  new account creation, code capture, profile saving, adult consent, logout,
+  incorrect-code feedback and returning sign-in with saved profile/consent.
+  The refreshed development stylesheet also passes a 320-pixel reflow check.
+- Production Next build, TypeScript checks, focused ESLint, Ruff and mypy checks
+  pass. OpenAPI/client generation and drift checks pass. Documentation links and
+  whitespace were checked directly because this workspace has no Git metadata;
+  Git-based repository checks cannot run here.
+
+No database migration or new architecture decision is required. Local SMS remains
+an inaccessible in-memory test adapter, and the web form directs users to email.
+No real SMS/provider delivery, production acceptance, or new personal-data fields
+are claimed. Next acceptance remains the existing academic/provider release gates.
+
 Date: 23 September 2026. Branch: `codex/e1-identity-consent`.
 Foundation `4faf65a` passed [hosted CI](https://github.com/Jotham566/kasoma/actions/runs/35889650630),
 was fast-forwarded to main and pushed, and its branch was deleted locally/remotely.

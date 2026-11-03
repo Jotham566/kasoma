@@ -1,5 +1,15 @@
 # Changelog
 
+## Local onboarding clarity
+
+- Clarify the shared account creation/sign-in flow, show explicit email delivery
+  guidance and an API-configured Mailpit link, and remove the unusable local SMS
+  entry path from learner forms. Add setup steps, visible fixed Senior 4 level,
+  a resend cooldown, verification errors and missing-subject guidance. Hide
+  re-verification until a profile is loaded. Keep OTP, session and consent policies.
+- Add the minimized public `GET /api/v1/auth/options` contract and gateway route,
+  regenerate the client, and extend identity/browser checks for the revised flow.
+
 ## Installed catalog expectation groundwork — in progress
 
 Added rollback-only fresh definition preparation, complete trusted-code hashing,

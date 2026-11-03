@@ -4,7 +4,7 @@ import { fetchCommitted } from "./support/committed-intercept";
 
 async function onboard(page: Page, email: string) {
   await page.goto("/onboarding");
-  await page.getByLabel("Email or mobile number", { exact: true }).fill(email);
+  await page.getByLabel("Email address", { exact: true }).fill(email);
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");
   await page.getByRole("button", { name: "Verify and continue" }).click();

@@ -8,6 +8,8 @@ import type { components } from "@kasoma/api-client";
 type Profile = components["schemas"]["ProfileView"];
 type Subject = components["schemas"]["SubjectView"];
 type Consent = components["schemas"]["ConsentInput"];
+type AuthOptions = components["schemas"]["AuthOptions"];
+type Purpose = "LOGIN" | "GUARDIAN" | "LINK";
 const client = () => apiClient("", crypto.randomUUID());
 const inputClass = "ui-input";
 const buttonClass = "ui-button ui-button-primary my-2";
@@ -15,6 +17,13 @@ const buttonClass = "ui-button ui-button-primary my-2";
 export default function Onboarding() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [authOptions, setAuthOptions] = useState<AuthOptions | null>(null);
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [cooldowns, setCooldowns] = useState<Record<Purpose, number>>({
+    LOGIN: 0,
+    GUARDIAN: 0,
+    LINK: 0,
+  });
   const [challenge, setChallenge] = useState<string | null>(null);
   const [guardianChallenge, setGuardianChallenge] = useState<string | null>(
     null,
@@ -23,14 +32,31 @@ export default function Onboarding() {
   const [status, setStatus] = useState("Checking your session…");
   const consentRetry = useRef<{ payload: string; key: string } | null>(null);
   const [busy, setBusy] = useState(true);
+  const coolingDown = Object.values(cooldowns).some((seconds) => seconds > 0);
+
+  useEffect(() => {
+    if (!coolingDown) return;
+    const timer = setInterval(
+      () =>
+        setCooldowns((current) => ({
+          LOGIN: Math.max(0, current.LOGIN - 1),
+          GUARDIAN: Math.max(0, current.GUARDIAN - 1),
+          LINK: Math.max(0, current.LINK - 1),
+        })),
+      1000,
+    );
+    return () => clearInterval(timer);
+  }, [coolingDown]);
 
   async function load() {
     const api = client();
-    const [me, catalog] = await Promise.all([
+    const [me, catalog, options] = await Promise.all([
       api.GET("/api/v1/me"),
       api.GET("/api/v1/curriculum/subjects"),
+      api.GET("/api/v1/auth/options"),
     ]);
     if (catalog.data) setSubjects(catalog.data);
+    if (options.data) setAuthOptions(options.data);
     setProfile(me.data ?? null);
     setStatus(
       me.data ? "Your profile is ready to review." : "Sign in to continue.",
@@ -42,10 +68,12 @@ export default function Onboarding() {
     void Promise.all([
       api.GET("/api/v1/me"),
       api.GET("/api/v1/curriculum/subjects"),
+      api.GET("/api/v1/auth/options"),
     ])
-      .then(([me, catalog]) => {
+      .then(([me, catalog, options]) => {
         if (!active) return;
         if (catalog.data) setSubjects(catalog.data);
+        if (options.data) setAuthOptions(options.data);
         setProfile(me.data ?? null);
         setStatus(
           me.data ? "Your profile is ready to review." : "Sign in to continue.",
@@ -74,10 +102,9 @@ export default function Onboarding() {
       setBusy(false);
     }
   }
-  async function requestCode(
-    form: FormData,
-    purpose: "LOGIN" | "GUARDIAN" | "LINK",
-  ) {
+  async function requestCode(form: FormData, purpose: Purpose) {
+    const identifier = String(form.get("identifier")).trim();
+    setCodeError(null);
     let device = sessionStorage.getItem("kasoma_device");
     if (!device) {
       device = crypto.randomUUID();
@@ -85,25 +112,39 @@ export default function Onboarding() {
     }
     const result = await client().POST("/api/v1/auth/otp/request", {
       body: {
-        identifier: String(form.get("identifier")),
+        identifier,
         purpose,
         device_id: device,
       },
     });
     if (!result.data) throw new Error("Request unavailable");
+    setCooldowns((current) => ({ ...current, [purpose]: 60 }));
     const id = result.data.challenge_id;
     if (purpose === "LOGIN") setChallenge(id);
     else if (purpose === "GUARDIAN") setGuardianChallenge(id);
     else setLinkChallenge(id);
     setStatus(
-      "If eligible, a code was sent. It expires in 10 minutes. Wait at least 60 seconds before requesting another.",
+      authOptions?.email_delivery === "mailpit"
+        ? "If eligible, your email code is in the local inbox (Mailpit). It expires in 10 minutes. Wait at least 60 seconds before requesting another."
+        : "If eligible, a code was captured by the test email adapter. It expires in 10 minutes. Wait at least 60 seconds before requesting another.",
     );
   }
   async function verify(form: FormData, id: string, purpose: "LOGIN" | "LINK") {
+    setCodeError(null);
     const result = await client().POST("/api/v1/auth/otp/verify", {
       body: { challenge_id: id, code: String(form.get("code")), purpose },
     });
-    if (!result.response.ok) throw new Error("Verification unavailable");
+    if (!result.response.ok) {
+      const message =
+        result.response.status === 429
+          ? "Too many verification attempts. Wait before requesting a new code."
+          : result.response.status === 400
+            ? "That code is incorrect or has expired. Check the latest message, or request a new code after 60 seconds."
+            : "Verification is unavailable. Check your connection and try again.";
+      setCodeError(message);
+      setStatus(message);
+      return;
+    }
     setChallenge(null);
     setLinkChallenge(null);
     await load();
@@ -125,7 +166,7 @@ export default function Onboarding() {
         : "Your declaration was saved.",
     );
   }
-  function contactForm(purpose: "LOGIN" | "GUARDIAN" | "LINK", label: string) {
+  function contactForm(purpose: Purpose, label: string) {
     return (
       <form
         onSubmit={(event) => {
@@ -139,13 +180,26 @@ export default function Onboarding() {
           <input
             className={inputClass}
             name="identifier"
+            type="email"
             required
             maxLength={254}
-            autoComplete="off"
-            placeholder="name@example.invalid or +256…"
+            autoComplete="email"
+            placeholder="learner@example.invalid"
+            aria-describedby={`${purpose}-delivery-help`}
           />
         </label>
-        <button className={buttonClass} disabled={busy}>
+        <p id={`${purpose}-delivery-help`} className="auth-help">
+          {authOptions?.email_delivery === "mailpit"
+            ? "Use a fictional email, such as learner@example.invalid. Codes go to the local inbox, not your real email."
+            : authOptions?.email_delivery === "fake"
+              ? "Email codes are captured by the test adapter. No real email is sent."
+              : "Delivery information is unavailable. Refresh this page to try again."}{" "}
+          Mobile SMS is unavailable in this local app.
+        </p>
+        <button
+          className={buttonClass}
+          disabled={busy || !authOptions || cooldowns[purpose] > 0}
+        >
           Send{" "}
           {purpose === "GUARDIAN"
             ? "guardian "
@@ -154,6 +208,11 @@ export default function Onboarding() {
               : ""}
           code
         </button>
+        {cooldowns[purpose] > 0 && (
+          <p className="auth-help">
+            Request another code in {cooldowns[purpose]} seconds.
+          </p>
+        )}
       </form>
     );
   }
@@ -176,8 +235,16 @@ export default function Onboarding() {
             pattern="[0-9]{6}"
             required
             maxLength={6}
+            aria-invalid={!!codeError}
+            aria-describedby={codeError ? `${purpose}-code-error` : undefined}
+            onChange={() => setCodeError(null)}
           />
         </label>
+        {codeError && (
+          <p id={`${purpose}-code-error`} role="alert">
+            {codeError}
+          </p>
+        )}
         <button className={buttonClass} disabled={busy}>
           Verify {purpose === "LINK" ? "new contact" : "and continue"}
         </button>
@@ -202,6 +269,9 @@ export default function Onboarding() {
           onClick={() => {
             setProfile(null);
             setChallenge(null);
+            setGuardianChallenge(null);
+            setLinkChallenge(null);
+            setCodeError(null);
             setStatus(
               "Verify your existing contact again to continue sensitive actions.",
             );
@@ -212,14 +282,44 @@ export default function Onboarding() {
       )}
       {!profile ? (
         <section aria-label="Sign in">
-          <h2>Start with your contact</h2>
+          <h2>Create an account or sign in</h2>
           <p>
-            Verify your contact to keep your profile connected across devices.
+            Your first verified email creates an account. Use the same email to
+            sign in again. No password is needed.
           </p>
-          {contactForm("LOGIN", "Email or mobile number")}
-          {challenge && verifyForm(challenge, "LOGIN")}
+          <ol className="onboarding-steps" aria-label="Account setup steps">
+            <li aria-current="step">Verify your email</li>
+            <li>Complete your Senior 4 profile</li>
+            <li>Record the required consent</li>
+          </ol>
+          <h3>1. Verify your email</h3>
+          {contactForm("LOGIN", "Email address")}
+          {authOptions?.local_inbox_url && (
+            <a
+              className="ui-button ui-button-secondary my-2"
+              href={authOptions.local_inbox_url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open local inbox (Mailpit)
+            </a>
+          )}
+          {challenge && (
+            <div className="verification-step">
+              <p>
+                Open the latest Kasoma message for your email and enter its
+                six-digit code below.
+              </p>
+              {verifyForm(challenge, "LOGIN")}
+            </div>
+          )}
+          <p className="auth-help">
+            After verification, you can enter your display name, date of birth
+            and Mathematics or Physics subjects. Under-18 learners also need
+            separate guardian consent and learner assent.
+          </p>
           <button
-            className={buttonClass}
+            className="ui-button ui-button-secondary my-2"
             disabled={busy}
             onClick={() =>
               void run(async () => {
@@ -235,6 +335,10 @@ export default function Onboarding() {
           >
             Resume saved session
           </button>
+          <p className="auth-help">
+            Returning on this device? Resume a previously saved session, or
+            request a new email code.
+          </p>
         </section>
       ) : (
         <>
@@ -249,6 +353,12 @@ export default function Onboarding() {
                 event.preventDefault();
                 const form = new FormData(event.currentTarget);
                 void run(async () => {
+                  if (form.getAll("subject_ids").length === 0) {
+                    setStatus(
+                      "Choose Mathematics, Physics, or both before saving your profile.",
+                    );
+                    return;
+                  }
                   const result = await client().PATCH("/api/v1/me", {
                     body: {
                       display_name: String(form.get("display_name")),
@@ -262,6 +372,10 @@ export default function Onboarding() {
                 });
               }}
             >
+              <label>
+                Level
+                <input className={inputClass} value={profile.level} readOnly />
+              </label>
               <label>
                 Display name
                 <input
@@ -374,7 +488,17 @@ export default function Onboarding() {
                     The guardian must use their own contact, review the notice
                     and make this declaration separately.
                   </p>
-                  {contactForm("GUARDIAN", "Guardian email or mobile number")}
+                  {contactForm("GUARDIAN", "Guardian email address")}
+                  {authOptions?.local_inbox_url && (
+                    <a
+                      className="ui-text-link"
+                      href={authOptions.local_inbox_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open guardian code in local inbox (Mailpit)
+                    </a>
+                  )}
                   {guardianChallenge && (
                     <form
                       onSubmit={(event) => {
@@ -465,7 +589,17 @@ export default function Onboarding() {
               {profile.identifier_count} verified contact(s). A recently
               verified session is required.
             </p>
-            {contactForm("LINK", "New email or mobile number")}
+            {contactForm("LINK", "New email address")}
+            {authOptions?.local_inbox_url && (
+              <a
+                className="ui-text-link"
+                href={authOptions.local_inbox_url}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open linking code in local inbox (Mailpit)
+              </a>
+            )}
             {linkChallenge && verifyForm(linkChallenge, "LINK")}
           </section>
           <div className="flex gap-4 flex-wrap">

@@ -45,6 +45,7 @@ Do not expose stack traces, provider errors, internal prompts or database identi
 
 | Method/path | Purpose |
 |---|---|
+| `GET /auth/options` | Public local email/SMS delivery modes and optional Mailpit inbox URL; no account or code data; `Cache-Control: no-store` |
 | `POST /auth/otp/request` | Request email/phone verification code; always generic response |
 | `POST /auth/otp/verify` | Verify code; create/link identity; return access/refresh credentials |
 | `POST /auth/refresh` | Rotate refresh token |

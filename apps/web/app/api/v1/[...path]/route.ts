@@ -8,6 +8,7 @@ import { settings as warningSettings } from "../../../admin/configuration/settin
 
 type Credentials = components["schemas"]["Credentials"];
 const allowed: Record<string, string[]> = {
+  "auth/options": ["GET"],
   "auth/otp/request": ["POST"],
   "auth/otp/verify": ["POST"],
   "auth/refresh": ["POST"],

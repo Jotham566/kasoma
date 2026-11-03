@@ -1,5 +1,15 @@
 # Current sprint: browser isolation and synthetic erasure foundation
 
+## Local onboarding correction
+
+FR-ID-001–005 / NFR-ACC-001: clarify account creation and sign-in, expose only local
+delivery capabilities through `GET /api/v1/auth/options`, and align learner, guardian
+and linking forms with email capture. Explicit setup guidance, fixed Senior 4 level,
+resend cooldown and verification/subject errors preserve ADR-014's existing OTP,
+session and consent policies. See [local runbook](../runbooks/LOCAL_DEVELOPMENT.md)
+and [E1 verification](E1_VERIFICATION.md) for validation and remaining limits.
+
+
 ## Dormant lifecycle0045 — isolated verification candidate
 
 FR-ID-006/BR-010/FR-OPS-003 and NFR-SEC-002/MNT-001: additive0045 registers the

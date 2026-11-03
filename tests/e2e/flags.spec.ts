@@ -7,7 +7,7 @@ test("FR-GRD-009/FR-CNT-006: lost report acknowledgement and independent audited
 }) => {
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("flag-learner@example.invalid");
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");
@@ -81,7 +81,7 @@ test("FR-GRD-009/FR-CNT-006: lost report acknowledgement and independent audited
   try {
     await staff.goto("/onboarding");
     await staff
-      .getByLabel("Email or mobile number", { exact: true })
+      .getByLabel("Email address", { exact: true })
       .fill("e2e-content-flag-reviewer@example.invalid");
     await staff.getByRole("button", { name: "Send code", exact: true }).click();
     await staff.getByLabel("Verification code", { exact: true }).fill("246810");

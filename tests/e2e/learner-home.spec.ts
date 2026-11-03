@@ -65,7 +65,7 @@ for (const width of [320, 1280]) {
       navigation.getByRole("link", { name: "Profile & settings", exact: true }),
     ).toHaveAttribute("aria-current", "page");
     await expect(
-      page.getByLabel("Email or mobile number", { exact: true }),
+      page.getByLabel("Email address", { exact: true }),
     ).toBeVisible();
     await reflow();
     await expect(

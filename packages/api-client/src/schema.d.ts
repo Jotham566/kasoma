@@ -606,6 +606,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/options": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Auth Options */
+        get: operations["auth_options_api_v1_auth_options_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/otp/request": {
         parameters: {
             query?: never;
@@ -1223,6 +1240,21 @@ export interface components {
              * @constant
              */
             status: "COMPLETED";
+        };
+        /** AuthOptions */
+        AuthOptions: {
+            /**
+             * Email Delivery
+             * @enum {string}
+             */
+            email_delivery: "mailpit" | "fake";
+            /** Local Inbox Url */
+            local_inbox_url: "http://localhost:8025" | null;
+            /**
+             * Sms Delivery
+             * @constant
+             */
+            sms_delivery: "fake";
         };
         /** BlindedReviewTask */
         BlindedReviewTask: {
@@ -7331,6 +7363,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    auth_options_api_v1_auth_options_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthOptions"];
+                };
             };
         };
     };

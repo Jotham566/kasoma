@@ -6,7 +6,7 @@ test("FR-GRD-006: reviewed hints survive lost acknowledgement and preserve gradi
 }) => {
   await page.goto("/onboarding");
   await page
-    .getByLabel("Email or mobile number", { exact: true })
+    .getByLabel("Email address", { exact: true })
     .fill("e4-hints@example.invalid");
   await page.getByRole("button", { name: "Send code", exact: true }).click();
   await page.getByLabel("Verification code", { exact: true }).fill("246810");
